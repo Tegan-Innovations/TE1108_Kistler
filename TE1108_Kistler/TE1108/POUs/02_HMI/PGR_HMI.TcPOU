@@ -7,75 +7,110 @@ VAR
 	bResetTest				: BOOL;
 	i						: DINT;
 	n						: DINT;//TABLE INDEX
+		// Local variable to store the synchronized blink bit
+
+	bFlash					: BOOL;
+	fbBlinkTimer : TON;          // Timer instance to generate the 1Hz blinking clock
+	bBlinkTimer_Q_Old 		: BOOL;    // Rising edge detection for timer output
+	
+
 	
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[// Process strings and colors for the top status banner on the HMI
-M_StatusHMI();]]></ST>
+      <ST><![CDATA[// =================================================================================
+// RUN GENERATOR CLOCK IN MAIN PROGRAM BODY
+// =================================================================================
+fbBlinkTimer(IN := NOT fbBlinkTimer.Q, PT := T#500MS);
+
+IF fbBlinkTimer.Q AND NOT bBlinkTimer_Q_Old THEN
+	GVL_MASTER.bBlink_1Hz := NOT GVL_MASTER.bBlink_1Hz;
+END_IF
+bBlinkTimer_Q_Old := fbBlinkTimer.Q;
+
+// =================================================================================
+// NOW CALL THE METHOD TO PROCESS STRINGS AND HMI COLORS
+
+M_StatusHMI();
+]]></ST>
     </Implementation>
     <Method Name="M_StatusHMI" Id="{6ed5e17f-430e-4297-ba97-996934b423b4}">
       <Declaration><![CDATA[METHOD M_StatusHMI : BOOL
 VAR
-	// Local variable to store the synchronized blink bit
-	bFlash : BOOL;
-END_VAR
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// // =================================================================================
+// // 1. BLINK TIMING CIRCUIT (RUNS CONTINUOUSLY EVERY CYCLE)
+// // =================================================================================
+// // The timer input (IN) is fed by its own inverted output (Q) to loop indefinitely
+// fbBlinkTimer(IN := NOT fbBlinkTimer.Q, PT := T#500MS);
+// 
+// // Point directly to the timer instance declared inside PGR_HMI
+// PGR_HMI.fbBlinkTimer(IN := NOT PGR_HMI.fbBlinkTimer.Q, PT := T#500MS);
+// 
+// // Detect rising edge using the persistent flag inside PGR_HMI
+// IF PGR_HMI.fbBlinkTimer.Q AND NOT PGR_HMI.bBlinkTimer_Q_Old THEN
+// 	GVL_MASTER.bBlink_1Hz := NOT GVL_MASTER.bBlink_1Hz;
+// END_IF
+// PGR_HMI.bBlinkTimer_Q_Old := PGR_HMI.fbBlinkTimer.Q;
 
-// Fetch the 1Hz system clock flash bit from the master GVL
+// Now safely transfer the global clock to the local display bit
+
 bFlash := GVL_MASTER.bBlink_1Hz;
+
+
 
 CASE GVL_MASTER.stMachineStatus.eMachineState OF
 
     E_MachineState.SYSTEM_INITIALISING:
         GVL_HMI.StatusHMI.sMachineStatusText := 'SYSTEM INITIALIZING';        
-        GVL_HMI.StatusHMI.sBannerBckColor    := '#FFFF00'; // Yellow
-        GVL_HMI.StatusHMI.sBannerTextColor   := '#000000'; // Black
+        GVL_HMI.StatusHMI.sBannerBckColor    := '{"color":"rgba(255, 255, 0, 1)"}';   // Solid Yellow
+        GVL_HMI.StatusHMI.sBannerTextColor   := '{"color":"rgba(0, 0, 0, 1)"}';       // Solid Black
 
     E_MachineState.SYSTEM_READY_TO_START:
-        GVH_HMI.StatusHMI.sMachineStatusText := 'SYSTEM READY TO START';        
+        GVL_HMI.StatusHMI.sMachineStatusText := 'SYSTEM READY TO START';        
         IF bFlash THEN
-            GVL_HMI.StatusHMI.sBannerBckColor  := '#00FF00'; // Green
-            GVL_HMI.StatusHMI.sBannerTextColor := '#FFFFFF'; // White
+            GVL_HMI.StatusHMI.sBannerBckColor  := '{"color":"rgba(0, 255, 0, 1)"}';   // Solid Green
+            GVL_HMI.StatusHMI.sBannerTextColor := '{"color":"rgba(255, 255, 255, 1)"}'; // Solid White
         ELSE    
-            GVL_HMI.StatusHMI.sBannerBckColor  := '#FFFFFF'; // White
-            GVL_HMI.StatusHMI.sBannerTextColor := '#00FF00'; // Green
+            GVL_HMI.StatusHMI.sBannerBckColor  := '{"color":"rgba(0, 0, 0, 0)"}';     // 100% TRANSPARENT
+            GVL_HMI.StatusHMI.sBannerTextColor := '{"color":"rgba(0, 180, 0, 1)"}';   // Darker Green for readability
         END_IF
 
     E_MachineState.SYSTEM_AUTO_CYCLE:
         GVL_HMI.StatusHMI.sMachineStatusText := 'SYSTEM AUTO CYCLE';        
-        GVL_HMI.StatusHMI.sBannerBckColor    := '#00FF00'; // Green
-        GVL_HMI.StatusHMI.sBannerTextColor   := '#FFFFFF'; // White  
+        GVL_HMI.StatusHMI.sBannerBckColor    := '{"color":"rgba(0, 255, 0, 1)"}';     // Solid Green
+        GVL_HMI.StatusHMI.sBannerTextColor   := '{"color":"rgba(255, 255, 255, 1)"}';   // Solid White  
 
     E_MachineState.STOPPING:
         GVL_HMI.StatusHMI.sMachineStatusText := 'STOPPING';        
         IF bFlash THEN    
-            GVL_HMI.StatusHMI.sBannerBckColor  := '#000000'; // Black
-            GVL_HMI.StatusHMI.sBannerTextColor := '#FFFFFF'; // White    
+            GVL_HMI.StatusHMI.sBannerBckColor  := '{"color":"rgba(0, 0, 0, 1)"}';       // Solid Black
+            GVL_HMI.StatusHMI.sBannerTextColor := '{"color":"rgba(255, 255, 255, 1)"}'; // Solid White    
         ELSE    
-            GVL_HMI.StatusHMI.sBannerBckColor  := '#FFFFFF'; // White
-            GVL_HMI.StatusHMI.sBannerTextColor := '#000000'; // Black    
+            GVL_HMI.StatusHMI.sBannerBckColor  := '{"color":"rgba(0, 0, 0, 0)"}';     // 100% TRANSPARENT
+            GVL_HMI.StatusHMI.sBannerTextColor := '{"color":"rgba(0, 0, 0, 1)"}';       // Solid Black    
         END_IF
 
     E_MachineState.STOPPED:
         GVL_HMI.StatusHMI.sMachineStatusText := 'CYCLE STOPPED';        
-        GVL_HMI.StatusHMI.sBannerBckColor    := '#808080'; // Industrial Grey
-        GVL_HMI.StatusHMI.sBannerTextColor   := '#FFFFFF'; // White    
+        GVL_HMI.StatusHMI.sBannerBckColor    := '{"color":"rgba(128, 128, 128, 1)"}'; // Solid Industrial Grey
+        GVL_HMI.StatusHMI.sBannerTextColor   := '{"color":"rgba(255, 255, 255, 1)"}'; // Solid White    
 
     E_MachineState.FAULT:
         GVL_HMI.StatusHMI.sMachineStatusText := 'IMMEDIATE FAULT';        
         IF bFlash THEN    
-            GVL_HMI.StatusHMI.sBannerBckColor  := '#FF0000'; // Red
-            GVL_HMI.StatusHMI.sBannerTextColor := '#FFFFFF'; // White    
+            GVL_HMI.StatusHMI.sBannerBckColor  := '{"color":"rgba(255, 0, 0, 1)"}';     // Solid Red
+            GVL_HMI.StatusHMI.sBannerTextColor := '{"color":"rgba(255, 255, 255, 1)"}'; // Solid White    
         ELSE    
-            GVL_HMI.StatusHMI.sBannerBckColor  := '#FFFFFF'; // White
-            GVL_HMI.StatusHMI.sBannerTextColor := '#000000'; // Black    
+            GVL_HMI.StatusHMI.sBannerBckColor  := '{"color":"rgba(0, 0, 0, 0)"}';     // 100% TRANSPARENT
+            GVL_HMI.StatusHMI.sBannerTextColor := '{"color":"rgba(255, 0, 0, 1)"}';     // Solid Red Text over screen background
         END_IF
 
 END_CASE
 
-M_StatusHMI := TRUE;]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[]]></ST>
+
+M_StatusHMI := TRUE;]]></ST>
       </Implementation>
     </Method>
   </POU>

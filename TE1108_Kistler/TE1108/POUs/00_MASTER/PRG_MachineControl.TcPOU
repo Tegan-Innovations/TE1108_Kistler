@@ -103,7 +103,10 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 		END_IF
         
 	 E_MachineState.SYSTEM_READY_TO_START:
-        IF GVL_MASTER.bHmiStart THEN
+	    
+		IF GVL_Master.bHmiStop THEN
+            GVL_Master.stMachineStatus.eMachineState := E_MachineState.STOPPING;
+        ELSIF GVL_MASTER.bHmiStart THEN
             GVL_Master.stMachineStatus.eMachineState := E_MachineState.SYSTEM_AUTO_CYCLE;
         END_IF	
  
@@ -124,7 +127,6 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 
     E_MachineState.STOPPING:
         rtFirstAutoCycle(CLK := FALSE);
-		// 1. Trigger a simulation timer for the stopping sequence (e.g., 2 seconds)
         tonStoppingDelay(IN := GVL_Master.stMachineStatus.bStopping, PT := T#2S);
 		IF tonStoppingDelay.Q THEN
 			tonStoppingDelay(IN := FALSE);
@@ -158,8 +160,7 @@ M_KistlerControl(eCurrentState := GVL_MASTER.stMachineStatus.eMachineState);
 // Map Kistler hardware feedbacks and update panel/HMI indicators
 M_StatusMapping();
 
-// Process strings and colors for the top status banner on the HMI
-M_StatusHMI();]]></ST>
+]]></ST>
     </Implementation>
     <Method Name="M_KistlerControl" Id="{142f0c7b-5ff7-4bb2-a407-a7b85664501f}">
       <Declaration><![CDATA[METHOD PRIVATE M_KistlerControl : BOOL

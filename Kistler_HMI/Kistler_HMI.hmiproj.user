@@ -11,6 +11,15 @@
       "DesignAreaPosition": "Left",
       "CodeAreaPosition": "Right",
       "SplitPercentage": 0.5
+    },
+    {
+      "Path": "Contents\\Screens\\HeadMenu.content",
+      "DesignAreaSplitSize": "Full",
+      "CodeAreaSplitSize": "Minimized",
+      "Orientation": "Horizontal",
+      "DesignAreaPosition": "Left",
+      "CodeAreaPosition": "Right",
+      "SplitPercentage": 0.5
     }
   ]
 }</TcHmiEditor_SplitAreaStates>
@@ -97,23 +106,67 @@
     <RecentColors>[
   {
     "counter": 0,
-    "color": "#FFF9F9F9"
+    "color": "#FF902727"
   },
   {
     "counter": 0,
-    "color": "#FFF1ECEC"
+    "color": "#FFD7D5D5"
   },
   {
     "counter": 0,
-    "color": "#FFFFFFFF"
+    "color": "#FFC6C5C5"
   },
   {
     "counter": 0,
-    "color": "#FF9F9F9F"
+    "color": "#FFEFEBEB"
   },
   {
     "counter": 0,
-    "color": "#FF4C4C4C"
+    "color": "#FF891A1A"
+  },
+  {
+    "counter": 0,
+    "color": "#FF977B7B"
+  },
+  {
+    "counter": 0,
+    "color": "#FF813B3B"
+  },
+  {
+    "counter": 0,
+    "color": "#FFB92020"
+  },
+  {
+    "counter": 0,
+    "color": "#FFECE9E9"
+  },
+  {
+    "counter": 0,
+    "color": "#FFEDE7E7"
+  },
+  {
+    "counter": 0,
+    "color": "#FFBE2424"
+  },
+  {
+    "counter": 0,
+    "color": "#FFB01818"
+  },
+  {
+    "counter": 0,
+    "color": "#FFFD0303"
+  },
+  {
+    "counter": 0,
+    "color": "#FFED0C0C"
+  },
+  {
+    "counter": 0,
+    "color": "#FFC6C6C6"
+  },
+  {
+    "counter": 0,
+    "color": "#FFFF0000"
   },
   {
     "counter": 0,
@@ -121,59 +174,15 @@
   },
   {
     "counter": 0,
-    "color": "#FF4E6889"
+    "color": "#FFC12C2C"
   },
   {
     "counter": 0,
-    "color": "#FF232752"
+    "color": "#FFF9F9F9"
   },
   {
     "counter": 0,
-    "color": "#FF627A99"
-  },
-  {
-    "counter": 0,
-    "color": "#FF527197"
-  },
-  {
-    "counter": 0,
-    "color": "#FFF8F3F3"
-  },
-  {
-    "counter": 0,
-    "color": "#FFCCC8C8"
-  },
-  {
-    "counter": 0,
-    "color": "#FF65809F"
-  },
-  {
-    "counter": 0,
-    "color": "#FF908F8F"
-  },
-  {
-    "counter": 0,
-    "color": "#FFC32525"
-  },
-  {
-    "counter": 0,
-    "color": "#FFCD1D1D"
-  },
-  {
-    "counter": 0,
-    "color": "#FFBFC1CF"
-  },
-  {
-    "counter": 0,
-    "color": "#FFBFD8DC"
-  },
-  {
-    "counter": 0,
-    "color": "#FFE7E3E3"
-  },
-  {
-    "counter": 0,
-    "color": "#FF818181"
+    "color": "#FFF1ECEC"
   }
 ]</RecentColors>
   </PropertyGroup>
