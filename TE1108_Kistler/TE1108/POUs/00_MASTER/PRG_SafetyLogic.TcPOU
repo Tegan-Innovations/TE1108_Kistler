@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="PRG_SafetyLogic" Id="{c1ae741e-7d84-482a-8ac0-230607928d2d}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_SafetyLogic
+VAR
+	
+// =================================================================================
+    // LOCAL VARIABLES
+    // =================================================================================
+    bEstopLatched       : BOOL; // Internal latch memory for Emergency Stop active
+    fbResetTrigger      : R_TRIG; // Rising edge detector for HMI Reset command
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// =================================================================================
+// EMERGENCY STOP LOGIC 
+// =================================================================================
+
+// 1. Evaluate E-Stop triggers (Latching fault if software E-Stop is triggered)
+// Note: Assumes bHmiEmergencyStop is TRUE when the HMI button is pressed
+IF GVL_MASTER.bHmiEmergencyStop THEN
+    bEstopLatched := TRUE;
+END_IF;
+
+// 2. Evaluate Reset Command Edge from HMI
+fbResetTrigger(CLK := GVL_MASTER.bHmiReset);
+
+// 3. Reset Latch condition
+// The system can only be reset if the HMI Software E-Stop is released (FALSE)
+IF fbResetTrigger.Q AND NOT GVL_MASTER.bHmiEmergencyStop THEN
+    bEstopLatched := FALSE;
+END_IF;
+
+// 4. Update Global Safety Status
+// Provisional bypass: This logic controls the safety healthy flag until TwinSafe is active
+GVL_MASTER.bHardwareSafetyOk := NOT bEstopLatched;
+
+
+(* =================================================================================
+   FUTURE TWINSAFE INTEGRATION ROADMAP:
+   ---------------------------------------------------------------------------------
+   When EL1918 / TwinSafe modules are commissioned:
+   1. Comment out line 20 (GVL.bHardwareSafetyOk := NOT bEstopLatched;).
+   2. Map the TwinSafe 'FB_Estop' output directly to 'GVL.bHardwareSafetyOk'.
+   3. Connect 'GVL.bHmiReset' to the Safe FB Reset Input.
+================================================================================= *)]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

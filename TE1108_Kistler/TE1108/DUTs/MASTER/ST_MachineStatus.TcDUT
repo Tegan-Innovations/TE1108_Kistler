@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_MachineStatus" Id="{cd369679-37c4-4262-a51c-51136fc43f53}">
+    <Declaration><![CDATA[TYPE ST_MachineStatus :
+STRUCT
+
+	////////////////////////////:
+	eMachineState				:E_MachineState;
+	
+	// Status Flags:
+	bSystemPowerUp 				:BOOL;
+	bStopped 					:BOOL;
+	bInitialising 				:BOOL;
+	bReadyToStart 				:BOOL;
+	bAutoCycle 					:BOOL;
+	bStopping					:BOOL;
+	bFault 						:BOOL;
+	bManualMode					:BOOL;
+	bSafety						:BOOL;
+	
+
+
+END_STRUCT
+END_TYPE
+
+
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

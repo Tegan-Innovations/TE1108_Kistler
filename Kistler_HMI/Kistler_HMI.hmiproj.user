@@ -1,0 +1,170 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <TcHmiEditor_SplitAreaStates>{
+  "EditorSettings": []
+}</TcHmiEditor_SplitAreaStates>
+    <TcHmiEditor_SelectBindingWindowColumnWidths_m_SymbolMappedTree>[
+  408.0,
+  50.0,
+  180.0,
+  80.0,
+  180.0,
+  100.0
+]</TcHmiEditor_SelectBindingWindowColumnWidths_m_SymbolMappedTree>
+    <TcHmiEditor_SelectBindingWindowColumnWidths_m_SymbolServerTree>[
+  280.0,
+  300.0,
+  254.0
+]</TcHmiEditor_SelectBindingWindowColumnWidths_m_SymbolServerTree>
+    <TcHmiEditor_SelectBindingWindowColumnWidths_m_SymbolInternalTree>[
+  300.0,
+  300.0,
+  100.0,
+  50.0,
+  65.0
+]</TcHmiEditor_SelectBindingWindowColumnWidths_m_SymbolInternalTree>
+    <TcHmiEditor_SelectBindingWindowColumnWidths_m_symbolLocalizedTree>[
+  300.0
+]</TcHmiEditor_SelectBindingWindowColumnWidths_m_symbolLocalizedTree>
+    <TcHmiEditor_SelectBindingWindowColumnWidths_m_extensionLocalizationsTree>[
+  300.0
+]</TcHmiEditor_SelectBindingWindowColumnWidths_m_extensionLocalizationsTree>
+    <TcHmiEditor_SelectBindingWindowColumnWidths_m_ControlsTree>[
+  300.0,
+  300.0
+]</TcHmiEditor_SelectBindingWindowColumnWidths_m_ControlsTree>
+    <TcHmiEditor_SelectBindingWindowColumnWidths_m_SymbolActionTemplateParametersTree>[
+  200.0,
+  300.0,
+  100.0
+]</TcHmiEditor_SelectBindingWindowColumnWidths_m_SymbolActionTemplateParametersTree>
+    <TcHmiEditor_SelectBindingWindowColumnWidths_m_SymbolUserControlParametersTree>[
+  200.0,
+  300.0,
+  200.0
+]</TcHmiEditor_SelectBindingWindowColumnWidths_m_SymbolUserControlParametersTree>
+    <TcHmiEditor_SelectBindingWindowColumnWidths_m_SymbolHistorizedTree>[
+  200.0,
+  50.0,
+  180.0,
+  80.0,
+  80.0,
+  80.0
+]</TcHmiEditor_SelectBindingWindowColumnWidths_m_SymbolHistorizedTree>
+    <TcHmiEditor_SelectBindingWindowColumnWidths_m_SymbolHistorizedPostgresTree>[
+  200.0,
+  50.0,
+  180.0,
+  80.0,
+  80.0,
+  100.0,
+  80.0
+]</TcHmiEditor_SelectBindingWindowColumnWidths_m_SymbolHistorizedPostgresTree>
+    <TcHmiEditor_SelectBindingWindowColumnWidths_m_RecipesTree>[
+  300.0,
+  150.0
+]</TcHmiEditor_SelectBindingWindowColumnWidths_m_RecipesTree>
+    <TcHmiEditor_SelectBindingWindowColumnWidths_m_RecipeTypesTree>[
+  300.0,
+  180.0,
+  150.0,
+  70.0,
+  70.0
+]</TcHmiEditor_SelectBindingWindowColumnWidths_m_RecipeTypesTree>
+    <TcHmiEditor_SelectBindingWindowColumnWidths_m_ControlTypeAttributesTree>[
+  300.0,
+  300.0
+]</TcHmiEditor_SelectBindingWindowColumnWidths_m_ControlTypeAttributesTree>
+    <TcHmiEditor_SelectBindingWindowColumnWidths_m_ThemedResourceTree>[
+  214.0,
+  300.0
+]</TcHmiEditor_SelectBindingWindowColumnWidths_m_ThemedResourceTree>
+    <TcHmiEditor_SelectBindingWindowColumnWidths_m_ContextTree>[
+  300.0,
+  300.0
+]</TcHmiEditor_SelectBindingWindowColumnWidths_m_ContextTree>
+    <RecentColors>[
+  {
+    "counter": 0,
+    "color": "#FFF9F9F9"
+  },
+  {
+    "counter": 0,
+    "color": "#FFF1ECEC"
+  },
+  {
+    "counter": 0,
+    "color": "#FFFFFFFF"
+  },
+  {
+    "counter": 0,
+    "color": "#FF9F9F9F"
+  },
+  {
+    "counter": 0,
+    "color": "#FF4C4C4C"
+  },
+  {
+    "counter": 0,
+    "color": "#FF000000"
+  },
+  {
+    "counter": 0,
+    "color": "#FF4E6889"
+  },
+  {
+    "counter": 0,
+    "color": "#FF232752"
+  },
+  {
+    "counter": 0,
+    "color": "#FF627A99"
+  },
+  {
+    "counter": 0,
+    "color": "#FF527197"
+  },
+  {
+    "counter": 0,
+    "color": "#FFF8F3F3"
+  },
+  {
+    "counter": 0,
+    "color": "#FFCCC8C8"
+  },
+  {
+    "counter": 0,
+    "color": "#FF65809F"
+  },
+  {
+    "counter": 0,
+    "color": "#FF908F8F"
+  },
+  {
+    "counter": 0,
+    "color": "#FFC32525"
+  },
+  {
+    "counter": 0,
+    "color": "#FFCD1D1D"
+  },
+  {
+    "counter": 0,
+    "color": "#FFBFC1CF"
+  },
+  {
+    "counter": 0,
+    "color": "#FFBFD8DC"
+  },
+  {
+    "counter": 0,
+    "color": "#FFE7E3E3"
+  },
+  {
+    "counter": 0,
+    "color": "#FF818181"
+  }
+]</RecentColors>
+  </PropertyGroup>
+</Project>

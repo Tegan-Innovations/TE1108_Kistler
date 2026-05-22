@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="PGR_HMI" Id="{8c3348d2-2e4f-488f-b8d2-fe29da512452}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PGR_HMI
+VAR
+	
+	bResetTest				: BOOL;
+	i						: DINT;
+	n						: DINT;//TABLE INDEX
+	
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Process strings and colors for the top status banner on the HMI
+M_StatusHMI();]]></ST>
+    </Implementation>
+    <Method Name="M_StatusHMI" Id="{6ed5e17f-430e-4297-ba97-996934b423b4}">
+      <Declaration><![CDATA[METHOD M_StatusHMI : BOOL
+VAR
+	// Local variable to store the synchronized blink bit
+	bFlash : BOOL;
+END_VAR
+
+// Fetch the 1Hz system clock flash bit from the master GVL
+bFlash := GVL_MASTER.bBlink_1Hz;
+
+CASE GVL_MASTER.stMachineStatus.eMachineState OF
+
+    E_MachineState.SYSTEM_INITIALISING:
+        GVL_HMI.StatusHMI.sMachineStatusText := 'SYSTEM INITIALIZING';        
+        GVL_HMI.StatusHMI.sBannerBckColor    := '#FFFF00'; // Yellow
+        GVL_HMI.StatusHMI.sBannerTextColor   := '#000000'; // Black
+
+    E_MachineState.SYSTEM_READY_TO_START:
+        GVH_HMI.StatusHMI.sMachineStatusText := 'SYSTEM READY TO START';        
+        IF bFlash THEN
+            GVL_HMI.StatusHMI.sBannerBckColor  := '#00FF00'; // Green
+            GVL_HMI.StatusHMI.sBannerTextColor := '#FFFFFF'; // White
+        ELSE    
+            GVL_HMI.StatusHMI.sBannerBckColor  := '#FFFFFF'; // White
+            GVL_HMI.StatusHMI.sBannerTextColor := '#00FF00'; // Green
+        END_IF
+
+    E_MachineState.SYSTEM_AUTO_CYCLE:
+        GVL_HMI.StatusHMI.sMachineStatusText := 'SYSTEM AUTO CYCLE';        
+        GVL_HMI.StatusHMI.sBannerBckColor    := '#00FF00'; // Green
+        GVL_HMI.StatusHMI.sBannerTextColor   := '#FFFFFF'; // White  
+
+    E_MachineState.STOPPING:
+        GVL_HMI.StatusHMI.sMachineStatusText := 'STOPPING';        
+        IF bFlash THEN    
+            GVL_HMI.StatusHMI.sBannerBckColor  := '#000000'; // Black
+            GVL_HMI.StatusHMI.sBannerTextColor := '#FFFFFF'; // White    
+        ELSE    
+            GVL_HMI.StatusHMI.sBannerBckColor  := '#FFFFFF'; // White
+            GVL_HMI.StatusHMI.sBannerTextColor := '#000000'; // Black    
+        END_IF
+
+    E_MachineState.STOPPED:
+        GVL_HMI.StatusHMI.sMachineStatusText := 'CYCLE STOPPED';        
+        GVL_HMI.StatusHMI.sBannerBckColor    := '#808080'; // Industrial Grey
+        GVL_HMI.StatusHMI.sBannerTextColor   := '#FFFFFF'; // White    
+
+    E_MachineState.FAULT:
+        GVL_HMI.StatusHMI.sMachineStatusText := 'IMMEDIATE FAULT';        
+        IF bFlash THEN    
+            GVL_HMI.StatusHMI.sBannerBckColor  := '#FF0000'; // Red
+            GVL_HMI.StatusHMI.sBannerTextColor := '#FFFFFF'; // White    
+        ELSE    
+            GVL_HMI.StatusHMI.sBannerBckColor  := '#FFFFFF'; // White
+            GVL_HMI.StatusHMI.sBannerTextColor := '#000000'; // Black    
+        END_IF
+
+END_CASE
+
+M_StatusHMI := TRUE;]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

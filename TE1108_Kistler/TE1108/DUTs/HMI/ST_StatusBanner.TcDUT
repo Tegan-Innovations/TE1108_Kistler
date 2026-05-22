@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_StatusBanner" Id="{fc70b9e2-bf77-4e2c-aff2-609ee512aee6}">
+    <Declaration><![CDATA[TYPE ST_StatusBanner :
+STRUCT
+	sMachineStatusText	: STRING; // Text to be displayed in the center of the HMI banner
+	sBannerBckColor		: STRING; // Hexadecimal string for the background color (e.g., '#FF0000')
+	sBannerTextColor	: STRING; // Hexadecimal string for the text/font color (e.g., '#FFFFFF')
+END_STRUCT
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>

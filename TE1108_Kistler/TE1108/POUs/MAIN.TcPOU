@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="MAIN" Id="{285feca3-3584-46ac-bbbf-e7743c5ad826}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+PRG_SafetyLogic(); // Process emergency states and safety interlocks first
+PRG_MachineControl(); // Process standard machine state and auto cycle sequences]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <GVL Name="GVL_HMI" Id="{c67b6703-6204-460f-ac9e-cc67d35591bd}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	// HMI Status Banner structure for dynamic text and color mapping
+	StatusHMI : ST_StatusBanner;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

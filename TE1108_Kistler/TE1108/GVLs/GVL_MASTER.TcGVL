@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <GVL Name="GVL_MASTER" Id="{051e26cb-59b3-4cfe-9e1f-b522d5330f72}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+    // =================================================================================
+    // MACHINE STATUS
+    // =================================================================================
+    stMachineStatus         : ST_MachineStatus; // Main machine state and flags structure
+
+    // =================================================================================
+    // HMI COMMANDS & SIGNALS
+    // =================================================================================
+    bHmiStart               : BOOL; // HMI Auto Cycle start button
+    bHmiStop                : BOOL; // HMI cycle stop button
+    bHmiReset               : BOOL; // HMI fault reset button
+    bHmiEmergencyStop       : BOOL; // HMI software E-stop button
+    
+    bStartButtonLamp        : BOOL; // Physical start button lamp output
+    bResetButtonLamp        : BOOL; // Physical reset button lamp output
+    
+    bBlink_1Hz              : BOOL; // 1Hz system clock flash bit
+
+    // =================================================================================
+    // INTERLOCKS & SAFETY
+    // =================================================================================
+    bHardwareSafetyOk       : BOOL; // Safety relay/PLC healthy feedback
+    bAirPressureOk          : BOOL; // Main air supply pressure switch feedback
+    
+    // =================================================================================
+    // HARDWARE STATUS
+    // =================================================================================
+    bKistlerSystemReady     : BOOL; // Kistler system global ready feedback
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

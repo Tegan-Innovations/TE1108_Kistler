@@ -1,0 +1,304 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="PRG_MachineControl" Id="{73cce6c0-0336-454e-b089-fed285c9fc85}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_MachineControl
+VAR
+    // =========================================================
+    // TIMERS & TRIGGERS
+    // =========================================================
+	tonSys_Init           : TON := (PT := T#1S);    // Initialization pulse timer
+    tonSys_InitTimeout    : TON := (PT := T#20S);   // Initialization timeout fault timer
+    tonFirstAutoCycle     : TON := (PT := T#500MS); // Auto cycle start settling timer
+	tonStoppingDelay	  : TON                   ; // Time to finalize process 
+    tonSafety             : TON := (PT := T#10S);   // Safety interlock debounce timer
+	tonSimulation		  : ARRAY[1..4] OF TON; //timer for simulations  
+    
+    rtFirstAutoCycle      : R_TRIG; // Detects entry into Auto Cycle
+    fbResetTrigger        : F_TRIG; // Detects HMI Reset button release 
+	         
+    
+    // =========================================================
+    // PROCESS CYCLE CONTROL
+    // =========================================================
+	bStartProcessCondition : BOOL;   // OK to Start checklist condition flag
+    bKistlerReady          : BOOL;   // Press healthy and ready feedback flag
+    i                      : INT;    // Loop index counter
+    sMachineMessage        : STRING; // Diagnostics and status message string
+	
+	//==========================================================
+	//KISTLER COMMAND INTERFACE 
+	//==========================================================
+	stKistler_CMD          : ST_Kistler_CMD;    // Commands sent to Kistler press
+    stKistler_Status       : ST_Kistler_Status; // Feedbacks read from Kistler press
+
+	
+    
+    // =========================================================
+    // PERSISTENT DATA & LOGGING
+    // =========================================================
+    //fbWritePersistent      : FB_WritePersistentData;
+	bWriteTrigger          : BOOL; // Test and simulation sequence trigger
+END_VAR
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// =================================================================================
+// SIMULATION: AUTOMATIC HMI BUTTON RELEASE (PULSE SIMULATION)
+// =================================================================================
+// If the HMI buttons are forced TRUE, turn them FALSE on the very next scan cycle
+tonSimulation[1] (IN:= GVL_MASTER.bHmiStart, PT:= T#1S);
+IF tonSimulation[1].Q AND GVL_MASTER.bHmiStart THEN
+    GVL_MASTER.bHmiStart := FALSE;
+END_IF
+
+tonSimulation[2] (IN:= GVL_MASTER.bHmiReset, PT:= T#1S);
+IF tonSimulation[2].Q THEN
+    GVL_MASTER.bHmiReset := FALSE;
+END_IF
+
+tonSimulation[3] (IN:= GVL_MASTER.bHmiStop, PT:= T#1S);
+IF tonSimulation[3].Q THEN
+    GVL_MASTER.bHmiStop := FALSE;
+END_IF
+
+
+
+
+// =========================================================
+// 1. PRE-CONDITION LOGIC
+// =========================================================
+M_PreExecution();
+
+bStartProcessCondition := GVL_MASTER.stMachineStatus.bSafety AND 
+						  NOT GVL_MASTER.stMachineStatus.bFault AND 
+						  NOT GVL_MASTER.stMachineStatus.bFault AND 
+						  bKistlerReady;
+						  	  
+IF NOT GVL_MASTER.stMachineStatus.bSafety AND 
+   GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.FAULT THEN
+    
+    GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.FAULT;
+END_IF;
+						  
+// =========================================================
+// 2. MAIN STATE MACHINE (CASE)
+// =========================================================
+
+
+CASE GVL_Master.stMachineStatus.eMachineState OF
+
+    E_MachineState.SYSTEM_POWER_UP:
+	    GVL_Master.stMachineStatus.eMachineState := E_MachineState.STOPPING;
+
+    E_MachineState.SYSTEM_INITIALISING:
+		tonSys_Init (IN := GVL_MASTER.stMachineStatus.bInitialising);
+		tonSys_InitTimeout (IN := GVL_MASTER.stMachineStatus.bInitialising);
+		
+		IF tonSys_Init.Q AND bKistlerReady THEN
+			GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.SYSTEM_READY_TO_START;
+			
+		ELSIF tonSys_InitTimeout.Q THEN
+			GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.FAULT;
+			
+		END_IF
+        
+	 E_MachineState.SYSTEM_READY_TO_START:
+        IF GVL_MASTER.bHmiStart THEN
+            GVL_Master.stMachineStatus.eMachineState := E_MachineState.SYSTEM_AUTO_CYCLE;
+        END_IF	
+ 
+    E_MachineState.STOPPED:
+        IF GVL_Master.bHmiStart AND bStartProcessCondition THEN
+            GVL_Master.stMachineStatus.eMachineState := E_MachineState.SYSTEM_INITIALISING;
+        END_IF
+
+    E_MachineState.SYSTEM_AUTO_CYCLE:
+        rtFirstAutoCycle(CLK := TRUE);
+        tonFirstAutoCycle(IN := rtFirstAutoCycle.Q);
+        
+        IF GVL_Master.bHmiStop THEN
+            GVL_Master.stMachineStatus.eMachineState := E_MachineState.STOPPING;
+        ELSIF GVL_Master.stMachineStatus.bFault OR NOT GVL_Master.stMachineStatus.bSafety THEN
+            GVL_Master.stMachineStatus.eMachineState := E_MachineState.FAULT;
+        END_IF
+
+    E_MachineState.STOPPING:
+        rtFirstAutoCycle(CLK := FALSE);
+		// 1. Trigger a simulation timer for the stopping sequence (e.g., 2 seconds)
+        tonStoppingDelay(IN := GVL_Master.stMachineStatus.bStopping, PT := T#2S);
+		IF tonStoppingDelay.Q THEN
+			tonStoppingDelay(IN := FALSE);
+        	GVL_Master.stMachineStatus.eMachineState := E_MachineState.STOPPED;
+		END_IF
+		
+    E_MachineState.FAULT:
+        IF GVL_Master.bHmiReset AND NOT GVL_MASTER.bHmiEmergencyStop THEN
+            GVL_Master.stMachineStatus.eMachineState := E_MachineState.STOPPING;
+        END_IF
+		
+END_CASE
+
+// =========================================================
+// 3. GLOBAL FLAG MAPPING
+// =========================================================
+GVL_Master.stMachineStatus.bSystemPowerUp := (GVL_Master.stMachineStatus.eMachineState = E_MachineState.SYSTEM_POWER_UP);
+GVL_Master.stMachineStatus.bInitialising  := (GVL_Master.stMachineStatus.eMachineState = E_MachineState.SYSTEM_INITIALISING);
+GVL_Master.stMachineStatus.bStopped       := (GVL_Master.stMachineStatus.eMachineState = E_MachineState.STOPPED);
+GVL_Master.stMachineStatus.bStopping      := (GVL_Master.stMachineStatus.eMachineState = E_MachineState.STOPPING);
+GVL_Master.stMachineStatus.bAutoCycle     := (GVL_Master.stMachineStatus.eMachineState = E_MachineState.SYSTEM_AUTO_CYCLE);
+GVL_Master.stMachineStatus.bFault         := (GVL_Master.stMachineStatus.eMachineState = E_MachineState.FAULT);
+GVL_Master.stMachineStatus.bReadyToStart  := (GVL_Master.stMachineStatus.eMachineState = E_MachineState.SYSTEM_READY_TO_START);
+
+// =================================================================================
+// 4. METHOD POST-EXECUTION ROUTINE
+// =================================================================================
+// Pass the freshly calculated machine state into the Kistler hardware controller
+M_KistlerControl(eCurrentState := GVL_MASTER.stMachineStatus.eMachineState);
+
+// Map Kistler hardware feedbacks and update panel/HMI indicators
+M_StatusMapping();
+
+// Process strings and colors for the top status banner on the HMI
+M_StatusHMI();]]></ST>
+    </Implementation>
+    <Method Name="M_KistlerControl" Id="{142f0c7b-5ff7-4bb2-a407-a7b85664501f}">
+      <Declaration><![CDATA[METHOD PRIVATE M_KistlerControl : BOOL
+VAR_INPUT
+	eCurrentState : E_MachineState;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// =================================================================================
+// KISTLER DYNAMIC COMMAND MAPPING
+// =================================================================================
+// If the system is stopping or in a fault condition, trigger the abort command
+stKistler_CMD.bAbort := (eCurrentState = E_MachineState.STOPPING OR eCurrentState = E_MachineState.FAULT);
+
+// Enable the press only when it is not in stopping or fault states
+stKistler_CMD.bEnable := (eCurrentState <> E_MachineState.STOPPING AND eCurrentState <> E_MachineState.FAULT);
+
+// Activate manual override operations only when the machine is in manual mode
+stKistler_CMD.bManualMode := (eCurrentState = E_MachineState.MANUAL_MODE);
+
+// =================================================================================
+// COMPONENT RESET MANAGEMENT
+// =================================================================================
+// Toggle the hardware reset command based on the HMI/Panel button falling edge
+fbResetTrigger(CLK := GVL_MASTER.bHmiReset);
+
+	IF fbResetTrigger.Q THEN
+		stKistler_CMD.bReset := TRUE;
+	ELSE
+		stKistler_CMD.bReset := FALSE;
+	END_IF
+
+// =================================================================================
+// METHOD EXECUTION FEEDBACK (Return True)
+// =================================================================================
+// Returning TRUE confirms that the Kistler component commands were successfully processed
+
+M_KistlerControl := TRUE;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_PreExecution" Id="{d5c5735d-f733-481f-9f83-00134f7ccc98}">
+      <Declaration><![CDATA[METHOD PRIVATE M_PreExecution : BOOL
+VAR
+
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// =================================================================================
+// SYSTEM TIMERS
+// =================================================================================
+// Update initialization and safety timers on every PLC scan cycle
+tonSys_Init(IN := GVL_MASTER.stMachineStatus.bInitialising);
+tonSys_InitTimeout(IN := GVL_MASTER.stMachineStatus.bInitialising);
+
+// TwinSAFE circuit stabilization timer (10 seconds)
+tonSafety(IN := (GVL_MASTER.stMachineStatus.eMachineState = E_MachineState.SAFETY), PT := T#10S);
+
+
+// =================================================================================
+// HMI MESSAGE CLEARING
+// =================================================================================
+// Clear old system messages if the machine is not actively in production
+// Uses the proper ENUM namespace from your MASTER folder
+IF GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.SYSTEM_AUTO_CYCLE THEN
+    sMachineMessage := '';            
+END_IF
+
+
+// =================================================================================
+// CRITICAL FAULT INTERLOCK (Watchdog)
+// =================================================================================
+// If Kistler hardware is NOT ready, force the state machine to FAULT immediately
+// Exception: Do not override if the system is currently in SAFETY or POWER_UP
+IF NOT GVL_MASTER.bKistlerSystemReady 
+    AND GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.SAFETY 
+    AND GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.SYSTEM_POWER_UP THEN
+    
+    GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.FAULT;
+END_IF
+
+
+// =================================================================================
+// START BUTTON OPERATION CHECKLIST
+// =================================================================================
+// Pre-calculate conditions required to allow the START button sequence
+// System allows starting only if: Kistler is healthy AND HMI Stop is NOT pressed AND Kistler component is Ready
+bStartProcessCondition := GVL_MASTER.bKistlerSystemReady 
+                          AND NOT GVL_MASTER.bHmiStop
+                          AND bKistlerReady; 
+
+
+// =================================================================================
+// METHOD EXECUTION FEEDBACK (Return True)
+// =================================================================================
+// Returning TRUE confirms the pre-execution routine completed successfully
+M_PreExecution := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_StatusMapping" Id="{e76387c3-2b6b-4ab8-8e2c-031286cbd112}">
+      <Declaration><![CDATA[METHOD PRIVATE M_StatusMapping : BOOL
+VAR_INPUT
+
+
+
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+// =================================================================================
+// KISTLER TO GLOBAL STATUS MAPPING
+// =================================================================================
+// Link the software/hardware safety loop to the machine status structure
+GVL_MASTER.stMachineStatus.bSafety := GVL_MASTER.bHardwareSafetyOk;
+
+// Map the local Kistler hardware ready flag to our main control variable
+bKistlerReady := stKistler_Status.bReady;
+
+// Update the global machine fault status if the Kistler press enters an error state
+IF stKistler_Status.bError THEN
+	GVL_MASTER.stMachineStatus.bFault := TRUE;
+END_IF
+
+// =================================================================================
+// HMI / PANEL LAMP SIGNALLING MANAGEMENT
+// =================================================================================
+// Control the Start Button Lamp feedback based on machine state
+IF GVL_MASTER.stMachineStatus.eMachineState = E_MachineState.STOPPED AND bKistlerReady THEN
+    GVL_MASTER.bStartButtonLamp := GVL_MASTER.bBlink_1Hz; // Uses standard 1Hz global clock bit
+ELSIF GVL_MASTER.stMachineStatus.eMachineState = E_MachineState.SYSTEM_AUTO_CYCLE THEN
+    GVL_MASTER.bStartButtonLamp := TRUE;
+ELSE
+    GVL_MASTER.bStartButtonLamp := FALSE;
+END_IF
+// =================================================================================
+// METHOD EXECUTION FEEDBACK (Return True)
+// =================================================================================
+// Returning TRUE confirms that the status mapping routine executed successfully
+M_StatusMapping := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

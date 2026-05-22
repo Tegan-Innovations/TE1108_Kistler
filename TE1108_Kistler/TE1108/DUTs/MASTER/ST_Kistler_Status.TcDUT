@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_Kistler_Status" Id="{13fe1f7e-c843-4ff0-b94a-cef6c7ea4e07}">
+    <Declaration><![CDATA[TYPE ST_Kistler_Status :
+STRUCT
+	
+// =================================================================================
+    // KISTLER PRESS HARDWARE STATUS INTERFACE
+    // =================================================================================
+    bReady       : BOOL; // Hardware is healthy, clear of faults, and ready to press
+    bBusy        : BOOL; // Pressing cycle is currently active/running
+    bDone        : BOOL; // Cycle completed successfully (Evaluation OK)
+    bError       : BOOL; // Press hardware is in a fault condition
+    bInPosition  : BOOL; // Press head is at its home/retracted position
+	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
