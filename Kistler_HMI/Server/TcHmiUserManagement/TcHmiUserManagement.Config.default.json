@@ -1,0 +1,74 @@
+{
+    "ENABLE_TWO_FACTOR_AUTHENTICATION": 0,
+    "EXCLUDE_SYSTEM_ADMINISTRATOR_FROM_LOCKOUT": false,
+    "MAX_INVALID_LOGIN_ATTEMPTS": 0,
+    "PASSWORD_BLACKLIST": "",
+    "PASSWORD_ENABLE_AGING": false,
+    "PASSWORD_FORCE_COMPLEX": 0,
+    "PASSWORD_HISTORY_SIZE": 0,
+    "PASSWORD_MAXIMUM_AGE": "P90D",
+    "PASSWORD_MINIMUM_LENGTH": 1,
+    "USERS": {
+        "Renan": {
+            "ALGORITHM": 1,
+            "ENABLED": true,
+            "LAST_PASSWORD_CHANGE": "2026-05-21T13:13:45.4279935Z",
+            "PASSWORD": "1ab018c81010502252096bc70a7ae911232635231291bf5739de530267e5a20365a0e4b745555d80afde09398d970017f53aa2d49adb6ffc4159e2cb68a5db93",
+            "SALT": "3WUIdZbOE59TKindxElah52fzU1lYkkWpQ5AN0+nQG9TeTMmuZPp2y8F+QnZGhCsjNa/zz6kvk93HQsu3Uu4FA==",
+            "TWO_FACTOR_AUTHENTICATION_ENABLED": false
+        },
+        "Thays": {
+            "ALGORITHM": 1,
+            "ENABLED": true,
+            "LAST_PASSWORD_CHANGE": "2026-05-21T13:14:06.6534893Z",
+            "PASSWORD": "ae7d53460a64b9f066b619ea0a940e9bb9d73966d5d7e60eef7f7f977ad9624c500fefce7f9752294063a802b0f529d3131b328209a3032590c6105a76679426",
+            "SALT": "c0DwpSwgVgVlSTf5S7kofev7gevWWVfECTTz3q+k8ut2w3h1pQ5eco4C4qn6R+M2wKjPjdevBIcQUaioGZb5FQ==",
+            "TWO_FACTOR_AUTHENTICATION_ENABLED": false
+        },
+        "__SystemAdministrator": {
+            "ALGORITHM": 0,
+            "ENABLED": false,
+            "LAST_PASSWORD_CHANGE": "1970-01-01T00:00:00Z",
+            "PASSWORD": "",
+            "PASSWORD_HISTORY": [],
+            "SALT": "",
+            "SECRET": {
+                "algorithm": 0,
+                "configuration": 0,
+                "iv": "",
+                "value": ""
+            },
+            "TWO_FACTOR_AUTHENTICATION_ENABLED": false
+        },
+        "__SystemGuest": {
+            "ALGORITHM": 0,
+            "ENABLED": true,
+            "LAST_PASSWORD_CHANGE": "1970-01-01T00:00:00Z",
+            "PASSWORD": "",
+            "PASSWORD_HISTORY": [],
+            "SALT": "",
+            "SECRET": {
+                "algorithm": 0,
+                "configuration": 0,
+                "iv": "",
+                "value": ""
+            },
+            "TWO_FACTOR_AUTHENTICATION_ENABLED": false
+        },
+        "__SystemUser": {
+            "ALGORITHM": 0,
+            "ENABLED": true,
+            "LAST_PASSWORD_CHANGE": "1970-01-01T00:00:00Z",
+            "PASSWORD": "",
+            "PASSWORD_HISTORY": [],
+            "SALT": "",
+            "SECRET": {
+                "algorithm": 0,
+                "configuration": 0,
+                "iv": "",
+                "value": ""
+            },
+            "TWO_FACTOR_AUTHENTICATION_ENABLED": false
+        }
+    }
+}

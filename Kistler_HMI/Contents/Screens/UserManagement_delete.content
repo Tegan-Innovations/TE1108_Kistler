@@ -1,0 +1,3264 @@
+<div id="Content_UserManagement" data-tchmi-type="TcHmi.Controls.System.TcHmiContent" data-tchmi-top="0" data-tchmi-left="0" data-tchmi-width="1080" data-tchmi-height="1360" data-tchmi-zindex="4">
+<div id="TcHmiButton_Logout_125" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="60" data-tchmi-height-unit="px" data-tchmi-left="280" data-tchmi-left-unit="px" data-tchmi-text="Logout" data-tchmi-top="332" data-tchmi-top-unit="px" data-tchmi-width="140" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="18" data-tchmi-zindex="4">
+
+
+
+    
+
+<script data-tchmi-target-attribute="data-tchmi-border-radius" type="application/json">
+{
+  "topLeft": 0.0,
+  "topRight": 0.0,
+  "bottomLeft": 0.0,
+  "bottomRight": 0.0,
+  "topLeftUnit": "px",
+  "topRightUnit": "px",
+  "bottomLeftUnit": "px",
+  "bottomRightUnit": "px"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "TcHmiButton_Logout_125.onPressed",
+    "actions": [
+      {
+        "objectType": "Function",
+        "active": true,
+        "fn": "TcHmi.Functions.Beckhoff.Logout",
+        "fnParams": [
+          {
+            "objectType": "StaticValue",
+            "valueType": "tchmi:general#/definitions/Boolean",
+            "value": true
+          }
+        ],
+        "asyncWait": true
+      }
+    ]
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-access-config" type="application/json">
+[
+  {
+    "accessright": "operate",
+    "group": "TEGAN",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "operate",
+    "group": "OPERATORS",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "operate",
+    "group": "MANAGEMENT",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "observe",
+    "group": "MANAGEMENT",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "observe",
+    "group": "OPERATORS",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "observe",
+    "group": "TEGAN",
+    "permission": "Allow"
+  }
+]
+</script>
+</div>
+<div id="TcHmi_Controls_Beckhoff_TcHmiImage_85" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiImage" data-tchmi-height="158" data-tchmi-height-unit="px" data-tchmi-left="43" data-tchmi-left-unit="px" data-tchmi-src="Resources/Custom/Images/userIcon.svg" data-tchmi-top="138" data-tchmi-top-unit="px" data-tchmi-width="158" data-tchmi-width-unit="px" data-tchmi-zindex="4">
+</div>
+<div id="TcHmiTextblock_CurrentUserName_1247" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="321" data-tchmi-left-unit="px" data-tchmi-text="%f%TcHmi.Server.getCurrentUser()%/f%" data-tchmi-top="138" data-tchmi-top-unit="px" data-tchmi-width="175" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="20" data-tchmi-text-font-weight="Auto" data-tchmi-zindex="4">
+</div>
+<div id="TcHmiTextblock_CurrentUserGroup_1247" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="50" data-tchmi-height-unit="px" data-tchmi-left="321" data-tchmi-left-unit="px" data-tchmi-top="195" data-tchmi-top-unit="px" data-tchmi-width="175" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="20" data-tchmi-text-font-weight="Auto" data-tchmi-zindex="4" data-tchmi-text="%f%TcHmi.Server.getGroupsOfCurrentUser()%/f%">
+
+
+</div>
+<div id="TcHmiTextblock_165" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="211" data-tchmi-left-unit="px" data-tchmi-text="User Name:" data-tchmi-top="138" data-tchmi-top-unit="px" data-tchmi-width="100" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="20" data-tchmi-text-font-weight="Auto" data-tchmi-zindex="4">
+</div>
+<div id="TcHmiTextblock_166" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="211" data-tchmi-left-unit="px" data-tchmi-text="User Group:" data-tchmi-top="195" data-tchmi-top-unit="px" data-tchmi-width="100" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="20" data-tchmi-text-font-weight="Auto" data-tchmi-zindex="4">
+</div>
+<div id="TcHmiRectangle_28" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="290" data-tchmi-height-unit="px" data-tchmi-left="562" data-tchmi-left-unit="px" data-tchmi-top="114" data-tchmi-top-unit="px" data-tchmi-width="484" data-tchmi-width-unit="px" data-tchmi-zindex="4">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "angle": 90.0,
+  "stopPoints": [
+    {
+      "color": "rgba(255, 255, 255, 1)",
+      "stop": "17.61%"
+    },
+    {
+      "color": "rgba(239, 239, 239, 1)",
+      "stop": "100%"
+    }
+  ]
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(163, 163, 163, 0)"
+}
+</script>
+</div>
+<div id="TcHmiButton_ChangePasswd_125" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="60" data-tchmi-height-unit="px" data-tchmi-left="827" data-tchmi-left-unit="px" data-tchmi-text="Change Password" data-tchmi-top="332" data-tchmi-top-unit="px" data-tchmi-width="140" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="16" data-tchmi-zindex="4">
+
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "TcHmiButton_ChangePasswd_125.onPressed",
+    "actions": [
+      {
+        "objectType": "JavaScript",
+        "active": true,
+        "sourceLines": [
+          "(function () {",
+          "",
+          "    function validateNewPassword(password) {",
+          "        const requirements = {",
+          "            minLength: 8,",
+          "            hasUppercase: /[A-Z]/,",
+          "            hasLowercase: /[a-z]/,",
+          "            hasNumber: /[0-9]/,",
+          "            hasSpecialCharacter: /[!@#$%^&*(),.?\":{}|<>]/",
+          "        };",
+          "",
+          "        if (!password) {",
+          "            return 'Please enter a new password.';",
+          "        }",
+          "",
+          "        if (password.length < requirements.minLength) {",
+          "            return 'The password must be at least 8 characters long.';",
+          "        }",
+          "",
+          "        if (!requirements.hasUppercase.test(password)) {",
+          "            return 'The password must contain at least one uppercase letter.';",
+          "        }",
+          "",
+          "        if (!requirements.hasLowercase.test(password)) {",
+          "            return 'The password must contain at least one lowercase letter.';",
+          "        }",
+          "",
+          "        if (!requirements.hasNumber.test(password)) {",
+          "            return 'The password must contain at least one number.';",
+          "        }",
+          "",
+          "        if (!requirements.hasSpecialCharacter.test(password)) {",
+          "            return 'The password must contain at least one special character.';",
+          "        }",
+          "",
+          "        return null;",
+          "    }",
+          "",
+          "    function clearPasswordFields() {",
+          "        const newPasswordControl = TcHmi.Controls.get('TextboxNewPassword');",
+          "        const confirmPasswordControl = TcHmi.Controls.get('TextboxConfirmNewPassword');",
+          "",
+          "        if (newPasswordControl) {",
+          "            newPasswordControl.setText('');",
+          "        }",
+          "",
+          "        if (confirmPasswordControl) {",
+          "            confirmPasswordControl.setText('');",
+          "        }",
+          "    }",
+          "",
+          "    const newPasswordControl = TcHmi.Controls.get('TextboxNewPassword');",
+          "    const confirmPasswordControl = TcHmi.Controls.get('TextboxConfirmNewPassword');",
+          "    const messageTextblock = TcHmi.Controls.get('TcHmiTextblock_1014');",
+          "",
+          "    if (!newPasswordControl || !confirmPasswordControl || !messageTextblock) {",
+          "        alert('Password controls not found.');",
+          "        return;",
+          "    }",
+          "",
+          "    const newPassword = newPasswordControl.getText();",
+          "    const confirmPassword = confirmPasswordControl.getText();",
+          "    const currentUser = TcHmi.Server.getCurrentUser();",
+          "",
+          "    messageTextblock.setText('');",
+          "",
+          "    if (!currentUser) {",
+          "        messageTextblock.setText('No user is currently logged in.');",
+          "        alert('No user is currently logged in.');",
+          "        return;",
+          "    }",
+          "",
+          "    if (!confirmPassword) {",
+          "        messageTextblock.setText('Please confirm the new password.');",
+          "        return;",
+          "    }",
+          "",
+          "    if (newPassword !== confirmPassword) {",
+          "        messageTextblock.setText('The passwords do not match.');",
+          "        alert('The passwords do not match. Please check both fields.');",
+          "        return;",
+          "    }",
+          "",
+          "    const passwordError = validateNewPassword(newPassword);",
+          "",
+          "    if (passwordError) {",
+          "        messageTextblock.setText(passwordError);",
+          "        return;",
+          "    }",
+          "",
+          "    if (!confirm('Do you confirm the password change?')) {",
+          "        console.log('Password change cancelled by the user.');",
+          "        return;",
+          "    }",
+          "",
+          "    TcHmi.Server.UserManagement.updateUser(",
+          "        currentUser,",
+          "        {",
+          "            password: newPassword",
+          "        },",
+          "        function (data) {",
+          "            if (data.error === TcHmi.Errors.NONE) {",
+          "                console.log('Password updated successfully.');",
+          "",
+          "                messageTextblock.setText('Password changed successfully.');",
+          "                alert('Password changed successfully. Please log in again.');",
+          "",
+          "                clearPasswordFields();",
+          "",
+          "                TcHmi.Server.logout();",
+          "",
+          "            } else {",
+          "                console.error('Error updating password:', data.error);",
+          "",
+          "                messageTextblock.setText('Error changing password. Please check permissions and try again.');",
+          "                alert('Error changing password. Please check permissions and try again.');",
+          "            }",
+          "        }",
+          "    );",
+          "",
+          "})();"
+        ],
+        "injectContextObject": true,
+        "asyncWait": true,
+        "waitMode": "Asynchronous"
+      }
+    ]
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-radius" type="application/json">
+{
+  "topLeft": 0.0,
+  "topRight": 0.0,
+  "bottomLeft": 0.0,
+  "bottomRight": 0.0,
+  "topLeftUnit": "px",
+  "topRightUnit": "px",
+  "bottomLeftUnit": "px",
+  "bottomRightUnit": "px"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-access-config" type="application/json">
+[
+  {
+    "accessright": "operate",
+    "group": "OPERATORS",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "operate",
+    "group": "MANAGEMENT",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "operate",
+    "group": "TEGAN",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "observe",
+    "group": "MANAGEMENT",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "observe",
+    "group": "OPERATORS",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "observe",
+    "group": "TEGAN",
+    "permission": "Allow"
+  }
+]
+</script>
+</div>
+<div id="TcHmiTextblock_169" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="592" data-tchmi-left-unit="px" data-tchmi-text="Current User:" data-tchmi-top="138" data-tchmi-top-unit="px" data-tchmi-width="153" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="20" data-tchmi-text-font-weight="Auto" data-tchmi-zindex="4">
+</div>
+<div id="TcHmiTextblock_170" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="592" data-tchmi-left-unit="px" data-tchmi-text="New:" data-tchmi-top="181" data-tchmi-top-unit="px" data-tchmi-width="153" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="20" data-tchmi-text-font-weight="Auto" data-tchmi-zindex="4">
+</div>
+<div id="TcHmiTextblock_172" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="211" data-tchmi-left-unit="px" data-tchmi-text="Auto Logout:" data-tchmi-top="255" data-tchmi-top-unit="px" data-tchmi-width="100" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="20" data-tchmi-text-font-weight="Auto" data-tchmi-zindex="4">
+</div>
+<div id="TcHmiTextblock_CurrentAutoLogout_1247" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="321" data-tchmi-left-unit="px" data-tchmi-top="255" data-tchmi-top-unit="px" data-tchmi-width="38" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="20" data-tchmi-text-font-weight="Auto" data-tchmi-text="%f%(TcHmi.Server.getCurrentUserConfig().autoLogOffMilliSeconds)/(1000*60)%/f%" data-tchmi-zindex="4" data-tchmi-text-horizontal-alignment="Left">
+</div>
+<div id="TcHmiTextblock_174" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="369" data-tchmi-left-unit="px" data-tchmi-top="255" data-tchmi-top-unit="px" data-tchmi-width="38" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="20" data-tchmi-text-font-weight="Auto" data-tchmi-text="min" data-tchmi-zindex="4">
+</div>
+<div id="TcHmiRectangle_29" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="290" data-tchmi-height-unit="px" data-tchmi-left="30" data-tchmi-left-unit="px" data-tchmi-top="525" data-tchmi-top-unit="px" data-tchmi-width="484" data-tchmi-width-unit="px" data-tchmi-zindex="4">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "angle": 90.0,
+  "stopPoints": [
+    {
+      "color": "rgba(246, 246, 246, 1)",
+      "stop": "24.53%"
+    },
+    {
+      "color": "rgba(243, 243, 243, 1)",
+      "stop": "100%"
+    }
+  ]
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(163, 163, 163, 0)"
+}
+</script>
+</div>
+<div id="TcHmiTextblock_176" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="69" data-tchmi-left-unit="px" data-tchmi-text="User Name:" data-tchmi-top="553" data-tchmi-top-unit="px" data-tchmi-width="110" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="20" data-tchmi-text-font-weight="Auto" data-tchmi-zindex="4">
+</div>
+<div id="TcHmiTextbox_NewUserName" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextbox" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="195" data-tchmi-left-unit="px" data-tchmi-top="553" data-tchmi-top-unit="px" data-tchmi-width="260" data-tchmi-width-unit="px" data-tchmi-text-font-size="15" data-tchmi-zindex="4" data-tchmi-text="New Name">
+<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+{
+  "top": 3,
+  "right": 3,
+  "bottom": 3,
+  "left": 3
+}
+</script>
+
+</div>
+<div id="TcHmiTextblock_177" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="69" data-tchmi-left-unit="px" data-tchmi-text="User Group:" data-tchmi-top="598" data-tchmi-top-unit="px" data-tchmi-width="110" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="20" data-tchmi-text-font-weight="Auto" data-tchmi-zindex="4">
+</div>
+<div id="TcHmiCombobox_NewUserGroup" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiCombobox" data-tchmi-auto-focus-out="true" data-tchmi-combobox-text="Select" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="195" data-tchmi-left-unit="px" data-tchmi-top="598" data-tchmi-top-unit="px" data-tchmi-width="260" data-tchmi-width-unit="px" data-tchmi-text-font-size="16" data-tchmi-zindex="4" data-tchmi-data-height="30" data-tchmi-drop-down-font-size="16">
+<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+{
+  "top": 3,
+  "right": 3,
+  "bottom": 3,
+  "left": 3
+}
+</script>
+
+</div>
+<div id="TcHmiTextblock_180" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="69" data-tchmi-left-unit="px" data-tchmi-text="Password:" data-tchmi-top="643" data-tchmi-top-unit="px" data-tchmi-width="110" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="20" data-tchmi-text-font-weight="Auto" data-tchmi-zindex="4">
+</div>
+<div id="TcHmiButton_NewUserAdd_125" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="60" data-tchmi-height-unit="px" data-tchmi-left="104" data-tchmi-left-unit="px" data-tchmi-text="Add User" data-tchmi-top="738" data-tchmi-top-unit="px" data-tchmi-width="140" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="18" data-tchmi-zindex="4">
+
+
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "TcHmiButton_NewUserAdd_125.onPressed",
+    "actions": [
+      {
+        "objectType": "JavaScript",
+        "active": true,
+        "sourceLines": [
+          "(function () {",
+          "",
+          "    function minutesToIsoDuration(totalMinutes) {",
+          "        totalMinutes = parseInt(totalMinutes, 10);",
+          "",
+          "        if (isNaN(totalMinutes) || totalMinutes < 0) {",
+          "            totalMinutes = 0;",
+          "        }",
+          "",
+          "        const days = Math.floor(totalMinutes / 1440);",
+          "        const remainingAfterDays = totalMinutes % 1440;",
+          "",
+          "        const hours = Math.floor(remainingAfterDays / 60);",
+          "        const minutes = remainingAfterDays % 60;",
+          "",
+          "        if (days > 0 && hours === 0 && minutes === 0) {",
+          "            return 'P' + days + 'D';",
+          "        }",
+          "",
+          "        if (days > 0) {",
+          "            const totalHours = Math.floor(totalMinutes / 60);",
+          "            const remainingMinutes = totalMinutes % 60;",
+          "",
+          "            let resultWithDays = 'PT' + totalHours + 'H';",
+          "",
+          "            if (remainingMinutes > 0) {",
+          "                resultWithDays += remainingMinutes + 'M';",
+          "            }",
+          "",
+          "            return resultWithDays;",
+          "        }",
+          "",
+          "        let result = 'PT';",
+          "",
+          "        if (hours > 0) {",
+          "            result += hours + 'H';",
+          "        }",
+          "",
+          "        if (minutes > 0) {",
+          "            result += minutes + 'M';",
+          "        }",
+          "",
+          "        if (hours === 0 && minutes === 0) {",
+          "            result += '0S';",
+          "        }",
+          "",
+          "        return result;",
+          "    }",
+          "",
+          "    function clearNewUserFields() {",
+          "        const txtNewUser = TcHmi.Controls.get('TcHmiTextbox_NewUserName');",
+          "        const cmbNewGroup = TcHmi.Controls.get('TcHmiCombobox_NewUserGroup');",
+          "        const numNewTimeout = TcHmi.Controls.get('TcHmiNumericInput_NewUserTimeOut2');",
+          "        const pwdNewUser = TcHmi.Controls.get('TcHmiPasswordInput_NewUserPasswdUpdate');",
+          "",
+          "        if (txtNewUser) {",
+          "            txtNewUser.setText('');",
+          "        }",
+          "",
+          "        if (cmbNewGroup && typeof cmbNewGroup.setSelectedIndex === 'function') {",
+          "            cmbNewGroup.setSelectedIndex(-1);",
+          "        }",
+          "",
+          "        if (numNewTimeout && typeof numNewTimeout.setValue === 'function') {",
+          "            numNewTimeout.setValue(0);",
+          "        }",
+          "",
+          "        if (pwdNewUser) {",
+          "            pwdNewUser.setText('');",
+          "        }",
+          "    }",
+          "",
+          "    const txtNewUser = TcHmi.Controls.get('TcHmiTextbox_NewUserName');",
+          "    const cmbNewGroup = TcHmi.Controls.get('TcHmiCombobox_NewUserGroup');",
+          "    const numNewTimeout = TcHmi.Controls.get('TcHmiNumericInput_NewUserTimeOut2');",
+          "    const pwdNewUser = TcHmi.Controls.get('TcHmiPasswordInput_NewUserPasswdUpdate');",
+          "",
+          "    if (!txtNewUser || !cmbNewGroup || !numNewTimeout || !pwdNewUser) {",
+          "        alert('New user controls not found.');",
+          "        return;",
+          "    }",
+          "",
+          "    const addNewUser = txtNewUser.getText();",
+          "    const addNewGroup = cmbNewGroup.getSelectedValue();",
+          "    const addNewAutoL = parseInt(numNewTimeout.getValue(), 10);",
+          "    const addNewPassword = pwdNewUser.getText();",
+          "",
+          "    if (!addNewUser || addNewUser === 'New User') {",
+          "        alert('Please provide a valid username.');",
+          "        return;",
+          "    }",
+          "",
+          "    if (!addNewPassword) {",
+          "        alert('Please provide a password.');",
+          "        return;",
+          "    }",
+          "",
+          "    if (!addNewGroup) {",
+          "        alert('Please select a group.');",
+          "        return;",
+          "    }",
+          "",
+          "    if (isNaN(addNewAutoL) || addNewAutoL < 0) {",
+          "        alert('Please provide a valid auto logout time in minutes.');",
+          "        return;",
+          "    }",
+          "",
+          "    const groupsToAdd = [];",
+          "",
+          "    groupsToAdd.push(addNewGroup);",
+          "",
+          "    // If the selected group is MANAGEMENT,",
+          "    // also add the internal __SystemAdministrators group.",
+          "    if (addNewGroup === 'MANAGEMENT') {",
+          "        groupsToAdd.push('__SystemAdministrators');",
+          "    }",
+          "",
+          "    const autoLogoutValue = minutesToIsoDuration(addNewAutoL);",
+          "",
+          "    // 1) Create the user with initial password",
+          "    TcHmi.Server.UserManagement.addUser(",
+          "        addNewUser,",
+          "        addNewPassword,",
+          "        function (addData) {",
+          "",
+          "            if (addData && addData.error !== TcHmi.Errors.NONE) {",
+          "                console.error('Error creating user:', addData.error);",
+          "                alert('Error while creating the user.');",
+          "                return;",
+          "            }",
+          "",
+          "            // 2) Update user properties",
+          "            TcHmi.Server.UserManagement.updateUser(",
+          "                addNewUser,",
+          "                {",
+          "                    enabled: true,",
+          "                    autoLogout: autoLogoutValue,",
+          "                    addGroups: groupsToAdd",
+          "                },",
+          "                function (data) {",
+          "",
+          "                    if (data.error === TcHmi.Errors.NONE) {",
+          "",
+          "                        console.log('User created:', addNewUser);",
+          "                        console.log('Groups:', groupsToAdd);",
+          "                        console.log('Auto-logout:', autoLogoutValue);",
+          "",
+          "                        alert('User \"' + addNewUser + '\" was created successfully!');",
+          "",
+          "                        clearNewUserFields();",
+          "",
+          "                        // Reload User DataGrid immediately",
+          "                        if (typeof window.UserManagement_LoadUsers === 'function') {",
+          "                            window.UserManagement_LoadUsers();",
+          "                        } else {",
+          "                            console.warn('window.UserManagement_LoadUsers is not available.');",
+          "                        }",
+          "",
+          "                    } else {",
+          "                        console.error('Error updating user:', data.error);",
+          "                        alert('Error while creating or updating the user.');",
+          "                    }",
+          "                }",
+          "            );",
+          "        }",
+          "    );",
+          "",
+          "})();"
+        ],
+        "injectContextObject": false,
+        "asyncWait": true,
+        "waitMode": "Synchronous"
+      },
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%ctrl%TcHmiNumericInput_NewUserTimeOut2::Value%/ctrl%",
+        "value": {
+          "objectType": "StaticValue",
+          "valueType": "tchmi:general#/definitions/Number",
+          "value": 0.0
+        },
+        "asyncWait": true
+      },
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%ctrl%TcHmiPasswordInput_NewUserPasswdUpdate::Text%/ctrl%",
+        "value": {
+          "objectType": "StaticValue",
+          "valueType": "tchmi:general#/definitions/String",
+          "value": null
+        },
+        "asyncWait": true
+      },
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%ctrl%TcHmiTextbox_NewUserName::Text%/ctrl%",
+        "value": {
+          "objectType": "StaticValue",
+          "valueType": "tchmi:general#/definitions/String",
+          "value": "New Name"
+        },
+        "asyncWait": true
+      },
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%ctrl%TcHmiCombobox_NewUserGroup::SelectedIndex%/ctrl%",
+        "value": {
+          "objectType": "StaticValue",
+          "valueType": "tchmi:general#/definitions/UDINT",
+          "value": 0
+        },
+        "asyncWait": true
+      }
+    ]
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-radius" type="application/json">
+{
+  "topLeft": 0.0,
+  "topRight": 0.0,
+  "bottomLeft": 0.0,
+  "bottomRight": 0.0,
+  "topLeftUnit": "px",
+  "topRightUnit": "px",
+  "bottomLeftUnit": "px",
+  "bottomRightUnit": "px"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-access-config" type="application/json">
+[
+  {
+    "accessright": "operate",
+    "group": "MANAGEMENT",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "operate",
+    "group": "OPERATORS",
+    "permission": "Deny"
+  },
+  {
+    "accessright": "operate",
+    "group": "TEGAN",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "operate",
+    "group": "__SystemGuests",
+    "permission": "Deny"
+  },
+  {
+    "accessright": "operate",
+    "group": "__SystemMaintenanceUsers",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "operate",
+    "group": "__SystemUsers",
+    "permission": "Deny"
+  },
+  {
+    "accessright": "observe",
+    "group": "MANAGEMENT",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "observe",
+    "group": "OPERATORS",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "observe",
+    "group": "TEGAN",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "observe",
+    "group": "__SystemGuests",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "observe",
+    "group": "__SystemMaintenanceUsers",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "observe",
+    "group": "__SystemUsers",
+    "permission": "Allow"
+  }
+]
+</script>
+</div>
+<div id="TcHmiButton_NewUserClear_125" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="60" data-tchmi-height-unit="px" data-tchmi-left="280" data-tchmi-left-unit="px" data-tchmi-text="Clear" data-tchmi-top="738" data-tchmi-top-unit="px" data-tchmi-width="140" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="18" data-tchmi-zindex="4">
+
+
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "TcHmiButton_NewUserClear_125.onPressed",
+    "actions": [
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%ctrl%TcHmiNumericInput_NewUserTimeOut::Value%/ctrl%",
+        "value": {
+          "objectType": "StaticValue",
+          "valueType": "tchmi:general#/definitions/Number",
+          "value": 0.0
+        },
+        "asyncWait": true
+      },
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%ctrl%TcHmiPasswordInput_NewUserPasswdUpdate::Text%/ctrl%",
+        "value": {
+          "objectType": "StaticValue",
+          "valueType": "tchmi:general#/definitions/String",
+          "value": null
+        },
+        "asyncWait": true
+      },
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%ctrl%TcHmiTextbox_NewUserName::Text%/ctrl%",
+        "value": {
+          "objectType": "StaticValue",
+          "valueType": "tchmi:general#/definitions/String",
+          "value": "New Name"
+        },
+        "asyncWait": true
+      },
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%ctrl%TcHmiCombobox_NewUserGroup::SelectedIndex%/ctrl%",
+        "value": {
+          "objectType": "StaticValue",
+          "valueType": "tchmi:general#/definitions/UDINT",
+          "value": 0
+        },
+        "asyncWait": true
+      }
+    ]
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-radius" type="application/json">
+{
+  "topLeft": 0.0,
+  "topRight": 0.0,
+  "bottomLeft": 0.0,
+  "bottomRight": 0.0,
+  "topLeftUnit": "px",
+  "topRightUnit": "px",
+  "bottomLeftUnit": "px",
+  "bottomRightUnit": "px"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-access-config" type="application/json">
+[
+  {
+    "accessright": "operate",
+    "group": "MANAGEMENT",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "operate",
+    "group": "OPERATORS",
+    "permission": "Deny"
+  },
+  {
+    "accessright": "operate",
+    "group": "TEGAN",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "operate",
+    "group": "__SystemGuests",
+    "permission": "Deny"
+  },
+  {
+    "accessright": "operate",
+    "group": "__SystemMaintenanceUsers",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "operate",
+    "group": "__SystemUsers",
+    "permission": "Deny"
+  },
+  {
+    "accessright": "observe",
+    "group": "MANAGEMENT",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "observe",
+    "group": "OPERATORS",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "observe",
+    "group": "TEGAN",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "observe",
+    "group": "__SystemGuests",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "observe",
+    "group": "__SystemMaintenanceUsers",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "observe",
+    "group": "__SystemUsers",
+    "permission": "Allow"
+  }
+]
+</script>
+</div>
+<div id="TcHmiDatagrid_UserLists_6" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiDatagrid" data-tchmi-height="276" data-tchmi-height-unit="px" data-tchmi-left="32" data-tchmi-left-unit="px" data-tchmi-top="938" data-tchmi-top-unit="px" data-tchmi-width="250" data-tchmi-width-unit="px" data-tchmi-grid-font-size="18" data-tchmi-header-font-size="16" data-tchmi-zindex="4" data-tchmi-is-enabled="true" data-tchmi-row-height="35" data-tchmi-table-border-width="1" data-tchmi-row-numbers-start-number="1" data-tchmi-show-row-numbers="true" data-tchmi-row-numbers-resizable="false" data-tchmi-row-numbers-font-weight="Auto">
+<script data-tchmi-target-attribute="data-tchmi-src-column" type="application/json">
+[
+  {
+    "name": "Username",
+    "label": "User Name",
+    "control": "TextBlock",
+    "width": 200,
+    "widthUnit": "px",
+    "resize": true,
+    "sortable": false,
+    "minWidth": 100,
+    "minWidthUnit": "px",
+    "editable": false,
+    "horizontalAlignment": "Center",
+    "verticalAlignment": "Center",
+    "headerHorizontalAlignment": "Center",
+    "headerVerticalAlignment": "Center",
+    "ignoreEscapeSequences": false,
+    "autoFocusOut": true,
+    "autoSelectText": false
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-cell-content-padding" type="application/json">
+{
+  "left": 3,
+  "right": 3,
+  "top": 0,
+  "bottom": 0,
+  "leftUnit": "px",
+  "rightUnit": "px",
+  "topUnit": "px",
+  "bottomUnit": "px"
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-border-style" type="application/json">
+{
+  "left": "Solid",
+  "right": "Solid",
+  "top": "Solid",
+  "bottom": "Solid"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-width" type="application/json">
+{
+  "left": 0,
+  "right": 0,
+  "top": 0,
+  "bottom": 0,
+  "leftUnit": "px",
+  "rightUnit": "px",
+  "topUnit": "px",
+  "bottomUnit": "px"
+}
+</script>
+
+
+
+
+
+
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "TcHmiDatagrid_UserLists_6.onPressed",
+    "actions": [
+      {
+        "objectType": "JavaScript",
+        "active": true,
+        "sourceLines": [
+          "(function () {",
+          "",
+          "    const SYSTEM_GROUPS = [",
+          "        '__SystemAdministrators',",
+          "        '__SystemUsers',",
+          "        '__SystemGuests'",
+          "    ];",
+          "",
+          "    const SYSTEM_USERS = [",
+          "        '__SystemAdministrator',",
+          "        '__SystemGuest'",
+          "    ];",
+          "",
+          "    // Controls",
+          "    const grid = TcHmi.Controls.get('TcHmiDatagrid_UserLists');",
+          "    const showText = TcHmi.Controls.get('TcHmiTextblock_UserDetails');",
+          "    const txtEditUser = TcHmi.Controls.get('TcHmiTextbox_EditCurrentUserName');",
+          "    const cmbEditGroup = TcHmi.Controls.get('TcHmiCombobox_EditCurrentUserGroup');",
+          "    const numEditTimeout = TcHmi.Controls.get('TcHmiNumericInput_EditCurrentTimeOut');",
+          "",
+          "    if (!grid) {",
+          "        console.error('TcHmiDatagrid_UserLists not found.');",
+          "        return;",
+          "    }",
+          "",
+          "    if (!showText) {",
+          "        console.error('TcHmiTextblock_UserDetails not found.');",
+          "        return;",
+          "    }",
+          "",
+          "    function isSystemUser(username) {",
+          "        return SYSTEM_USERS.includes(username);",
+          "    }",
+          "",
+          "    function isSystemGroup(groupName) {",
+          "        return SYSTEM_GROUPS.includes(groupName);",
+          "    }",
+          "",
+          "    function isoDurationToMinutes(duration) {",
+          "\t    if (duration === null || duration === undefined) {",
+          "\t        return 0;",
+          "\t    }",
+          "\t",
+          "\t    const value = String(duration).trim().toUpperCase();",
+          "\t",
+          "\t    console.log('Raw autoLogout value:', duration);",
+          "\t    console.log('Normalized autoLogout value:', value);",
+          "\t",
+          "\t    if (value === '') {",
+          "\t        return 0;",
+          "\t    }",
+          "\t",
+          "\t    // Format examples:",
+          "\t    // P30D",
+          "\t    // P1D",
+          "\t    if (value.startsWith('P') && !value.startsWith('PT')) {",
+          "\t        let days = 0;",
+          "\t        let buffer = '';",
+          "\t",
+          "\t        for (let i = 1; i < value.length; i++) {",
+          "\t            const char = value[i];",
+          "\t",
+          "\t            if (char >= '0' && char <= '9') {",
+          "\t                buffer += char;",
+          "\t            } else {",
+          "\t                const number = parseInt(buffer, 10);",
+          "\t",
+          "\t                if (!isNaN(number)) {",
+          "\t                    if (char === 'D') {",
+          "\t                        days = number;",
+          "\t                    }",
+          "\t                }",
+          "\t",
+          "\t                buffer = '';",
+          "\t            }",
+          "\t        }",
+          "\t",
+          "\t        return days * 24 * 60;",
+          "\t    }",
+          "\t",
+          "\t    // Format examples:",
+          "\t    // PT8H",
+          "\t    // PT30M",
+          "\t    // PT1H30M",
+          "\t    // PT1H0M0S",
+          "\t    // PT0S",
+          "\t    if (value.startsWith('PT')) {",
+          "\t",
+          "\t        let hours = 0;",
+          "\t        let minutes = 0;",
+          "\t        let seconds = 0;",
+          "\t",
+          "\t        let buffer = '';",
+          "\t",
+          "\t        for (let i = 2; i < value.length; i++) {",
+          "\t            const char = value[i];",
+          "\t",
+          "\t            if (char >= '0' && char <= '9') {",
+          "\t                buffer += char;",
+          "\t            } else {",
+          "\t                const number = parseInt(buffer, 10);",
+          "\t",
+          "\t                if (!isNaN(number)) {",
+          "\t                    if (char === 'H') {",
+          "\t                        hours = number;",
+          "\t                    } else if (char === 'M') {",
+          "\t                        minutes = number;",
+          "\t                    } else if (char === 'S') {",
+          "\t                        seconds = number;",
+          "\t                    }",
+          "\t                }",
+          "\t",
+          "\t                buffer = '';",
+          "\t            }",
+          "\t        }",
+          "\t",
+          "\t        return (hours * 60) + minutes + Math.ceil(seconds / 60);",
+          "\t    }",
+          "\t",
+          "\t    // Fallback: 01:00:00",
+          "\t    if (value.indexOf(':') >= 0) {",
+          "\t        const parts = value.split(':');",
+          "\t",
+          "\t        if (parts.length === 3) {",
+          "\t            const hours = parseInt(parts[0], 10) || 0;",
+          "\t            const minutes = parseInt(parts[1], 10) || 0;",
+          "\t            const seconds = parseInt(parts[2], 10) || 0;",
+          "\t",
+          "\t            return (hours * 60) + minutes + Math.ceil(seconds / 60);",
+          "\t        }",
+          "\t    }",
+          "\t",
+          "\t    // Fallback: plain number, assume minutes",
+          "\t    if (!isNaN(Number(value))) {",
+          "\t        return parseInt(value, 10);",
+          "\t    }",
+          "\t",
+          "\t    console.warn('Unsupported autoLogout format:', duration);",
+          "\t    return 0;",
+          "\t}",
+          "    ",
+          "\tfunction formatAutoLogout(duration) {",
+          "\t    const totalMinutes = isoDurationToMinutes(duration);",
+          "\t",
+          "\t    if (totalMinutes <= 0) {",
+          "\t        return '0min';",
+          "\t    }",
+          "\t",
+          "\t    const days = Math.floor(totalMinutes / 1440);",
+          "\t    const remainingAfterDays = totalMinutes % 1440;",
+          "\t",
+          "\t    const hours = Math.floor(remainingAfterDays / 60);",
+          "\t    const minutes = remainingAfterDays % 60;",
+          "\t",
+          "\t    let parts = [];",
+          "\t",
+          "\t    if (days > 0) {",
+          "\t        parts.push(days + 'd');",
+          "\t    }",
+          "\t",
+          "\t    if (hours > 0) {",
+          "\t        parts.push(hours + 'h');",
+          "\t    }",
+          "\t",
+          "\t    if (minutes > 0) {",
+          "\t        parts.push(minutes + 'min');",
+          "\t    }",
+          "\t",
+          "\t    return parts.join(' ');",
+          "\t}",
+          "",
+          "    function getSelectedUsername() {",
+          "        const selectedIndex = grid.getSelectedRowIndex();",
+          "        const gridData = grid.getSrcData();",
+          "",
+          "        if (selectedIndex === null || selectedIndex < 0 || !gridData || selectedIndex >= gridData.length) {",
+          "            return null;",
+          "        }",
+          "",
+          "        const selectedRow = gridData[selectedIndex];",
+          "",
+          "        if (!selectedRow || !selectedRow['Username']) {",
+          "            return null;",
+          "        }",
+          "",
+          "        return selectedRow['Username'];",
+          "    }",
+          "",
+          "    function getVisibleGroups(userDetails) {",
+          "        if (!userDetails || !Array.isArray(userDetails.groups)) {",
+          "            return [];",
+          "        }",
+          "",
+          "        return userDetails.groups.filter(function (group) {",
+          "            return !isSystemGroup(group);",
+          "        });",
+          "    }",
+          "",
+          "    function getMainUserGroup(userDetails) {",
+          "        const visibleGroups = getVisibleGroups(userDetails);",
+          "",
+          "        if (visibleGroups.length > 0) {",
+          "            return visibleGroups[0];",
+          "        }",
+          "",
+          "        return '';",
+          "    }",
+          "",
+          "    function setComboboxValue(combo, value) {",
+          "        if (!combo || !value) {",
+          "            return;",
+          "        }",
+          "",
+          "        // Preferred method if available",
+          "        if (typeof combo.setSelectedValue === 'function') {",
+          "            combo.setSelectedValue(value);",
+          "            return;",
+          "        }",
+          "",
+          "        // Fallback using SrcData",
+          "        const comboData = combo.getSrcData ? combo.getSrcData() : null;",
+          "",
+          "        if (!comboData || !Array.isArray(comboData)) {",
+          "            console.warn('Combobox SrcData not available.');",
+          "            return;",
+          "        }",
+          "",
+          "        const index = comboData.findIndex(function (item) {",
+          "            return item === value ||",
+          "                item.value === value ||",
+          "                item.text === value ||",
+          "                item.Groupname === value ||",
+          "                item.GroupName === value ||",
+          "                item.groupName === value;",
+          "        });",
+          "",
+          "        if (index >= 0 && typeof combo.setSelectedIndex === 'function') {",
+          "            combo.setSelectedIndex(index);",
+          "        } else {",
+          "            console.warn('Group not found in combobox:', value);",
+          "        }",
+          "    }",
+          "",
+          "    function clearEditArea() {",
+          "        if (txtEditUser) {",
+          "            txtEditUser.setText('');",
+          "        }",
+          "",
+          "        if (cmbEditGroup && typeof cmbEditGroup.setSelectedIndex === 'function') {",
+          "            cmbEditGroup.setSelectedIndex(-1);",
+          "        }",
+          "",
+          "        if (numEditTimeout && typeof numEditTimeout.setValue === 'function') {",
+          "            numEditTimeout.setValue(0);",
+          "        }",
+          "    }",
+          "",
+          "    const nome = getSelectedUsername();",
+          "",
+          "    if (!nome) {",
+          "        console.warn('No row selected or invalid data.');",
+          "        showText.setText('No user selected.');",
+          "        clearEditArea();",
+          "        return;",
+          "    }",
+          "",
+          "    console.log('Nome selecionado:', nome);",
+          "",
+          "    if (isSystemUser(nome)) {",
+          "        showText.setText(",
+          "            'System user selected:\\n' +",
+          "            nome +",
+          "            '\\n\\nThis user cannot be edited or deleted from this screen.'",
+          "        );",
+          "",
+          "        clearEditArea();",
+          "        return;",
+          "    }",
+          "",
+          "    // Show selected username while full details are loading",
+          "    showText.setText(nome);",
+          "",
+          "    TcHmi.Server.UserManagement.listUsersEx(",
+          "        null,",
+          "        { timeout: 2000 },",
+          "        function (data) {",
+          "",
+          "            if (data.error === TcHmi.Errors.NONE) {",
+          "",
+          "                const allUsers = data.userDetails;",
+          "",
+          "                if (allUsers.hasOwnProperty(nome)) {",
+          "",
+          "                    const userDetails = allUsers[nome];",
+          "                    console.log('User details:', userDetails);",
+          "",
+          "                    const visibleGroups = getVisibleGroups(userDetails);",
+          "                    const mainGroup = getMainUserGroup(userDetails);",
+          "",
+          "                    const groupsText = visibleGroups.length > 0",
+          "                        ? visibleGroups.join(',\\n')",
+          "                        : 'No application group assigned';",
+          "",
+          "                    // Populate edit username textbox",
+          "                    if (txtEditUser) {",
+          "                        txtEditUser.setText(nome);",
+          "                    }",
+          "",
+          "                    // Populate edit group combobox",
+          "                    if (cmbEditGroup && mainGroup) {",
+          "                        setComboboxValue(cmbEditGroup, mainGroup);",
+          "                    } else if (cmbEditGroup && typeof cmbEditGroup.setSelectedIndex === 'function') {",
+          "                        cmbEditGroup.setSelectedIndex(-1);",
+          "                    }",
+          "",
+          "                    // Populate edit timeout numeric input in minutes",
+          "                    if (numEditTimeout && typeof numEditTimeout.setValue === 'function') {",
+          "                        numEditTimeout.setValue(isoDurationToMinutes(userDetails.autoLogout));",
+          "                    }",
+          "",
+          "                    // User details text",
+          "                    const formattedText =",
+          "                        'User: ' + nome + '\\n\\n' +",
+          "                        'Active: ' + (userDetails.enabled ? 'Yes' : 'No') + '\\n\\n' +",
+          "                        'Automatic Logout: ' + formatAutoLogout(userDetails.autoLogout) + '\\n\\n' +",
+          "                        'Groups:\\n ' + groupsText;",
+          "",
+          "                    showText.setText(formattedText);",
+          "",
+          "                } else {",
+          "                    console.log('User not found:', nome);",
+          "                    showText.setText('User not found:\\n' + nome);",
+          "                    clearEditArea();",
+          "                }",
+          "",
+          "            } else {",
+          "                console.error('Error listing users:', data.error);",
+          "                showText.setText('Error loading user details.');",
+          "                clearEditArea();",
+          "            }",
+          "        }",
+          "    );",
+          "",
+          "})();"
+        ],
+        "injectContextObject": true,
+        "asyncWait": true,
+        "waitMode": "Asynchronous"
+      }
+    ]
+  }
+]
+</script>
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-header-background-color" type="application/json">
+{
+  "color": "rgba(25, 63, 98, 1)"
+}
+</script>
+</div>
+<div id="TcHmiButton_DeleteUser_125" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="60" data-tchmi-height-unit="px" data-tchmi-left="827" data-tchmi-left-unit="px" data-tchmi-text="Delete User" data-tchmi-top="738" data-tchmi-top-unit="px" data-tchmi-width="140" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="18" data-tchmi-zindex="4">
+
+
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "TcHmiButton_DeleteUser_125.onPressed",
+    "actions": [
+      {
+        "objectType": "JavaScript",
+        "active": true,
+        "sourceLines": [
+          "(function () {",
+          "",
+          "    const SYSTEM_USERS = [",
+          "        '__SystemAdministrator',",
+          "        '__SystemGuest'",
+          "    ];",
+          "",
+          "    function isSystemUser(userName) {",
+          "        return SYSTEM_USERS.includes(userName);",
+          "    }",
+          "",
+          "    function removeUserAsync(userName) {",
+          "        return new Promise(function (resolve, reject) {",
+          "            TcHmi.Server.UserManagement.removeUserEx(",
+          "                userName,",
+          "                null,",
+          "                { timeout: 2000 },",
+          "                function (data) {",
+          "                    if (data.error === TcHmi.Errors.NONE) {",
+          "                        resolve(true);",
+          "                    } else {",
+          "                        reject(data.error);",
+          "                    }",
+          "                }",
+          "            );",
+          "        });",
+          "    }",
+          "",
+          "    function clearEditArea() {",
+          "        const txtUser = TcHmi.Controls.get('TcHmiTextbox_EditCurrentUserName');",
+          "        const cmbGroup = TcHmi.Controls.get('TcHmiCombobox_EditCurrentUserGroup');",
+          "        const numTimeout = TcHmi.Controls.get('TcHmiNumericInput_EditCurrentTimeOut');",
+          "        const showText = TcHmi.Controls.get('TcHmiTextblock_UserDetails');",
+          "",
+          "        if (txtUser) {",
+          "            txtUser.setText('');",
+          "        }",
+          "",
+          "        if (cmbGroup && typeof cmbGroup.setSelectedIndex === 'function') {",
+          "            cmbGroup.setSelectedIndex(-1);",
+          "        }",
+          "",
+          "        if (numTimeout && typeof numTimeout.setValue === 'function') {",
+          "            numTimeout.setValue(0);",
+          "        }",
+          "",
+          "        if (showText) {",
+          "            showText.setText('');",
+          "        }",
+          "    }",
+          "",
+          "    async function deleteUser() {",
+          "        try {",
+          "            const txtUser = TcHmi.Controls.get('TcHmiTextbox_EditCurrentUserName');",
+          "",
+          "            if (!txtUser) {",
+          "                alert('User textbox not found.');",
+          "                return;",
+          "            }",
+          "",
+          "            const userName = txtUser.getText();",
+          "",
+          "            if (!userName) {",
+          "                alert('Please select a user first.');",
+          "                return;",
+          "            }",
+          "",
+          "            if (isSystemUser(userName)) {",
+          "                alert('System users cannot be deleted.');",
+          "                return;",
+          "            }",
+          "",
+          "            const confirmed = confirm(",
+          "                'Are you sure you want to delete user \"' + userName + '\"?'",
+          "            );",
+          "",
+          "            if (!confirmed) {",
+          "                return;",
+          "            }",
+          "",
+          "            await removeUserAsync(userName);",
+          "",
+          "            alert('User deleted successfully.');",
+          "",
+          "            clearEditArea();",
+          "",
+          "            // Reload User DataGrid immediately",
+          "            if (typeof window.UserManagement_LoadUsers === 'function') {",
+          "                window.UserManagement_LoadUsers();",
+          "            } else {",
+          "                console.warn('window.UserManagement_LoadUsers is not available.');",
+          "            }",
+          "",
+          "        } catch (error) {",
+          "            console.error('Error deleting user:', error);",
+          "            alert('Error deleting user. Please check HMI permissions and server logs.');",
+          "        }",
+          "    }",
+          "",
+          "    deleteUser();",
+          "",
+          "})();"
+        ],
+        "injectContextObject": false,
+        "asyncWait": true,
+        "waitMode": "Synchronous"
+      }
+    ]
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-radius" type="application/json">
+{
+  "topLeft": 0.0,
+  "topRight": 0.0,
+  "bottomLeft": 0.0,
+  "bottomRight": 0.0,
+  "topLeftUnit": "px",
+  "topRightUnit": "px",
+  "bottomLeftUnit": "px",
+  "bottomRightUnit": "px"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-access-config" type="application/json">
+[
+  {
+    "accessright": "operate",
+    "group": "MANAGEMENT",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "operate",
+    "group": "OPERATORS",
+    "permission": "Deny"
+  },
+  {
+    "accessright": "operate",
+    "group": "TEGAN",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "operate",
+    "group": "__SystemGuests",
+    "permission": "Deny"
+  },
+  {
+    "accessright": "operate",
+    "group": "__SystemMaintenanceUsers",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "operate",
+    "group": "__SystemUsers",
+    "permission": "Deny"
+  },
+  {
+    "accessright": "observe",
+    "group": "MANAGEMENT",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "observe",
+    "group": "OPERATORS",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "observe",
+    "group": "TEGAN",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "observe",
+    "group": "__SystemGuests",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "observe",
+    "group": "__SystemMaintenanceUsers",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "observe",
+    "group": "__SystemUsers",
+    "permission": "Allow"
+  }
+]
+</script>
+</div>
+<div id="TcHmiButton_UpdateUser_125" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="60" data-tchmi-height-unit="px" data-tchmi-left="647" data-tchmi-left-unit="px" data-tchmi-text="Update User" data-tchmi-top="738" data-tchmi-top-unit="px" data-tchmi-width="140" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="18" data-tchmi-zindex="4">
+
+
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "TcHmiButton_UpdateUser_125.onPressed",
+    "actions": [
+      {
+        "objectType": "JavaScript",
+        "active": true,
+        "sourceLines": [
+          "(function () {",
+          "",
+          "    const SYSTEM_GROUPS = [",
+          "        '__SystemAdministrators',",
+          "        '__SystemUsers',",
+          "        '__SystemGuests',",
+          "        '__SystemMaintenanceUsers'",
+          "    ];",
+          "",
+          "    const SYSTEM_USERS = [",
+          "        '__SystemAdministrator',",
+          "        '__SystemGuest'",
+          "    ];",
+          "",
+          "    function isSystemGroup(groupName) {",
+          "        return SYSTEM_GROUPS.includes(groupName);",
+          "    }",
+          "",
+          "    function isSystemUser(userName) {",
+          "        return SYSTEM_USERS.includes(userName);",
+          "    }",
+          "",
+          "    function isoDurationToMinutes(duration) {",
+          "        if (duration === null || duration === undefined) {",
+          "            return 0;",
+          "        }",
+          "",
+          "        const value = String(duration).trim().toUpperCase();",
+          "",
+          "        if (value === '') {",
+          "            return 0;",
+          "        }",
+          "",
+          "        // Format examples:",
+          "        // P30D",
+          "        // P1D",
+          "        if (value.startsWith('P') && !value.startsWith('PT')) {",
+          "            let days = 0;",
+          "            let buffer = '';",
+          "",
+          "            for (let i = 1; i < value.length; i++) {",
+          "                const char = value[i];",
+          "",
+          "                if (char >= '0' && char <= '9') {",
+          "                    buffer += char;",
+          "                } else {",
+          "                    const number = parseInt(buffer, 10);",
+          "",
+          "                    if (!isNaN(number)) {",
+          "                        if (char === 'D') {",
+          "                            days = number;",
+          "                        }",
+          "                    }",
+          "",
+          "                    buffer = '';",
+          "                }",
+          "            }",
+          "",
+          "            return days * 24 * 60;",
+          "        }",
+          "",
+          "        // Format examples:",
+          "        // PT8H",
+          "        // PT30M",
+          "        // PT1H30M",
+          "        // PT1H0M0S",
+          "        // PT0S",
+          "        if (value.startsWith('PT')) {",
+          "",
+          "            let hours = 0;",
+          "            let minutes = 0;",
+          "            let seconds = 0;",
+          "",
+          "            let buffer = '';",
+          "",
+          "            for (let i = 2; i < value.length; i++) {",
+          "                const char = value[i];",
+          "",
+          "                if (char >= '0' && char <= '9') {",
+          "                    buffer += char;",
+          "                } else {",
+          "                    const number = parseInt(buffer, 10);",
+          "",
+          "                    if (!isNaN(number)) {",
+          "                        if (char === 'H') {",
+          "                            hours = number;",
+          "                        } else if (char === 'M') {",
+          "                            minutes = number;",
+          "                        } else if (char === 'S') {",
+          "                            seconds = number;",
+          "                        }",
+          "                    }",
+          "",
+          "                    buffer = '';",
+          "                }",
+          "            }",
+          "",
+          "            return (hours * 60) + minutes + Math.ceil(seconds / 60);",
+          "        }",
+          "",
+          "        // Fallback: 01:00:00",
+          "        if (value.indexOf(':') >= 0) {",
+          "            const parts = value.split(':');",
+          "",
+          "            if (parts.length === 3) {",
+          "                const hours = parseInt(parts[0], 10) || 0;",
+          "                const minutes = parseInt(parts[1], 10) || 0;",
+          "                const seconds = parseInt(parts[2], 10) || 0;",
+          "",
+          "                return (hours * 60) + minutes + Math.ceil(seconds / 60);",
+          "            }",
+          "        }",
+          "",
+          "        // Fallback: plain number, assume minutes",
+          "        if (!isNaN(Number(value))) {",
+          "            return parseInt(value, 10);",
+          "        }",
+          "",
+          "        console.warn('Unsupported autoLogout format:', duration);",
+          "        return 0;",
+          "    }",
+          "",
+          "    function minutesToIsoDuration(totalMinutes) {",
+          "        totalMinutes = parseInt(totalMinutes, 10);",
+          "",
+          "        if (isNaN(totalMinutes) || totalMinutes < 0) {",
+          "            totalMinutes = 0;",
+          "        }",
+          "",
+          "        const days = Math.floor(totalMinutes / 1440);",
+          "        const remainingAfterDays = totalMinutes % 1440;",
+          "",
+          "        const hours = Math.floor(remainingAfterDays / 60);",
+          "        const minutes = remainingAfterDays % 60;",
+          "",
+          "        // If exactly one or more full days, save as PnD.",
+          "        // Example: 43200 min -> P30D",
+          "        if (days > 0 && hours === 0 && minutes === 0) {",
+          "            return 'P' + days + 'D';",
+          "        }",
+          "",
+          "        // If there are days + remaining hours/minutes,",
+          "        // convert everything to hours because it is safer for the HMI parser.",
+          "        if (days > 0) {",
+          "            const totalHours = Math.floor(totalMinutes / 60);",
+          "            const remainingMinutes = totalMinutes % 60;",
+          "",
+          "            let resultWithDays = 'PT' + totalHours + 'H';",
+          "",
+          "            if (remainingMinutes > 0) {",
+          "                resultWithDays += remainingMinutes + 'M';",
+          "            }",
+          "",
+          "            return resultWithDays;",
+          "        }",
+          "",
+          "        let result = 'PT';",
+          "",
+          "        if (hours > 0) {",
+          "            result += hours + 'H';",
+          "        }",
+          "",
+          "        if (minutes > 0) {",
+          "            result += minutes + 'M';",
+          "        }",
+          "",
+          "        if (hours === 0 && minutes === 0) {",
+          "            result += '0S';",
+          "        }",
+          "",
+          "        return result;",
+          "    }",
+          "",
+          "    function formatAutoLogoutFromMinutes(totalMinutes) {",
+          "        totalMinutes = parseInt(totalMinutes, 10);",
+          "",
+          "        if (isNaN(totalMinutes) || totalMinutes <= 0) {",
+          "            return '0min';",
+          "        }",
+          "",
+          "        const days = Math.floor(totalMinutes / 1440);",
+          "        const remainingAfterDays = totalMinutes % 1440;",
+          "",
+          "        const hours = Math.floor(remainingAfterDays / 60);",
+          "        const minutes = remainingAfterDays % 60;",
+          "",
+          "        let parts = [];",
+          "",
+          "        if (days > 0) {",
+          "            parts.push(days + 'd');",
+          "        }",
+          "",
+          "        if (hours > 0) {",
+          "            parts.push(hours + 'h');",
+          "        }",
+          "",
+          "        if (minutes > 0) {",
+          "            parts.push(minutes + 'min');",
+          "        }",
+          "",
+          "        return parts.join(' ');",
+          "    }",
+          "",
+          "    function getNumericValue(control) {",
+          "        if (!control) {",
+          "            return 0;",
+          "        }",
+          "",
+          "        if (typeof control.getValue === 'function') {",
+          "            return control.getValue();",
+          "        }",
+          "",
+          "        if (typeof control.getText === 'function') {",
+          "            return parseFloat(control.getText());",
+          "        }",
+          "",
+          "        return 0;",
+          "    }",
+          "",
+          "    function getSelectedComboboxValue(combo) {",
+          "        if (!combo) {",
+          "            return '';",
+          "        }",
+          "",
+          "        if (typeof combo.getSelectedValue === 'function') {",
+          "            const selectedValue = combo.getSelectedValue();",
+          "",
+          "            if (selectedValue !== null && selectedValue !== undefined && selectedValue !== '') {",
+          "                return selectedValue;",
+          "            }",
+          "        }",
+          "",
+          "        const selectedIndex = combo.getSelectedIndex ? combo.getSelectedIndex() : -1;",
+          "        const srcData = combo.getSrcData ? combo.getSrcData() : null;",
+          "",
+          "        if (selectedIndex < 0 || !srcData || selectedIndex >= srcData.length) {",
+          "            return '';",
+          "        }",
+          "",
+          "        const selectedItem = srcData[selectedIndex];",
+          "",
+          "        if (typeof selectedItem === 'string') {",
+          "            return selectedItem;",
+          "        }",
+          "",
+          "        return selectedItem.value ||",
+          "            selectedItem.text ||",
+          "            selectedItem.Groupname ||",
+          "            selectedItem.GroupName ||",
+          "            selectedItem.groupName ||",
+          "            '';",
+          "    }",
+          "",
+          "    function listUsersExAsync() {",
+          "        return new Promise(function (resolve, reject) {",
+          "            TcHmi.Server.UserManagement.listUsersEx(",
+          "                null,",
+          "                { timeout: 2000 },",
+          "                function (data) {",
+          "                    if (data.error === TcHmi.Errors.NONE) {",
+          "                        resolve(data.userDetails);",
+          "                    } else {",
+          "                        reject(data.error);",
+          "                    }",
+          "                }",
+          "            );",
+          "        });",
+          "    }",
+          "",
+          "    function updateUserAsync(userName, updateData) {",
+          "        return new Promise(function (resolve, reject) {",
+          "            TcHmi.Server.UserManagement.updateUserEx(",
+          "                userName,",
+          "                updateData,",
+          "                { timeout: 2000 },",
+          "                function (data) {",
+          "                    if (data.error === TcHmi.Errors.NONE) {",
+          "                        resolve(true);",
+          "                    } else {",
+          "                        reject(data.error);",
+          "                    }",
+          "                }",
+          "            );",
+          "        });",
+          "    }",
+          "",
+          "    async function updateUser() {",
+          "        try {",
+          "            const txtUser = TcHmi.Controls.get('TcHmiTextbox_EditCurrentUserName');",
+          "            const cmbGroup = TcHmi.Controls.get('TcHmiCombobox_EditCurrentUserGroup');",
+          "            const numTimeout = TcHmi.Controls.get('TcHmiNumericInput_EditCurrentTimeOut');",
+          "            const showText = TcHmi.Controls.get('TcHmiTextblock_UserDetails');",
+          "",
+          "            if (!txtUser || !cmbGroup || !numTimeout) {",
+          "                alert('User management controls not found.');",
+          "                return;",
+          "            }",
+          "",
+          "            const userName = txtUser.getText();",
+          "            const selectedGroup = getSelectedComboboxValue(cmbGroup);",
+          "            const selectedTimeoutMin = parseInt(getNumericValue(numTimeout), 10);",
+          "",
+          "            if (!userName) {",
+          "                alert('Please select a user first.');",
+          "                return;",
+          "            }",
+          "",
+          "            if (isSystemUser(userName)) {",
+          "                alert('System users cannot be edited.');",
+          "                return;",
+          "            }",
+          "",
+          "            if (!selectedGroup) {",
+          "                alert('Please select a group.');",
+          "                return;",
+          "            }",
+          "",
+          "            if (isSystemGroup(selectedGroup)) {",
+          "                alert('System groups cannot be assigned from this screen.');",
+          "                return;",
+          "            }",
+          "",
+          "            if (isNaN(selectedTimeoutMin) || selectedTimeoutMin < 0) {",
+          "                alert('Please enter a valid automatic logout time in minutes.');",
+          "                return;",
+          "            }",
+          "",
+          "            const allUsers = await listUsersExAsync();",
+          "",
+          "            if (!allUsers.hasOwnProperty(userName)) {",
+          "                alert('Selected user was not found.');",
+          "                return;",
+          "            }",
+          "",
+          "            const userDetails = allUsers[userName];",
+          "",
+          "            if (!userDetails.groups || !Array.isArray(userDetails.groups)) {",
+          "                alert('Could not read current user groups.');",
+          "                return;",
+          "            }",
+          "",
+          "            const currentCustomGroups = userDetails.groups.filter(function (group) {",
+          "                return !isSystemGroup(group);",
+          "            });",
+          "",
+          "            const currentGroup = currentCustomGroups.length > 0 ? currentCustomGroups[0] : '';",
+          "            const currentTimeoutMin = isoDurationToMinutes(userDetails.autoLogout);",
+          "",
+          "            const groupChanged = currentGroup !== selectedGroup;",
+          "            const timeoutChanged = currentTimeoutMin !== selectedTimeoutMin;",
+          "",
+          "            if (!groupChanged && !timeoutChanged) {",
+          "                alert('No changes detected.');",
+          "                return;",
+          "            }",
+          "",
+          "            const updateData = {};",
+          "",
+          "            if (groupChanged) {",
+          "                updateData.removeGroups = currentCustomGroups.filter(function (group) {",
+          "                    return group !== selectedGroup;",
+          "                });",
+          "",
+          "                updateData.addGroups = currentCustomGroups.includes(selectedGroup) ? [] : [selectedGroup];",
+          "            }",
+          "",
+          "            if (timeoutChanged) {",
+          "                updateData.autoLogout = minutesToIsoDuration(selectedTimeoutMin);",
+          "            }",
+          "",
+          "            console.log('Updating user:', userName);",
+          "            console.log('Current group:', currentGroup);",
+          "            console.log('Selected group:', selectedGroup);",
+          "            console.log('Current timeout min:', currentTimeoutMin);",
+          "            console.log('Selected timeout min:', selectedTimeoutMin);",
+          "            console.log('Update data:', updateData);",
+          "",
+          "            await updateUserAsync(userName, updateData);",
+          "",
+          "            alert('User updated successfully.');",
+          "",
+          "            if (showText) {",
+          "                showText.setText(",
+          "                    'User: ' + userName + '\\n\\n' +",
+          "                    'Group: ' + selectedGroup + '\\n\\n' +",
+          "                    'Automatic Logout: ' + formatAutoLogoutFromMinutes(selectedTimeoutMin)",
+          "                );",
+          "            }",
+          "",
+          "            // Reload the user list to keep the screen synchronized.",
+          "            // Not strictly required for update, but useful for UX consistency.",
+          "            if (typeof window.UserManagement_LoadUsers === 'function') {",
+          "                window.UserManagement_LoadUsers();",
+          "            } else {",
+          "                console.warn('window.UserManagement_LoadUsers is not available.');",
+          "            }",
+          "",
+          "        } catch (error) {",
+          "            console.error('Error updating user:', error);",
+          "            alert('Error updating user. Please check HMI permissions and server logs.');",
+          "        }",
+          "    }",
+          "",
+          "    updateUser();",
+          "",
+          "})();"
+        ],
+        "injectContextObject": true,
+        "asyncWait": true,
+        "waitMode": "Asynchronous"
+      }
+    ]
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-radius" type="application/json">
+{
+  "topLeft": 0.0,
+  "topRight": 0.0,
+  "bottomLeft": 0.0,
+  "bottomRight": 0.0,
+  "topLeftUnit": "px",
+  "topRightUnit": "px",
+  "bottomLeftUnit": "px",
+  "bottomRightUnit": "px"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-access-config" type="application/json">
+[
+  {
+    "accessright": "operate",
+    "group": "MANAGEMENT",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "operate",
+    "group": "OPERATORS",
+    "permission": "Deny"
+  },
+  {
+    "accessright": "operate",
+    "group": "TEGAN",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "operate",
+    "group": "__SystemGuests",
+    "permission": "Deny"
+  },
+  {
+    "accessright": "operate",
+    "group": "__SystemMaintenanceUsers",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "operate",
+    "group": "__SystemUsers",
+    "permission": "Deny"
+  },
+  {
+    "accessright": "observe",
+    "group": "MANAGEMENT",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "observe",
+    "group": "OPERATORS",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "observe",
+    "group": "TEGAN",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "observe",
+    "group": "__SystemGuests",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "observe",
+    "group": "__SystemMaintenanceUsers",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "observe",
+    "group": "__SystemUsers",
+    "permission": "Allow"
+  }
+]
+</script>
+</div>
+<div id="TcHmiRectangle_30" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="290" data-tchmi-height-unit="px" data-tchmi-left="562" data-tchmi-left-unit="px" data-tchmi-top="525" data-tchmi-top-unit="px" data-tchmi-width="484" data-tchmi-width-unit="px" data-tchmi-zindex="3">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "angle": 90.0,
+  "stopPoints": [
+    {
+      "color": "rgba(244, 244, 244, 1)",
+      "stop": "0%"
+    },
+    {
+      "color": "rgba(241, 241, 241, 1)",
+      "stop": "100%"
+    }
+  ]
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(163, 163, 163, 0)"
+}
+</script>
+</div>
+<div id="TcHmiTextblock_185" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="606" data-tchmi-left-unit="px" data-tchmi-text="User Name:" data-tchmi-top="553" data-tchmi-top-unit="px" data-tchmi-width="110" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="20" data-tchmi-text-font-weight="Auto" data-tchmi-zindex="4">
+</div>
+<div id="TcHmiTextblock_186" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="606" data-tchmi-left-unit="px" data-tchmi-text="User Group:" data-tchmi-top="612" data-tchmi-top-unit="px" data-tchmi-width="110" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="20" data-tchmi-text-font-weight="Auto" data-tchmi-zindex="4">
+</div>
+<div id="TcHmiTextblock_187" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="606" data-tchmi-left-unit="px" data-tchmi-text="Auto Logout:" data-tchmi-top="672" data-tchmi-top-unit="px" data-tchmi-width="110" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="20" data-tchmi-text-font-weight="Auto" data-tchmi-zindex="4">
+</div>
+<div id="TcHmiTextbox_EditCurrentUserName" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextbox" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="726" data-tchmi-left-unit="px" data-tchmi-text="%f%TcHmi.Server.getCurrentUser()%/f%" data-tchmi-top="553" data-tchmi-top-unit="px" data-tchmi-width="260" data-tchmi-width-unit="px" data-tchmi-text-font-size="15" data-tchmi-zindex="4">
+<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+{
+  "top": 3,
+  "right": 3,
+  "bottom": 3,
+  "left": 3
+}
+</script>
+
+</div>
+<div id="TcHmiCombobox_EditCurrentUserGroup" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiCombobox" data-tchmi-auto-focus-out="true" data-tchmi-combobox-text="%f%TcHmi.Server.getGroupsOfCurrentUser().join('');%/f%" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="726" data-tchmi-left-unit="px" data-tchmi-top="612" data-tchmi-top-unit="px" data-tchmi-width="260" data-tchmi-width-unit="px" data-tchmi-text-font-size="16" data-tchmi-zindex="4" data-tchmi-text="" data-tchmi-data-height="30" data-tchmi-drop-down-font-size="16">
+<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+{
+  "top": 3,
+  "right": 3,
+  "bottom": 3,
+  "left": 3
+}
+</script>
+
+
+<script data-tchmi-target-attribute="data-tchmi-src-data" type="application/json">
+[]
+</script>
+
+
+
+
+</div>
+<div id="TcHmiNumericInput_EditCurrentTimeOut" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiNumericInput" data-tchmi-auto-focus-out="true" data-tchmi-decimal-digits="0" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="726" data-tchmi-left-unit="px" data-tchmi-max-value="1441" data-tchmi-min-value="0" data-tchmi-reset-to-last-valid-value="true" data-tchmi-top="672" data-tchmi-top-unit="px" data-tchmi-value="0" data-tchmi-width="50" data-tchmi-width-unit="px" data-tchmi-value-font-size="15" data-tchmi-zindex="4">
+<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+{
+  "top": 3,
+  "right": 3,
+  "bottom": 3,
+  "left": 3
+}
+</script>
+
+</div>
+<div id="TcHmiTextblock_188" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="786" data-tchmi-left-unit="px" data-tchmi-top="672" data-tchmi-top-unit="px" data-tchmi-width="38" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="20" data-tchmi-text-font-weight="Auto" data-tchmi-text="min" data-tchmi-zindex="4">
+</div>
+<div id="TcHmiTextblock_189" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="20" data-tchmi-height-unit="px" data-tchmi-left="592" data-tchmi-left-unit="px" data-tchmi-text="Passwords should contain three of the four character types:" data-tchmi-top="265" data-tchmi-top-unit="px" data-tchmi-width="343" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="14" data-tchmi-text-font-weight="Auto" data-tchmi-text-horizontal-alignment="Left" data-tchmi-text-vertical-alignment="Center" data-tchmi-zindex="4">
+<script data-tchmi-target-attribute="data-tchmi-text-color" type="application/json">
+{
+  "color": "rgba(25, 63, 98, 1)"
+}
+</script>
+</div>
+<div id="TcHmiTextblock_190" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="18" data-tchmi-height-unit="px" data-tchmi-left="592" data-tchmi-left-unit="px" data-tchmi-text="1. Uppercase letters" data-tchmi-top="286" data-tchmi-top-unit="px" data-tchmi-width="200" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="14" data-tchmi-text-font-weight="Auto" data-tchmi-text-horizontal-alignment="Left" data-tchmi-text-vertical-alignment="Center" data-tchmi-zindex="4">
+<script data-tchmi-target-attribute="data-tchmi-text-color" type="application/json">
+{
+  "color": "rgba(25, 63, 98, 1)"
+}
+</script>
+</div>
+<div id="TcHmiTextblock_191" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="18" data-tchmi-height-unit="px" data-tchmi-left="592" data-tchmi-left-unit="px" data-tchmi-text="2. Lowercase letters" data-tchmi-top="305" data-tchmi-top-unit="px" data-tchmi-width="200" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="14" data-tchmi-text-font-weight="Auto" data-tchmi-text-horizontal-alignment="Left" data-tchmi-text-vertical-alignment="Center" data-tchmi-zindex="4">
+<script data-tchmi-target-attribute="data-tchmi-text-color" type="application/json">
+{
+  "color": "rgba(25, 63, 98, 1)"
+}
+</script>
+</div>
+<div id="TcHmiTextblock_192" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="18" data-tchmi-height-unit="px" data-tchmi-left="592" data-tchmi-left-unit="px" data-tchmi-text="3. Numbers" data-tchmi-top="324" data-tchmi-top-unit="px" data-tchmi-width="200" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="14" data-tchmi-text-font-weight="Auto" data-tchmi-text-horizontal-alignment="Left" data-tchmi-text-vertical-alignment="Center" data-tchmi-zindex="4">
+<script data-tchmi-target-attribute="data-tchmi-text-color" type="application/json">
+{
+  "color": "rgba(25, 63, 98, 1)"
+}
+</script>
+</div>
+<div id="TcHmiTextblock_193" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="18" data-tchmi-height-unit="px" data-tchmi-left="592" data-tchmi-left-unit="px" data-tchmi-text="4. Symbols" data-tchmi-top="342" data-tchmi-top-unit="px" data-tchmi-width="200" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="14" data-tchmi-text-font-weight="Auto" data-tchmi-text-horizontal-alignment="Left" data-tchmi-text-vertical-alignment="Center" data-tchmi-zindex="4">
+<script data-tchmi-target-attribute="data-tchmi-text-color" type="application/json">
+{
+  "color": "rgba(25, 63, 98, 1)"
+}
+</script>
+</div>
+<div id="TcHmiTextblock_UserDetails_1247" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="241" data-tchmi-height-unit="px" data-tchmi-left="291" data-tchmi-left-unit="px" data-tchmi-text="Select an item to view the information" data-tchmi-top="973" data-tchmi-top-unit="px" data-tchmi-width="220" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-is-enabled="true" data-tchmi-zindex="2" data-tchmi-text-horizontal-alignment="Left" data-tchmi-text-vertical-alignment="Top" data-tchmi-text-font-size="18" data-tchmi-text-font-weight="Normal">
+
+<script data-tchmi-target-attribute="data-tchmi-border-style" type="application/json">
+{
+  "left": "Solid",
+  "right": "Solid",
+  "top": "Solid",
+  "bottom": "Solid"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-width" type="application/json">
+{
+  "left": 1,
+  "right": 1,
+  "top": 1,
+  "bottom": 1,
+  "leftUnit": "px",
+  "rightUnit": "px",
+  "topUnit": "px",
+  "bottomUnit": "px"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-color" type="application/json">
+{
+  "color": "rgba(215, 215, 215, 0)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-text-color" type="application/json">
+{
+  "color": "rgba(76, 76, 76, 1)"
+}
+</script>
+</div>
+<div id="UserDetails" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="241" data-tchmi-height-unit="px" data-tchmi-left="824" data-tchmi-left-unit="px" data-tchmi-text="Select an item to view the information" data-tchmi-top="973" data-tchmi-top-unit="px" data-tchmi-width="220" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-is-enabled="true" data-tchmi-zindex="2" data-tchmi-text-font-size="18">
+
+<script data-tchmi-target-attribute="data-tchmi-border-width" type="application/json">
+{
+  "left": 1,
+  "right": 1,
+  "top": 1,
+  "bottom": 1,
+  "leftUnit": "px",
+  "rightUnit": "px",
+  "topUnit": "px",
+  "bottomUnit": "px"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-style" type="application/json">
+{
+  "left": "Solid",
+  "right": "Solid",
+  "top": "Solid",
+  "bottom": "Solid"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-color" type="application/json">
+{
+  "color": "rgba(215, 215, 215, 0)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-text-color" type="application/json">
+{
+  "color": "rgba(76, 76, 76, 1)"
+}
+</script>
+</div>
+<div id="TcHmiRectangle_31" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="290" data-tchmi-height-unit="px" data-tchmi-left="30" data-tchmi-left-unit="px" data-tchmi-top="114" data-tchmi-top-unit="px" data-tchmi-width="484" data-tchmi-width-unit="px" data-tchmi-zindex="1">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "angle": 90.0,
+  "stopPoints": [
+    {
+      "color": "rgba(255, 255, 255, 0.7058823)",
+      "stop": "0%"
+    },
+    {
+      "color": "rgba(255, 255, 255, 1)",
+      "stop": "75%"
+    }
+  ]
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(163, 163, 163, 0)"
+}
+</script>
+</div>
+<div id="TextboxNewPassword" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiPasswordInput" data-tchmi-auto-focus-out="true" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="755" data-tchmi-left-unit="px" data-tchmi-top="181" data-tchmi-top-unit="px" data-tchmi-width="250" data-tchmi-width-unit="px" data-tchmi-zindex="5">
+<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+{
+  "top": 3,
+  "right": 3,
+  "bottom": 3,
+  "left": 3
+}
+</script>
+
+
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "TextboxNewPassword.onTextChanged",
+    "actions": [
+      {
+        "objectType": "JavaScript",
+        "active": true,
+        "sourceLines": [
+          "function validarSenhaNova(senha) {",
+          "    const requisitos = {",
+          "        comprimentoMinimo: 8,",
+          "        temMaiuscula: /[A-Z]/,",
+          "        temMinuscula: /[a-z]/,",
+          "        temNumero: /[0-9]/,",
+          "        temEspecial: /[!@#$%^&*(),.?\":{}|<>]/",
+          "    };",
+          "",
+          "    ",
+          "    if (!requisitos.temMaiuscula.test(senha)) {",
+          "        return 'The password must contain at least one capital letter.';",
+          "    }",
+          "    if (!requisitos.temMinuscula.test(senha)) {",
+          "        return 'The password must contain at least one lowercase letter.';",
+          "    }",
+          "    if (!requisitos.temNumero.test(senha)) {",
+          "        return 'The password must contain at least one number.';",
+          "    }",
+          "    if (!requisitos.temEspecial.test(senha)) {",
+          "        return 'The password must contain at least one special character.';",
+          "    }",
+          "\tif (senha.length < requisitos.comprimentoMinimo) {",
+          "        return 'The password must be at least 8 characters long.';",
+          "    }",
+          "",
+          "    return null; // Senha válida",
+          "}",
+          "const novaSenha = TcHmi.Controls.get('TextboxNewPassword').getText();",
+          "const erroSenha = validarSenhaNova(novaSenha);",
+          "",
+          "if (erroSenha) {",
+          "    // Senha inválida - mostra mensagem",
+          "    TcHmi.Controls.get('TcHmiTextblock_1014').setText(erroSenha);",
+          "} else {",
+          "    // Senha válida - prossegue com a atualização",
+          "    TcHmi.Controls.get('TcHmiTextblock_1014').setText('');",
+          "    ",
+          "",
+          "    /*/ Aqui você pode chamar o updateUser com a nova senha",
+          "    TcHmi.Server.UserManagement.updateUser(",
+          "        nomeUsuario,",
+          "        {",
+          "            password: novaSenha",
+          "        },",
+          "        function (data) {",
+          "            if (data.error === TcHmi.Errors.NONE) {",
+          "                console.log('Senha atualizada com sucesso.');",
+          "            } else {",
+          "                console.log('Erro ao atualizar senha: ' + data.error);",
+          "            }",
+          "        }",
+          "    );*/",
+          "}"
+        ],
+        "injectContextObject": false,
+        "asyncWait": true,
+        "waitMode": "Synchronous"
+      }
+    ]
+  }
+]
+</script>
+</div>
+<div id="TcHmiPasswordInput_NewUserPasswdUpdate" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiPasswordInput" data-tchmi-auto-focus-out="true" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="195" data-tchmi-left-unit="px" data-tchmi-top="642" data-tchmi-top-unit="px" data-tchmi-width="260" data-tchmi-width-unit="px" data-tchmi-zindex="5">
+<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+{
+  "top": 3,
+  "right": 3,
+  "bottom": 3,
+  "left": 3
+}
+</script>
+
+</div>
+<div id="TcHmiPopup_UserManagement_2" data-tchmi-type="TcHmi.Controls.System.TcHmiPopup" data-tchmi-height="380" data-tchmi-height-unit="px" data-tchmi-left="245" data-tchmi-left-unit="px" data-tchmi-top="380" data-tchmi-top-unit="px" data-tchmi-width="600" data-tchmi-width-unit="px" data-tchmi-zindex="7">
+</div>
+<div id="TcHmiDatagrid_GroupLists_6" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiDatagrid" data-tchmi-height="276" data-tchmi-height-unit="px" data-tchmi-left="564" data-tchmi-left-unit="px" data-tchmi-top="938" data-tchmi-top-unit="px" data-tchmi-width="250" data-tchmi-width-unit="px" data-tchmi-grid-font-size="18" data-tchmi-header-font-size="16" data-tchmi-zindex="4" data-tchmi-is-enabled="true" data-tchmi-row-height="35">
+<script data-tchmi-target-attribute="data-tchmi-src-column" type="application/json">
+[
+  {
+    "name": "Groupname",
+    "label": "Group Name",
+    "control": "TextBox",
+    "width": 220,
+    "widthUnit": "px",
+    "resize": false,
+    "sortable": false,
+    "minWidth": 100,
+    "minWidthUnit": "px",
+    "textColor": {
+      "color": "rgba(0, 0, 0, 1)"
+    },
+    "editable": false,
+    "horizontalAlignment": "Center",
+    "verticalAlignment": "Center",
+    "headerHorizontalAlignment": "Center",
+    "headerVerticalAlignment": "Center",
+    "ignoreEscapeSequences": false,
+    "autoFocusOut": true,
+    "autoSelectText": false
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-cell-content-padding" type="application/json">
+{
+  "left": 3,
+  "leftUnit": "px",
+  "right": 3,
+  "rightUnit": "px",
+  "top": 0,
+  "topUnit": "px",
+  "bottom": 0,
+  "bottomUnit": "px"
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-border-width" type="application/json">
+{
+  "left": 0,
+  "right": 0,
+  "top": 0,
+  "bottom": 0,
+  "leftUnit": "px",
+  "rightUnit": "px",
+  "topUnit": "px",
+  "bottomUnit": "px"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-style" type="application/json">
+{
+  "left": "Solid",
+  "right": "Solid",
+  "top": "Solid",
+  "bottom": "Solid"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "TcHmiDatagrid_GroupLists_6.onPressed",
+    "actions": [
+      {
+        "objectType": "JavaScript",
+        "active": true,
+        "sourceLines": [
+          "// Pega o controle do DataGrid",
+          "let grid = TcHmi.Controls.get('TcHmiDatagrid_GroupLists');",
+          "",
+          "// Pega o índice da linha selecionada",
+          "let selectedIndex = grid.getSelectedRowIndex();",
+          "",
+          "// Pega os dados da origem do DataGrid",
+          "let data = grid.getSrcData();",
+          "",
+          "// Verifica se há uma seleção válida",
+          "if (grid) {",
+          "    if (selectedIndex !== null && data && selectedIndex >= 0 && selectedIndex < data.length) {",
+          "        // Pega a linha selecionada",
+          "        let selectedRow = data[selectedIndex];",
+          "",
+          "        // Pega o nome do grupo da linha selecionada (ajuste o nome da coluna conforme necessário)",
+          "        let nomeGrupo = selectedRow['Groupname']; // Substitua 'GroupName' pelo nome real da coluna no seu DataGrid",
+          "",
+          "        console.log('Grupo selecionado:', nomeGrupo);",
+          "",
+          "        // Busca todos os usuários e filtra os que pertencem ao grupo selecionado",
+          "        TcHmi.Server.UserManagement.listUsersEx(",
+          "            null,",
+          "            { timeout: 2000 },",
+          "            function (data) {",
+          "                if (data.error === TcHmi.Errors.NONE) {",
+          "                    const allUsers = data.userDetails;",
+          "",
+          "                    // Filtra usuários que pertencem ao grupo selecionado",
+          "                    const usuariosNoGrupo = Object.keys(allUsers).filter(username => {",
+          "                        const user = allUsers[username];",
+          "                        return user.groups.includes(nomeGrupo);",
+          "                    });",
+          "",
+          "                    if (usuariosNoGrupo.length > 0) {",
+          "                        const formattedText =",
+          "                            'Group: ' + nomeGrupo + '\\n\\n' +",
+          "                            'Users in the group:\\n' + usuariosNoGrupo.join(',\\n');",
+          "",
+          "                        const showText = TcHmi.Controls.get('UserDetails');",
+          "                        showText.setText(formattedText);",
+          "                    } else {",
+          "                        const showText = TcHmi.Controls.get('UserDetails');",
+          "                        showText.setText('No users registered in this group:\\n' + nomeGrupo);",
+          "                    }",
+          "                } else {",
+          "                    console.error('Erro ao listar usuários:', data.error);",
+          "                }",
+          "            }",
+          "        );",
+          "    } else {",
+          "        console.warn('No row selected or invalid data.');",
+          "    }",
+          "} else {",
+          "    console.error('Controle DataGrid não encontrado.');",
+          "}"
+        ],
+        "injectContextObject": false,
+        "asyncWait": true,
+        "waitMode": "Synchronous"
+      }
+    ]
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-header-background-color" type="application/json">
+{
+  "color": "rgba(25, 63, 98, 1)"
+}
+</script>
+
+
+</div>
+<div id="TcHmiTextblock_CurrentUserName_1015" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="755" data-tchmi-left-unit="px" data-tchmi-text="%f%TcHmi.Server.getCurrentUser()%/f%" data-tchmi-top="138" data-tchmi-top-unit="px" data-tchmi-width="250" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="20" data-tchmi-text-font-weight="Auto" data-tchmi-zindex="4">
+</div>
+<div id="TcHmiTextblock_1041" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="255" data-tchmi-left-unit="px" data-tchmi-top="690" data-tchmi-top-unit="px" data-tchmi-width="38" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="20" data-tchmi-text-font-weight="Auto" data-tchmi-text="min" data-tchmi-zindex="4">
+</div>
+<div id="TcHmiNumericInput_NewUserTimeOut2" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiNumericInput" data-tchmi-auto-focus-out="true" data-tchmi-decimal-digits="0" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="195" data-tchmi-left-unit="px" data-tchmi-max-value="1441" data-tchmi-min-value="0" data-tchmi-reset-to-last-valid-value="true" data-tchmi-top="690" data-tchmi-top-unit="px" data-tchmi-value="0" data-tchmi-width="50" data-tchmi-width-unit="px" data-tchmi-value-font-size="15" data-tchmi-zindex="4">
+<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+{
+  "top": 3,
+  "right": 3,
+  "bottom": 3,
+  "left": 3
+}
+</script>
+
+</div>
+<div id="TcHmiTextblock_1042" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="69" data-tchmi-left-unit="px" data-tchmi-text="Auto Logout:" data-tchmi-top="690" data-tchmi-top-unit="px" data-tchmi-width="110" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="20" data-tchmi-text-font-weight="Auto" data-tchmi-zindex="4">
+</div>
+
+
+<div id="TcHmiRectangle_298" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="2" data-tchmi-height-unit="px" data-tchmi-left="184" data-tchmi-left-unit="px" data-tchmi-top="106" data-tchmi-top-unit="px" data-tchmi-width="338" data-tchmi-width-unit="px" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(124, 124, 124, 1)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(30, 77, 117, 0)"
+}
+</script>
+</div>
+<div id="TcHmiTextblock_1079" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="31" data-tchmi-height-unit="px" data-tchmi-left="72" data-tchmi-left-unit="px" data-tchmi-text="User Info" data-tchmi-top="90" data-tchmi-top-unit="px" data-tchmi-width="110" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="22" data-tchmi-text-font-weight="Bold" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(255, 255, 255, 0.7058823)"
+}
+</script>
+</div>
+<div id="TcHmiRectangle_299" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="2" data-tchmi-height-unit="px" data-tchmi-left="22" data-tchmi-left-unit="px" data-tchmi-top="106" data-tchmi-top-unit="px" data-tchmi-width="50" data-tchmi-width-unit="px" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(124, 124, 124, 1)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(30, 77, 117, 0)"
+}
+</script>
+</div>
+
+
+<div id="TcHmiRectangle_300" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="2" data-tchmi-height-unit="px" data-tchmi-left="22" data-tchmi-left-unit="px" data-tchmi-top="410" data-tchmi-top-unit="px" data-tchmi-width="500" data-tchmi-width-unit="px" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(124, 124, 124, 1)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(30, 77, 117, 0)"
+}
+</script>
+</div>
+<div id="TcHmiRectangle_301" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="306" data-tchmi-height-unit="px" data-tchmi-left="22" data-tchmi-left-unit="px" data-tchmi-top="106" data-tchmi-top-unit="px" data-tchmi-width="2" data-tchmi-width-unit="px" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(124, 124, 124, 1)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(30, 77, 117, 0)"
+}
+</script>
+</div>
+<div id="TcHmiRectangle_302" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="306" data-tchmi-height-unit="px" data-tchmi-left="520" data-tchmi-left-unit="px" data-tchmi-top="106" data-tchmi-top-unit="px" data-tchmi-width="2" data-tchmi-width-unit="px" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(124, 124, 124, 1)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(30, 77, 117, 0)"
+}
+</script>
+</div>
+<div id="TcHmiRectangle_303" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="2" data-tchmi-height-unit="px" data-tchmi-left="784" data-tchmi-left-unit="px" data-tchmi-top="106" data-tchmi-top-unit="px" data-tchmi-width="270" data-tchmi-width-unit="px" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(124, 124, 124, 1)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(30, 77, 117, 0)"
+}
+</script>
+</div>
+<div id="TcHmiTextblock_1080" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="31" data-tchmi-height-unit="px" data-tchmi-left="604" data-tchmi-left-unit="px" data-tchmi-text="Password Change" data-tchmi-top="90" data-tchmi-top-unit="px" data-tchmi-width="180" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="22" data-tchmi-text-font-weight="Bold" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(255, 255, 255, 0.7058823)"
+}
+</script>
+</div>
+<div id="TcHmiRectangle_304" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="2" data-tchmi-height-unit="px" data-tchmi-left="554" data-tchmi-left-unit="px" data-tchmi-top="106" data-tchmi-top-unit="px" data-tchmi-width="50" data-tchmi-width-unit="px" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(124, 124, 124, 1)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(30, 77, 117, 0)"
+}
+</script>
+</div>
+<div id="TcHmiRectangle_305" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="306" data-tchmi-height-unit="px" data-tchmi-left="554" data-tchmi-left-unit="px" data-tchmi-top="106" data-tchmi-top-unit="px" data-tchmi-width="2" data-tchmi-width-unit="px" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(124, 124, 124, 1)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(30, 77, 117, 0)"
+}
+</script>
+</div>
+<div id="TcHmiRectangle_306" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="306" data-tchmi-height-unit="px" data-tchmi-left="1052" data-tchmi-left-unit="px" data-tchmi-top="106" data-tchmi-top-unit="px" data-tchmi-width="2" data-tchmi-width-unit="px" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(124, 124, 124, 1)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(30, 77, 117, 0)"
+}
+</script>
+</div>
+<div id="TcHmiRectangle_307" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="2" data-tchmi-height-unit="px" data-tchmi-left="554" data-tchmi-left-unit="px" data-tchmi-top="410" data-tchmi-top-unit="px" data-tchmi-width="500" data-tchmi-width-unit="px" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(124, 124, 124, 1)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(30, 77, 117, 0)"
+}
+</script>
+</div>
+<div id="TcHmiTextblock_1081" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="31" data-tchmi-height-unit="px" data-tchmi-left="604" data-tchmi-left-unit="px" data-tchmi-text="Edit Selected User" data-tchmi-top="502" data-tchmi-top-unit="px" data-tchmi-width="180" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="22" data-tchmi-text-font-weight="Bold" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(255, 255, 255, 0.7058823)"
+}
+</script>
+</div>
+<div id="TcHmiRectangle_308" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="2" data-tchmi-height-unit="px" data-tchmi-left="554" data-tchmi-left-unit="px" data-tchmi-top="518" data-tchmi-top-unit="px" data-tchmi-width="50" data-tchmi-width-unit="px" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(124, 124, 124, 1)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(30, 77, 117, 0)"
+}
+</script>
+</div>
+<div id="TcHmiRectangle_309" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="306" data-tchmi-height-unit="px" data-tchmi-left="554" data-tchmi-left-unit="px" data-tchmi-top="518" data-tchmi-top-unit="px" data-tchmi-width="2" data-tchmi-width-unit="px" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(124, 124, 124, 1)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(30, 77, 117, 0)"
+}
+</script>
+</div>
+<div id="TcHmiRectangle_310" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="2" data-tchmi-height-unit="px" data-tchmi-left="554" data-tchmi-left-unit="px" data-tchmi-top="822" data-tchmi-top-unit="px" data-tchmi-width="500" data-tchmi-width-unit="px" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(124, 124, 124, 1)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(30, 77, 117, 0)"
+}
+</script>
+</div>
+<div id="TcHmiRectangle_311" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="306" data-tchmi-height-unit="px" data-tchmi-left="1052" data-tchmi-left-unit="px" data-tchmi-top="518" data-tchmi-top-unit="px" data-tchmi-width="2" data-tchmi-width-unit="px" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(124, 124, 124, 1)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(30, 77, 117, 0)"
+}
+</script>
+</div>
+<div id="TcHmiRectangle_312" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="2" data-tchmi-height-unit="px" data-tchmi-left="784" data-tchmi-left-unit="px" data-tchmi-top="518" data-tchmi-top-unit="px" data-tchmi-width="270" data-tchmi-width-unit="px" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(124, 124, 124, 1)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(30, 77, 117, 0)"
+}
+</script>
+</div>
+<div id="TcHmiRectangle_313" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="306" data-tchmi-height-unit="px" data-tchmi-left="22" data-tchmi-left-unit="px" data-tchmi-top="518" data-tchmi-top-unit="px" data-tchmi-width="2" data-tchmi-width-unit="px" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(124, 124, 124, 1)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(30, 77, 117, 0)"
+}
+</script>
+</div>
+<div id="TcHmiRectangle_314" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="2" data-tchmi-height-unit="px" data-tchmi-left="22" data-tchmi-left-unit="px" data-tchmi-top="518" data-tchmi-top-unit="px" data-tchmi-width="50" data-tchmi-width-unit="px" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(124, 124, 124, 1)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(30, 77, 117, 0)"
+}
+</script>
+</div>
+<div id="TcHmiTextblock_1082" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="31" data-tchmi-height-unit="px" data-tchmi-left="72" data-tchmi-left-unit="px" data-tchmi-text="Create New User" data-tchmi-top="502" data-tchmi-top-unit="px" data-tchmi-width="180" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="22" data-tchmi-text-font-weight="Bold" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(255, 255, 255, 0.7058823)"
+}
+</script>
+</div>
+<div id="TcHmiRectangle_315" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="2" data-tchmi-height-unit="px" data-tchmi-left="252" data-tchmi-left-unit="px" data-tchmi-top="518" data-tchmi-top-unit="px" data-tchmi-width="270" data-tchmi-width-unit="px" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(124, 124, 124, 1)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(30, 77, 117, 0)"
+}
+</script>
+</div>
+<div id="TcHmiRectangle_316" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="2" data-tchmi-height-unit="px" data-tchmi-left="22" data-tchmi-left-unit="px" data-tchmi-top="822" data-tchmi-top-unit="px" data-tchmi-width="500" data-tchmi-width-unit="px" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(124, 124, 124, 1)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(30, 77, 117, 0)"
+}
+</script>
+</div>
+<div id="TcHmiRectangle_317" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="306" data-tchmi-height-unit="px" data-tchmi-left="520" data-tchmi-left-unit="px" data-tchmi-top="518" data-tchmi-top-unit="px" data-tchmi-width="2" data-tchmi-width-unit="px" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(124, 124, 124, 1)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(30, 77, 117, 0)"
+}
+</script>
+</div>
+
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "Content_UserManagement.onAttached",
+    "actions": [
+      {
+        "objectType": "JavaScript",
+        "active": true,
+        "sourceLines": [
+          "(function () {",
+          "",
+          "    console.log(\"User Management Content attached. Loading users and groups...\");",
+          "",
+          "    // ------------------------------------------------------------",
+          "    // Load Users",
+          "    // ------------------------------------------------------------",
+          "    function loadUsers() {",
+          "",
+          "        TcHmi.Server.UserManagement.listUsernames(function (data) {",
+          "",
+          "            if (data.error === TcHmi.Errors.NONE) {",
+          "",
+          "                const userList = data.userList || [];",
+          "                console.log(\"User list received:\", userList);",
+          "",
+          "                const usersExcluded = [",
+          "                    \"__SystemAdministrator\",",
+          "                    \"__SystemGuest\"",
+          "                ];",
+          "",
+          "                const usersFiltered = userList.filter(function (username) {",
+          "                    return !usersExcluded.includes(username);",
+          "                });",
+          "",
+          "                const gridData = usersFiltered.map(function (username) {",
+          "                    return {",
+          "                        Username: username",
+          "                    };",
+          "                });",
+          "",
+          "                const userGrid = TcHmi.Controls.get(\"TcHmiDatagrid_UserLists\");",
+          "",
+          "                if (userGrid) {",
+          "                    userGrid.setSrcData(gridData);",
+          "                    console.log(\"User DataGrid loaded:\", gridData);",
+          "                } else {",
+          "                    console.warn(\"Control not found: TcHmiDatagrid_UserLists\");",
+          "                }",
+          "",
+          "            } else {",
+          "                console.error(\"Error loading users:\", data.error);",
+          "            }",
+          "        });",
+          "    }",
+          "",
+          "",
+          "    // ------------------------------------------------------------",
+          "    // Load Groups",
+          "    // ------------------------------------------------------------",
+          "    function loadGroups() {",
+          "",
+          "        TcHmi.Server.UserManagement.listUserGroups(function (data) {",
+          "",
+          "            if (data.error === TcHmi.Errors.NONE) {",
+          "",
+          "                const groupDetailsList = data.groupDetailsList || {};",
+          "                console.log(\"Group details received:\", groupDetailsList);",
+          "",
+          "                const groupsExcluded = [",
+          "                    \"__SystemAdministrators\",",
+          "                    \"__SystemGuests\",",
+          "                    \"__SystemMaintenanceUsers\",",
+          "                    \"__SystemUsers\"",
+          "                ];",
+          "",
+          "                const groupNames = Object.keys(groupDetailsList).filter(function (groupname) {",
+          "                    return !groupsExcluded.includes(groupname);",
+          "                });",
+          "",
+          "                console.log(\"Filtered groups:\", groupNames);",
+          "",
+          "                const gridData = groupNames.map(function (groupname) {",
+          "                    return {",
+          "                        Groupname: groupname",
+          "                    };",
+          "                });",
+          "",
+          "                const comboData = groupNames.map(function (groupname) {",
+          "                    return {",
+          "                        value: groupname,",
+          "                        text: groupname",
+          "                    };",
+          "                });",
+          "",
+          "",
+          "                // ------------------------------------------------------------",
+          "                // Group DataGrid",
+          "                // ------------------------------------------------------------",
+          "                const groupGrid = TcHmi.Controls.get(\"TcHmiDatagrid_GroupLists\");",
+          "",
+          "                if (groupGrid) {",
+          "                    groupGrid.setSrcData(gridData);",
+          "                    console.log(\"Group DataGrid loaded:\", gridData);",
+          "                } else {",
+          "                    console.warn(\"Control not found: TcHmiDatagrid_GroupLists\");",
+          "                }",
+          "",
+          "",
+          "                // ------------------------------------------------------------",
+          "                // New User Group ComboBox",
+          "                // ------------------------------------------------------------",
+          "                const newUserGroupCombo = TcHmi.Controls.get(\"TcHmiCombobox_NewUserGroup\");",
+          "",
+          "                if (newUserGroupCombo) {",
+          "                    newUserGroupCombo.setSrcData(comboData);",
+          "                    console.log(\"New User Group ComboBox loaded:\", comboData);",
+          "                } else {",
+          "                    console.warn(\"Control not found: TcHmiCombobox_NewUserGroup\");",
+          "                }",
+          "",
+          "",
+          "                // ------------------------------------------------------------",
+          "                // Edit Current User Group ComboBox",
+          "                // ------------------------------------------------------------",
+          "                const editUserGroupCombo = TcHmi.Controls.get(\"TcHmiCombobox_EditCurrentUserGroup\");",
+          "",
+          "                if (editUserGroupCombo) {",
+          "                    editUserGroupCombo.setSrcData(comboData);",
+          "                    console.log(\"Edit User Group ComboBox loaded:\", comboData);",
+          "                } else {",
+          "                    console.warn(\"Control not found: TcHmiCombobox_EditCurrentUserGroup\");",
+          "                }",
+          "",
+          "            } else {",
+          "                console.error(\"Error loading groups:\", data.error);",
+          "            }",
+          "        });",
+          "    }",
+          "",
+          "",
+          "    // ------------------------------------------------------------",
+          "    // Expose reload functions globally",
+          "    // ------------------------------------------------------------",
+          "    window.UserManagement_LoadUsers = loadUsers;",
+          "",
+          "    window.UserManagement_LoadGroups = loadGroups;",
+          "",
+          "    window.UserManagement_ReloadAll = function () {",
+          "        loadUsers();",
+          "        loadGroups();",
+          "    };",
+          "",
+          "",
+          "    // ------------------------------------------------------------",
+          "    // Execute on content attached",
+          "    // ------------------------------------------------------------",
+          "    loadUsers();",
+          "    loadGroups();",
+          "",
+          "})();"
+        ],
+        "injectContextObject": false,
+        "asyncWait": true,
+        "waitMode": "Synchronous"
+      }
+    ]
+  }
+]
+</script>
+<div id="TcHmiRectangle_318" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="2" data-tchmi-height-unit="px" data-tchmi-left="22" data-tchmi-left-unit="px" data-tchmi-top="1220" data-tchmi-top-unit="px" data-tchmi-width="500" data-tchmi-width-unit="px" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(124, 124, 124, 1)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(30, 77, 117, 0)"
+}
+</script>
+</div>
+<div id="TcHmiRectangle_319" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="306" data-tchmi-height-unit="px" data-tchmi-left="22" data-tchmi-left-unit="px" data-tchmi-top="916" data-tchmi-top-unit="px" data-tchmi-width="2" data-tchmi-width-unit="px" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(124, 124, 124, 1)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(30, 77, 117, 0)"
+}
+</script>
+</div>
+<div id="TcHmiRectangle_320" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="306" data-tchmi-height-unit="px" data-tchmi-left="520" data-tchmi-left-unit="px" data-tchmi-top="916" data-tchmi-top-unit="px" data-tchmi-width="2" data-tchmi-width-unit="px" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(124, 124, 124, 1)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(30, 77, 117, 0)"
+}
+</script>
+</div>
+<div id="TcHmiTextblock_1083" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="31" data-tchmi-height-unit="px" data-tchmi-left="72" data-tchmi-left-unit="px" data-tchmi-text="Users List" data-tchmi-top="900" data-tchmi-top-unit="px" data-tchmi-width="110" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="22" data-tchmi-text-font-weight="Bold" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(255, 255, 255, 0.7058823)"
+}
+</script>
+</div>
+<div id="TcHmiRectangle_321" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="2" data-tchmi-height-unit="px" data-tchmi-left="22" data-tchmi-left-unit="px" data-tchmi-top="916" data-tchmi-top-unit="px" data-tchmi-width="50" data-tchmi-width-unit="px" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(124, 124, 124, 1)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(30, 77, 117, 0)"
+}
+</script>
+</div>
+<div id="TcHmiRectangle_322" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="2" data-tchmi-height-unit="px" data-tchmi-left="182" data-tchmi-left-unit="px" data-tchmi-top="916" data-tchmi-top-unit="px" data-tchmi-width="339" data-tchmi-width-unit="px" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(124, 124, 124, 1)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(30, 77, 117, 0)"
+}
+</script>
+</div>
+<div id="TcHmiRectangle_323" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="290" data-tchmi-height-unit="px" data-tchmi-left="30" data-tchmi-left-unit="px" data-tchmi-top="924" data-tchmi-top-unit="px" data-tchmi-width="484" data-tchmi-width-unit="px" data-tchmi-zindex="0">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "angle": 90.0,
+  "stopPoints": [
+    {
+      "color": "rgba(244, 244, 244, 1)",
+      "stop": "0%"
+    },
+    {
+      "color": "rgba(255, 255, 255, 1)",
+      "stop": "55.66%"
+    }
+  ]
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(163, 163, 163, 0)"
+}
+</script>
+</div>
+<div id="TcHmiTextblock_1084" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="31" data-tchmi-height-unit="px" data-tchmi-left="604" data-tchmi-left-unit="px" data-tchmi-text="Groups List" data-tchmi-top="900" data-tchmi-top-unit="px" data-tchmi-width="110" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="22" data-tchmi-text-font-weight="Bold" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(255, 255, 255, 0.7058823)"
+}
+</script>
+</div>
+<div id="TcHmiRectangle_324" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="2" data-tchmi-height-unit="px" data-tchmi-left="554" data-tchmi-left-unit="px" data-tchmi-top="916" data-tchmi-top-unit="px" data-tchmi-width="50" data-tchmi-width-unit="px" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(124, 124, 124, 1)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(30, 77, 117, 0)"
+}
+</script>
+</div>
+<div id="TcHmiRectangle_325" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="2" data-tchmi-height-unit="px" data-tchmi-left="714" data-tchmi-left-unit="px" data-tchmi-top="916" data-tchmi-top-unit="px" data-tchmi-width="339" data-tchmi-width-unit="px" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(124, 124, 124, 1)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(30, 77, 117, 0)"
+}
+</script>
+</div>
+<div id="TcHmiRectangle_326" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="306" data-tchmi-height-unit="px" data-tchmi-left="1052" data-tchmi-left-unit="px" data-tchmi-top="916" data-tchmi-top-unit="px" data-tchmi-width="2" data-tchmi-width-unit="px" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(124, 124, 124, 1)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(30, 77, 117, 0)"
+}
+</script>
+</div>
+<div id="TcHmiRectangle_327" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="2" data-tchmi-height-unit="px" data-tchmi-left="554" data-tchmi-left-unit="px" data-tchmi-top="1220" data-tchmi-top-unit="px" data-tchmi-width="500" data-tchmi-width-unit="px" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(124, 124, 124, 1)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(30, 77, 117, 0)"
+}
+</script>
+</div>
+<div id="TcHmiRectangle_328" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="306" data-tchmi-height-unit="px" data-tchmi-left="554" data-tchmi-left-unit="px" data-tchmi-top="916" data-tchmi-top-unit="px" data-tchmi-width="2" data-tchmi-width-unit="px" data-tchmi-zindex="6">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(124, 124, 124, 1)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(30, 77, 117, 0)"
+}
+</script>
+</div>
+<div id="TcHmiRectangle_329" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="290" data-tchmi-height-unit="px" data-tchmi-left="562" data-tchmi-left-unit="px" data-tchmi-top="924" data-tchmi-top-unit="px" data-tchmi-width="484" data-tchmi-width-unit="px" data-tchmi-zindex="0">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "angle": 90.0,
+  "stopPoints": [
+    {
+      "color": "rgba(244, 244, 244, 1)",
+      "stop": "0%"
+    },
+    {
+      "color": "rgba(255, 255, 255, 1)",
+      "stop": "46.86%"
+    }
+  ]
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(163, 163, 163, 0)"
+}
+</script>
+</div>
+<div id="TcHmiRectangle_330" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="29" data-tchmi-height-unit="px" data-tchmi-left="278" data-tchmi-left-unit="px" data-tchmi-top="938" data-tchmi-top-unit="px" data-tchmi-width="233" data-tchmi-width-unit="px" data-tchmi-zindex="8">
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(0, 0, 0, 0)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(25, 63, 98, 1)"
+}
+</script>
+</div>
+<div id="TcHmiRectangle_331" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="29" data-tchmi-height-unit="px" data-tchmi-left="285" data-tchmi-left-unit="px" data-tchmi-top="938" data-tchmi-top-unit="px" data-tchmi-width="1" data-tchmi-width-unit="px" data-tchmi-zindex="8">
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(0, 0, 0, 0)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(255, 255, 255, 1)"
+}
+</script>
+</div>
+<div id="TcHmiTextblock_1085" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="29" data-tchmi-height-unit="px" data-tchmi-left="342" data-tchmi-left-unit="px" data-tchmi-text="User Details" data-tchmi-top="938" data-tchmi-top-unit="px" data-tchmi-width="110" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="16" data-tchmi-text-font-weight="Auto" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-zindex="9">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "None"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-text-color" type="application/json">
+{
+  "color": "rgba(255, 255, 255, 1)"
+}
+</script>
+</div>
+<div id="TcHmiRectangle_332" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="29" data-tchmi-height-unit="px" data-tchmi-left="811" data-tchmi-left-unit="px" data-tchmi-top="938" data-tchmi-top-unit="px" data-tchmi-width="233" data-tchmi-width-unit="px" data-tchmi-zindex="8">
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(0, 0, 0, 0)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(25, 63, 98, 1)"
+}
+</script>
+</div>
+<div id="TcHmiRectangle_333" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="29" data-tchmi-height-unit="px" data-tchmi-left="818" data-tchmi-left-unit="px" data-tchmi-top="938" data-tchmi-top-unit="px" data-tchmi-width="1" data-tchmi-width-unit="px" data-tchmi-zindex="8">
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(0, 0, 0, 0)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(255, 255, 255, 1)"
+}
+</script>
+</div>
+<div id="TcHmiTextblock_1086" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="29" data-tchmi-height-unit="px" data-tchmi-left="875" data-tchmi-left-unit="px" data-tchmi-text="Group Details" data-tchmi-top="938" data-tchmi-top-unit="px" data-tchmi-width="110" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="16" data-tchmi-text-font-weight="Auto" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-zindex="9">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "None"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-text-color" type="application/json">
+{
+  "color": "rgba(255, 255, 255, 1)"
+}
+</script>
+</div>
+
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "None"
+}
+</script>
+<div id="TextboxConfirmNewPassword" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiPasswordInput" data-tchmi-auto-focus-out="true" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="755" data-tchmi-left-unit="px" data-tchmi-top="225" data-tchmi-top-unit="px" data-tchmi-width="250" data-tchmi-width-unit="px" data-tchmi-zindex="5">
+<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+{
+  "top": 3,
+  "right": 3,
+  "bottom": 3,
+  "left": 3
+}
+</script>
+
+
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "TextboxNewPassword_1.onTextChanged",
+    "actions": [
+      {
+        "objectType": "JavaScript",
+        "active": true,
+        "sourceLines": [
+          "function validarSenhaNova(senha) {",
+          "    const requisitos = {",
+          "        comprimentoMinimo: 8,",
+          "        temMaiuscula: /[A-Z]/,",
+          "        temMinuscula: /[a-z]/,",
+          "        temNumero: /[0-9]/,",
+          "        temEspecial: /[!@#$%^&*(),.?\":{}|<>]/",
+          "    };",
+          "",
+          "    ",
+          "    if (!requisitos.temMaiuscula.test(senha)) {",
+          "        return 'The password must contain at least one capital letter.';",
+          "    }",
+          "    if (!requisitos.temMinuscula.test(senha)) {",
+          "        return 'The password must contain at least one lowercase letter.';",
+          "    }",
+          "    if (!requisitos.temNumero.test(senha)) {",
+          "        return 'The password must contain at least one number.';",
+          "    }",
+          "    if (!requisitos.temEspecial.test(senha)) {",
+          "        return 'The password must contain at least one special character.';",
+          "    }",
+          "\tif (senha.length < requisitos.comprimentoMinimo) {",
+          "        return 'The password must be at least 8 characters long.';",
+          "    }",
+          "",
+          "    return null; // Senha válida",
+          "}",
+          "const novaSenha = TcHmi.Controls.get('TextboxNewPassword').getText();",
+          "const erroSenha = validarSenhaNova(novaSenha);",
+          "",
+          "if (erroSenha) {",
+          "    // Senha inválida - mostra mensagem",
+          "    TcHmi.Controls.get('TcHmiTextblock_1014').setText(erroSenha);",
+          "} else {",
+          "    // Senha válida - prossegue com a atualização",
+          "    TcHmi.Controls.get('TcHmiTextblock_1014').setText('');",
+          "    ",
+          "",
+          "    /*/ Aqui você pode chamar o updateUser com a nova senha",
+          "    TcHmi.Server.UserManagement.updateUser(",
+          "        nomeUsuario,",
+          "        {",
+          "            password: novaSenha",
+          "        },",
+          "        function (data) {",
+          "            if (data.error === TcHmi.Errors.NONE) {",
+          "                console.log('Senha atualizada com sucesso.');",
+          "            } else {",
+          "                console.log('Erro ao atualizar senha: ' + data.error);",
+          "            }",
+          "        }",
+          "    );*/",
+          "}"
+        ],
+        "injectContextObject": false,
+        "asyncWait": true,
+        "waitMode": "Synchronous"
+      }
+    ]
+  }
+]
+</script>
+</div>
+<div id="TcHmiTextblock_1103" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="592" data-tchmi-left-unit="px" data-tchmi-text="Confirm:" data-tchmi-top="225" data-tchmi-top-unit="px" data-tchmi-width="153" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="20" data-tchmi-text-font-weight="Auto" data-tchmi-zindex="4">
+</div>
+</div>
