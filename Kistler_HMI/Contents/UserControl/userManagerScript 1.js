@@ -14,15 +14,15 @@ async function userManager(User, Password, Group, slctUser, Action){
         var   groupName = '';
         var   LogOutTime = "";  
 
-        if(groupData == 1 ){
+        if(groupData == '1'){
 	        groupName = 'Administrator';
             LogOutTime = "PT15M";
         }
-        if(groupData == 2){
+        if(groupData == '2'){
 	        groupName = 'Engineer';
             LogOutTime = "PT15M";
         }
-        if(groupData == 3){
+        if(groupData == '3'){
 	        groupName = 'Operator';
             LogOutTime = "P30D";
         }
@@ -122,7 +122,7 @@ async function userManager(User, Password, Group, slctUser, Action){
 
         console.log(userData);
         console.log(passwordData);
-        console.log(groupsData);
+        console.log(groupData);
 
     } catch (erro){
         console.error(erro);

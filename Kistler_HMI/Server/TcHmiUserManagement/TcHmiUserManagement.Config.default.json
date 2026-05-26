@@ -9,6 +9,14 @@
     "PASSWORD_MAXIMUM_AGE": "P90D",
     "PASSWORD_MINIMUM_LENGTH": 1,
     "USERS": {
+        "442": {
+            "ALGORITHM": 1,
+            "ENABLED": true,
+            "LAST_PASSWORD_CHANGE": "2026-05-26T11:22:07.8873941Z",
+            "PASSWORD": "bd84899fffe04c32ea2bb54e7efe8677d1ac06a0d95c2d4830b4c5630bc51bc32068876bccfa802e76ea3f6d829de2322ba121fe3b048899d70b92d673a7958a",
+            "SALT": "WUjvV2gr2mfzui5lvo/ppJC5kqq7lf0KfZucpox6W5FRmq9+rHBpQfIFAj0dcZ48ocGywpUD0QIQkzcfHJFaBg==",
+            "TWO_FACTOR_AUTHENTICATION_ENABLED": false
+        },
         "Renan": {
             "ALGORITHM": 1,
             "ENABLED": true,
@@ -68,6 +76,78 @@
                 "iv": "",
                 "value": ""
             },
+            "TWO_FACTOR_AUTHENTICATION_ENABLED": false
+        },
+        "aaaaaaa": {
+            "ALGORITHM": 1,
+            "ENABLED": true,
+            "LAST_PASSWORD_CHANGE": "2026-05-26T13:23:08.1471359Z",
+            "PASSWORD": "5c6325dad3bac5a3880b516ca7a7a7e1af248d1e62de999eb23e8c0febc7807cba4aef76e18f2dff432ed0557ec018678c3e077b5044b2f794548573f48cd8cb",
+            "SALT": "9gPZ5yKcStRz4jFSw3x2AF6Nr//eFmTtqfRYrqdubBwBesll7WHZ8ByVpfFi1K/1YMz1H7ku8MlqOoVArO/TWQ==",
+            "TWO_FACTOR_AUTHENTICATION_ENABLED": false
+        },
+        "i": {
+            "ALGORITHM": 1,
+            "ENABLED": true,
+            "LAST_PASSWORD_CHANGE": "2026-05-26T11:32:27.1785601Z",
+            "PASSWORD": "7225096d9482020d7e1cf90e9da24cf1655af190f5568bf626048879ab2cfc2f4624a17cb7e2fcec43c50e2aadb3a321e095cee88bcdceeea849cbee4ca6c1a0",
+            "SALT": "VZMDaWoNR/0vPM8beogOHWWJHrPKfxY/qSMlGLLTQDY3qVL9Mk3TUC3jO/rwlWpYjoOO0kfDJxfi0nlCbn2EWA==",
+            "TWO_FACTOR_AUTHENTICATION_ENABLED": false
+        },
+        "ili": {
+            "ALGORITHM": 1,
+            "ENABLED": true,
+            "LAST_PASSWORD_CHANGE": "2026-05-26T11:51:32.357786Z",
+            "PASSWORD": "d3441254377c800fe9d28476b6af478a5f6d3b216af9d9581464fabe08c740058ffdadb1b906ce22af4fbfc24db4581663ccb2532af6ac7aa3fc35572f88d2f6",
+            "SALT": "RLtDxkym315bUqa/7Jb++OcuL9hrOfbwTQJPK6xXp5qHW1EqE0ReK0J8ST41sxxFsYM7hVwN8ZTutTrjSxY+jA==",
+            "TWO_FACTOR_AUTHENTICATION_ENABLED": false
+        },
+        "jesus": {
+            "ALGORITHM": 1,
+            "ENABLED": true,
+            "LAST_PASSWORD_CHANGE": "2026-05-26T11:17:05.9426037Z",
+            "PASSWORD": "e5e75ee2db02e82fa9d14e04cb379ad2a6512d8a20b04b475e374d998ae55a56f777b5feda0e394ef78003b6b005fb0fc68420b0772571a163d5d112fe353c2f",
+            "SALT": "u9T49EmYAKMQ350ICnvKoGw0mceGlHdkRhNEnbEOxuNT+y8GSRAeXSqWe+I3chDVbxKK37XfDAqyf/Z2TtztpQ==",
+            "TWO_FACTOR_AUTHENTICATION_ENABLED": false
+        },
+        "p": {
+            "ALGORITHM": 1,
+            "ENABLED": true,
+            "LAST_PASSWORD_CHANGE": "2026-05-26T11:28:51.4407011Z",
+            "PASSWORD": "1a0e2c24b707c5a2b5c934fe15342a00f26de4417493daddefd27791a4d2a6f5113cb621e6b1fe379c2f57bfa58ad1a7ac5e2a108003b5b507d52cc767a3745f",
+            "SALT": "xamicp//EYh9O8DVYAykksGwOySk+D8AwGkmUU5EDXTpyrwWPTib4tELOKe0cydSAXTrxkloD8U4o6jVkQLSdw==",
+            "TWO_FACTOR_AUTHENTICATION_ENABLED": false
+        },
+        "pam": {
+            "ALGORITHM": 1,
+            "ENABLED": true,
+            "LAST_PASSWORD_CHANGE": "2026-05-26T11:54:49.0463302Z",
+            "PASSWORD": "471aa30728de719dd96bca262a8a18d8651d4f34af6546e7be67a76fb1d3fa8b568b5d6b97b657aeb8c17171b15a486a602f039cb4cb5a53e418d2798a19f03e",
+            "SALT": "IdAPWmkg6UQuGQxgo3I8FIe5lU02IBa4DG5naWlXIgYBiKVBtXQYYckLtctmGtkIkdWbj8+pgcPH2xCQkk1eOA==",
+            "TWO_FACTOR_AUTHENTICATION_ENABLED": false
+        },
+        "pp": {
+            "ALGORITHM": 1,
+            "ENABLED": true,
+            "LAST_PASSWORD_CHANGE": "2026-05-26T11:48:08.4852701Z",
+            "PASSWORD": "9cdf42ae39a6cda91cac153dbe9c480beb016d3b720cdb6da7e8ea7481329eab24dda3129135a0d6e8e9aff406010842087e9ebd3072a9ee19f0e77042759686",
+            "SALT": "na1+t202x9Jr6wExU+r8S1JoJ8OhrLO9dxds8BZPaBtWgaC/N+w/o7aYPDZlXntq8BENuma1mm3y7H17FC6Emg==",
+            "TWO_FACTOR_AUTHENTICATION_ENABLED": false
+        },
+        "te": {
+            "ALGORITHM": 1,
+            "ENABLED": true,
+            "LAST_PASSWORD_CHANGE": "2026-05-26T11:27:24.9446645Z",
+            "PASSWORD": "081a59f2ff8df0ec6195fdbfdd389a3837929393c4145b8b16065319230588175fce1cd953fe89eaed09e3d73843b1deee9abfc1f00772d5b76aacabb4e9b7cf",
+            "SALT": "BU/hF6DSZzXvrO3f1IQMOQdWh0VONnn3HzYgWEfgsbIPzIEuqSz0ZiJ+s1Sv/yqH+hwpFhVeOyOoQz4KaKvBQA==",
+            "TWO_FACTOR_AUTHENTICATION_ENABLED": false
+        },
+        "ui": {
+            "ALGORITHM": 1,
+            "ENABLED": true,
+            "LAST_PASSWORD_CHANGE": "2026-05-26T11:52:35.5017444Z",
+            "PASSWORD": "020cd4554cbe5860a8c08de533f0516fd8e166929bed018e474b94d5422b1903ec64449cb93aabebc4bb22edae2051008a44de7120b0bd3f01bf37362c5bcc4d",
+            "SALT": "AucQxYpBHd7Xni4hHHcwkKb+Av4mxUvd2OVS31GOqXK/teYhCGEmpbYuF2K7wyUiqkxjEAOq2VXz1Y3o4u/5Bg==",
             "TWO_FACTOR_AUTHENTICATION_ENABLED": false
         }
     }

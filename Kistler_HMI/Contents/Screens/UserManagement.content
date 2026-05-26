@@ -1,5 +1,5 @@
 <div id="Content1_11" data-tchmi-type="TcHmi.Controls.System.TcHmiContent" data-tchmi-top="0" data-tchmi-left="0" data-tchmi-width="100" data-tchmi-height="100" data-tchmi-creator-viewport-width="1360" data-tchmi-creator-viewport-height="480" data-tchmi-width-unit="%" data-tchmi-height-unit="%" data-tchmi-zindex="3">
-<div id="TcHmiCombobox_3" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiCombobox" data-tchmi-auto-focus-out="true" data-tchmi-combobox-text="Select" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="459" data-tchmi-left-unit="px" data-tchmi-top="76" data-tchmi-top-unit="px" data-tchmi-width="150" data-tchmi-width-unit="px" tchmi.server.usermanagement.igroupresultobject)="data-tchmi-auto-select-text=" true""="" data-tchmi-selected-id="%i%AddGroupID|BindingMode=TwoWay%/i%" data-tchmi-zindex="5" data-tchmi-creator-locked="True">
+<div id="TcHmiCombobox_3" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiCombobox" data-tchmi-auto-focus-out="true" data-tchmi-combobox-text="Select" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="459" data-tchmi-left-unit="px" data-tchmi-top="76" data-tchmi-top-unit="px" data-tchmi-width="150" data-tchmi-width-unit="px" tchmi.server.usermanagement.igroupresultobject)="data-tchmi-auto-select-text=" true""="" data-tchmi-zindex="5" data-tchmi-creator-locked="True" data-tchmi-selected-id="%i%AddGroupID%/i%">
 void) = null
 ): TcHmi.IErrorDetails;%/f%"
     callback: null | ((this: void, data: TcHmi.Server.UserManagement.IGroupResultObject) => void) = null
@@ -88,7 +88,7 @@ void) = null
 </div>
 <div id="TcHmiTextblock_304" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="58" data-tchmi-left-unit="px" data-tchmi-text="User Name:" data-tchmi-top="39" data-tchmi-top-unit="px" data-tchmi-width="150" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-zindex="5" data-tchmi-text-font-weight="Bold" data-tchmi-text-font-size="18" data-tchmi-creator-locked="True">
 </div>
-<div id="userNameField" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextbox" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="58" data-tchmi-left-unit="px" data-tchmi-text="%i%UserName|BindingMode=TwoWay%/i%" data-tchmi-top="76" data-tchmi-top-unit="px" data-tchmi-width="150" data-tchmi-width-unit="px" data-tchmi-zindex="5" data-tchmi-ignore-escape-sequences="false" data-tchmi-auto-select-text="false" data-tchmi-creator-locked="True">
+<div id="userNameField" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextbox" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="58" data-tchmi-left-unit="px" data-tchmi-top="76" data-tchmi-top-unit="px" data-tchmi-width="150" data-tchmi-width-unit="px" data-tchmi-zindex="5" data-tchmi-ignore-escape-sequences="false" data-tchmi-auto-select-text="false" data-tchmi-creator-locked="True" data-tchmi-text="%i%UserName|BindingMode=TwoWay%/i%">
 <script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
 {
   "top": 3,
@@ -525,6 +525,10 @@ void) = null
 <script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
 [
   {
+    "event": "TcHmiTextbox_38.onTextChanged",
+    "actions": []
+  },
+  {
     "event": "%ctx%owner::Id|EventRegistrationMode=Resolve%/ctx%.onPressed",
     "actions": [
       {
@@ -563,11 +567,33 @@ void) = null
       {
         "objectType": "WriteToSymbol",
         "active": true,
-        "symbolExpression": "%ctrl%UserManager_Popup::Visibility%/ctrl%",
+        "symbolExpression": "%i%UserManager_PopupVisibility%/i%",
         "value": {
           "objectType": "StaticValue",
           "valueType": "tchmi:framework#/definitions/Visibility",
           "value": "Visible"
+        },
+        "asyncWait": true
+      },
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%ctrl%RegiaoPopuptest::TargetContent%/ctrl%",
+        "value": {
+          "objectType": "StaticValue",
+          "valueType": "tchmi:framework#/definitions/ContentPath",
+          "value": "Contents/Screens/popups/Content_Popup_SaveSettings.content"
+        },
+        "asyncWait": true
+      },
+      {
+        "objectType": "WriteToSymbol",
+        "active": false,
+        "symbolExpression": "%i%UserManager_Action%/i%",
+        "value": {
+          "objectType": "StaticValue",
+          "valueType": "tchmi:general#/definitions/String",
+          "value": ""
         },
         "asyncWait": true
       }
@@ -1009,5 +1035,7 @@ void) = null
 </div>
 </div>
 <div id="TcHmiContainer_49" data-tchmi-type="TcHmi.Controls.System.TcHmiContainer" data-tchmi-height="199" data-tchmi-height-unit="px" data-tchmi-left="38" data-tchmi-left-unit="px" data-tchmi-top="23" data-tchmi-top-unit="px" data-tchmi-width="593" data-tchmi-width-unit="px">
+</div>
+<div id="RegiaoPopuptest" data-tchmi-type="TcHmi.Controls.System.TcHmiRegion" data-tchmi-height="479" data-tchmi-height-unit="px" data-tchmi-left="409" data-tchmi-left-unit="px" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width="553" data-tchmi-width-unit="px" data-tchmi-zindex="100" data-tchmi-visibility="%i%UserManager_PopupVisibility%/i%">
 </div>
 </div>

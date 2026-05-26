@@ -182,9 +182,6 @@
     <Content Include="Contents\CSS_JAVA\RowClassesProvider.js">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Contents\CSS_JAVA\UserManagerControl\userManagerScript 1.js">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Contents\Hardware\C6010-0010.content">
       <SubType>Content</SubType>
     </Content>
@@ -243,6 +240,9 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Contents\Screens\0_Simulation.content">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Contents\Screens\popups\Content_Popup_UserManager.content">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Contents\Screens\UserManagement.content">
@@ -381,6 +381,9 @@
     <Content Include="Contents\UserControl\PopUp\YesNo_ver2.usercontrol.json">
       <SubType>Content</SubType>
       <DependentUpon>Contents\UserControl\PopUp\YesNo_ver2.usercontrol</DependentUpon>
+    </Content>
+    <Content Include="Contents\UserControl\userManagerScript 1.js">
+      <SubType>Content</SubType>
     </Content>
     <Content Include="Images\Buttons\AlarmButton.png">
       <SubType>Content</SubType>

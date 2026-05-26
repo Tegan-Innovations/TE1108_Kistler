@@ -67,11 +67,6 @@
       "type": "JavaScript"
     },
     {
-      "name": "Contents/CSS_JAVA/UserManagerControl/userManagerScript 1.js",
-      "description": "",
-      "type": "JavaScript"
-    },
-    {
       "name": "Contents/CSS_JAVA/CssBehind1.css",
       "description": "",
       "type": "Stylesheet"
@@ -83,6 +78,11 @@
     },
     {
       "name": "Contents/CSS_JAVA/RowClassesProvider.js",
+      "description": "",
+      "type": "JavaScript"
+    },
+    {
+      "name": "Contents/UserControl/userManagerScript 1.js",
       "description": "",
       "type": "JavaScript"
     }
@@ -351,6 +351,13 @@
       "preloadBindings": false
     },
     {
+      "url": "Contents/Screens/popups/Content_Popup_UserManager.content",
+      "preload": false,
+      "keepAlive": false,
+      "loadSync": false,
+      "preloadBindings": false
+    },
+    {
       "url": "Contents/Screens/UserManagement.content",
       "preload": false,
       "keepAlive": false,
@@ -379,7 +386,56 @@
     }
   ],
   "symbols": {
-    "internal": {},
+    "internal": {
+      "UserName": {
+        "value": "",
+        "type": "tchmi:general#/definitions/String",
+        "persist": false,
+        "readonly": false
+      },
+      "UserManager_Action": {
+        "value": "",
+        "type": "tchmi:general#/definitions/String",
+        "persist": false,
+        "readonly": false
+      },
+      "UserManager_PopupHeader": {
+        "value": "",
+        "type": "tchmi:general#/definitions/String",
+        "persist": false,
+        "readonly": false
+      },
+      "UserManager_PopupText": {
+        "value": "",
+        "type": "tchmi:general#/definitions/String",
+        "persist": false,
+        "readonly": false
+      },
+      "UserGroups": {
+        "value": "",
+        "type": "tchmi:general#/definitions/String",
+        "persist": false,
+        "readonly": false
+      },
+      "PasswordField": {
+        "value": "",
+        "type": "tchmi:general#/definitions/String",
+        "persist": false,
+        "readonly": false
+      },
+      "UserManager_PopupVisibility": {
+        "value": "Collapsed",
+        "type": "tchmi:framework#/definitions/Visibility",
+        "persist": false,
+        "readonly": false
+      },
+      "AddGroupID": {
+        "value": "",
+        "type": "tchmi:general#/definitions/String",
+        "persist": false,
+        "readonly": false
+      }
+    },
     "themedResources": {},
     "timer": {},
     "package": {}
