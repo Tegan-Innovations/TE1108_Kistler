@@ -4,7 +4,7 @@
 <script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
 [
   {
-    "event": "TcHmiButton_ExitHMI.onPressed",
+    "event": "%ctx%owner::Id|EventRegistrationMode=Resolve%/ctx%.onPressed",
     "actions": [
       {
         "objectType": "JavaScript",
@@ -12,7 +12,6 @@
         "sourceLines": [
           "window.close();"
         ],
-        "injectContextObject": false,
         "asyncWait": true,
         "waitMode": "Synchronous"
       }
@@ -116,16 +115,20 @@
 </script>
 </div>
 <div id="TcHmiRectangle_popUpBackground_290" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="350" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width="480" data-tchmi-width-unit="px" data-tchmi-zindex="0">
+
+
+
+
 <script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
 {
   "angle": 0.0,
   "stopPoints": [
     {
-      "color": "rgba(5, 34, 59, 1)",
+      "color": "rgba(35, 39, 82, 1)",
       "stop": "0%"
     },
     {
-      "color": "rgba(17, 57, 91, 1)",
+      "color": "rgba(82, 113, 151, 1)",
       "stop": "100%"
     }
   ]

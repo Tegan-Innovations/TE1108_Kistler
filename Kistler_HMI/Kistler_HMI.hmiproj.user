@@ -116,7 +116,9 @@
   65.0
 ]</TcHmiEditor_SelectBindingWindowColumnWidths_m_SymbolInternalTree>
     <TcHmiEditor_SelectBindingWindowColumnWidths_m_symbolLocalizedTree>[
-  300.0
+  300.0,
+  100.0,
+  100.0
 ]</TcHmiEditor_SelectBindingWindowColumnWidths_m_symbolLocalizedTree>
     <TcHmiEditor_SelectBindingWindowColumnWidths_m_extensionLocalizationsTree>[
   300.0
@@ -169,7 +171,9 @@
 ]</TcHmiEditor_SelectBindingWindowColumnWidths_m_ControlTypeAttributesTree>
     <TcHmiEditor_SelectBindingWindowColumnWidths_m_ThemedResourceTree>[
   214.0,
-  300.0
+  300.0,
+  100.0,
+  100.0
 ]</TcHmiEditor_SelectBindingWindowColumnWidths_m_ThemedResourceTree>
     <TcHmiEditor_SelectBindingWindowColumnWidths_m_ContextTree>[
   300.0,
@@ -178,7 +182,31 @@
     <RecentColors>[
   {
     "counter": 0,
+    "color": "#FF232752"
+  },
+  {
+    "counter": 0,
+    "color": "#FFBFC1CF"
+  },
+  {
+    "counter": 0,
+    "color": "#FF527197"
+  },
+  {
+    "counter": 0,
     "color": "#FFF9F9F9"
+  },
+  {
+    "counter": 0,
+    "color": "#FF4E6889"
+  },
+  {
+    "counter": 0,
+    "color": "#FF05223B"
+  },
+  {
+    "counter": 0,
+    "color": "#FF000000"
   },
   {
     "counter": 0,
@@ -198,23 +226,7 @@
   },
   {
     "counter": 0,
-    "color": "#FF000000"
-  },
-  {
-    "counter": 0,
-    "color": "#FF4E6889"
-  },
-  {
-    "counter": 0,
-    "color": "#FF232752"
-  },
-  {
-    "counter": 0,
     "color": "#FF627A99"
-  },
-  {
-    "counter": 0,
-    "color": "#FF527197"
   },
   {
     "counter": 0,
@@ -242,19 +254,11 @@
   },
   {
     "counter": 0,
-    "color": "#FFBFC1CF"
-  },
-  {
-    "counter": 0,
     "color": "#FFBFD8DC"
   },
   {
     "counter": 0,
     "color": "#FFE7E3E3"
-  },
-  {
-    "counter": 0,
-    "color": "#FF818181"
   }
 ]</RecentColors>
   </PropertyGroup>

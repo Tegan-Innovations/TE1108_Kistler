@@ -123,56 +123,21 @@
       {
         "objectType": "WriteToSymbol",
         "active": true,
-        "symbolExpression": "%i%YESNOpopup_close%/i%",
+        "symbolExpression": "%ctrl%Main_Popup::TargetFile%/ctrl%",
         "value": {
           "objectType": "StaticValue",
-          "valueType": "tchmi:general#/definitions/BOOL",
-          "value": false
+          "valueType": "tchmi:framework#/definitions/TcHmi.Controls.System.TcHmiPopup.TargetFile",
+          "value": {
+            "path": "Contents/Screens/popups/Content_Popup_Shutdown.content"
+          }
         },
         "asyncWait": true
       },
       {
-        "objectType": "WriteToSymbol",
+        "objectType": "ControlApiFunction",
         "active": true,
-        "symbolExpression": "%ctrl%yes_no_popup::Visibility%/ctrl%",
-        "value": {
-          "objectType": "StaticValue",
-          "valueType": "tchmi:framework#/definitions/Visibility",
-          "value": "Visible"
-        },
-        "asyncWait": true
-      },
-      {
-        "objectType": "WriteToSymbol",
-        "active": true,
-        "symbolExpression": "%i%YESNOpopup_Header%/i%",
-        "value": {
-          "objectType": "StaticValue",
-          "valueType": "tchmi:general#/definitions/String",
-          "value": "SHUTDOWN"
-        },
-        "asyncWait": true
-      },
-      {
-        "objectType": "WriteToSymbol",
-        "active": true,
-        "symbolExpression": "%i%YESNOpopup_Text%/i%",
-        "value": {
-          "objectType": "StaticValue",
-          "valueType": "tchmi:general#/definitions/String",
-          "value": "DO YOU WANT TO TURN OFF DEVICE?"
-        },
-        "asyncWait": true
-      },
-      {
-        "objectType": "WriteToSymbol",
-        "active": true,
-        "symbolExpression": "%i%YESNOpopup_setting_in%/i%",
-        "value": {
-          "objectType": "StaticValue",
-          "valueType": "tchmi:general#/definitions/DINT",
-          "value": 2
-        },
+        "control": "Main_Popup",
+        "fn": "open",
         "asyncWait": true
       }
     ]
