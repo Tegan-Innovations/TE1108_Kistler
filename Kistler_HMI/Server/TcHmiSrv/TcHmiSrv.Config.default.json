@@ -4109,14 +4109,14 @@
     },
     "USERGROUPUSERS": {
         "TcHmiUserManagement": {
-            "442": {
+            "442222": {
                 "USERGROUPUSERS_AUTO_LOGOFF": "PT15M",
                 "USERGROUPUSERS_GROUPS": [
                     "Administrator"
                 ],
                 "USERGROUPUSERS_LOCALE": "de"
             },
-            "44ppp7": {
+            "44ppp71": {
                 "USERGROUPUSERS_AUTO_LOGOFF": "PT15M",
                 "USERGROUPUSERS_GROUPS": [
                     "Administrator"
@@ -4182,7 +4182,8 @@
             "tyte": {
                 "USERGROUPUSERS_AUTO_LOGOFF": "PT15M",
                 "USERGROUPUSERS_GROUPS": [
-                    "Engineer"
+                    "Engineer",
+                    "Administrator"
                 ],
                 "USERGROUPUSERS_LOCALE": "de"
             }

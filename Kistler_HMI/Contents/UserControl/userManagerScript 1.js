@@ -36,7 +36,7 @@ async function userManager(User, Password, Group, slctUser, Action){
         }
 
 // 3. Bulletproof Native Username Duplication Check
-        if (act == 'addUser' || act == 'changeName') {
+        if (act == 'addUser') {
             // Query the core internal TwinCAT HMI Server user registry database directly
             const listRes = await TcHmi.Symbol.readEx2('%s%TcHmi.Server.UserManagement.getUsers%/s%');
             
@@ -89,7 +89,7 @@ async function userManager(User, Password, Group, slctUser, Action){
                 {timeout: 2000},
                 function(data) {
                     if (data.error === TcHmi.Errors.NONE) {
-                        console.log('User removed successfully.');
+                        alert.log('User removed successfully.');
                     } else {
                         alert("Server Error: Failed to remove the selected user. Code: " + data.error);
                     }
@@ -104,7 +104,7 @@ async function userManager(User, Password, Group, slctUser, Action){
                 },
                 function(data) {
                     if (delData.error === TcHmi.Errors.NONE) {
-                        console.log('User renamed successfully.');
+                        alert.log('User renamed successfully.');
                     } else {
                         lert("Server Critical Error: New identity established, but the legacy account couldn't be purged. Code: " + delData.error);
                     }
@@ -119,7 +119,7 @@ async function userManager(User, Password, Group, slctUser, Action){
                 },
                 function(data) {
                     if (data.error === TcHmi.Errors.NONE) {
-                        console.log('Group association added.'); 
+                        alert.log('Group association added.'); 
                     } else {
                         alert("Server Error: Failed to attach group to user profile. Code: " + data.error);
                     }
@@ -134,7 +134,7 @@ async function userManager(User, Password, Group, slctUser, Action){
                 },
                 function(data) {
                     if (data.error === TcHmi.Errors.NONE) {
-                        console.log('Group association removed.'); 
+                        alert.log('Group association removed.'); 
                     } else {
                         alert("Server Error: Failed to detach group from user profile. Code: " + data.error);
                     }
@@ -149,7 +149,7 @@ async function userManager(User, Password, Group, slctUser, Action){
                 },
                 function(data) {
                     if (data.error === TcHmi.Errors.NONE) {
-                        console.log('Credentials updated.'); 
+                        alert.log('Credentials updated.'); 
                     } else {
                         alert("Server Error: Password update rejected by server. Code: " + data.error);
                     }
