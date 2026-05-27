@@ -578,22 +578,11 @@ void) = null
       {
         "objectType": "WriteToSymbol",
         "active": true,
-        "symbolExpression": "%ctrl%RegiaoPopuptest::TargetContent%/ctrl%",
+        "symbolExpression": "%ctrl%Popup_UserManager::TargetContent%/ctrl%",
         "value": {
           "objectType": "StaticValue",
           "valueType": "tchmi:framework#/definitions/ContentPath",
-          "value": "Contents/Screens/popups/Content_Popup_SaveSettings.content"
-        },
-        "asyncWait": true
-      },
-      {
-        "objectType": "WriteToSymbol",
-        "active": false,
-        "symbolExpression": "%i%UserManager_Action%/i%",
-        "value": {
-          "objectType": "StaticValue",
-          "valueType": "tchmi:general#/definitions/String",
-          "value": ""
+          "value": "Contents/Screens/popups/Content_Popup_UserManager.content"
         },
         "asyncWait": true
       }
@@ -670,11 +659,22 @@ void) = null
       {
         "objectType": "WriteToSymbol",
         "active": true,
-        "symbolExpression": "%ctrl%UserManager_Popup::Visibility%/ctrl%",
+        "symbolExpression": "%i%UserManager_PopupVisibility%/i%",
         "value": {
           "objectType": "StaticValue",
           "valueType": "tchmi:framework#/definitions/Visibility",
           "value": "Visible"
+        },
+        "asyncWait": true
+      },
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%ctrl%Popup_UserManager::TargetContent%/ctrl%",
+        "value": {
+          "objectType": "StaticValue",
+          "valueType": "tchmi:framework#/definitions/ContentPath",
+          "value": "Contents/Screens/popups/Content_Popup_UserManager.content"
         },
         "asyncWait": true
       }
@@ -751,7 +751,18 @@ void) = null
       {
         "objectType": "WriteToSymbol",
         "active": true,
-        "symbolExpression": "%ctrl%UserManager_Popup::Visibility%/ctrl%",
+        "symbolExpression": "%ctrl%Popup_UserManager::TargetContent%/ctrl%",
+        "value": {
+          "objectType": "StaticValue",
+          "valueType": "tchmi:framework#/definitions/ContentPath",
+          "value": "Contents/Screens/popups/Content_Popup_UserManager.content"
+        },
+        "asyncWait": true
+      },
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%i%UserManager_PopupVisibility%/i%",
         "value": {
           "objectType": "StaticValue",
           "valueType": "tchmi:framework#/definitions/Visibility",
@@ -814,7 +825,7 @@ void) = null
         "value": {
           "objectType": "StaticValue",
           "valueType": "tchmi:general#/definitions/String",
-          "value": "Add a Group"
+          "value": "Add Group"
         },
         "asyncWait": true
       },
@@ -825,18 +836,29 @@ void) = null
         "value": {
           "objectType": "StaticValue",
           "valueType": "tchmi:general#/definitions/String",
-          "value": "The selected Group will be added into the user. Do you want to proceed?"
+          "value": "The selected Group will be Add from the user. Do you want to proceed?"
         },
         "asyncWait": true
       },
       {
         "objectType": "WriteToSymbol",
         "active": true,
-        "symbolExpression": "%ctrl%UserManager_Popup::Visibility%/ctrl%",
+        "symbolExpression": "%i%UserManager_PopupVisibility%/i%",
         "value": {
           "objectType": "StaticValue",
           "valueType": "tchmi:framework#/definitions/Visibility",
           "value": "Visible"
+        },
+        "asyncWait": true
+      },
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%ctrl%Popup_UserManager::TargetContent%/ctrl%",
+        "value": {
+          "objectType": "StaticValue",
+          "valueType": "tchmi:framework#/definitions/ContentPath",
+          "value": "Contents/Screens/popups/Content_Popup_UserManager.content"
         },
         "asyncWait": true
       }
@@ -913,11 +935,22 @@ void) = null
       {
         "objectType": "WriteToSymbol",
         "active": true,
-        "symbolExpression": "%ctrl%UserManager_Popup::Visibility%/ctrl%",
+        "symbolExpression": "%i%UserManager_PopupVisibility%/i%",
         "value": {
           "objectType": "StaticValue",
           "valueType": "tchmi:framework#/definitions/Visibility",
           "value": "Visible"
+        },
+        "asyncWait": true
+      },
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%ctrl%Popup_UserManager::TargetContent%/ctrl%",
+        "value": {
+          "objectType": "StaticValue",
+          "valueType": "tchmi:framework#/definitions/ContentPath",
+          "value": "Contents/Screens/popups/Content_Popup_UserManager.content"
         },
         "asyncWait": true
       }
@@ -994,11 +1027,22 @@ void) = null
       {
         "objectType": "WriteToSymbol",
         "active": true,
-        "symbolExpression": "%ctrl%UserManager_Popup::Visibility%/ctrl%",
+        "symbolExpression": "%i%UserManager_PopupVisibility%/i%",
         "value": {
           "objectType": "StaticValue",
           "valueType": "tchmi:framework#/definitions/Visibility",
           "value": "Visible"
+        },
+        "asyncWait": true
+      },
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%ctrl%Popup_UserManager::TargetContent%/ctrl%",
+        "value": {
+          "objectType": "StaticValue",
+          "valueType": "tchmi:framework#/definitions/ContentPath",
+          "value": "Contents/Screens/popups/Content_Popup_UserManager.content"
         },
         "asyncWait": true
       }
@@ -1036,6 +1080,6 @@ void) = null
 </div>
 <div id="TcHmiContainer_49" data-tchmi-type="TcHmi.Controls.System.TcHmiContainer" data-tchmi-height="199" data-tchmi-height-unit="px" data-tchmi-left="38" data-tchmi-left-unit="px" data-tchmi-top="23" data-tchmi-top-unit="px" data-tchmi-width="593" data-tchmi-width-unit="px">
 </div>
-<div id="RegiaoPopuptest" data-tchmi-type="TcHmi.Controls.System.TcHmiRegion" data-tchmi-height="479" data-tchmi-height-unit="px" data-tchmi-left="409" data-tchmi-left-unit="px" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width="553" data-tchmi-width-unit="px" data-tchmi-zindex="100" data-tchmi-visibility="%i%UserManager_PopupVisibility%/i%">
+<div id="Popup_UserManager" data-tchmi-type="TcHmi.Controls.System.TcHmiRegion" data-tchmi-height="479" data-tchmi-height-unit="px" data-tchmi-left="409" data-tchmi-left-unit="px" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width="553" data-tchmi-width-unit="px" data-tchmi-zindex="100" data-tchmi-visibility="%i%UserManager_PopupVisibility%/i%">
 </div>
 </div>

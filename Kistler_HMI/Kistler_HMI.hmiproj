@@ -242,9 +242,6 @@
     <Content Include="Contents\Screens\0_Simulation.content">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Contents\Screens\popups\Content_Popup_UserManager.content">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Contents\Screens\UserManagement.content">
       <SubType>Content</SubType>
     </Content>
@@ -266,13 +263,10 @@
     <Content Include="Contents\Screens\popups\Content_Popup_ManualMode.content">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Contents\Screens\popups\Content_Popup_SaveSettings.content">
+    <Content Include="Contents\Screens\popups\Content_Popup_UserManager.content">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Contents\Screens\popups\Content_Popup_Shutdown.content">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Contents\Screens\UserManagement_delete.content">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Contents\Screens\Main_Kistler.content">

@@ -337,13 +337,6 @@
       "preloadBindings": false
     },
     {
-      "url": "Contents/Screens/popups/Content_Popup_SaveSettings.content",
-      "preload": false,
-      "keepAlive": false,
-      "loadSync": false,
-      "preloadBindings": false
-    },
-    {
       "url": "Contents/Screens/popups/Content_Popup_Shutdown.content",
       "preload": false,
       "keepAlive": false,
@@ -359,13 +352,6 @@
     },
     {
       "url": "Contents/Screens/UserManagement.content",
-      "preload": false,
-      "keepAlive": false,
-      "loadSync": false,
-      "preloadBindings": false
-    },
-    {
-      "url": "Contents/Screens/UserManagement_delete.content",
       "preload": false,
       "keepAlive": false,
       "loadSync": false,
@@ -430,6 +416,12 @@
         "readonly": false
       },
       "AddGroupID": {
+        "value": "",
+        "type": "tchmi:general#/definitions/String",
+        "persist": false,
+        "readonly": false
+      },
+      "SelectedUser": {
         "value": "",
         "type": "tchmi:general#/definitions/String",
         "persist": false,
