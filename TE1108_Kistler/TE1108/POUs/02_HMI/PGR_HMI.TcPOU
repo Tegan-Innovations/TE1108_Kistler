@@ -3,24 +3,29 @@
   <POU Name="PGR_HMI" Id="{8c3348d2-2e4f-488f-b8d2-fe29da512452}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM PGR_HMI
 VAR
+	bResetTest			: BOOL;
+	i					: DINT;
+	n					: DINT; // TABLE INDEX
 	
-	bResetTest				: BOOL;
-	i						: DINT;
-	n						: DINT;//TABLE INDEX
-		// Local variable to store the synchronized blink bit
+	bFlash				: BOOL;
+	fbBlinkTimer		: TON; 
+	bBlinkTimer_Q_Old	: BOOL; 
+	
+	sCurrentTimeStr		: STRING := '2026-05-27 15:30:00'; // Static timestamp for testing
+	
 
-	bFlash					: BOOL;
-	fbBlinkTimer : TON;          // Timer instance to generate the 1Hz blinking clock
-	bBlinkTimer_Q_Old 		: BOOL;    // Rising edge detection for timer output
-	
+	bTriggerTestAlarm	: BOOL;    // Force esta variável para TRUE online para simular o alarme
+	fbTestAlarmTrigger	: R_TRIG; 
+	fbLocalTime 		: FB_LocalSystemTime;
+	sTimeReal           : STRING;
+    sDateReal           : STRING;
 
-	
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[// =================================================================================
+      <ST><![CDATA[// =================================================================
 // RUN GENERATOR CLOCK IN MAIN PROGRAM BODY
-// =================================================================================
+// =================================================================
 fbBlinkTimer(IN := NOT fbBlinkTimer.Q, PT := T#500MS);
 
 IF fbBlinkTimer.Q AND NOT bBlinkTimer_Q_Old THEN
@@ -28,34 +33,140 @@ IF fbBlinkTimer.Q AND NOT bBlinkTimer_Q_Old THEN
 END_IF
 bBlinkTimer_Q_Old := fbBlinkTimer.Q;
 
-// =================================================================================
-// NOW CALL THE METHOD TO PROCESS STRINGS AND HMI COLORS
+// =================================================================
+// REFRESH LOCAL SYSTEM TIME & FORMAT STRINGS (O que faltava aqui!)
+// =================================================================
+fbLocalTime(bEnable := TRUE); // Executa o bloco para ler a hora do Windows
 
-M_StatusHMI();
-]]></ST>
+IF fbLocalTime.bValid THEN
+	
+	// --- FORMATAÇÃO DA HORA (sTimeReal) ---
+	IF fbLocalTime.systemTime.wHour < 10 THEN
+		sTimeReal := CONCAT('0', WORD_TO_STRING(fbLocalTime.systemTime.wHour));
+	ELSE
+		sTimeReal := WORD_TO_STRING(fbLocalTime.systemTime.wHour);
+	END_IF
+	
+	sTimeReal := CONCAT(sTimeReal, ':');
+	
+	IF fbLocalTime.systemTime.wMinute < 10 THEN
+		sTimeReal := CONCAT(sTimeReal, CONCAT('0', WORD_TO_STRING(fbLocalTime.systemTime.wMinute)));
+	ELSE
+		sTimeReal := CONCAT(sTimeReal, WORD_TO_STRING(fbLocalTime.systemTime.wMinute));
+	END_IF
+	
+	// --- FORMATAÇÃO DA DATA (sCurrentTimeStr) ---
+	IF fbLocalTime.systemTime.wDay < 10 THEN
+		sCurrentTimeStr := CONCAT('0', WORD_TO_STRING(fbLocalTime.systemTime.wDay));
+	ELSE
+		sCurrentTimeStr := WORD_TO_STRING(fbLocalTime.systemTime.wDay);
+	END_IF
+	
+	sCurrentTimeStr := CONCAT(sCurrentTimeStr, '/');
+	
+	IF fbLocalTime.systemTime.wMonth < 10 THEN
+		sCurrentTimeStr := CONCAT(sCurrentTimeStr, CONCAT('0', WORD_TO_STRING(fbLocalTime.systemTime.wMonth)));
+	ELSE
+		sCurrentTimeStr := CONCAT(sCurrentTimeStr, WORD_TO_STRING(fbLocalTime.systemTime.wMonth));
+	END_IF
+	
+	sCurrentTimeStr := CONCAT(sCurrentTimeStr, '/');
+	sCurrentTimeStr := CONCAT(sCurrentTimeStr, WORD_TO_STRING(fbLocalTime.systemTime.wYear));
+
+END_IF
+
+// =================================================================
+// ALARM TRIGGER TEST BLOCK (EDGE DETECTION)
+// =================================================================
+fbTestAlarmTrigger(CLK := bTriggerTestAlarm);
+
+IF fbTestAlarmTrigger.Q THEN
+	// Agora as strings sTimeReal e sCurrentTimeStr já possuem valor real!
+	M_AddLogToHistory(
+		sTime		:= sTimeReal,
+		sType 		:= E_Alarms.FAULT,
+		sDate		:= sCurrentTimeStr, 
+		abType		:= E_Alarms.FAULT,
+		nEventId	:= 3001,
+		sMessage	:= 'Error feio'
+	);
+		M_AddLogToHistory(
+		sTime		:= sTimeReal,
+		sType 		:= E_Alarms.Cycle_Stop_Fault,
+		sDate		:= sCurrentTimeStr, 
+		abType		:= E_Alarms.FAULT,
+		nEventId	:= 3001,
+		sMessage	:= 'Error feio'
+	);
+		M_AddLogToHistory(
+		sTime		:= sTimeReal,
+		sType 		:= E_Alarms.Cycle_Stop_Request,
+		sDate		:= sCurrentTimeStr, 
+		abType		:= 2,
+		nEventId	:= 3001,
+		sMessage	:= 'Error feio'
+		
+		);
+		M_AddLogToHistory(
+		sTime		:= sTimeReal,
+		sType 		:= E_Alarms.MESSAGE,
+		sDate		:= sCurrentTimeStr, 
+		abType		:= 3,
+		nEventId	:= 3001,
+		sMessage	:= 'Error feio'
+	);
+END_IF
+
+// =================================================================
+// NOW CALL THE METHOD TO PROCESS STRINGS AND HMI COLORS
+// =================================================================
+M_StatusHMI();]]></ST>
     </Implementation>
+    <Method Name="M_AddLogToHistory" Id="{4a7a2891-da8e-4224-86d0-f95767bff40e}">
+      <Declaration><![CDATA[METHOD M_AddLogToHistory
+VAR_INPUT
+	sTime		: STRING(255);
+	sType		: E_Alarms;
+	sDate		: STRING(255);
+	abType		: DINT;	
+	nEventId	: INT;
+	sMessage	: STRING(255);
+END_VAR
+VAR
+	i           : INT; // Loop index variable for shifting
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// 1. Cascade existing array rows downward to create an empty slot at index [1]
+FOR i := 100 TO 2 BY -1 DO
+	GVL_HMI.arrAlarmHistory[i] := GVL_HMI.arrAlarmHistory[i - 1];
+END_FOR
+
+// 2. Inject the newest event block directly into the primary top row
+GVL_HMI.arrAlarmHistory[1].sTime     := sTime;
+GVL_HMI.arrAlarmHistory[1].sType     := sType;
+GVL_HMI.arrAlarmHistory[1].sDate     := sDate;
+GVL_HMI.arrAlarmHistory[1].abType    := abType;
+GVL_HMI.arrAlarmHistory[1].nEventId  := nEventId;
+GVL_HMI.arrAlarmHistory[1].sMessage  := sMessage;
+// 
+// // 3. Drive high-priority alert strings and colors onto the main overhead header banner
+// IF eSeverity >= E_Alarms.ERROR THEN
+// 	GVL_HMI.StatusHMI.sMachineStatusText := sMessage;      // Texto central do Banner
+// 	GVL_HMI.StatusHMI.sBannerBckColor   := '#FF0000';     // Fundo Vermelho para Erros/Críticos
+// 	GVL_HMI.StatusHMI.sBannerTextColor   := '#FFFFFF';     // Texto Branco para dar contraste
+// ELSIF eSeverity = E_Alarms.WARNING THEN
+// 	GVL_HMI.StatusHMI.sMachineStatusText := sMessage;
+// 	GVL_HMI.StatusHMI.sBannerBckColor   := '#FF8C00';     // Fundo Laranja para Avisos
+// 	GVL_HMI.StatusHMI.sBannerTextColor   := '#FFFFFF';
+// END_IF]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="M_StatusHMI" Id="{6ed5e17f-430e-4297-ba97-996934b423b4}">
       <Declaration><![CDATA[METHOD M_StatusHMI : BOOL
 VAR
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[// // =================================================================================
-// // 1. BLINK TIMING CIRCUIT (RUNS CONTINUOUSLY EVERY CYCLE)
-// // =================================================================================
-// // The timer input (IN) is fed by its own inverted output (Q) to loop indefinitely
-// fbBlinkTimer(IN := NOT fbBlinkTimer.Q, PT := T#500MS);
-// 
-// // Point directly to the timer instance declared inside PGR_HMI
-// PGR_HMI.fbBlinkTimer(IN := NOT PGR_HMI.fbBlinkTimer.Q, PT := T#500MS);
-// 
-// // Detect rising edge using the persistent flag inside PGR_HMI
-// IF PGR_HMI.fbBlinkTimer.Q AND NOT PGR_HMI.bBlinkTimer_Q_Old THEN
-// 	GVL_MASTER.bBlink_1Hz := NOT GVL_MASTER.bBlink_1Hz;
-// END_IF
-// PGR_HMI.bBlinkTimer_Q_Old := PGR_HMI.fbBlinkTimer.Q;
-
-// Now safely transfer the global clock to the local display bit
-
+        <ST><![CDATA[
 bFlash := GVL_MASTER.bBlink_1Hz;
 
 

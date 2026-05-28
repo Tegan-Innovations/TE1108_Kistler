@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_AlarmHistory" Id="{8a14a77e-92d1-4f79-92bd-adbe73675153}">
+    <Declaration><![CDATA[TYPE ST_AlarmHistory :
+STRUCT
+    sTime		: STRING(255);
+	sType		: E_Alarms := E_Alarms.Vazio;
+	sDate		: STRING(255);
+	abType		: DINT;	
+    nEventId  	: INT;
+    sMessage  	: STRING(255) := '';
+END_STRUCT
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>

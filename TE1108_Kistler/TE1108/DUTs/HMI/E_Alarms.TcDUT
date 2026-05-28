@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="E_Alarms" Id="{aea24d4a-6a9b-4ecd-be04-0d8712ae17bd}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+TYPE E_Alarms :
+(
+	Vazio					:= 0, 
+	Fault					:= 1, // Informational message, no machine stoppage required
+    Cycle_Stop_Fault		:= 2, // Warning condition, machine keeps running but requires attention
+    Cycle_Stop_Request 		:= 3, // Standard error condition, causes a controlled cycle or machine stop
+    Message					:= 4  // Severe safety or hardware fault, triggers immediate emergency stop
+) BYTE;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

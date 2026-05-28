@@ -5,6 +5,7 @@
 VAR_GLOBAL
 	// HMI Status Banner structure for dynamic text and color mapping
 	StatusHMI : ST_StatusBanner;
+	arrAlarmHistory : ARRAY[1..100] OF ST_AlarmHistory;
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>
