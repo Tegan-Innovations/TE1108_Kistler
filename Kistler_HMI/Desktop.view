@@ -44,7 +44,7 @@
 }
 </script>
 </div>
-<div id="Group_Name" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="35" data-tchmi-height-unit="px" data-tchmi-left="444" data-tchmi-left-unit="px" data-tchmi-text="%f%%s%GetCurrentUser::groups%/s%[0]%/f%" data-tchmi-top="45" data-tchmi-top-unit="px" data-tchmi-width="378" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-horizontal-alignment="Left" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-font-size="20" data-tchmi-text-font-style="Normal" data-tchmi-text-font-weight="Bold" data-tchmi-zindex="2" data-tchmi-creator-locked="True" data-tchmi-creator-visibility="Visible">
+<div id="Group_Name" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="35" data-tchmi-height-unit="px" data-tchmi-left="444" data-tchmi-left-unit="px" data-tchmi-text="%f%%s%GetCurrentUser::groups%/s%%/f%" data-tchmi-top="45" data-tchmi-top-unit="px" data-tchmi-width="378" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-horizontal-alignment="Left" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-font-size="20" data-tchmi-text-font-style="Normal" data-tchmi-text-font-weight="Bold" data-tchmi-zindex="2" data-tchmi-creator-locked="True" data-tchmi-creator-visibility="Visible">
 <script data-tchmi-target-attribute="data-tchmi-text-color" type="application/json">
 {
   "color": "rgba(15, 136, 94, 1)"
