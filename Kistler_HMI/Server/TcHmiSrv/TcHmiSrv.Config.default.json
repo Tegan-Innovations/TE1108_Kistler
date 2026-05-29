@@ -31,6 +31,48 @@
     "DEFAULTTIMEZONE": "client",
     "DEFINITIONS": {
         "ADS": {
+            "ADS-PLC1.ARRAY_1..100_OF-ST_AlarmHistory": {
+                "items": {
+                    "$ref": "tchmi:server#/definitions/ADS-PLC1.ST_AlarmHistory"
+                },
+                "maxItems": 100,
+                "minItems": 100,
+                "startOffset": 1,
+                "type": "array"
+            },
+            "ADS-PLC1.E_Alarms": {
+                "attributes": {
+                    "generate_implicit_init_function": "",
+                    "qualified_only": "",
+                    "strict": "",
+                    "to_string": ""
+                },
+                "enum": [
+                    1,
+                    2,
+                    3,
+                    4
+                ],
+                "options": [
+                    {
+                        "label": "INFO",
+                        "value": 1
+                    },
+                    {
+                        "label": "WARNING",
+                        "value": 2
+                    },
+                    {
+                        "label": "ERROR",
+                        "value": 3
+                    },
+                    {
+                        "label": "CRITICAL",
+                        "value": 4
+                    }
+                ],
+                "type": "integer"
+            },
             "ADS-PLC1.E_MachineState": {
                 "attributes": {
                     "generate_implicit_init_function": "",
@@ -88,6 +130,68 @@
                     }
                 ],
                 "type": "integer"
+            },
+            "ADS-PLC1.STRING-120": {
+                "allOf": [
+                    {
+                        "maxLength": 120
+                    },
+                    {
+                        "$ref": "tchmi:general#/definitions/String"
+                    }
+                ]
+            },
+            "ADS-PLC1.ST_AlarmHistory": {
+                "additionalProperties": false,
+                "properties": {
+                    "eSeverity": {
+                        "allOf": [
+                            {
+                                "$ref": "tchmi:server#/definitions/ADS-PLC1.E_Alarms"
+                            },
+                            {
+                                "propertyOrder": 2
+                            }
+                        ]
+                    },
+                    "nEventId": {
+                        "allOf": [
+                            {
+                                "$ref": "tchmi:general#/definitions/INT"
+                            },
+                            {
+                                "propertyOrder": 3
+                            }
+                        ]
+                    },
+                    "sMessage": {
+                        "allOf": [
+                            {
+                                "$ref": "tchmi:server#/definitions/ADS-PLC1.STRING-120"
+                            },
+                            {
+                                "propertyOrder": 4
+                            }
+                        ]
+                    },
+                    "sTimestamp": {
+                        "allOf": [
+                            {
+                                "$ref": "tchmi:general#/definitions/STRING%2880%29"
+                            },
+                            {
+                                "propertyOrder": 1
+                            }
+                        ]
+                    }
+                },
+                "required": [
+                    "sTimestamp",
+                    "eSeverity",
+                    "nEventId",
+                    "sMessage"
+                ],
+                "type": "object"
             }
         }
     },
@@ -916,6 +1020,16 @@
                         "propertyOrder": 1
                     }
                 ]
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.arrAlarmHistory": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::arrAlarmHistory",
+            "SCHEMA": {
+                "$ref": "tchmi:server#/definitions/ADS-PLC1.ARRAY_1..100_OF-ST_AlarmHistory"
             },
             "USEMAPPING": true
         },
@@ -4064,6 +4178,7 @@
                 "ADS.PLC1.GVL_HMI.StatusHMI.sBannerBckColor": 3,
                 "ADS.PLC1.GVL_HMI.StatusHMI.sBannerTextColor": 3,
                 "ADS.PLC1.GVL_HMI.StatusHMI.sMachineStatusText": 3,
+                "ADS.PLC1.GVL_HMI.arrAlarmHistory": 3,
                 "ADS.PLC1.GVL_MASTER.bHmiEmergencyStop": 3,
                 "ADS.PLC1.GVL_MASTER.bHmiReset": 3,
                 "ADS.PLC1.GVL_MASTER.bHmiStart": 3,

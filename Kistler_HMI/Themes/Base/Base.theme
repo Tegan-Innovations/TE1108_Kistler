@@ -21,6 +21,14 @@
       },
       "themedResources": {}
     },
+    "TcHmi.Controls.Beckhoff.TcHmiCombobox": {
+      "attributes": {
+        "DropDownToggleButtonBackgroundColor": {
+          "color": "rgba(78, 104, 137, 1)"
+        }
+      },
+      "themedResources": {}
+    },
     "TcHmi.Controls.System.TcHmiContainer": {
       "attributes": {
         "BorderColor": {
@@ -48,6 +56,14 @@
         },
         "RowNumbersTextColor": {
           "color": "rgba(255, 255, 255, 1)"
+        }
+      },
+      "themedResources": {}
+    },
+    "TcHmi.Controls.Beckhoff.TcHmiRectangle": {
+      "attributes": {
+        "StrokeColor": {
+          "color": "rgba(144, 143, 143, 1)"
         }
       },
       "themedResources": {}

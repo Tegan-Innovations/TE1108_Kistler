@@ -242,10 +242,13 @@
     <Content Include="Contents\Screens\0_Simulation.content">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Contents\Screens\UserManagement.content">
+    <Content Include="Contents\Screens\Alarms.content">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Contents\Screens\Alarms.content">
+    <Content Include="Contents\Screens\Content1.content">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Contents\Screens\UserManagement.content">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Contents\Screens\popups\Content_Popup_AutoCyclePause.content">
@@ -644,6 +647,9 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Server\TcHmiUserManagement\TcHmiUserManagement.Storage.json">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Themes\Base\Alarms.css">
       <SubType>Content</SubType>
     </Content>
     <Content Include="tsconfig.tpl.json">

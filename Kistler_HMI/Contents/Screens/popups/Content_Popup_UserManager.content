@@ -137,25 +137,4 @@
 }
 </script>
 </div>
-<div id="TcHmiTextblock_1249" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="37" data-tchmi-height-unit="px" data-tchmi-left="322" data-tchmi-left-unit="px" data-tchmi-top="375" data-tchmi-top-unit="px" data-tchmi-width="148" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="26" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-horizontal-alignment="Center" data-tchmi-zindex="1" data-tchmi-text="%i%AddGroupID%/i%">
-<script data-tchmi-target-attribute="data-tchmi-text-color" type="application/json">
-{
-  "color": "rgba(255, 255, 255, 1)"
-}
-</script>
-</div>
-<div id="TcHmiTextblock_1250" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="37" data-tchmi-height-unit="px" data-tchmi-left="164" data-tchmi-left-unit="px" data-tchmi-top="375" data-tchmi-top-unit="px" data-tchmi-width="148" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="26" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-horizontal-alignment="Center" data-tchmi-zindex="1" data-tchmi-text="%i%PasswordField%/i%">
-<script data-tchmi-target-attribute="data-tchmi-text-color" type="application/json">
-{
-  "color": "rgba(255, 255, 255, 1)"
-}
-</script>
-</div>
-<div id="TcHmiTextblock_1251" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="37" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-top="375" data-tchmi-top-unit="px" data-tchmi-width="148" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="26" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-horizontal-alignment="Center" data-tchmi-zindex="1" data-tchmi-text="%i%UserName%/i%">
-<script data-tchmi-target-attribute="data-tchmi-text-color" type="application/json">
-{
-  "color": "rgba(255, 255, 255, 1)"
-}
-</script>
-</div>
 </div>
