@@ -6,9 +6,10 @@ VAR_GLOBAL
 //========================================================================================
 	// TwinSAFE Interface Signals (PLC <-> TwinSAFE EL6910)
 	//========================================================================================
-	bSafetyRun    AT %Q* : BOOL := TRUE; // Output from PLC to TwinSAFE (Command to run)
+	bSafetyRun    AT %Q* : BOOL; // Output from PLC to TwinSAFE (Command to run)
 	bSafetyReset  AT %Q* : BOOL; // Output from PLC to TwinSAFE (Command to reset)
-	bSafetyOK     AT %I* : BOOL; // Input to PLC from TwinSAFE (System is safe)
+	bSafetyOK     AT %I* : BOOL; // Input to PLC from TwinSAFE (System can start)
+	bSystemSafeOK AT %I* : BOOL; // Input to PLC from TwinSAFE (System is safe)
 	bSafetyError  AT %I* : BOOL; // Input to PLC from TwinSAFE (System has a fault)
 
 	//========================================================================================

@@ -46,19 +46,19 @@ END_VAR
 // SIMULATION: AUTOMATIC HMI BUTTON RELEASE (PULSE SIMULATION)
 // =================================================================================
 // If the HMI buttons are forced TRUE, turn them FALSE on the very next scan cycle
-tonSimulation[1] (IN:= GVL_MASTER.bHmiStart, PT:= T#1S);
-IF tonSimulation[1].Q AND GVL_MASTER.bHmiStart THEN
-    GVL_MASTER.bHmiStart := FALSE;
+tonSimulation[1] (IN:= GVL_MASTER.bButtonStart, PT:= T#1S);
+IF tonSimulation[1].Q AND GVL_MASTER.bButtonStart THEN
+    GVL_MASTER.bButtonStart := FALSE;
 END_IF
 
-tonSimulation[2] (IN:= GVL_MASTER.bHmiReset, PT:= T#1S);
+tonSimulation[2] (IN:= GVL_MASTER.bButtonReset, PT:= T#1S);
 IF tonSimulation[2].Q THEN
-    GVL_MASTER.bHmiReset := FALSE;
+    GVL_MASTER.bButtonReset := FALSE;
 END_IF
 
-tonSimulation[3] (IN:= GVL_MASTER.bHmiStop, PT:= T#1S);
+tonSimulation[3] (IN:= GVL_MASTER.bButtonStop, PT:= T#1S);
 IF tonSimulation[3].Q THEN
-    GVL_MASTER.bHmiStop := FALSE;
+    GVL_MASTER.bButtonStop := FALSE;
 END_IF
 
 
@@ -71,12 +71,10 @@ M_PreExecution();
 
 bStartProcessCondition := GVL_MASTER.stMachineStatus.bSafety AND 
 						  NOT GVL_MASTER.stMachineStatus.bFault AND 
-						  NOT GVL_MASTER.stMachineStatus.bFault AND 
 						  bKistlerReady;
 						  	  
 IF NOT GVL_MASTER.stMachineStatus.bSafety AND 
    GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.FAULT THEN
-    
     GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.FAULT;
 END_IF;
 						  
@@ -87,57 +85,60 @@ END_IF;
 
 CASE GVL_Master.stMachineStatus.eMachineState OF
 
+
     E_MachineState.SYSTEM_POWER_UP:
 	    GVL_Master.stMachineStatus.eMachineState := E_MachineState.STOPPING;
-
-    E_MachineState.SYSTEM_INITIALISING:
-		tonSys_Init (IN := GVL_MASTER.stMachineStatus.bInitialising);
-		tonSys_InitTimeout (IN := GVL_MASTER.stMachineStatus.bInitialising);
 		
-		IF tonSys_Init.Q AND bKistlerReady THEN
-			GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.SYSTEM_READY_TO_START;
-			
-		ELSIF tonSys_InitTimeout.Q THEN
-			GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.FAULT;
-			
-		END_IF
-        
-	 E_MachineState.SYSTEM_READY_TO_START:
-	    
-		IF GVL_Master.bHmiStop THEN
+    E_MachineState.FAULT:
+        IF GVL_Master.bButtonReset AND GVL_IO.bSystemSafeOK THEN
             GVL_Master.stMachineStatus.eMachineState := E_MachineState.STOPPING;
-        ELSIF GVL_MASTER.bHmiStart THEN
-            GVL_Master.stMachineStatus.eMachineState := E_MachineState.SYSTEM_AUTO_CYCLE;
-        END_IF	
- 
-    E_MachineState.STOPPED:
-        IF GVL_Master.bHmiStart AND bStartProcessCondition THEN
-            GVL_Master.stMachineStatus.eMachineState := E_MachineState.SYSTEM_INITIALISING;
         END_IF
-
-    E_MachineState.SYSTEM_AUTO_CYCLE:
-        rtFirstAutoCycle(CLK := TRUE);
-        tonFirstAutoCycle(IN := rtFirstAutoCycle.Q);
-        
-        IF GVL_Master.bHmiStop THEN
-            GVL_Master.stMachineStatus.eMachineState := E_MachineState.STOPPING;
-        ELSIF GVL_Master.stMachineStatus.bFault OR NOT GVL_Master.stMachineStatus.bSafety THEN
-            GVL_Master.stMachineStatus.eMachineState := E_MachineState.FAULT;
-        END_IF
-
-    E_MachineState.STOPPING:
+		
+	E_MachineState.STOPPING:
         rtFirstAutoCycle(CLK := FALSE);
         tonStoppingDelay(IN := GVL_Master.stMachineStatus.bStopping, PT := T#2S);
 		IF tonStoppingDelay.Q THEN
 			tonStoppingDelay(IN := FALSE);
         	GVL_Master.stMachineStatus.eMachineState := E_MachineState.STOPPED;
 		END_IF
-		
-    E_MachineState.FAULT:
-        IF GVL_Master.bHmiReset AND NOT GVL_MASTER.bHmiEmergencyStop THEN
-            GVL_Master.stMachineStatus.eMachineState := E_MachineState.STOPPING;
+	   
+	E_MachineState.STOPPED:
+        IF GVL_Master.bButtonStart AND GVL_IO.bSystemSafeOK THEN
+            GVL_Master.stMachineStatus.eMachineState := E_MachineState.SYSTEM_INITIALISING;
         END_IF
 		
+		
+	E_MachineState.SYSTEM_INITIALISING:
+		tonSys_Init (IN := GVL_MASTER.stMachineStatus.bInitialising);
+		tonSys_InitTimeout (IN := GVL_MASTER.stMachineStatus.bInitialising);
+		
+		IF tonSys_Init.Q AND bKistlerReady THEN
+			GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.SYSTEM_READY_TO_START;
+			
+		ELSIF tonSys_InitTimeout.Q OR NOT GVL_IO.bSystemSafeOK THEN
+			GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.FAULT;
+			
+		END_IF
+		
+	E_MachineState.SYSTEM_READY_TO_START:
+	    
+		IF GVL_Master.bButtonStop THEN
+            GVL_Master.stMachineStatus.eMachineState := E_MachineState.STOPPING;
+        ELSIF GVL_MASTER.bButtonStart THEN
+            GVL_Master.stMachineStatus.eMachineState := E_MachineState.SYSTEM_AUTO_CYCLE;
+        END_IF	
+ 
+	E_MachineState.SYSTEM_AUTO_CYCLE:
+        rtFirstAutoCycle(CLK := TRUE);
+        tonFirstAutoCycle(IN := rtFirstAutoCycle.Q);
+        
+        IF GVL_Master.bButtonStop THEN
+            GVL_Master.stMachineStatus.eMachineState := E_MachineState.STOPPING;
+        ELSIF GVL_Master.stMachineStatus.bFault OR NOT GVL_IO.bSystemSafeOK THEN
+            GVL_Master.stMachineStatus.eMachineState := E_MachineState.FAULT;
+        END_IF
+
+
 END_CASE
 
 // =========================================================
@@ -185,7 +186,7 @@ stKistler_CMD.bManualMode := (eCurrentState = E_MachineState.MANUAL_MODE);
 // COMPONENT RESET MANAGEMENT
 // =================================================================================
 // Toggle the hardware reset command based on the HMI/Panel button falling edge
-fbResetTrigger(CLK := GVL_MASTER.bHmiReset);
+fbResetTrigger(CLK := GVL_MASTER.bButtonReset);
 
 	IF fbResetTrigger.Q THEN
 		stKistler_CMD.bReset := TRUE;
@@ -245,11 +246,11 @@ END_IF
 // =================================================================================
 // START BUTTON OPERATION CHECKLIST
 // =================================================================================
-// Pre-calculate conditions required to allow the START button sequence
-// System allows starting only if: Kistler is healthy AND HMI Stop is NOT pressed AND Kistler component is Ready
-bStartProcessCondition := GVL_MASTER.bKistlerSystemReady 
-                          AND NOT GVL_MASTER.bHmiStop
-                          AND bKistlerReady; 
+// // Pre-calculate conditions required to allow the START button sequence
+// // System allows starting only if: Kistler is healthy AND HMI Stop is NOT pressed AND Kistler component is Ready
+// bStartProcessCondition := GVL_MASTER.bKistlerSystemReady 
+//                           AND NOT GVL_MASTER.bButtonStop
+//                           AND bKistlerReady; 
 
 
 // =================================================================================
@@ -273,7 +274,7 @@ END_VAR
 // KISTLER TO GLOBAL STATUS MAPPING
 // =================================================================================
 // Link the software/hardware safety loop to the machine status structure
-GVL_MASTER.stMachineStatus.bSafety := GVL_MASTER.bHardwareSafetyOk;
+GVL_MASTER.stMachineStatus.bSafety := GVL_IO.bSafetyOK;
 
 // Map the local Kistler hardware ready flag to our main control variable
 bKistlerReady := stKistler_Status.bReady;

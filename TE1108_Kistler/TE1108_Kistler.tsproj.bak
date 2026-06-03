@@ -58,12 +58,12 @@
 			</SubItem>
 		</DataType>
 		<DataType>
-			<Name GUID="{18071995-0000-0000-0000-002000000007}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..6] OF BIT</Name>
-			<BitSize>7</BitSize>
+			<Name GUID="{18071995-0000-0000-0000-002000000004}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..3] OF BIT</Name>
+			<BitSize>4</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
 			<ArrayInfo>
 				<LBound>0</LBound>
-				<Elements>7</Elements>
+				<Elements>4</Elements>
 			</ArrayInfo>
 		</DataType>
 		<DataType>
@@ -242,15 +242,6 @@
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{18071995-0000-0000-0000-002000000004}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..3] OF BIT</Name>
-			<BitSize>4</BitSize>
-			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
-			<ArrayInfo>
-				<LBound>0</LBound>
-				<Elements>4</Elements>
-			</ArrayInfo>
-		</DataType>
-		<DataType>
 			<Name GUID="{18071995-0000-0000-0000-00200000000C}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..11] OF BIT</Name>
 			<BitSize>12</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
@@ -305,7 +296,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{09826F5E-A0C6-4F2A-AB8E-A2951346EAC9}" Name="TE1108" PrjFilePath="TE1108\TE1108.plcproj" TmcFilePath="TE1108\TE1108.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{45B9A298-C3EB-388C-8ACB-E4B90F604DFD}" TmcPath="TE1108\TE1108.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{F65BC3F1-F51B-9994-8AE8-B781D6D21A4A}" TmcPath="TE1108\TE1108.tmc">
 					<Name>TE1108 Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -325,12 +316,37 @@
 						<Name>PlcTask Inputs</Name>
 						<Var>
 							<Name>GVL_IO.bSafetyOK</Name>
-							<Comment><![CDATA[ Input to PLC from TwinSAFE (System is safe)]]></Comment>
+							<Comment><![CDATA[ Input to PLC from TwinSAFE (System can start)]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_IO.bSafetyError</Name>
 							<Comment><![CDATA[ Input to PLC from TwinSAFE (System has a fault)]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.bSystemSafeOK</Name>
+							<Comment><![CDATA[ Input to PLC from TwinSAFE (System is safe)]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.bButtonStart</Name>
+							<Comment><![CDATA[  Auto Cycle start button]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.bButtonStop</Name>
+							<Comment><![CDATA[  cycle stop button]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.bButtonReset</Name>
+							<Comment><![CDATA[  fault reset button]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.bButtonEmergencyStop</Name>
+							<Comment><![CDATA[  software E-stop button]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 					</Vars>
@@ -427,8 +443,17 @@
 								<Entry Name="TwinSafeGroup1.Safety_OK_8" Index="#x7000" Sub="#x01">
 									<Type>BIT</Type>
 								</Entry>
+								<Entry Name="TwinSafeGroup1.ESTOP_Pressed_9" Index="#x7000" Sub="#x02">
+									<Type>BIT</Type>
+								</Entry>
+								<Entry Name="TwinSafeGroup1.bResetSafety_10" Index="#x7000" Sub="#x03">
+									<Type>BIT</Type>
+								</Entry>
+								<Entry Name="TwinSafeGroup1.System_Safe_OK_11" Index="#x7000" Sub="#x04">
+									<Type>BIT</Type>
+								</Entry>
 								<Entry>
-									<Type GUID="{18071995-0000-0000-0000-002000000007}">ARRAY [0..6] OF BIT</Type>
+									<Type GUID="{18071995-0000-0000-0000-002000000004}">ARRAY [0..3] OF BIT</Type>
 								</Entry>
 							</Pdo>
 							<Pdo Name="StandardOutputs" Index="#x17f0" InOut="1" Flags="#x2011" SyncMan="2">
@@ -443,7 +468,7 @@
 								</Entry>
 							</Pdo>
 							<Pdo Name="Connection Info Data" Index="#x1bf9" Flags="#x2011" SyncMan="3">
-								<Entry Name="TwinSafeGroup1.Term 4 (EL1918) - Module 1 (FSOE)_3 Info Data" Index="#x7000" Sub="#x01" Flags="#x00008000">
+								<Entry Name="TwinSafeGroup1.Term 4 (EL1918) - Module 1 (FSOE)_3 Info Data" Index="#x7000" Sub="#x01">
 									<Type GUID="{00690516-A06B-2FAC-765F-330C43E46EC8}">INFODATA_3187781607</Type>
 								</Entry>
 							</Pdo>
@@ -1945,7 +1970,18 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 		</OwnerA>
 		<OwnerA Name="TIPC^TE1108^TE1108 Instance">
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1100)^Term 3 (EL6910)">
+				<Link VarA="PlcTask Inputs^GVL_IO.bSafetyOK" VarB="StandardInputs^TwinSafeGroup1.Safety_OK_8"/>
+				<Link VarA="PlcTask Inputs^GVL_IO.bSystemSafeOK" VarB="StandardInputs^TwinSafeGroup1.System_Safe_OK_11"/>
+				<Link VarA="PlcTask Inputs^GVL_MASTER.bButtonEmergencyStop" VarB="StandardInputs^TwinSafeGroup1.ESTOP_Pressed_9"/>
+				<Link VarA="PlcTask Outputs^GVL_IO.bSafetyReset" VarB="StandardOutputs^TwinSafeGroup1.ErrorAcknowledgement_1"/>
 				<Link VarA="PlcTask Outputs^GVL_IO.bSafetyRun" VarB="StandardOutputs^TwinSafeGroup1.Run_2"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1100)^Term 4 (EL1918)">
+				<Link VarA="PlcTask Inputs^GVL_MASTER.bButtonReset" VarB="Module 1 (FSOE)^FSoE Inputs^FSOE^FSIN Module 3.Input"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1100)^Term 9 (EL1809)">
+				<Link VarA="PlcTask Inputs^GVL_MASTER.bButtonStart" VarB="Channel 1^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_MASTER.bButtonStop" VarB="Channel 2^Input"/>
 			</OwnerB>
 		</OwnerA>
 	</Mappings>

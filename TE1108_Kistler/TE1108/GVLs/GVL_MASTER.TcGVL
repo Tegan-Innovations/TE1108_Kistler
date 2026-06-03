@@ -11,26 +11,26 @@ VAR_GLOBAL
     // =================================================================================
     // HMI COMMANDS & SIGNALS
     // =================================================================================
-    bHmiStart               : BOOL; // HMI Auto Cycle start button
-    bHmiStop                : BOOL; // HMI cycle stop button
-    bHmiReset               : BOOL; // HMI fault reset button
-    bHmiEmergencyStop       : BOOL; // HMI software E-stop button
+    bButtonStart           AT%I*    : BOOL; //  Auto Cycle start button
+    bButtonStop            AT%I*    : BOOL; //  cycle stop button
+    bButtonReset           AT%I*    : BOOL; //  fault reset button
+    bButtonEmergencyStop   AT%I*    : BOOL; //  software E-stop button
     
-    bStartButtonLamp        : BOOL; // Physical start button lamp output
-    bResetButtonLamp        : BOOL; // Physical reset button lamp output
+    bStartButtonLamp        		: BOOL; // Physical start button lamp output
+    bResetButtonLamp        		: BOOL; // Physical reset button lamp output
     
-    bBlink_1Hz              : BOOL; // 1Hz system clock flash bit
+    bBlink_1Hz              		: BOOL; // 1Hz system clock flash bit
 
     // =================================================================================
     // INTERLOCKS & SAFETY
     // =================================================================================
-    bHardwareSafetyOk       : BOOL; // Safety relay/PLC healthy feedback
-    bAirPressureOk          : BOOL; // Main air supply pressure switch feedback
+    
+    bAirPressureOk          		 : BOOL; // Main air supply pressure switch feedback
     
     // =================================================================================
     // HARDWARE STATUS
     // =================================================================================
-    bKistlerSystemReady     : BOOL; // Kistler system global ready feedback
+    bKistlerSystemReady    			 : BOOL; // Kistler system global ready feedback
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

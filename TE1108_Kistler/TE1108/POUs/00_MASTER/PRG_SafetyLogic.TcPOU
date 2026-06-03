@@ -16,25 +16,25 @@ END_VAR
       <ST><![CDATA[// =================================================================================
 // EMERGENCY STOP LOGIC 
 // =================================================================================
-
-// 1. Evaluate E-Stop triggers (Latching fault if software E-Stop is triggered)
-// Note: Assumes bHmiEmergencyStop is TRUE when the HMI button is pressed
-IF GVL_MASTER.bHmiEmergencyStop THEN
-    bEstopLatched := TRUE;
-END_IF;
-
-// 2. Evaluate Reset Command Edge from HMI
-fbResetTrigger(CLK := GVL_MASTER.bHmiReset);
-
-// 3. Reset Latch condition
-// The system can only be reset if the HMI Software E-Stop is released (FALSE)
-IF fbResetTrigger.Q AND NOT GVL_MASTER.bHmiEmergencyStop THEN
-    bEstopLatched := FALSE;
-END_IF;
-
-// 4. Update Global Safety Status
-// Provisional bypass: This logic controls the safety healthy flag until TwinSafe is active
-GVL_MASTER.bHardwareSafetyOk := NOT bEstopLatched;
+	GVL_IO.bSafetyReset := GVL_MASTER.bButtonReset;
+// // 1. Evaluate E-Stop triggers (Latching fault if software E-Stop is triggered)
+// // Note: Assumes bHmiEmergencyStop is TRUE when the HMI button is pressed
+// IF GVL_MASTER.bButtonEmergencyStop THEN
+//     bEstopLatched := TRUE;
+// END_IF;
+// 
+// // 2. Evaluate Reset Command Edge from HMI
+// fbResetTrigger(CLK := GVL_MASTER.bButtonReset);
+// 
+// // 3. Reset Latch condition
+// // The system can only be reset if the HMI Software E-Stop is released (FALSE)
+// IF fbResetTrigger.Q AND NOT GVL_MASTER.bButtonEmergencyStop THEN
+//     bEstopLatched := FALSE;
+// END_IF;
+// 
+// // 4. Update Global Safety Status
+// // Provisional bypass: This logic controls the safety healthy flag until TwinSafe is active
+// GVL_MASTER.bHardwareSafetyOk := NOT bEstopLatched;
 
 
 (* =================================================================================
