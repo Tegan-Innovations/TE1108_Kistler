@@ -27,59 +27,49 @@ async function userManager(User, Password, Group, slctUser, Action){
             LogOutTime = "P30D";
         }
 
-        // 2. Input validation for creating or renaming users (prevents empty submissions)
-        if (act == 'addUser' || act == 'changeName') {
-            if (!userData || !passwordData || !groupName) {
-                alert("Validation Warning: Please fill in all required text fields and select a valid group.");
-                return; 
-            }
-        }
-
-// 3. Bulletproof Native Username Duplication Check
+        // ========================================================
+        // PASSO ATUAL: VALIDAÇÃO DE DUPLICIDADE APENAS PARA ADDUSER
+        // ========================================================
         if (act == 'addUser') {
-            // Query the core internal TwinCAT HMI Server user registry database directly
-            const listRes = await TcHmi.Symbol.readEx2('%s%TcHmi.Server.UserManagement.getUsers%/s%');
-            
-            // Fail-safe protection: If server is initializing or disconnected, abort to prevent accidental overwrites
-            if (listRes.error !== TcHmi.Errors.NONE || !listRes.value) {
-                alert("System Warning: Unable to safely verify existing users from the TwinCAT Server registry. Action aborted to protect database integrity. Code: " + listRes.error);
-                return; 
-            }
-
-            const masterUserRegistry = listRes.value;
-            let userExists = false;
-
-            // TwinCAT Server natively returns an object dictionary where the keys are the usernames (e.g., {"Administrator": {}, "Guest": {}})
-            if (typeof masterUserRegistry === 'object' && masterUserRegistry !== null) {
-                userExists = Object.keys(masterUserRegistry).some(existingUser => 
-                    existingUser.trim().toLowerCase() === userData.trim().toLowerCase()
-                );
-            }
-
-            // If a duplicate registry match is found, immediately halt execution and trigger error popup
-            if (userExists) {
-                alert("Validation Error: The username '" + userData + "' already exists in the system registry! Overwrite rejected.");
+            // 1. Bloqueio básico caso esqueçam de preencher os campos na tela
+            if (!userData || !passwordData || !groupName) {
+                alert("Validation Notice: Please fill in the Username, Password, and select a Group.");
                 return; 
             }
         }
-
-
-        // Section dadicated for the Actions that the button in HMI will call
 
         if(act == 'addUser'){
-            TcHmi.Server.UserManagement.addUserEx(
-                User, 
-                Password, 
-                {groups: [groupName], enabled: true, locale: 'de', autoLogout: LogOutTime },
-                {timeout: 2000},
-                function(data) {
-                    if (data.error === TcHmi.Errors.NONE) {
-                        alert('User created successfully.');
-                    } else {
-                        alert("Server Error: Failed to add the new user. Code: " + data.error);
+            // 1. Lê a lista de usuários mapeada no servidor através do símbolo real 'ListUsers'
+            TcHmi.Symbol.readEx2('%s%TcHmiUserManagement.ListUsers%/s%', function(data) {
+                
+                if (data.error === TcHmi.Errors.NONE) {
+                    // O data.result trará o array de strings com os nomes dos usuários existentes (ex: ["__SystemAdministrator", "uu11"])
+                    const userListArray = data.result;
+
+                    if (Array.isArray(userListArray)) {
+                        // 2. Verifica se o nome digitado (User) já está incluso na lista do servidor
+                        if (userListArray.includes(User)) {
+                            alert("Validation Error: The username '" + User + "' already exists in the system.");
+                            return; // Aborta e impede o avanço para a criação do duplicado
+                        }
                     }
                 }
-            );
+
+                // 3. Se passou pela validação (não existe), executa o addUserEx nativo do framework
+                TcHmi.Server.UserManagement.addUserEx(
+                    User, 
+                    Password, 
+                    {groups: [groupName], enabled: true, locale: 'de', autoLogout: LogOutTime },
+                    {timeout: 2000},
+                    function(dataAdd) {
+                        if (dataAdd.error === TcHmi.Errors.NONE) {
+                            alert('User created successfully.');
+                        } else {
+                            alert("Server Error: Failed to add the new user. Code: " + dataAdd.error);
+                        }
+                    }
+                );
+            });
             console.log(act);
         }
         if(act == 'removeUser'){

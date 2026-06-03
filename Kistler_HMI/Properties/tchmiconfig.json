@@ -428,8 +428,8 @@
         "readonly": false
       },
       "AddGroupID": {
-        "value": "",
-        "type": "tchmi:general#/definitions/String",
+        "value": 0,
+        "type": "tchmi:general#/definitions/UDINT",
         "persist": false,
         "readonly": false
       },

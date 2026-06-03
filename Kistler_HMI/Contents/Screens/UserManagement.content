@@ -186,7 +186,7 @@ void) = null
 </div>
 
 
-<div id="TcHmiDatagrid_12" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiDatagrid" data-tchmi-height="430" data-tchmi-height-unit="px" data-tchmi-left="679" data-tchmi-left-unit="px" data-tchmi-top="23" data-tchmi-top-unit="px" data-tchmi-width="635" data-tchmi-width-unit="px" data-tchmi-src-data="%s%ListUsers%/s%" data-tchmi-zindex="4" data-tchmi-row-numbers-font-weight="Auto" data-tchmi-header-font-style="Auto" data-tchmi-header-font-weight="Auto" data-tchmi-header-font-size="16" data-tchmi-row-numbers-font-size="14">
+<div id="TcHmiDatagrid_12" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiDatagrid" data-tchmi-height="430" data-tchmi-height-unit="px" data-tchmi-left="680" data-tchmi-left-unit="px" data-tchmi-top="23" data-tchmi-top-unit="px" data-tchmi-width="700" data-tchmi-width-unit="px" data-tchmi-src-data="%s%ListUsers%/s%" data-tchmi-zindex="4" data-tchmi-row-numbers-font-weight="Auto" data-tchmi-header-font-style="Auto" data-tchmi-header-font-weight="Auto" data-tchmi-header-font-size="16" data-tchmi-row-numbers-font-size="14" data-tchmi-grid-font-size="20">
 <script data-tchmi-target-attribute="data-tchmi-cell-content-padding" type="application/json">
 {
   "left": 3,
@@ -210,36 +210,42 @@ void) = null
     "width": 300,
     "widthUnit": "px",
     "resize": false,
-    "sortable": false,
     "minWidth": 100,
     "minWidthUnit": "px",
     "editable": false,
     "horizontalAlignment": "Left",
     "verticalAlignment": "Center",
+    "textColor": {
+      "color": "rgba(0, 0, 0, 1)"
+    },
     "headerHorizontalAlignment": "Center",
     "headerVerticalAlignment": "Center",
     "ignoreEscapeSequences": false,
     "autoFocusOut": true,
-    "autoSelectText": false
+    "autoSelectText": false,
+    "sortable": false
   },
   {
     "name": "groups",
     "label": "Group",
     "control": "TextBox",
-    "width": 300,
+    "width": 320,
     "widthUnit": "px",
-    "resize": false,
-    "sortable": false,
+    "resize": true,
     "minWidth": 300,
     "minWidthUnit": "px",
     "editable": false,
     "horizontalAlignment": "Left",
     "verticalAlignment": "Center",
+    "textColor": {
+      "color": "rgba(0, 0, 0, 1)"
+    },
     "headerHorizontalAlignment": "Center",
     "headerVerticalAlignment": "Center",
     "ignoreEscapeSequences": false,
     "autoFocusOut": true,
-    "autoSelectText": false
+    "autoSelectText": false,
+    "sortable": false
   }
 ]
 </script>
@@ -518,7 +524,7 @@ void) = null
 
 
 </div>
-<div id="UserManager_Popup" data-tchmi-type="TcHmi.Controls.System.TcHmiRegion" data-tchmi-height="300" data-tchmi-height-unit="px" data-tchmi-left="398" data-tchmi-left-unit="px" data-tchmi-top="79" data-tchmi-top-unit="px" data-tchmi-width="500" data-tchmi-width-unit="px" data-tchmi-target-content="Contents/popup/popup5_UserManagement.content" data-tchmi-zindex="6" data-tchmi-visibility="Collapsed" data-tchmi-creator-visibility="Visible">
+<div id="UserManager_Popup" data-tchmi-type="TcHmi.Controls.System.TcHmiRegion" data-tchmi-height="300" data-tchmi-height-unit="px" data-tchmi-left="398" data-tchmi-left-unit="px" data-tchmi-top="79" data-tchmi-top-unit="px" data-tchmi-width="500" data-tchmi-width-unit="px" data-tchmi-target-content="Contents/Screens/popups/Content_Popup_UserManagement.content" data-tchmi-zindex="6" data-tchmi-visibility="Collapsed" data-tchmi-creator-visibility="Visible">
 </div>
 <div id="TcHmiContainer_48" data-tchmi-type="TcHmi.Controls.System.TcHmiContainer" data-tchmi-height="199" data-tchmi-height-unit="px" data-tchmi-left="38" data-tchmi-left-unit="px" data-tchmi-top="254" data-tchmi-top-unit="px" data-tchmi-width="593" data-tchmi-width-unit="px">
 <div id="Button_CreateUser" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="50" data-tchmi-height-unit="px" data-tchmi-left="30" data-tchmi-left-unit="px" data-tchmi-text="Create \nUser" data-tchmi-top="30" data-tchmi-top-unit="px" data-tchmi-width="160" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-zindex="4" data-tchmi-text-font-size="16" data-tchmi-text-font-weight="Auto" data-tchmi-creator-locked="True">
