@@ -30,7 +30,7 @@
     <HmiCommunicationServerAuthPort>13000</HmiCommunicationServerAuthPort>
     <HmiCommunicationServerPublicPort>3443</HmiCommunicationServerPublicPort>
     <HmiInitial>14.3.683.1</HmiInitial>
-    <HmiRecent>14.3.683.1</HmiRecent>
+    <HmiRecent>14.3.804.1</HmiRecent>
     <HmiServerNodeAdvancedView>False</HmiServerNodeAdvancedView>
   </PropertyGroup>
   <PropertyGroup>
@@ -146,6 +146,7 @@
     <Folder Include="Images\Icons\events" />
     <Folder Include="Images\IO" />
     <Folder Include="Images\Manifest" />
+    <Folder Include="Images\Client" />
     <Folder Include="Imports" />
     <Folder Include="Imports\Images" />
     <Folder Include="Imports\Videos" />
@@ -398,6 +399,9 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Images\Buttons\Shutdown_Box_Red.png">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Images\Client\JabilMasterLogo.png">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Images\Icons\box.svg">

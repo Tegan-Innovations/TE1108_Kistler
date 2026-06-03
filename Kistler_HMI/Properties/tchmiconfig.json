@@ -498,19 +498,22 @@
     }
   ],
   "systemKeyboard": {
-    "providerName": "",
-    "autoOpen": false,
+    "providerName": "Beckhoff.TcHmiKeyboard",
+    "autoOpen": true,
     "projectKeyboardMapping": {
       "de": {
         "text": "KeyboardLayouts/German - compact.keyboard.json",
         "decimal": "KeyboardLayouts/Numpad (plusminus).keyboard.json",
-        "numeric": ""
+        "numeric": "KeyboardLayouts/Numpad (plusminus).keyboard.json"
       },
       "en": {
         "text": "KeyboardLayouts/US - compact.keyboard.json",
         "decimal": "KeyboardLayouts/Numpad (plusminus).keyboard.json",
-        "numeric": ""
+        "numeric": "KeyboardLayouts/Numpad (plusminus).keyboard.json"
       }
+    },
+    "layout": {
+      "position": "popup"
     }
   },
   "systemPopups": {

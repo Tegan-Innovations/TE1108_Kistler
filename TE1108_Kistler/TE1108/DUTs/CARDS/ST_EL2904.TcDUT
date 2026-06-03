@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_EL2904" Id="{b47fa1ee-8218-430d-bdaf-20385f9eef63}">
+    <Declaration><![CDATA[TYPE ST_EL2904 :
+STRUCT
+    sTerminalName       : STRING(80) := 'EL2904 | 4-Channel Safety Digital Output';
+    
+    // TwinSAFE physical hardware channels (Safe Outputs 1 to 4)
+    bOutput             : ARRAY[1..4] OF BOOL;
+    
+    // Hardware status and diagnostic signals
+    bError              : BOOL; // TRUE if a fault is detected (short-circuit, overload, or FSoE error)
+    bReady              : BOOL; // TRUE if terminal is active and TwinSAFE communication is OK
+END_STRUCT
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -431,6 +431,11 @@
             "domain": "TcHmiUserManagement",
             "userName": "__SystemAdministrator"
         },
+        "9b75ab82572fc66e8497e2f53ef264b44be7f21170bac8510c8018faa9b8b6e0a50f20bb5d8b8f025bac0e1d405890d88a0b84ab88446f2d28e9552c43f066ce": {
+            "created": "2026-06-01T15:45:03.9256766Z",
+            "domain": "TcHmiUserManagement",
+            "userName": "Thays"
+        },
         "a94c1d7af1acf4fa29b9b190e5ec7818491a6698a0e3c68bd3a3ccc4fa74985f83a791e2130118d13b04eaf079393d02bfd725ff80bd62a1954453e693bd60a6": {
             "created": "2026-05-26T13:23:43.3590788Z",
             "domain": "TcHmiUserManagement",

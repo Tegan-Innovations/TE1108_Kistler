@@ -1,1 +1,5 @@
 .vs/
+
+# TwinCAT HMI, filter downloaded JSON schema files
+json-schema.org
+

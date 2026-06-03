@@ -5,12 +5,12 @@
   "EditorSettings": [
     {
       "Path": "Desktop.view",
-      "DesignAreaSplitSize": "Splitted",
-      "CodeAreaSplitSize": "Splitted",
+      "DesignAreaSplitSize": "Full",
+      "CodeAreaSplitSize": "Minimized",
       "Orientation": "Horizontal",
       "DesignAreaPosition": "Left",
       "CodeAreaPosition": "Right",
-      "SplitPercentage": 0.96404275996112732
+      "SplitPercentage": 1.1814859926918393
     },
     {
       "Path": "Contents\\Screens\\popups\\Content_Popup_Shutdown.content",
@@ -196,9 +196,7 @@
 ]</TcHmiEditor_SelectBindingWindowColumnWidths_m_ControlTypeAttributesTree>
     <TcHmiEditor_SelectBindingWindowColumnWidths_m_ThemedResourceTree>[
   214.0,
-  300.0,
-  100.0,
-  100.0
+  300.0
 ]</TcHmiEditor_SelectBindingWindowColumnWidths_m_ThemedResourceTree>
     <TcHmiEditor_SelectBindingWindowColumnWidths_m_ContextTree>[
   300.0,

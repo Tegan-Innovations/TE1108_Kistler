@@ -11,7 +11,7 @@ VAR
 	fbBlinkTimer		: TON; 
 	bBlinkTimer_Q_Old	: BOOL; 
 	
-	sCurrentTimeStr		: STRING := '2026-05-27 15:30:00'; // Static timestamp for testing
+	sCurrentTimeStr		: STRING := '2026-05-2 15:30:00'; // Static timestamp for testing
 	
 
 	bTriggerTestAlarm	: BOOL;    // Force esta variável para TRUE online para simular o alarme

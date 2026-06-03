@@ -655,7 +655,7 @@
 </div>
 <div id="TcHmiDateTimeDisplay_1" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiDateTimeDisplay" data-tchmi-height="33" data-tchmi-height-unit="px" data-tchmi-left="877" data-tchmi-left-unit="px" data-tchmi-top="10" data-tchmi-top-unit="px" data-tchmi-width="150" data-tchmi-width-unit="px" data-tchmi-time-display-layout="Date" data-tchmi-zindex="1" data-tchmi-creator-locked="True" data-tchmi-creator-visibility="Visible">
 </div>
-<div id="TcHmiImage_1" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiImage" data-tchmi-height="60" data-tchmi-height-unit="px" data-tchmi-left="1060" data-tchmi-left-unit="px" data-tchmi-src="Images/JabilMasterLogo.png" data-tchmi-top="10" data-tchmi-top-unit="px" data-tchmi-width="290" data-tchmi-width-unit="px" data-tchmi-zindex="1" data-tchmi-creator-locked="True" data-tchmi-creator-visibility="Visible">
+<div id="TcHmiImage_1" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiImage" data-tchmi-height="60" data-tchmi-height-unit="px" data-tchmi-left="1060" data-tchmi-left-unit="px" data-tchmi-src="Images/Client/JabilMasterLogo.png" data-tchmi-top="10" data-tchmi-top-unit="px" data-tchmi-width="290" data-tchmi-width-unit="px" data-tchmi-zindex="1" data-tchmi-creator-locked="True" data-tchmi-creator-visibility="Visible">
 </div>
 <div id="Head_Menu" data-tchmi-type="TcHmi.Controls.System.TcHmiRegion" data-tchmi-height="79" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width="390" data-tchmi-width-unit="px" data-tchmi-zindex="1" data-tchmi-target-content="Contents/Screens/HeadMenu.content" data-tchmi-creator-locked="True" data-tchmi-creator-visibility="Visible">
 </div>

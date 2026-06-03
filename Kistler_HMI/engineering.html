@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="en" class="tchmi-html-designer">
+<head>
+  <meta charset="utf-8">
+  <title>Kistler_HMI</title>
+  <meta name="tchmi-buildtime" content="2026-06-02T12:55:45">
+
+  <!-- target-densitydpi=device-dpi -->
+  <meta name="viewport" content="initial-scale=1.0"><script>
+	 TCHMI_CONSOLE_LOG_LEVEL  = 2;
+	 TCHMI_CONSOLE_LOG_TCHMISERVER_MESSAGES  = false;
+	 TCHMI_CONSOLE_LOG_ENGINEERING_COM_MESSAGES  = false;
+	 TCHMI_CURRENT_CONTROL_THEME  = "";
+</script><script>
+	TCHMI_TARGET_PARTIAL = new URL(window.location.href).searchParams.get('TargetPartial') ?? undefined;
+</script><script>TCHMI_NUGET_METADATA = {
+  "Beckhoff.TwinCAT.HMI.Controls": {
+    "version": "14.4.32",
+    "authors": "Beckhoff",
+    "title": "Controls",
+    "description": "TwinCAT HMI is a development environment for web-based HMIs (Human Machine Interfaces). This package provides the controls for the TwinCAT HMI client."
+  },
+  "Beckhoff.TwinCAT.HMI.Framework": {
+    "version": "14.3.431",
+    "authors": "Beckhoff",
+    "title": "Framework",
+    "description": "TwinCAT HMI is a development environment for web-based HMIs (Human Machine Interfaces). This package provides the client framework for the TwinCAT HMI."
+  },
+  "Beckhoff.TwinCAT.HMI.Functions": {
+    "version": "14.3.344",
+    "authors": "Beckhoff",
+    "title": "Functions",
+    "description": "TwinCAT HMI is a development environment for web-based HMIs (Human Machine Interfaces). This package provides functions for use in the \"Actions and Conditions Editor\" and symbol expressions."
+  },
+  "Beckhoff.TwinCAT.HMI.Server.Engineering": {
+    "version": "22.0.7791",
+    "authors": "Beckhoff",
+    "title": "TcHmiSrv",
+    "description": "TwinCAT HMI is a development environment for web-based HMIs (Human Machine Interfaces). This package provides the TwinCAT HMI Server for the engineering."
+  },
+  "Microsoft.TypeScript.MSBuild": {
+    "version": "5.9.2",
+    "authors": "Microsoft",
+    "title": "Microsoft.TypeScript.MSBuild",
+    "description": "The TypeScript MSBuild task, and matching compiler version."
+  }
+};
+</script>
+
+  <script>
+		TCHMI_ENGINEERING = true;
+		TCHMI_DESIGNER = true;
+		TCHMI_CONFIG_OVERRIDE = {
+			"basePath": "Beckhoff.TwinCAT.HMI.Framework",
+			"tcHmiServer": {
+				"websocketOverwrite": {
+					"host": "127.0.0.1",
+					"port": 3000
+				},
+				"websocketIntervalTime": 200
+			}
+		};
+
+   	    window.onload = function load() {
+			if ((!('TcHmi' in window) || !window.TcHmi.System) && document.body) {
+				document.body.style.background = '#C8C8C8';
+				document.body.innerHTML = 'TwinCAT HMI Framework could not be loaded.';
+			}
+			window.onload = null;
+		};
+  </script>
+  <script type="importmap">
+{
+  "imports": {
+    "Beckhoff.TwinCAT.HMI.Controls/": "./Beckhoff.TwinCAT.HMI.Controls/",
+    "Beckhoff.TwinCAT.HMI.Controls": "./Beckhoff.TwinCAT.HMI.Controls/index.esm.js",
+    "Beckhoff.TwinCAT.HMI.Framework/": "./Beckhoff.TwinCAT.HMI.Framework/",
+    "Beckhoff.TwinCAT.HMI.Framework": "./Beckhoff.TwinCAT.HMI.Framework/index.esm.js",
+    "Beckhoff.TwinCAT.HMI.Functions/": "./Beckhoff.TwinCAT.HMI.Functions/",
+    "Beckhoff.TwinCAT.HMI.Functions": "./Beckhoff.TwinCAT.HMI.Functions/index.esm.js"
+  },
+  "scopes": {}
+}
+</script>
+
+<script src="/Beckhoff.TwinCAT.HMI.Framework/Lib/tslib.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Framework/Lib/EsHelper.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Framework/Lib/jquery.min.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Framework/Lib/acorn.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Framework/dist/Main.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Framework/dist/Controls/System/TcHmiControl/TcHmiControl.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Framework/dist/Controls/System/TcHmiContainerControl/TcHmiContainerControl.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Framework/dist/Controls/System/TcHmiPartial/TcHmiPartial.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Framework/dist/Controls/System/TcHmiPopup/TcHmiPopup.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Framework/dist/Controls/System/TcHmiContainer/TcHmiContainer.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Framework/dist/Controls/System/TcHmiContent/TcHmiContent.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Framework/dist/Controls/System/TcHmiGrid/TcHmiGrid.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Framework/dist/Controls/System/TcHmiHtmlHost/TcHmiHtmlHost.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Framework/dist/Controls/System/TcHmiUserControl/TcHmiUserControl.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Framework/dist/Controls/System/TcHmiView/TcHmiView.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Framework/dist/Controls/System/TcHmiRegion/TcHmiRegion.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Framework/dist/Controls/System/TcHmiUserControlHost/TcHmiUserControlHost.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/TcHmiCharting/TcHmiCharting.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiEventGrid/EventClassesProvider/EventClassesProvider.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiAccordionRegion/TcHmiAccordionRegion.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiAdsState/TcHmiAdsState.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiAudio/TcHmiAudio.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiButton/TcHmiButton.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiBarChart/TcHmiBarChart.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiCalculator/TcHmiCalculator.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/TcHmiCalculator/Lib/math.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiCheckbox/TcHmiCheckbox.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiCombobox/TcHmiCombobox.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiDatagrid/TcHmiDatagrid.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiDateTimeDisplay/TcHmiDateTimeDisplay.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiDateTimeInput/TcHmiDateTimeInput.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiDateTimePicker/TcHmiDateTimePicker.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiEllipse/TcHmiEllipse.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiEventGrid/TcHmiEventGrid.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiEventLine/TcHmiEventLine.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiFileExplorer/TcHmiFileExplorer.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiHorizontalBarChart/TcHmiHorizontalBarChart.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiIFrame/TcHmiIFrame.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiImage/TcHmiImage.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiInput/TcHmiInput.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/UiProvider/loader.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiKeyboard/TcHmiKeyboard.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiPieChart/TcHmiPieChart.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiLine/TcHmiLine.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiLinearGauge/TcHmiLinearGauge.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiLineChart/TcHmiLineChart.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiLoadingSpinner/TcHmiLoadingSpinner.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiLocalizationSelect/TcHmiLocalizationSelect.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiMultiState/TcHmiMultiState.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiNumericInput/TcHmiNumericInput.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiObjectBrowser/TcHmiObjectBrowser.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiPasswordInput/TcHmiPasswordInput.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiPermissionManagement/TcHmiPermissionManagement.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiPolygon/TcHmiPolygon.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiPolyline/TcHmiPolyline.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiProgressBar/TcHmiProgressBar.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiRadialGauge/TcHmiRadialGauge.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiRadioButton/TcHmiRadioButton.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiRecipeEdit/TcHmiRecipeEdit.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiRecipeSelect/TcHmiRecipeSelect.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiRectangle/TcHmiRectangle.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiSparkline/TcHmiSparkline.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiSpinboxInput/TcHmiSpinboxInput.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiStateImage/TcHmiStateImage.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiTabNavigation/TcHmiTabNavigation.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiTachometer/TcHmiTachometer.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiTextblock/TcHmiTextblock.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiTextbox/TcHmiTextbox.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiThemeSelect/TcHmiThemeSelect.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiThermometer/TcHmiThermometer.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiTimespanInput/TcHmiTimespanInput.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiTimespanPicker/TcHmiTimespanPicker.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiToggleButton/TcHmiToggleButton.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiToggleSwitch/TcHmiToggleSwitch.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiTreeView/TcHmiTreeView.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiTrendLineChart/TcHmiTrendLineChart.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiTrendSparkline/TcHmiTrendSparkline.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiUserGuidance/TcHmiUserGuidance.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiUserManagement/TcHmiUserManagement.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiVideo/TcHmiVideo.esm.js" type="module"></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/ActivateRecipe.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/BigIntToNumber.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/CheckAccess.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/CheckBinding.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/CheckBindingEx.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/Concatenate.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/ConvertBooleanToEnum.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/ConvertBooleanToVisibility.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/CreateAuditLogEntry.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/CreateBinding.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/Decrement.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/DownloadRecipes.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/DownloadRecipeTypes.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/EnumToString.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/EnumToMemberName.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/ExportEvents.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/ForceLogout.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/ForceLogoutEx.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/FormatString.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/GaugeValueFormatter.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/GetAutoOpenSystemKeyboard.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/GetElementByIndex.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/GetLocale.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/GetLocalizedText.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/GetRegisteredLocales.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/GetTheme.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/GoToLoginPage.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/Increment.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/IsSafeInteger.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/LineChartTooltipFormatter.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/Log.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/Login.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/LoginEx.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/Logout.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/LogoutEx.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/NumberToBigInt.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/NumberToSolidColor.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/RemoveBinding.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/SetAttributeToThemeValue.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/SetAutoOpenSystemKeyboard.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/SetElementByIndex.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/SetLocaleEx.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/SetLocale.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/SetTheme.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/StartInterval.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/StopInterval.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/SymbolExists.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/TeachAsNewRecipe.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/Wait.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/TeachRecipe.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/ToDateString.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/ToDateTimeString.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/ToLowerCase.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/ToTimeString.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/ToUpperCase.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/TrimToLength.js" defer=""></script>
+<script src="/Beckhoff.TwinCAT.HMI.Functions/UploadRecipeFiles.js" defer=""></script>
+<script src="/Contents/CSS_JAVA/Enable%20buttons.js" defer=""></script>
+<script src="/Contents/CSS_JAVA/PDF%20Maker/relatori.js" defer=""></script>
+<script src="/Contents/CSS_JAVA/PDF%20Maker/jspdf.min.js" defer=""></script>
+<script src="/Contents/CSS_JAVA/RowClassesProvider.js" defer=""></script>
+<script src="/Contents/UserControl/userManagerScript%201.js" defer=""></script>
+</head>
+<body class="tchmi-body-designer">
+	<div id="Content1_36" data-tchmi-type="TcHmi.Controls.System.TcHmiContent" data-tchmi-top="0" data-tchmi-left="0" data-tchmi-width="1340" data-tchmi-height="480" data-tchmi-zindex="2" data-tchmi-creator-partial-key="/Contents/Screens/Main_Kistler.content">
+<div id="TcHmiContainer_45" data-tchmi-type="TcHmi.Controls.System.TcHmiContainer" data-tchmi-height="90" data-tchmi-height-unit="px" data-tchmi-left="318" data-tchmi-left-unit="px" data-tchmi-top="229" data-tchmi-top-unit="px" data-tchmi-width="64" data-tchmi-width-unit="px" data-tchmi-zindex="2"><div id="TcHmiImage_87" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiImage" data-tchmi-height="70" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-src="Images/left_hand - green.png" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width="64" data-tchmi-width-unit="px" data-tchmi-zindex="2">
+
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "%s%ADS.PLC1.GVL_HMI.bLeftHand%/s%",
+    "actions": [
+      {
+        "objectType": "Condition",
+        "active": true,
+        "parts": [
+          {
+            "if": [
+              {
+                "compare1": {
+                  "objectType": "Symbol",
+                  "valueType": "tchmi:general#/definitions/BOOL",
+                  "symbolExpression": "%s%ADS.PLC1.GVL_HMI.bLeftHand%/s%"
+                },
+                "compare2": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:general#/definitions/BOOL",
+                  "value": true
+                },
+                "compareOperator": "==",
+                "logic": null
+              }
+            ],
+            "then": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctx%owner::Visibility%/ctx%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/Visibility",
+                  "value": "Visible"
+                },
+                "asyncWait": true
+              }
+            ]
+          },
+          {
+            "else": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctx%owner::Visibility%/ctx%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/Visibility",
+                  "value": "Collapsed"
+                },
+                "asyncWait": true
+              }
+            ]
+          }
+        ],
+        "asyncWait": true
+      }
+    ]
+  }
+]
+</script>
+</div>
+
+<div id="TcHmiImage_88" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiImage" data-tchmi-height="70" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-src="Images/left_hand.png" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width="64" data-tchmi-width-unit="px" data-tchmi-zindex="1">
+</div>
+</div>
+<div id="TcHmiContainer_46" data-tchmi-type="TcHmi.Controls.System.TcHmiContainer" data-tchmi-height="90" data-tchmi-height-unit="px" data-tchmi-left="941" data-tchmi-left-unit="px" data-tchmi-top="229" data-tchmi-top-unit="px" data-tchmi-width="64" data-tchmi-width-unit="px" data-tchmi-zindex="2"><div id="TcHmiImage_89" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiImage" data-tchmi-height="70" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-src="Images/right_hand.png" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width="64" data-tchmi-width-unit="px" data-tchmi-zindex="2">
+</div>
+
+<div id="TcHmiImage_90" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiImage" data-tchmi-height="70" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-src="Images/right_hand - green.png" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width="64" data-tchmi-width-unit="px" data-tchmi-zindex="2">
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "%s%ADS.PLC1.GVL_HMI.bRightHand%/s%",
+    "actions": [
+      {
+        "objectType": "Condition",
+        "active": true,
+        "parts": [
+          {
+            "if": [
+              {
+                "compare1": {
+                  "objectType": "Symbol",
+                  "valueType": "tchmi:general#/definitions/BOOL",
+                  "symbolExpression": "%s%ADS.PLC1.GVL_HMI.bRightHand%/s%"
+                },
+                "compare2": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:general#/definitions/BOOL",
+                  "value": true
+                },
+                "compareOperator": "==",
+                "logic": null
+              }
+            ],
+            "then": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctx%owner::Visibility%/ctx%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/Visibility",
+                  "value": "Visible"
+                },
+                "asyncWait": true
+              }
+            ]
+          },
+          {
+            "else": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctx%owner::Visibility%/ctx%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/Visibility",
+                  "value": "Collapsed"
+                },
+                "asyncWait": true
+              }
+            ]
+          }
+        ],
+        "asyncWait": true
+      }
+    ]
+  }
+]
+</script>
+</div>
+</div>
+<div id="TcHmiRectangle_103" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="432" data-tchmi-height-unit="px" data-tchmi-left="36" data-tchmi-left-unit="px" data-tchmi-top="18" data-tchmi-top-unit="px" data-tchmi-width="222" data-tchmi-width-unit="px" data-tchmi-width-mode="Value" data-tchmi-zindex="6" data-tchmi-radius-x="10" data-tchmi-stroke-thickness="2" data-tchmi-radius-y="10">
+<script data-tchmi-target-attribute="data-tchmi-border-radius" type="application/json">
+{
+  "topLeft": 10.0,
+  "topRight": 10.0,
+  "bottomLeft": 10.0,
+  "bottomRight": 10.0,
+  "topLeftUnit": "px",
+  "topRightUnit": "px",
+  "bottomLeftUnit": "px",
+  "bottomRightUnit": "px"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-box-shadow" type="application/json">
+[]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(255, 255, 255, 1)"
+}
+</script>
+</div>
+<div id="TcHmiTextblock_1233" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="36" data-tchmi-left-unit="px" data-tchmi-text="NEST - 1" data-tchmi-top="18" data-tchmi-top-unit="px" data-tchmi-width="222" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-zindex="30" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-font-weight="Bold" data-tchmi-text-font-size="18">
+<script data-tchmi-target-attribute="data-tchmi-border-style" type="application/json">
+{
+  "left": "None",
+  "right": "None",
+  "top": "None",
+  "bottom": "Solid"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-width" type="application/json">
+{
+  "left": 0,
+  "right": 0,
+  "top": 0,
+  "bottom": 2,
+  "leftUnit": "px",
+  "rightUnit": "px",
+  "topUnit": "px",
+  "bottomUnit": "px"
+}
+</script>
+</div>
+<div id="TcHmiTextblock_1235" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="55" data-tchmi-height-unit="px" data-tchmi-left="36" data-tchmi-left-unit="px" data-tchmi-text="Height Check" data-tchmi-top="114" data-tchmi-top-unit="px" data-tchmi-width="222" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-zindex="7" data-tchmi-text-font-weight="Bold" data-tchmi-text-font-size="20" data-tchmi-text-horizontal-alignment="Left" data-tchmi-text-vertical-alignment="Center">
+<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+{
+  "left": 110,
+  "right": 0,
+  "top": 0,
+  "bottom": 0,
+  "leftUnit": "px",
+  "rightUnit": "px",
+  "topUnit": "px",
+  "bottomUnit": "px"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-width" type="application/json">
+{
+  "left": 0,
+  "right": 0,
+  "top": 0,
+  "bottom": 1,
+  "leftUnit": "px",
+  "rightUnit": "px",
+  "topUnit": "px",
+  "bottomUnit": "px"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-style" type="application/json">
+{
+  "left": "None",
+  "right": "None",
+  "top": "None",
+  "bottom": "Solid"
+}
+</script>
+</div>
+<div id="TcHmiTextblock_1237" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="33" data-tchmi-height-unit="px" data-tchmi-left="52" data-tchmi-left-unit="px" data-tchmi-text="Distance I :" data-tchmi-top="269" data-tchmi-top-unit="px" data-tchmi-width="88" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-zindex="26" data-tchmi-text-font-weight="Bold" data-tchmi-text-font-size="17" data-tchmi-text-horizontal-alignment="Left" data-tchmi-text-vertical-alignment="Center">
+<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+{
+  "left": 0,
+  "right": 0,
+  "top": 0,
+  "bottom": 0,
+  "leftUnit": "px",
+  "rightUnit": "px",
+  "topUnit": "px",
+  "bottomUnit": "px"
+}
+</script>
+</div>
+<div id="TcHmiTextblock_1238" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="33" data-tchmi-height-unit="px" data-tchmi-left="156" data-tchmi-left-unit="px" data-tchmi-text="Distance II :" data-tchmi-top="269" data-tchmi-top-unit="px" data-tchmi-width="88" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-zindex="26" data-tchmi-text-font-weight="Bold" data-tchmi-text-font-size="17" data-tchmi-text-horizontal-alignment="Left" data-tchmi-text-vertical-alignment="Center">
+<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+{
+  "left": 0,
+  "right": 0,
+  "top": 0,
+  "bottom": 0,
+  "leftUnit": "px",
+  "rightUnit": "px",
+  "topUnit": "px",
+  "bottomUnit": "px"
+}
+</script>
+</div>
+<div id="TcHmiTextblock_1239" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="33" data-tchmi-height-unit="px" data-tchmi-left="52" data-tchmi-left-unit="px" data-tchmi-text="Distance III :" data-tchmi-top="362" data-tchmi-top-unit="px" data-tchmi-width="88" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-zindex="26" data-tchmi-text-font-weight="Bold" data-tchmi-text-font-size="17" data-tchmi-text-horizontal-alignment="Left" data-tchmi-text-vertical-alignment="Center">
+<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+{
+  "left": 0,
+  "right": 0,
+  "top": 0,
+  "bottom": 0,
+  "leftUnit": "px",
+  "rightUnit": "px",
+  "topUnit": "px",
+  "bottomUnit": "px"
+}
+</script>
+</div>
+<div id="TcHmiRectangle_102" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="432" data-tchmi-height-unit="px" data-tchmi-left="1082" data-tchmi-left-unit="px" data-tchmi-top="18" data-tchmi-top-unit="px" data-tchmi-width="222" data-tchmi-width-unit="px" data-tchmi-width-mode="Value" data-tchmi-zindex="6" data-tchmi-radius-x="10" data-tchmi-stroke-thickness="2" data-tchmi-radius-y="10">
+<script data-tchmi-target-attribute="data-tchmi-border-radius" type="application/json">
+{
+  "topLeft": 10.0,
+  "topRight": 10.0,
+  "bottomLeft": 10.0,
+  "bottomRight": 10.0,
+  "topLeftUnit": "px",
+  "topRightUnit": "px",
+  "bottomLeftUnit": "px",
+  "bottomRightUnit": "px"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-box-shadow" type="application/json">
+[]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(255, 255, 255, 1)"
+}
+</script>
+</div>
+<div id="TcHmiTextblock_1240" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="1082" data-tchmi-left-unit="px" data-tchmi-text="NEST - 2" data-tchmi-top="18" data-tchmi-top-unit="px" data-tchmi-width="222" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-zindex="30" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-font-weight="Bold" data-tchmi-text-font-size="18">
+<script data-tchmi-target-attribute="data-tchmi-border-style" type="application/json">
+{
+  "left": "None",
+  "right": "None",
+  "top": "None",
+  "bottom": "Solid"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-width" type="application/json">
+{
+  "left": 0,
+  "right": 0,
+  "top": 0,
+  "bottom": 2,
+  "leftUnit": "px",
+  "rightUnit": "px",
+  "topUnit": "px",
+  "bottomUnit": "px"
+}
+</script>
+</div>
+<div id="TcHmiTextblock_1242" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="55" data-tchmi-height-unit="px" data-tchmi-left="1082" data-tchmi-left-unit="px" data-tchmi-text="Height Check" data-tchmi-top="114" data-tchmi-top-unit="px" data-tchmi-width="222" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-zindex="7" data-tchmi-text-font-weight="Bold" data-tchmi-text-font-size="20" data-tchmi-text-horizontal-alignment="Left" data-tchmi-text-vertical-alignment="Center">
+<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+{
+  "left": 110,
+  "right": 0,
+  "top": 0,
+  "bottom": 0,
+  "leftUnit": "px",
+  "rightUnit": "px",
+  "topUnit": "px",
+  "bottomUnit": "px"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-width" type="application/json">
+{
+  "left": 0,
+  "right": 0,
+  "top": 0,
+  "bottom": 1,
+  "leftUnit": "px",
+  "rightUnit": "px",
+  "topUnit": "px",
+  "bottomUnit": "px"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-style" type="application/json">
+{
+  "left": "None",
+  "right": "None",
+  "top": "None",
+  "bottom": "Solid"
+}
+</script>
+</div>
+<div id="TcHmiTextblock_1244" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="33" data-tchmi-height-unit="px" data-tchmi-left="1098" data-tchmi-left-unit="px" data-tchmi-text="Distance I :" data-tchmi-top="269" data-tchmi-top-unit="px" data-tchmi-width="88" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-zindex="26" data-tchmi-text-font-weight="Bold" data-tchmi-text-font-size="17" data-tchmi-text-horizontal-alignment="Left" data-tchmi-text-vertical-alignment="Center">
+<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+{
+  "left": 0,
+  "right": 0,
+  "top": 0,
+  "bottom": 0,
+  "leftUnit": "px",
+  "rightUnit": "px",
+  "topUnit": "px",
+  "bottomUnit": "px"
+}
+</script>
+</div>
+<div id="TcHmiTextblock_1245" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="33" data-tchmi-height-unit="px" data-tchmi-left="1202" data-tchmi-left-unit="px" data-tchmi-text="Distance II :" data-tchmi-top="269" data-tchmi-top-unit="px" data-tchmi-width="88" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-zindex="26" data-tchmi-text-font-weight="Bold" data-tchmi-text-font-size="17" data-tchmi-text-horizontal-alignment="Left" data-tchmi-text-vertical-alignment="Center">
+<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+{
+  "left": 0,
+  "right": 0,
+  "top": 0,
+  "bottom": 0,
+  "leftUnit": "px",
+  "rightUnit": "px",
+  "topUnit": "px",
+  "bottomUnit": "px"
+}
+</script>
+</div>
+<div id="TcHmiTextblock_1246" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="33" data-tchmi-height-unit="px" data-tchmi-left="1098" data-tchmi-left-unit="px" data-tchmi-text="Distance III :" data-tchmi-top="362" data-tchmi-top-unit="px" data-tchmi-width="88" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-zindex="26" data-tchmi-text-font-weight="Bold" data-tchmi-text-font-size="17" data-tchmi-text-horizontal-alignment="Left" data-tchmi-text-vertical-alignment="Center">
+<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+{
+  "left": 0,
+  "right": 0,
+  "top": 0,
+  "bottom": 0,
+  "leftUnit": "px",
+  "rightUnit": "px",
+  "topUnit": "px",
+  "bottomUnit": "px"
+}
+</script>
+</div>
+<div id="TcHmiTextblock_1229" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="52" data-tchmi-left-unit="px" data-tchmi-top="229" data-tchmi-top-unit="px" data-tchmi-width="192" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-font-size="30" data-tchmi-zindex="31">
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "%s%ADS.PLC1.GVL_Master.stCycleDataNest1.bFail%/s%",
+    "actions": [
+      {
+        "objectType": "Condition",
+        "active": true,
+        "parts": [
+          {
+            "if": [
+              {
+                "compare1": {
+                  "objectType": "Symbol",
+                  "valueType": "tchmi:general#/definitions/BOOL",
+                  "symbolExpression": "%s%ADS.PLC1.GVL_Master.stCycleDataNest1.bFail%/s%"
+                },
+                "compare2": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:general#/definitions/BOOL",
+                  "value": true
+                },
+                "compareOperator": "==",
+                "logic": null
+              }
+            ],
+            "then": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctx%owner::BackgroundColor%/ctx%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/Color",
+                  "value": {
+                    "angle": 180.0,
+                    "stopPoints": [
+                      {
+                        "color": "rgba(255, 255, 255, 1)",
+                        "stop": "0%"
+                      },
+                      {
+                        "color": "rgba(255, 0, 0, 1)",
+                        "stop": "100%"
+                      }
+                    ]
+                  }
+                },
+                "asyncWait": true
+              },
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctx%owner::Text%/ctx%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:general#/definitions/String",
+                  "value": "FAIL"
+                },
+                "asyncWait": true
+              }
+            ]
+          },
+          {
+            "else": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctx%owner::BackgroundColor%/ctx%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/Color",
+                  "value": {
+                    "color": "rgba(146, 140, 140, 1)"
+                  }
+                },
+                "asyncWait": true
+              },
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctx%owner::Text%/ctx%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:general#/definitions/String",
+                  "value": ""
+                },
+                "asyncWait": true
+              }
+            ]
+          }
+        ],
+        "asyncWait": true
+      }
+    ]
+  },
+  {
+    "event": "%s%ADS.PLC1.GVL_Master.stCycleDataNest1.bPass%/s%",
+    "actions": [
+      {
+        "objectType": "Condition",
+        "active": true,
+        "parts": [
+          {
+            "if": [
+              {
+                "compare1": {
+                  "objectType": "Symbol",
+                  "valueType": "tchmi:general#/definitions/BOOL",
+                  "symbolExpression": "%s%ADS.PLC1.GVL_Master.stCycleDataNest1.bPass%/s%"
+                },
+                "compare2": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:general#/definitions/BOOL",
+                  "value": true
+                },
+                "compareOperator": "==",
+                "logic": null
+              }
+            ],
+            "then": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctx%owner::BackgroundColor%/ctx%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/Color",
+                  "value": {
+                    "angle": 180.0,
+                    "stopPoints": [
+                      {
+                        "color": "rgba(255, 255, 255, 1)",
+                        "stop": "0%"
+                      },
+                      {
+                        "color": "rgba(10, 255, 0, 1)",
+                        "stop": "100%"
+                      }
+                    ]
+                  }
+                },
+                "asyncWait": true
+              },
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctx%owner::Text%/ctx%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:general#/definitions/String",
+                  "value": "PASS"
+                },
+                "asyncWait": true
+              }
+            ]
+          },
+          {
+            "else": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctx%owner::BackgroundColor%/ctx%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/Color",
+                  "value": {
+                    "color": "rgba(146, 140, 140, 1)"
+                  }
+                },
+                "asyncWait": true
+              },
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctx%owner::Text%/ctx%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:general#/definitions/String",
+                  "value": ""
+                },
+                "asyncWait": true
+              }
+            ]
+          }
+        ],
+        "asyncWait": true
+      }
+    ]
+  }
+]
+</script>
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-text-color" type="application/json">
+{
+  "color": "rgba(255, 255, 255, 1)"
+}
+</script>
+</div>
+<div id="TcHmiTextblock_1230" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="1098" data-tchmi-left-unit="px" data-tchmi-top="229" data-tchmi-top-unit="px" data-tchmi-width="192" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-font-size="30" data-tchmi-zindex="31">
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "%s%ADS.PLC1.GVL_Master.stCycleDataNest2.bPass%/s%",
+    "actions": [
+      {
+        "objectType": "Condition",
+        "active": true,
+        "parts": [
+          {
+            "if": [
+              {
+                "compare1": {
+                  "objectType": "Symbol",
+                  "valueType": "tchmi:general#/definitions/BOOL",
+                  "symbolExpression": "%s%ADS.PLC1.GVL_Master.stCycleDataNest2.bPass%/s%"
+                },
+                "compare2": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:general#/definitions/BOOL",
+                  "value": true
+                },
+                "compareOperator": "==",
+                "logic": null
+              }
+            ],
+            "then": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctx%owner::BackgroundColor%/ctx%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/Color",
+                  "value": {
+                    "angle": 180.0,
+                    "stopPoints": [
+                      {
+                        "color": "rgba(255, 255, 255, 1)",
+                        "stop": "0%"
+                      },
+                      {
+                        "color": "rgba(10, 255, 0, 1)",
+                        "stop": "100%"
+                      }
+                    ]
+                  }
+                },
+                "asyncWait": true
+              },
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctx%owner::Text%/ctx%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:general#/definitions/String",
+                  "value": "PASS"
+                },
+                "asyncWait": true
+              }
+            ]
+          },
+          {
+            "else": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctx%owner::BackgroundColor%/ctx%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/Color",
+                  "value": {
+                    "color": "rgba(146, 140, 140, 1)"
+                  }
+                },
+                "asyncWait": true
+              },
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctx%owner::Text%/ctx%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:general#/definitions/String",
+                  "value": ""
+                },
+                "asyncWait": true
+              }
+            ]
+          }
+        ],
+        "asyncWait": true
+      }
+    ]
+  },
+  {
+    "event": "%s%ADS.PLC1.GVL_Master.stCycleDataNest2.bFail%/s%",
+    "actions": [
+      {
+        "objectType": "Condition",
+        "active": true,
+        "parts": [
+          {
+            "if": [
+              {
+                "compare1": {
+                  "objectType": "Symbol",
+                  "valueType": "tchmi:general#/definitions/BOOL",
+                  "symbolExpression": "%s%ADS.PLC1.GVL_Master.stCycleDataNest2.bFail%/s%"
+                },
+                "compare2": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:general#/definitions/BOOL",
+                  "value": true
+                },
+                "compareOperator": "==",
+                "logic": null
+              }
+            ],
+            "then": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctx%owner::BackgroundColor%/ctx%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/Color",
+                  "value": {
+                    "angle": 180.0,
+                    "stopPoints": [
+                      {
+                        "color": "rgba(255, 255, 255, 1)",
+                        "stop": "0%"
+                      },
+                      {
+                        "color": "rgba(255, 0, 0, 1)",
+                        "stop": "100%"
+                      }
+                    ]
+                  }
+                },
+                "asyncWait": true
+              },
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctx%owner::Text%/ctx%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:general#/definitions/String",
+                  "value": "FAIL"
+                },
+                "asyncWait": true
+              }
+            ]
+          },
+          {
+            "else": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctx%owner::BackgroundColor%/ctx%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/Color",
+                  "value": {
+                    "color": "rgba(146, 140, 140, 1)"
+                  }
+                },
+                "asyncWait": true
+              },
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctx%owner::Text%/ctx%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:general#/definitions/String",
+                  "value": ""
+                },
+                "asyncWait": true
+              }
+            ]
+          }
+        ],
+        "asyncWait": true
+      }
+    ]
+  }
+]
+</script>
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-text-color" type="application/json">
+{
+  "color": "rgba(255, 255, 255, 1)"
+}
+</script>
+</div>
+<div id="Green_Red_Rectangle_16" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height="27" data-tchmi-height-unit="px" data-tchmi-left="1202" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/UserControl/Green_Red_Rectangle.usercontrol" data-tchmi-top="312" data-tchmi-top-unit="px" data-tchmi-width="88" data-tchmi-width-unit="px" data-tchmi-greenred="%s%ADS.PLC1.GVL_Master.stCycleDataNest2.HeightTest_bDistancesResult.1%/s%" data-tchmi-text_value="%f%%s%ADS.PLC1.GVL_Master.stCycleDataNest2.HeightTest_anDistancesResult.1%/s%.toFixed(3);%/f%" data-tchmi-zindex="32">
+</div>
+<div id="Green_Red_Rectangle_17" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height="27" data-tchmi-height-unit="px" data-tchmi-left="52" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/UserControl/Green_Red_Rectangle.usercontrol" data-tchmi-top="312" data-tchmi-top-unit="px" data-tchmi-width="88" data-tchmi-width-unit="px" data-tchmi-greenred="%s%ADS.PLC1.GVL_Master.stCycleDataNest1.HeightTest_bDistancesResult.0%/s%" data-tchmi-text_value="%f%%s%ADS.PLC1.GVL_Master.stCycleDataNest1.HeightTest_anDistancesResult.0%/s%.toFixed(3);%/f%" data-tchmi-zindex="32">
+</div>
+<div id="Green_Red_Rectangle_18" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height="27" data-tchmi-height-unit="px" data-tchmi-left="156" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/UserControl/Green_Red_Rectangle.usercontrol" data-tchmi-top="312" data-tchmi-top-unit="px" data-tchmi-width="88" data-tchmi-width-unit="px" data-tchmi-greenred="%s%ADS.PLC1.GVL_Master.stCycleDataNest1.HeightTest_bDistancesResult.1%/s%" data-tchmi-zindex="32" data-tchmi-text_value="%f%%s%ADS.PLC1.GVL_Master.stCycleDataNest1.HeightTest_anDistancesResult.1%/s%.toFixed(3);%/f%">
+</div>
+<div id="Green_Red_Rectangle_19" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height="27" data-tchmi-height-unit="px" data-tchmi-left="52" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/UserControl/Green_Red_Rectangle.usercontrol" data-tchmi-top="405" data-tchmi-top-unit="px" data-tchmi-width="88" data-tchmi-width-unit="px" data-tchmi-greenred="%s%ADS.PLC1.GVL_Master.stCycleDataNest1.HeightTest_bDistancesResult.2%/s%" data-tchmi-text_value="%f%%s%ADS.PLC1.GVL_Master.stCycleDataNest1.HeightTest_anDistancesResult.2%/s%.toFixed(3);%/f%" data-tchmi-zindex="32">
+</div>
+<div id="Green_Red_Rectangle_14" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height="27" data-tchmi-height-unit="px" data-tchmi-left="1098" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/UserControl/Green_Red_Rectangle.usercontrol" data-tchmi-top="312" data-tchmi-top-unit="px" data-tchmi-width="88" data-tchmi-width-unit="px" data-tchmi-greenred="%s%ADS.PLC1.GVL_Master.stCycleDataNest2.HeightTest_bDistancesResult.0%/s%" data-tchmi-text_value="%f%%s%ADS.PLC1.GVL_Master.stCycleDataNest2.HeightTest_anDistancesResult.0%/s%.toFixed(3);%/f%" data-tchmi-zindex="32">
+</div>
+<div id="Green_Red_Rectangle_15" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height="27" data-tchmi-height-unit="px" data-tchmi-left="1098" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/UserControl/Green_Red_Rectangle.usercontrol" data-tchmi-top="405" data-tchmi-top-unit="px" data-tchmi-width="88" data-tchmi-width-unit="px" data-tchmi-greenred="%s%ADS.PLC1.GVL_Master.stCycleDataNest2.HeightTest_bDistancesResult.2%/s%" data-tchmi-text_value="%f%%s%ADS.PLC1.GVL_Master.stCycleDataNest2.HeightTest_anDistancesResult.2%/s%.toFixed(3);%/f%" data-tchmi-zindex="32">
+</div>
+<div id="Led_110" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height="50" data-tchmi-height-unit="px" data-tchmi-left="52" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/UserControl/led_RedAndGreen_2In.usercontrol" data-tchmi-top="115" data-tchmi-top-unit="px" data-tchmi-width="50" data-tchmi-width-unit="px" data-tchmi-zindex="33" data-tchmi-red="%s%ADS.PLC1.GVL_Master.stCycleDataNest1.HeightTest_Fail%/s%" data-tchmi-green="%s%ADS.PLC1.GVL_Master.stCycleDataNest1.HeightTest_Pass%/s%">
+</div>
+<div id="Led_113" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height="50" data-tchmi-height-unit="px" data-tchmi-left="1098" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/UserControl/led_RedAndGreen_2In.usercontrol" data-tchmi-top="116" data-tchmi-top-unit="px" data-tchmi-width="50" data-tchmi-width-unit="px" data-tchmi-zindex="33" data-tchmi-red="%s%ADS.PLC1.GVL_Master.stCycleDataNest2.HeightTest_Fail%/s%" data-tchmi-green="%s%ADS.PLC1.GVL_Master.stCycleDataNest2.HeightTest_Pass%/s%">
+</div>
+<div id="TcHmiTextblock_1231" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="55" data-tchmi-height-unit="px" data-tchmi-left="294" data-tchmi-left-unit="px" data-tchmi-text="PART PRESENT
+NEST 1" data-tchmi-top="18" data-tchmi-top-unit="px" data-tchmi-width="137" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-zindex="13" data-tchmi-text-font-weight="Bold" data-tchmi-text-font-size="20" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center">
+<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+{
+  "left": 0,
+  "right": 0,
+  "top": 0,
+  "bottom": 0,
+  "leftUnit": "px",
+  "rightUnit": "px",
+  "topUnit": "px",
+  "bottomUnit": "px"
+}
+</script>
+</div>
+<div id="TcHmiTextblock_1232" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="55" data-tchmi-height-unit="px" data-tchmi-left="911" data-tchmi-left-unit="px" data-tchmi-text="PART PRESENT
+NEST 2" data-tchmi-top="14" data-tchmi-top-unit="px" data-tchmi-width="137" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-zindex="13" data-tchmi-text-font-weight="Bold" data-tchmi-text-font-size="20" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center">
+<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+{
+  "left": 0,
+  "right": 0,
+  "top": 0,
+  "bottom": 0,
+  "leftUnit": "px",
+  "rightUnit": "px",
+  "topUnit": "px",
+  "bottomUnit": "px"
+}
+</script>
+</div>
+<div id="Led_116" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height="50" data-tchmi-height-unit="px" data-tchmi-left="332" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/UserControl/led_RedAndGreen_1In.usercontrol" data-tchmi-top="83" data-tchmi-top-unit="px" data-tchmi-width="50" data-tchmi-width-unit="px" data-tchmi-input="%s%ADS.PLC1.GVL_HMI.bPartPresent.0%/s%" data-tchmi-zindex="1">
+</div>
+<div id="Led_108" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height="50" data-tchmi-height-unit="px" data-tchmi-left="955" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/UserControl/led_RedAndGreen_1In.usercontrol" data-tchmi-top="79" data-tchmi-top-unit="px" data-tchmi-width="50" data-tchmi-width-unit="px" data-tchmi-input="%s%ADS.PLC1.GVL_HMI.bPartPresent.1%/s%" data-tchmi-zindex="1">
+</div>
+<div id="TcHmiRectangle_104" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="301" data-tchmi-height-unit="px" data-tchmi-left="268" data-tchmi-left-unit="px" data-tchmi-top="18" data-tchmi-top-unit="px" data-tchmi-width="189" data-tchmi-width-unit="px" data-tchmi-width-mode="Value" data-tchmi-zindex="0" data-tchmi-radius-x="10" data-tchmi-stroke-thickness="2" data-tchmi-radius-y="10">
+<script data-tchmi-target-attribute="data-tchmi-border-radius" type="application/json">
+{
+  "topLeft": 10.0,
+  "topRight": 10.0,
+  "bottomLeft": 10.0,
+  "bottomRight": 10.0,
+  "topLeftUnit": "px",
+  "topRightUnit": "px",
+  "bottomLeftUnit": "px",
+  "bottomRightUnit": "px"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-box-shadow" type="application/json">
+[]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(255, 255, 255, 1)"
+}
+</script>
+</div>
+<div id="base_animation_1" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiImage" data-tchmi-height="327" data-tchmi-height-unit="px" data-tchmi-left="407" data-tchmi-left-unit="px" data-tchmi-src="Images/animation_base.png" data-tchmi-top="164" data-tchmi-top-unit="px" data-tchmi-width="515" data-tchmi-width-unit="px">
+</div>
+<div id="cylinder_animation_1" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiImage" data-tchmi-height="297" data-tchmi-height-unit="px" data-tchmi-left="469" data-tchmi-left-unit="px" data-tchmi-src="Images/animation_cylinder.png" data-tchmi-top="105" data-tchmi-top-unit="px" data-tchmi-width="432" data-tchmi-width-unit="px">
+
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "%s%ADS.PLC1.B_4_1_PRG_Master_ProcessCylinder.bRetracted%/s%",
+    "actions": [
+      {
+        "objectType": "Condition",
+        "active": true,
+        "parts": [
+          {
+            "if": [
+              {
+                "compare1": {
+                  "objectType": "Symbol",
+                  "valueType": "tchmi:general#/definitions/BOOL",
+                  "symbolExpression": "%s%ADS.PLC1.B_4_1_PRG_Master_ProcessCylinder.bRetracted%/s%"
+                },
+                "compare2": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:general#/definitions/BOOL",
+                  "value": true
+                },
+                "compareOperator": "==",
+                "logic": null
+              }
+            ],
+            "then": [
+              {
+                "objectType": "JavaScript",
+                "active": true,
+                "sourceLines": [
+                  "var animation = new TcHmi.Animation('cylinder_animation', '')",
+                  "animation.addKeyframe('transform', 'translate(0px, 113px)', 0)",
+                  "    .addKeyframe('transform', 'translate(0px, 0px)', 1)",
+                  "    .duration(1000);",
+                  "animation.registerEventHandler('animationend', function (event) {",
+                  "    console.log('Animation ended: ' + event.animationName);",
+                  "    var someControl = TcHmi.Controls.get('cylinder_animation');",
+                  "    var t = [{",
+                  "        \"transformType\": \"Translate\",",
+                  "        \"x\": 0,",
+                  "        \"xUnit\": \"px\",",
+                  "        \"y\": 0,",
+                  "        \"yUnit\": \"px\",",
+                  "        \"z\": 0,",
+                  "        \"zUnit\": \"px\",",
+                  "    }",
+                  "    ];",
+                  "    someControl.setTransform(t);",
+                  "});",
+                  "animation.run();"
+                ],
+                "asyncWait": true,
+                "waitMode": "Synchronous"
+              }
+            ]
+          },
+          {
+            "else": [
+              {
+                "objectType": "JavaScript",
+                "active": true,
+                "sourceLines": [
+                  "var animation = new TcHmi.Animation('cylinder_animation', '')",
+                  "animation.addKeyframe('transform', 'translate(0px, 0px)', 0)",
+                  "    .addKeyframe('transform', 'translate(0px, 113px)', 1)",
+                  "    .duration(1000);",
+                  "animation.registerEventHandler('animationend', function (event) {",
+                  "    console.log('Animation ended: ' + event.animationName);",
+                  "    var someControl = TcHmi.Controls.get('cylinder_animation');",
+                  "    var t = [{",
+                  "        \"transformType\": \"Translate\",",
+                  "        \"x\": 0,",
+                  "        \"xUnit\": \"px\",",
+                  "        \"y\": 113,",
+                  "        \"yUnit\": \"px\",",
+                  "        \"z\": 0,",
+                  "        \"zUnit\": \"px\",",
+                  "    }",
+                  "    ];",
+                  "    someControl.setTransform(t);",
+                  "});",
+                  "animation.run();"
+                ],
+                "asyncWait": true,
+                "waitMode": "Synchronous"
+              }
+            ]
+          }
+        ],
+        "asyncWait": true
+      }
+    ]
+  }
+]
+</script>
+</div>
+<div id="TcHmiRectangle_101" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="12" data-tchmi-height-unit="px" data-tchmi-left="591" data-tchmi-left-unit="px" data-tchmi-top="417" data-tchmi-top-unit="px" data-tchmi-width="128" data-tchmi-width-unit="px" data-tchmi-zindex="34">
+
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(130, 90, 85, 1)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(130, 90, 85, 1)"
+}
+</script>
+</div>
+<div id="TcHmiRectangle_100" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="3" data-tchmi-height-unit="px" data-tchmi-left="591" data-tchmi-left-unit="px" data-tchmi-top="429" data-tchmi-top-unit="px" data-tchmi-width="128" data-tchmi-width-unit="px" data-tchmi-zindex="34">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(61, 40, 38, 1)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(61, 40, 38, 1)"
+}
+</script>
+</div>
+<div id="TcHmiRectangle_99" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="11" data-tchmi-height-unit="px" data-tchmi-left="591" data-tchmi-left-unit="px" data-tchmi-top="432" data-tchmi-top-unit="px" data-tchmi-width="128" data-tchmi-width-unit="px" data-tchmi-zindex="34">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(130, 90, 85, 1)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(130, 90, 85, 1)"
+}
+</script>
+</div>
+<div id="TcHmiRectangle_98" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="3" data-tchmi-height-unit="px" data-tchmi-left="591" data-tchmi-left-unit="px" data-tchmi-top="443" data-tchmi-top-unit="px" data-tchmi-width="128" data-tchmi-width-unit="px" data-tchmi-zindex="34">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(61, 40, 38, 1)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(61, 40, 38, 1)"
+}
+</script>
+</div>
+<div id="TcHmiRectangle_97" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="34" data-tchmi-height-unit="px" data-tchmi-left="591" data-tchmi-left-unit="px" data-tchmi-top="446" data-tchmi-top-unit="px" data-tchmi-width="128" data-tchmi-width-unit="px" data-tchmi-zindex="36">
+
+
+
+
+
+
+
+
+
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-border-style" type="application/json">
+{
+  "left": "None",
+  "right": "None",
+  "top": "None",
+  "bottom": "None"
+}
+</script>
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(216, 222, 228, 1)"
+}
+</script>
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-fill-color" type="application/json">
+{
+  "color": "rgba(216, 222, 228, 1)"
+}
+</script>
+</div>
+<div id="TcHmiImage_86" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiImage" data-tchmi-height="83" data-tchmi-height-unit="px" data-tchmi-left="796" data-tchmi-left-unit="px" data-tchmi-src="Images/camera.png" data-tchmi-top="346" data-tchmi-top-unit="px" data-tchmi-width="162" data-tchmi-width-unit="px" data-tchmi-zindex="37">
+</div>
+<div id="TcHmiImage_85" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiImage" data-tchmi-height="83" data-tchmi-height-unit="px" data-tchmi-left="579" data-tchmi-left-unit="px" data-tchmi-src="Images/camera.png" data-tchmi-top="346" data-tchmi-top-unit="px" data-tchmi-width="162" data-tchmi-width-unit="px" data-tchmi-zindex="37">
+</div>
+<div id="TcHmiTextblock_1228" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="55" data-tchmi-height-unit="px" data-tchmi-left="609" data-tchmi-left-unit="px" data-tchmi-text="SAFE
+ POSITION" data-tchmi-top="14" data-tchmi-top-unit="px" data-tchmi-width="132" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-zindex="38" data-tchmi-text-font-weight="Bold" data-tchmi-text-font-size="20" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center">
+<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+{
+  "left": 0,
+  "right": 0,
+  "top": 0,
+  "bottom": 0,
+  "leftUnit": "px",
+  "rightUnit": "px",
+  "topUnit": "px",
+  "bottomUnit": "px"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-style" type="application/json">
+{
+  "left": "None",
+  "right": "None",
+  "top": "None",
+  "bottom": "None"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-width" type="application/json">
+{
+  "left": 0,
+  "right": 0,
+  "top": 0,
+  "bottom": 1,
+  "leftUnit": "px",
+  "rightUnit": "px",
+  "topUnit": "px",
+  "bottomUnit": "px"
+}
+</script>
+</div>
+<div id="Led_109" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height="50" data-tchmi-height-unit="px" data-tchmi-left="650" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/UserControl/led_RedAndGreen_1In.usercontrol" data-tchmi-top="79" data-tchmi-top-unit="px" data-tchmi-width="50" data-tchmi-width-unit="px" data-tchmi-input="%s%ADS.PLC1.B_4_1_PRG_Master_ProcessCylinder.bRetracted%/s%" data-tchmi-zindex="39">
+</div>
+<div id="TcHmiRectangle_96" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="301" data-tchmi-height-unit="px" data-tchmi-left="883" data-tchmi-left-unit="px" data-tchmi-top="14" data-tchmi-top-unit="px" data-tchmi-width="189" data-tchmi-width-unit="px" data-tchmi-width-mode="Value" data-tchmi-zindex="0" data-tchmi-radius-x="10" data-tchmi-stroke-thickness="2" data-tchmi-radius-y="10">
+<script data-tchmi-target-attribute="data-tchmi-border-radius" type="application/json">
+{
+  "topLeft": 10.0,
+  "topRight": 10.0,
+  "bottomLeft": 10.0,
+  "bottomRight": 10.0,
+  "topLeftUnit": "px",
+  "topRightUnit": "px",
+  "bottomLeftUnit": "px",
+  "bottomRightUnit": "px"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-box-shadow" type="application/json">
+[]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(255, 255, 255, 1)"
+}
+</script>
+</div>
+<div id="TcHmiRectangle_95" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="144" data-tchmi-height-unit="px" data-tchmi-left="617" data-tchmi-left-unit="px" data-tchmi-top="10" data-tchmi-top-unit="px" data-tchmi-width="118" data-tchmi-width-unit="px" data-tchmi-width-mode="Value" data-tchmi-zindex="0" data-tchmi-radius-x="10" data-tchmi-stroke-thickness="2" data-tchmi-radius-y="10">
+<script data-tchmi-target-attribute="data-tchmi-border-radius" type="application/json">
+{
+  "topLeft": 10.0,
+  "topRight": 10.0,
+  "bottomLeft": 10.0,
+  "bottomRight": 10.0,
+  "topLeftUnit": "px",
+  "topRightUnit": "px",
+  "bottomLeftUnit": "px",
+  "bottomRightUnit": "px"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-box-shadow" type="application/json">
+[]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(255, 255, 255, 1)"
+}
+</script>
+</div>
+</div>
+</body>
+</html>

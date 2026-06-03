@@ -3,6 +3,29 @@
   <GVL Name="GVL_IO" Id="{9aa90eb0-9573-4452-8017-d30f8917684a}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL
+//========================================================================================
+	// TwinSAFE Interface Signals (PLC <-> TwinSAFE EL6910)
+	//========================================================================================
+	bSafetyRun    AT %Q* : BOOL := TRUE; // Output from PLC to TwinSAFE (Command to run)
+	bSafetyReset  AT %Q* : BOOL; // Output from PLC to TwinSAFE (Command to reset)
+	bSafetyOK     AT %I* : BOOL; // Input to PLC from TwinSAFE (System is safe)
+	bSafetyError  AT %I* : BOOL; // Input to PLC from TwinSAFE (System has a fault)
+
+	//========================================================================================
+	// TwinSAFE Hardware Terminals (Instances for HMI Diagnostic and Status Mapping)
+	//========================================================================================
+	stTerm4_EL1918      : ST_EL1918; // Term 4 | TwinSAFE 8-Channel Digital Input
+	stTerm5_EL1918      : ST_EL1918; // Term 5 | TwinSAFE 8-Channel Digital Input
+	stTerm6_EL1918      : ST_EL1918; // Term 6 | TwinSAFE 8-Channel Digital Input
+	
+	stTerm7_EL2904      : ST_EL2904; // Term 7 | TwinSAFE 4-Channel Digital Output
+	stTerm8_EL2904      : ST_EL2904; // Term 8 | TwinSAFE 4-Channel Digital Output
+	
+	
+	
+	
+	
+	
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>
