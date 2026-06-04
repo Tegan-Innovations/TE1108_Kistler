@@ -296,7 +296,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{09826F5E-A0C6-4F2A-AB8E-A2951346EAC9}" Name="TE1108" PrjFilePath="TE1108\TE1108.plcproj" TmcFilePath="TE1108\TE1108.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{F65BC3F1-F51B-9994-8AE8-B781D6D21A4A}" TmcPath="TE1108\TE1108.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{AFCCF259-CB09-68D1-368C-3DE32DA52AEB}" TmcPath="TE1108\TE1108.tmc">
 					<Name>TE1108 Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -311,14 +311,18 @@
 							<Comment><![CDATA[ Output from PLC to TwinSAFE (Command to reset)]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
+						<Var>
+							<Name>PRG_MachineControl.q_bLED_Start</Name>
+							<Comment><![CDATA[ Hardware digital outputs mapped to the physical LEDs]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_MachineControl.q_bLED_Reset</Name>
+							<Type>BOOL</Type>
+						</Var>
 					</Vars>
 					<Vars VarGrpType="1">
 						<Name>PlcTask Inputs</Name>
-						<Var>
-							<Name>GVL_IO.bSafetyOK</Name>
-							<Comment><![CDATA[ Input to PLC from TwinSAFE (System can start)]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
 						<Var>
 							<Name>GVL_IO.bSafetyError</Name>
 							<Comment><![CDATA[ Input to PLC from TwinSAFE (System has a fault)]]></Comment>
@@ -330,22 +334,27 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_MASTER.bButtonStart</Name>
+							<Name>GVL_IO.bSafetyOK</Name>
+							<Comment><![CDATA[ Input to PLC from TwinSAFE (System can start)]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.i_bButtonStart</Name>
 							<Comment><![CDATA[  Auto Cycle start button]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_MASTER.bButtonStop</Name>
+							<Name>GVL_MASTER.i_bButtonStop</Name>
 							<Comment><![CDATA[  cycle stop button]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_MASTER.bButtonReset</Name>
+							<Name>GVL_MASTER.i_bButtonReset</Name>
 							<Comment><![CDATA[  fault reset button]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_MASTER.bButtonEmergencyStop</Name>
+							<Name>GVL_MASTER.i_bButtonEmergencyStop</Name>
 							<Comment><![CDATA[  software E-stop button]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
@@ -1969,19 +1978,23 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 			</OwnerB>
 		</OwnerA>
 		<OwnerA Name="TIPC^TE1108^TE1108 Instance">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1100)^Term 11 (EL2809-0015)">
+				<Link VarA="PlcTask Outputs^PRG_MachineControl.q_bLED_Reset" VarB="Channel 2^Output"/>
+				<Link VarA="PlcTask Outputs^PRG_MachineControl.q_bLED_Start" VarB="Channel 1^Output"/>
+			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1100)^Term 3 (EL6910)">
 				<Link VarA="PlcTask Inputs^GVL_IO.bSafetyOK" VarB="StandardInputs^TwinSafeGroup1.Safety_OK_8"/>
 				<Link VarA="PlcTask Inputs^GVL_IO.bSystemSafeOK" VarB="StandardInputs^TwinSafeGroup1.System_Safe_OK_11"/>
-				<Link VarA="PlcTask Inputs^GVL_MASTER.bButtonEmergencyStop" VarB="StandardInputs^TwinSafeGroup1.ESTOP_Pressed_9"/>
+				<Link VarA="PlcTask Inputs^GVL_MASTER.i_bButtonEmergencyStop" VarB="StandardInputs^TwinSafeGroup1.ESTOP_Pressed_9"/>
 				<Link VarA="PlcTask Outputs^GVL_IO.bSafetyReset" VarB="StandardOutputs^TwinSafeGroup1.ErrorAcknowledgement_1"/>
 				<Link VarA="PlcTask Outputs^GVL_IO.bSafetyRun" VarB="StandardOutputs^TwinSafeGroup1.Run_2"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1100)^Term 4 (EL1918)">
-				<Link VarA="PlcTask Inputs^GVL_MASTER.bButtonReset" VarB="Module 1 (FSOE)^FSoE Inputs^FSOE^FSIN Module 3.Input"/>
+				<Link VarA="PlcTask Inputs^GVL_MASTER.i_bButtonReset" VarB="Module 1 (FSOE)^FSoE Inputs^FSOE^FSIN Module 3.Input"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1100)^Term 9 (EL1809)">
-				<Link VarA="PlcTask Inputs^GVL_MASTER.bButtonStart" VarB="Channel 1^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_MASTER.bButtonStop" VarB="Channel 2^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_MASTER.i_bButtonStart" VarB="Channel 1^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_MASTER.i_bButtonStop" VarB="Channel 2^Input"/>
 			</OwnerB>
 		</OwnerA>
 	</Mappings>

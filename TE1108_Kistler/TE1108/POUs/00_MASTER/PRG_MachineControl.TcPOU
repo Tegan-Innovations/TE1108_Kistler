@@ -14,7 +14,9 @@ VAR
 	tonSimulation		  : ARRAY[1..4] OF TON; //timer for simulations  
     
     rtFirstAutoCycle      : R_TRIG; // Detects entry into Auto Cycle
-    fbResetTrigger        : F_TRIG; // Detects HMI Reset button release 
+    fbResetTrigger        : F_TRIG; // Detects HMI Reset button release
+	fbStopTrigger         : F_TRIG;// Detects phisical button input
+	bButtonStop           : BOOL; // Logic signal (pulses TRUE for 1 cycle when pressed)
 	         
     
     // =========================================================
@@ -31,8 +33,19 @@ VAR
 	stKistler_CMD          : ST_Kistler_CMD;    // Commands sent to Kistler press
     stKistler_Status       : ST_Kistler_Status; // Feedbacks read from Kistler press
 
-	
+		//==========================================================
+	//LEDS COMMAND INTERFACE 
+	//==========================================================
+
+    // Status memory for each individual LED mode
+    eMode_LED_Start    : E_LEDs_Mode := E_LEDs_Mode.OFF;
+    eMode_LED_Reset    : E_LEDs_Mode := E_LEDs_Mode.OFF;
     
+    // Hardware digital outputs mapped to the physical LEDs
+    q_bLED_Start   AT%Q*    : BOOL; 
+    q_bLED_Reset   AT%Q*    : BOOL;
+    
+	
     // =========================================================
     // PERSISTENT DATA & LOGGING
     // =========================================================
@@ -42,24 +55,24 @@ END_VAR
 
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[// =================================================================================
-// SIMULATION: AUTOMATIC HMI BUTTON RELEASE (PULSE SIMULATION)
-// =================================================================================
-// If the HMI buttons are forced TRUE, turn them FALSE on the very next scan cycle
-tonSimulation[1] (IN:= GVL_MASTER.bButtonStart, PT:= T#1S);
-IF tonSimulation[1].Q AND GVL_MASTER.bButtonStart THEN
-    GVL_MASTER.bButtonStart := FALSE;
-END_IF
-
-tonSimulation[2] (IN:= GVL_MASTER.bButtonReset, PT:= T#1S);
-IF tonSimulation[2].Q THEN
-    GVL_MASTER.bButtonReset := FALSE;
-END_IF
-
-tonSimulation[3] (IN:= GVL_MASTER.bButtonStop, PT:= T#1S);
-IF tonSimulation[3].Q THEN
-    GVL_MASTER.bButtonStop := FALSE;
-END_IF
+      <ST><![CDATA[// // =================================================================================
+// // SIMULATION: AUTOMATIC HMI BUTTON RELEASE (PULSE SIMULATION)
+// // =================================================================================
+// // If the HMI buttons are forced TRUE, turn them FALSE on the very next scan cycle
+// tonSimulation[1] (IN:= GVL_MASTER.bButtonStart, PT:= T#1S);
+// IF tonSimulation[1].Q AND GVL_MASTER.bButtonStart THEN
+//     GVL_MASTER.bButtonStart := FALSE;
+// END_IF
+// 
+// tonSimulation[2] (IN:= GVL_MASTER.bButtonReset, PT:= T#1S);
+// IF tonSimulation[2].Q THEN
+//     GVL_MASTER.bButtonReset := FALSE;
+// END_IF
+// 
+// tonSimulation[3] (IN:= GVL_MASTER.bButtonStop, PT:= T#1S);
+// IF tonSimulation[3].Q THEN
+//     GVL_MASTER.bButtonStop := FALSE;
+// END_IF
 
 
 
@@ -90,7 +103,10 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 	    GVL_Master.stMachineStatus.eMachineState := E_MachineState.STOPPING;
 		
     E_MachineState.FAULT:
-        IF GVL_Master.bButtonReset AND GVL_IO.bSystemSafeOK THEN
+ 		eMode_LED_Start := E_LEDs_Mode.OFF;
+        eMode_LED_Reset := E_LEDs_Mode.FLASHING; // Reset button must flash
+		
+        IF GVL_Master.i_bButtonReset AND GVL_IO.bSystemSafeOK THEN
             GVL_Master.stMachineStatus.eMachineState := E_MachineState.STOPPING;
         END_IF
 		
@@ -103,7 +119,9 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 		END_IF
 	   
 	E_MachineState.STOPPED:
-        IF GVL_Master.bButtonStart AND GVL_IO.bSystemSafeOK THEN
+		eMode_LED_Reset := E_LEDs_Mode.FLASHING; // Start button must flash
+        eMode_LED_Start := E_LEDs_Mode.OFF;
+        IF GVL_Master.i_bButtonReset AND GVL_IO.bSystemSafeOK THEN
             GVL_Master.stMachineStatus.eMachineState := E_MachineState.SYSTEM_INITIALISING;
         END_IF
 		
@@ -117,14 +135,19 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 			
 		ELSIF tonSys_InitTimeout.Q OR NOT GVL_IO.bSystemSafeOK THEN
 			GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.FAULT;
-			
+		
+		ELSIF bButtonStop THEN
+            GVL_Master.stMachineStatus.eMachineState := E_MachineState.STOPPING;
 		END_IF
 		
 	E_MachineState.SYSTEM_READY_TO_START:
 	    
-		IF GVL_Master.bButtonStop THEN
+		eMode_LED_Start := E_LEDs_Mode.FLASHING; // Start button must flash
+        eMode_LED_Reset := E_LEDs_Mode.OFF;
+		
+		IF bButtonStop THEN
             GVL_Master.stMachineStatus.eMachineState := E_MachineState.STOPPING;
-        ELSIF GVL_MASTER.bButtonStart THEN
+        ELSIF GVL_MASTER.i_bButtonStart THEN
             GVL_Master.stMachineStatus.eMachineState := E_MachineState.SYSTEM_AUTO_CYCLE;
         END_IF	
  
@@ -132,7 +155,7 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
         rtFirstAutoCycle(CLK := TRUE);
         tonFirstAutoCycle(IN := rtFirstAutoCycle.Q);
         
-        IF GVL_Master.bButtonStop THEN
+        IF bButtonStop THEN
             GVL_Master.stMachineStatus.eMachineState := E_MachineState.STOPPING;
         ELSIF GVL_Master.stMachineStatus.bFault OR NOT GVL_IO.bSystemSafeOK THEN
             GVL_Master.stMachineStatus.eMachineState := E_MachineState.FAULT;
@@ -152,14 +175,17 @@ GVL_Master.stMachineStatus.bAutoCycle     := (GVL_Master.stMachineStatus.eMachin
 GVL_Master.stMachineStatus.bFault         := (GVL_Master.stMachineStatus.eMachineState = E_MachineState.FAULT);
 GVL_Master.stMachineStatus.bReadyToStart  := (GVL_Master.stMachineStatus.eMachineState = E_MachineState.SYSTEM_READY_TO_START);
 
-// =================================================================================
-// 4. METHOD POST-EXECUTION ROUTINE
+
+
+// 5. METHOD POST-EXECUTION ROUTINE
 // =================================================================================
 // Pass the freshly calculated machine state into the Kistler hardware controller
 M_KistlerControl(eCurrentState := GVL_MASTER.stMachineStatus.eMachineState);
 
 // Map Kistler hardware feedbacks and update panel/HMI indicators
 M_StatusMapping();
+M_LEDsButtons();
+
 
 ]]></ST>
     </Implementation>
@@ -186,7 +212,7 @@ stKistler_CMD.bManualMode := (eCurrentState = E_MachineState.MANUAL_MODE);
 // COMPONENT RESET MANAGEMENT
 // =================================================================================
 // Toggle the hardware reset command based on the HMI/Panel button falling edge
-fbResetTrigger(CLK := GVL_MASTER.bButtonReset);
+fbResetTrigger(CLK := GVL_MASTER.i_bButtonReset);
 
 	IF fbResetTrigger.Q THEN
 		stKistler_CMD.bReset := TRUE;
@@ -201,6 +227,53 @@ fbResetTrigger(CLK := GVL_MASTER.bButtonReset);
 
 M_KistlerControl := TRUE;
 ]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_LEDsButtons" Id="{a6680c49-408d-47a5-bfa3-499d1bfac7ad}">
+      <Declaration><![CDATA[METHOD M_LEDsButtons : BOOL
+VAR_INST
+    // Static-like variables inside the method (Instantiated with the PRG)
+    fbBlinker         : TON;
+    bBlinkerPulse     : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// =================================================================
+// 1. INTERNAL BLINKER GENERATOR
+// =================================================================
+fbBlinker(IN := NOT fbBlinker.Q, PT := T#500MS);
+IF fbBlinker.Q THEN
+    bBlinkerPulse := NOT bBlinkerPulse;
+END_IF;
+
+// =================================================================
+// 2. PROCESS START LED HARDWARE OUTPUT
+// =================================================================
+CASE PRG_MachineControl.eMode_LED_Start OF
+    E_LEDs_Mode.ON:
+        PRG_MachineControl.q_bLED_Start := TRUE;
+        
+    E_LEDs_Mode.FLASHING:
+        PRG_MachineControl.q_bLED_Start := bBlinkerPulse;
+        
+    E_LEDs_Mode.OFF:
+        PRG_MachineControl.q_bLED_Start := FALSE;
+END_CASE;
+
+// =================================================================
+// 3. PROCESS RESET LED HARDWARE OUTPUT
+// =================================================================
+CASE PRG_MachineControl.eMode_LED_Reset OF
+    E_LEDs_Mode.ON:
+        PRG_MachineControl.q_bLED_Reset := TRUE;
+        
+    E_LEDs_Mode.FLASHING:
+        PRG_MachineControl.q_bLED_Reset := bBlinkerPulse;
+        
+    E_LEDs_Mode.OFF:
+        PRG_MachineControl.q_bLED_Reset := FALSE;
+END_CASE;
+
+M_LEDsButtons := TRUE;]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_PreExecution" Id="{d5c5735d-f733-481f-9f83-00134f7ccc98}">
@@ -220,6 +293,8 @@ tonSys_InitTimeout(IN := GVL_MASTER.stMachineStatus.bInitialising);
 tonSafety(IN := (GVL_MASTER.stMachineStatus.eMachineState = E_MachineState.SAFETY), PT := T#10S);
 
 
+fbStopTrigger(CLK := GVL_Master.i_bButtonStop);
+bButtonStop := fbStopTrigger.Q;
 // =================================================================================
 // HMI MESSAGE CLEARING
 // =================================================================================
@@ -244,14 +319,10 @@ END_IF
 
 
 // =================================================================================
-// START BUTTON OPERATION CHECKLIST
+// START LEDs BUTTON OFF
 // =================================================================================
-// // Pre-calculate conditions required to allow the START button sequence
-// // System allows starting only if: Kistler is healthy AND HMI Stop is NOT pressed AND Kistler component is Ready
-// bStartProcessCondition := GVL_MASTER.bKistlerSystemReady 
-//                           AND NOT GVL_MASTER.bButtonStop
-//                           AND bKistlerReady; 
-
+eMode_LED_Start := E_LEDs_Mode.OFF;
+eMode_LED_Reset := E_LEDs_Mode.OFF;
 
 // =================================================================================
 // METHOD EXECUTION FEEDBACK (Return True)

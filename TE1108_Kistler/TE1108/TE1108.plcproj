@@ -33,6 +33,12 @@
     <Compile Include="DUTs\HMI\ST_StatusBanner.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\MASTER\BUTTON\E_LEDs.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\MASTER\BUTTON\E_LEDs_Mode.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\MASTER\E_MachineState.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -82,6 +88,7 @@
     <Folder Include="DUTs\HMI" />
     <Folder Include="DUTs\MASTER" />
     <Folder Include="DUTs\CARDS" />
+    <Folder Include="DUTs\MASTER\BUTTON" />
     <Folder Include="GVLs" />
     <Folder Include="POUs\00_MASTER" />
     <Folder Include="POUs\01_STATIONS" />

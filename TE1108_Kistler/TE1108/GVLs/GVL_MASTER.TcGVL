@@ -11,10 +11,10 @@ VAR_GLOBAL
     // =================================================================================
     // HMI COMMANDS & SIGNALS
     // =================================================================================
-    bButtonStart           AT%I*    : BOOL; //  Auto Cycle start button
-    bButtonStop            AT%I*    : BOOL; //  cycle stop button
-    bButtonReset           AT%I*    : BOOL; //  fault reset button
-    bButtonEmergencyStop   AT%I*    : BOOL; //  software E-stop button
+    i_bButtonStart           AT%I*    : BOOL; //  Auto Cycle start button
+    i_bButtonStop            AT%I*    : BOOL; //  cycle stop button
+    i_bButtonReset           AT%I*    : BOOL; //  fault reset button
+    i_bButtonEmergencyStop   AT%I*    : BOOL; //  software E-stop button
     
     bStartButtonLamp        		: BOOL; // Physical start button lamp output
     bResetButtonLamp        		: BOOL; // Physical reset button lamp output
@@ -25,12 +25,12 @@ VAR_GLOBAL
     // INTERLOCKS & SAFETY
     // =================================================================================
     
-    bAirPressureOk          		 : BOOL; // Main air supply pressure switch feedback
+    bAirPressureOk          		 : BOOL :=TRUE; // Main air supply pressure switch feedback
     
     // =================================================================================
     // HARDWARE STATUS
     // =================================================================================
-    bKistlerSystemReady    			 : BOOL; // Kistler system global ready feedback
+    bKistlerSystemReady    			 : BOOL :=TRUE; // Kistler system global ready feedback
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

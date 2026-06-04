@@ -7,7 +7,7 @@ STRUCT
 // =================================================================================
     // KISTLER PRESS HARDWARE STATUS INTERFACE
     // =================================================================================
-    bReady       : BOOL; // Hardware is healthy, clear of faults, and ready to press
+    bReady       : BOOL :=TRUE; // Hardware is healthy, clear of faults, and ready to press
     bBusy        : BOOL; // Pressing cycle is currently active/running
     bDone        : BOOL; // Cycle completed successfully (Evaluation OK)
     bError       : BOOL; // Press hardware is in a fault condition
