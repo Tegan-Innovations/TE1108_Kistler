@@ -3,25 +3,51 @@
   <POU Name="PGR_HMI" Id="{8c3348d2-2e4f-488f-b8d2-fe29da512452}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM PGR_HMI
 VAR
-	bResetTest			: BOOL;
-	i					: DINT;
-	n					: DINT; // TABLE INDEX
-	
-	bFlash				: BOOL;
-	fbBlinkTimer		: TON; 
-	bBlinkTimer_Q_Old	: BOOL; 
-	
-	sCurrentTimeStr		: STRING := '2026-05-2 15:30:00'; // Static timestamp for testing
+    // =========================================================================
+    // SYSTEM & SYSTEM TIME MANAGEMENT
+    // =========================================================================
+    fbLocalTime         : FB_LocalSystemTime; // Fetches the local NT system time
+    sTimeReal           : STRING;             // Formatted real-time string (HH:MM:SS)
+    sDateReal           : STRING;             // Formatted real-date string (YYYY-MM-DD)
+    sCurrentTimeStr     : STRING;             // General purpose timestamp string
+
+    // =========================================================================
+    // HMI BLINK & VISUAL FLASHING LOGIC
+    // =========================================================================
+    bFlash              : BOOL;               // Toggling bit for HMI flashing elements
+    fbBlinkTimer        : TON;                // Timer driving the flashing pulse
+    bBlinkTimer_Q_Old   : BOOL;               // Edge detection auxiliary bit for the timer
+
+    // =========================================================================
+    // IPC POWER CONTROL (REBOOT & SHUTDOWN)
+    // =========================================================================
+   // ePowerCmd           : E_PLC_Power := E_PLC_Power.Idle; // Command received from HMI
+    fbReboot            : NT_Reboot;          // Operating system reboot execution block
+    fbShutdown          : NT_Shutdown;        // Operating system shutdown execution block
+	fbKillEdge 			: NT_StartProcess;    // close HMI
+    tonRebootDelay      : TON;                // 30-second delay timer before rebooting
+    bTriggerReboot      : BOOL;               // Internal trigger for fbReboot
+    bTriggerShutdown    : BOOL;               // Internal trigger for fbShutdown
+	bTriggerExitHMI     : BOOL;               // Internal trigger for fbShutdown
+	bErrorOut : BOOL;
+	nErrIDOut : UDINT;
+	tonPowerDelay       : TON;     // Timer unificado de 60 segundos para Reboot/Shutdown
+	iCountdownValue     : INT;     // Valor regressivo (60 a 0) enviado para a IHM
 	
 
-	bTriggerTestAlarm	: BOOL;    // Force esta variável para TRUE online para simular o alarme
-	fbTestAlarmTrigger	: R_TRIG; 
-	fbLocalTime 		: FB_LocalSystemTime;
-	sTimeReal           : STRING;
-    sDateReal           : STRING;
+    // =========================================================================
+    // TESTING & ALARM SIMULATION
+    // =========================================================================
+    bTriggerTestAlarm   : BOOL;               // Force TRUE online to simulate a HMI alarm
+    fbTestAlarmTrigger  : R_TRIG;             // Rising edge detector for the test alarm
+    bResetTest          : BOOL;               // Reset command for test sequences
 
-END_VAR
-]]></Declaration>
+    // =========================================================================
+    // BUFFER / TABLE ARRAYS INDEXES
+    // =========================================================================
+    i                   : DINT;               // Generic loop index iterator
+    n                   : DINT;               // Specific table data index pointer
+END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[// =================================================================
 // RUN GENERATOR CLOCK IN MAIN PROGRAM BODY
@@ -120,7 +146,8 @@ END_IF
 // =================================================================
 // NOW CALL THE METHOD TO PROCESS STRINGS AND HMI COLORS
 // =================================================================
-M_StatusHMI();]]></ST>
+M_StatusHMI();
+M_PLC_Power();]]></ST>
     </Implementation>
     <Method Name="M_AddLogToHistory" Id="{4a7a2891-da8e-4224-86d0-f95767bff40e}">
       <Declaration><![CDATA[METHOD M_AddLogToHistory
@@ -161,9 +188,121 @@ GVL_HMI.arrAlarmHistory[1].sMessage  := sMessage;
 // END_IF]]></ST>
       </Implementation>
     </Method>
+    <Method Name="M_PLC_Power" Id="{d4177770-942e-42eb-bf27-e25710b83a0d}">
+      <Declaration><![CDATA[METHOD M_PLC_Power
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// =========================================================================
+// 1. TIMER CONFIGURATION (Dynamic PT based on Command)
+// =========================================================================
+// Define the preset time (PT) dynamically depending on the selected action
+IF GVL_HMI.ePowerCmd = E_PLC_Power.Reboot THEN
+    tonPowerDelay.PT := T#15S;
+ELSIF GVL_HMI.ePowerCmd = E_PLC_Power.Shutdown THEN
+    tonPowerDelay.PT := T#60S;
+END_IF
+
+// Call the timer block first so it updates its Elapsed Time (.ET)
+tonPowerDelay(
+    IN := (GVL_HMI.ePowerCmd = E_PLC_Power.Reboot OR GVL_HMI.ePowerCmd = E_PLC_Power.Shutdown)
+);
+
+// Calculate countdown value for HMI visualization after the timer execution
+IF tonPowerDelay.IN THEN
+    IF GVL_HMI.ePowerCmd = E_PLC_Power.Shutdown THEN
+        iCountdownValue := DINT_TO_INT(60 - (TIME_TO_DINT(tonPowerDelay.ET) / 1000));
+    ELSIF GVL_HMI.ePowerCmd = E_PLC_Power.Reboot THEN
+        iCountdownValue := DINT_TO_INT(15 - (TIME_TO_DINT(tonPowerDelay.ET) / 1000));
+    END_IF
+ELSE 
+    iCountdownValue := 60; // Default state idle value
+END_IF
+// =========================================================================
+// 2. STATE MACHINE WITH CANCEL FUNCTIONALITY
+// =========================================================================
+CASE GVL_HMI.ePowerCmd OF
+    
+    E_PLC_Power.Idle:
+        bTriggerReboot   := FALSE;
+        bTriggerShutdown := FALSE;
+
+    E_PLC_Power.Reboot:
+        // Triggers the reboot block ONLY after the 60 seconds expire
+        IF tonPowerDelay.Q THEN
+            bTriggerReboot := TRUE;
+        END_IF
+
+    E_PLC_Power.Shutdown:
+        // Triggers the shutdown block ONLY after the 60 seconds expire
+        IF tonPowerDelay.Q THEN
+            bTriggerShutdown := TRUE;
+        END_IF
+// 	E_PLC_Power.ExitHMI:
+//             bTriggerExitHMI := TRUE;
+
+
+    E_PLC_Power.Cancel:
+        // Safe abortion: clears all triggers and forces state back to Idle immediately
+        bTriggerReboot    := FALSE;
+        bTriggerShutdown  := FALSE;
+        GVL_HMI.ePowerCmd := E_PLC_Power.Idle;
+
+END_CASE
+
+// =========================================================================
+// 3. HARDWARE & OS BLOCK EXECUTION (ADS COMMANDS)
+// =========================================================================
+fbReboot(
+    NETID := '',
+    START := bTriggerReboot,
+    TMOUT := DEFAULT_ADS_TIMEOUT
+);
+
+fbShutdown(
+    NETID := '',
+    START := bTriggerShutdown,
+    TMOUT := DEFAULT_ADS_TIMEOUT
+);
+
+// fbKillEdge(
+//     NETID:= '',
+//     PATHSTR:= 'C:\Windows\System32\taskkill.exe',
+//     COMNDLINE:= '/F /IM msedge.exe /T', // <--- Corrigido para msedge.exe com "e"
+//     START:= (GVL_HMI.ePowerCmd = E_PLC_Power.ExitHMI),
+//     TMOUT:= DEFAULT_ADS_TIMEOUT
+// );
+// =========================================================================
+// 4. CLEAN & SAFE RESET
+// =========================================================================
+IF fbReboot.BUSY OR fbReboot.ERR THEN
+    bTriggerReboot    := FALSE;
+    GVL_HMI.ePowerCmd := E_PLC_Power.Idle;
+END_IF
+
+IF fbShutdown.BUSY OR fbShutdown.ERR THEN
+    bTriggerShutdown  := FALSE;
+    GVL_HMI.ePowerCmd := E_PLC_Power.Idle;
+END_IF
+
+// IF fbKillEdge.BUSY OR fbKillEdge.ERR THEN
+// 	bTriggerExitHMI  := FALSE;
+//     GVL_HMI.ePowerCmd := E_PLC_Power.Idle;
+// END_IF]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="M_StatusHMI" Id="{6ed5e17f-430e-4297-ba97-996934b423b4}">
       <Declaration><![CDATA[METHOD M_StatusHMI : BOOL
 VAR
+sGreen				:STRING := '{"color":"rgba(0, 180, 0, 1)"}';	
+sREd				:STRING := '{"color":"rgba(255, 0, 0, 1)"}';    
+sWhite				:STRING := '{"color":"rgba(255, 255, 255, 1)"}';
+sBlack				:STRING := '{"color":"rgba(0, 0, 0, 1)"}';
+sGrey				:STRING := '{"color":"rgba(128, 128, 128, 1)"}';
+sYellow				:STRING := '{"color":"rgba(255, 255, 0, 1)"}';
+sTransparent		:STRING := '{"color":"rgba(0, 0, 0, 0)"}'; 
+
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[
@@ -175,47 +314,47 @@ CASE GVL_MASTER.stMachineStatus.eMachineState OF
 
     E_MachineState.SYSTEM_INITIALISING:
         GVL_HMI.StatusHMI.sMachineStatusText := 'SYSTEM INITIALIZING';        
-        GVL_HMI.StatusHMI.sBannerBckColor    := '{"color":"rgba(255, 255, 0, 1)"}';   // Solid Yellow
-        GVL_HMI.StatusHMI.sBannerTextColor   := '{"color":"rgba(0, 0, 0, 1)"}';       // Solid Black
+        GVL_HMI.StatusHMI.sBannerBckColor    := sYellow; 
+        GVL_HMI.StatusHMI.sBannerTextColor   := sBlack;
 
     E_MachineState.SYSTEM_READY_TO_START:
         GVL_HMI.StatusHMI.sMachineStatusText := 'SYSTEM READY TO START';        
         IF bFlash THEN
-            GVL_HMI.StatusHMI.sBannerBckColor  := '{"color":"rgba(0, 255, 0, 1)"}';   // Solid Green
-            GVL_HMI.StatusHMI.sBannerTextColor := '{"color":"rgba(255, 255, 255, 1)"}'; // Solid White
+            GVL_HMI.StatusHMI.sBannerBckColor  := sGreen;
+            GVL_HMI.StatusHMI.sBannerTextColor := sWhite;
         ELSE    
-            GVL_HMI.StatusHMI.sBannerBckColor  := '{"color":"rgba(0, 0, 0, 0)"}';     // 100% TRANSPARENT
-            GVL_HMI.StatusHMI.sBannerTextColor := '{"color":"rgba(0, 180, 0, 1)"}';   // Darker Green for readability
+            GVL_HMI.StatusHMI.sBannerBckColor  := sWhite;
+            GVL_HMI.StatusHMI.sBannerTextColor := sGreen;
         END_IF
 
     E_MachineState.SYSTEM_AUTO_CYCLE:
         GVL_HMI.StatusHMI.sMachineStatusText := 'SYSTEM AUTO CYCLE';        
-        GVL_HMI.StatusHMI.sBannerBckColor    := '{"color":"rgba(0, 255, 0, 1)"}';     // Solid Green
-        GVL_HMI.StatusHMI.sBannerTextColor   := '{"color":"rgba(255, 255, 255, 1)"}';   // Solid White  
+        GVL_HMI.StatusHMI.sBannerBckColor    := sGreen;
+        GVL_HMI.StatusHMI.sBannerTextColor   := sWhite; 
 
     E_MachineState.STOPPING:
         GVL_HMI.StatusHMI.sMachineStatusText := 'STOPPING';        
         IF bFlash THEN    
-            GVL_HMI.StatusHMI.sBannerBckColor  := '{"color":"rgba(0, 0, 0, 1)"}';       // Solid Black
-            GVL_HMI.StatusHMI.sBannerTextColor := '{"color":"rgba(255, 255, 255, 1)"}'; // Solid White    
+            GVL_HMI.StatusHMI.sBannerBckColor  := sGrey;
+            GVL_HMI.StatusHMI.sBannerTextColor := sWhite;    
         ELSE    
-            GVL_HMI.StatusHMI.sBannerBckColor  := '{"color":"rgba(0, 0, 0, 0)"}';     // 100% TRANSPARENT
-            GVL_HMI.StatusHMI.sBannerTextColor := '{"color":"rgba(0, 0, 0, 1)"}';       // Solid Black    
+            GVL_HMI.StatusHMI.sBannerBckColor  := sTransparent;
+            GVL_HMI.StatusHMI.sBannerTextColor := sBlack;     
         END_IF
 
     E_MachineState.STOPPED:
         GVL_HMI.StatusHMI.sMachineStatusText := 'CYCLE STOPPED';        
-        GVL_HMI.StatusHMI.sBannerBckColor    := '{"color":"rgba(128, 128, 128, 1)"}'; // Solid Industrial Grey
-        GVL_HMI.StatusHMI.sBannerTextColor   := '{"color":"rgba(255, 255, 255, 1)"}'; // Solid White    
+        GVL_HMI.StatusHMI.sBannerBckColor    := sGrey;
+        GVL_HMI.StatusHMI.sBannerTextColor   := sWhite;    
 
     E_MachineState.FAULT:
         GVL_HMI.StatusHMI.sMachineStatusText := 'IMMEDIATE FAULT';        
         IF bFlash THEN    
-            GVL_HMI.StatusHMI.sBannerBckColor  := '{"color":"rgba(255, 0, 0, 1)"}';     // Solid Red
-            GVL_HMI.StatusHMI.sBannerTextColor := '{"color":"rgba(255, 255, 255, 1)"}'; // Solid White    
+            GVL_HMI.StatusHMI.sBannerBckColor  := sRed;
+            GVL_HMI.StatusHMI.sBannerTextColor := sWhite;   
         ELSE    
-            GVL_HMI.StatusHMI.sBannerBckColor  := '{"color":"rgba(0, 0, 0, 0)"}';     // 100% TRANSPARENT
-            GVL_HMI.StatusHMI.sBannerTextColor := '{"color":"rgba(255, 0, 0, 1)"}';     // Solid Red Text over screen background
+            GVL_HMI.StatusHMI.sBannerBckColor  := sWhite;
+            GVL_HMI.StatusHMI.sBannerTextColor := sRed;
         END_IF
 
 END_CASE

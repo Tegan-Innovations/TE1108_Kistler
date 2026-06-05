@@ -147,6 +147,7 @@
     <Folder Include="Images\IO" />
     <Folder Include="Images\Manifest" />
     <Folder Include="Images\Client" />
+    <Folder Include="Images\Project" />
     <Folder Include="Imports" />
     <Folder Include="Imports\Images" />
     <Folder Include="Imports\Videos" />
@@ -621,6 +622,18 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Images\IO\Wieland_Switch.PNG">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Images\Project\KistlerMAchine.png">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Images\Project\Kistler.png">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Images\Project\Kistler_Nest2.png">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Images\Project\Kistler_Nest.png">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Imports\Images\C6015-0010_2.png">

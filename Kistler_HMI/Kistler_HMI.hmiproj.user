@@ -10,7 +10,7 @@
       "Orientation": "Horizontal",
       "DesignAreaPosition": "Left",
       "CodeAreaPosition": "Right",
-      "SplitPercentage": 1.1814859926918393
+      "SplitPercentage": 1.6028880866425992
     },
     {
       "Path": "Contents\\Screens\\popups\\Content_Popup_Shutdown.content",
@@ -119,6 +119,33 @@
       "DesignAreaPosition": "Left",
       "CodeAreaPosition": "Right",
       "SplitPercentage": 0.5
+    },
+    {
+      "Path": "Contents\\Screens\\0_Simulation.content",
+      "DesignAreaSplitSize": "Full",
+      "CodeAreaSplitSize": "Minimized",
+      "Orientation": "Horizontal",
+      "DesignAreaPosition": "Left",
+      "CodeAreaPosition": "Right",
+      "SplitPercentage": 0.5
+    },
+    {
+      "Path": "Contents\\IOs\\Main_IOs.content",
+      "DesignAreaSplitSize": "Full",
+      "CodeAreaSplitSize": "Minimized",
+      "Orientation": "Horizontal",
+      "DesignAreaPosition": "Left",
+      "CodeAreaPosition": "Right",
+      "SplitPercentage": 0.5
+    },
+    {
+      "Path": "Contents\\Screens\\popups\\Content_Popup_AutoCyclePause.content",
+      "DesignAreaSplitSize": "Full",
+      "CodeAreaSplitSize": "Minimized",
+      "Orientation": "Horizontal",
+      "DesignAreaPosition": "Left",
+      "CodeAreaPosition": "Right",
+      "SplitPercentage": 0.5
     }
   ]
 }</TcHmiEditor_SplitAreaStates>
@@ -143,9 +170,7 @@
   65.0
 ]</TcHmiEditor_SelectBindingWindowColumnWidths_m_SymbolInternalTree>
     <TcHmiEditor_SelectBindingWindowColumnWidths_m_symbolLocalizedTree>[
-  300.0,
-  100.0,
-  100.0
+  300.0
 ]</TcHmiEditor_SelectBindingWindowColumnWidths_m_symbolLocalizedTree>
     <TcHmiEditor_SelectBindingWindowColumnWidths_m_extensionLocalizationsTree>[
   300.0
@@ -205,6 +230,10 @@
   300.0
 ]</TcHmiEditor_SelectBindingWindowColumnWidths_m_ContextTree>
     <RecentColors>[
+  {
+    "counter": 0,
+    "color": "#FFFAF6F6"
+  },
   {
     "counter": 0,
     "color": "#FFD21212"
@@ -280,10 +309,6 @@
   {
     "counter": 0,
     "color": "#FFCC6161"
-  },
-  {
-    "counter": 0,
-    "color": "#FFC32121"
   }
 ]</RecentColors>
   </PropertyGroup>

@@ -296,11 +296,20 @@
 		</System>
 		<Plc>
 			<Project GUID="{09826F5E-A0C6-4F2A-AB8E-A2951346EAC9}" Name="TE1108" PrjFilePath="TE1108\TE1108.plcproj" TmcFilePath="TE1108\TE1108.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{340D05B8-E975-35C8-37D1-40BD1E5B7691}" TmcPath="TE1108\TE1108.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{9D373713-5BFD-C773-B234-26EBCB66CE21}" TmcPath="TE1108\TE1108.tmc">
 					<Name>TE1108 Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
 						<Name>PlcTask Outputs</Name>
+						<Var>
+							<Name>PRG_MachineControl.q_bLED_Start</Name>
+							<Comment><![CDATA[ Hardware digital outputs mapped to the physical LEDs]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_MachineControl.q_bLED_Reset</Name>
+							<Type>BOOL</Type>
+						</Var>
 						<Var>
 							<Name>GVL_IO.bSafetyRun</Name>
 							<Comment><![CDATA[ Output from PLC to TwinSAFE (Command to run)]]></Comment>
@@ -311,21 +320,12 @@
 							<Comment><![CDATA[ Output from PLC to TwinSAFE (Command to reset)]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
-						<Var>
-							<Name>PRG_MachineControl.q_bLED_Start</Name>
-							<Comment><![CDATA[ Hardware digital outputs mapped to the physical LEDs]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>PRG_MachineControl.q_bLED_Reset</Name>
-							<Type>BOOL</Type>
-						</Var>
 					</Vars>
 					<Vars VarGrpType="1">
 						<Name>PlcTask Inputs</Name>
 						<Var>
-							<Name>GVL_IO.bSafetyError</Name>
-							<Comment><![CDATA[ Input to PLC from TwinSAFE (System has a fault)]]></Comment>
+							<Name>GVL_IO.bSafetyOK</Name>
+							<Comment><![CDATA[ Input to PLC from TwinSAFE (System can start)]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -334,8 +334,8 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_IO.bSafetyOK</Name>
-							<Comment><![CDATA[ Input to PLC from TwinSAFE (System can start)]]></Comment>
+							<Name>GVL_IO.bSafetyError</Name>
+							<Comment><![CDATA[ Input to PLC from TwinSAFE (System has a fault)]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
