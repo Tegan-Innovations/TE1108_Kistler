@@ -6,7 +6,7 @@ VAR
     // =========================================================
     // TIMERS & TRIGGERS
     // =========================================================
-	tonSys_Init           : TON := (PT := T#1S);    // Initialization pulse timer
+	tonSys_Init           : TON := (PT := T#3S);    // Initialization pulse timer
     tonSys_InitTimeout    : TON := (PT := T#20S);   // Initialization timeout fault timer
     tonFirstAutoCycle     : TON := (PT := T#500MS); // Auto cycle start settling timer
 	tonStoppingDelay	  : TON                   ; // Time to finalize process 
@@ -40,10 +40,13 @@ VAR
     // Status memory for each individual LED mode
     eMode_LED_Start    : E_LEDs_Mode := E_LEDs_Mode.OFF;
     eMode_LED_Reset    : E_LEDs_Mode := E_LEDs_Mode.OFF;
-    
+	eMode_LED_Pass 	   : E_LEDs_Mode := E_LEDs_Mode.OFF;
+    eMode_LED_fail     : E_LEDs_Mode := E_LEDs_Mode.OFF;
     // Hardware digital outputs mapped to the physical LEDs
-    q_bLED_Start   AT%Q*    : BOOL; 
-    q_bLED_Reset   AT%Q*    : BOOL;
+    q_bLED_Start      AT%Q*    : BOOL; 
+    q_bLED_Reset      AT%Q*    : BOOL;
+	q_bLED_Pass       AT%Q*    : BOOL;
+	q_bLED_Fail       AT%Q*    : BOOL;
     
 	
     // =========================================================
@@ -105,12 +108,16 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
     E_MachineState.FAULT:
  		eMode_LED_Start := E_LEDs_Mode.OFF;
         eMode_LED_Reset := E_LEDs_Mode.FLASHING; // Reset button must flash
+		eMode_LED_Fail := E_LEDs_Mode.ON;
+		eMode_LED_PASS := E_LEDs_Mode.OFF;
 		
         IF GVL_Master.i_bButtonReset AND GVL_IO.bSystemSafeOK THEN
             GVL_Master.stMachineStatus.eMachineState := E_MachineState.STOPPING;
         END_IF
 		
 	E_MachineState.STOPPING:
+		eMode_LED_PASS := E_LEDs_Mode.OFF;
+		eMode_LED_Fail := E_LEDs_Mode.OFF;
         rtFirstAutoCycle(CLK := FALSE);
         tonStoppingDelay(IN := GVL_Master.stMachineStatus.bStopping, PT := T#2S);
 		IF tonStoppingDelay.Q THEN
@@ -121,6 +128,9 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 	E_MachineState.STOPPED:
 		eMode_LED_Reset := E_LEDs_Mode.FLASHING; // Start button must flash
         eMode_LED_Start := E_LEDs_Mode.OFF;
+		eMode_LED_PASS := E_LEDs_Mode.OFF;
+		eMode_LED_Fail := E_LEDs_Mode.OFF;
+		
         IF GVL_Master.i_bButtonReset AND GVL_IO.bSystemSafeOK THEN
             GVL_Master.stMachineStatus.eMachineState := E_MachineState.SYSTEM_INITIALISING;
         END_IF
@@ -144,6 +154,8 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 	    
 		eMode_LED_Start := E_LEDs_Mode.FLASHING; // Start button must flash
         eMode_LED_Reset := E_LEDs_Mode.OFF;
+		eMode_LED_PASS := E_LEDs_Mode.OFF;
+		eMode_LED_Fail := E_LEDs_Mode.OFF;
 		
 		IF bButtonStop THEN
             GVL_Master.stMachineStatus.eMachineState := E_MachineState.STOPPING;
@@ -152,6 +164,8 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
         END_IF	
  
 	E_MachineState.SYSTEM_AUTO_CYCLE:
+		eMode_LED_PASS := E_LEDs_Mode.ON;
+		eMode_LED_Fail := E_LEDs_Mode.OFF;
         rtFirstAutoCycle(CLK := TRUE);
         tonFirstAutoCycle(IN := rtFirstAutoCycle.Q);
         
@@ -272,6 +286,35 @@ CASE PRG_MachineControl.eMode_LED_Reset OF
     E_LEDs_Mode.OFF:
         PRG_MachineControl.q_bLED_Reset := FALSE;
 END_CASE;
+// =================================================================
+// 4. PROCESS LED PASS HARDWARE OUTPUT
+// =================================================================
+CASE PRG_MachineControl.eMode_LED_Pass OF
+    E_LEDs_Mode.ON:
+        PRG_MachineControl.q_bLED_Pass := TRUE;
+        
+    E_LEDs_Mode.FLASHING:
+        PRG_MachineControl.q_bLED_Pass := bBlinkerPulse;
+        
+    E_LEDs_Mode.OFF:
+        PRG_MachineControl.q_bLED_Pass := FALSE;
+END_CASE;
+
+// =================================================================
+// 4. PROCESS LED FAIL HARDWARE OUTPUT
+// =================================================================
+CASE PRG_MachineControl.eMode_LED_Fail OF
+    E_LEDs_Mode.ON:
+        PRG_MachineControl.q_bLED_Fail := TRUE;
+        
+    E_LEDs_Mode.FLASHING:
+        PRG_MachineControl.q_bLED_Fail := bBlinkerPulse;
+        
+    E_LEDs_Mode.OFF:
+        PRG_MachineControl.q_bLED_Fail := FALSE;
+END_CASE;
+
+
 
 M_LEDsButtons := TRUE;]]></ST>
       </Implementation>

@@ -296,7 +296,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{09826F5E-A0C6-4F2A-AB8E-A2951346EAC9}" Name="TE1108" PrjFilePath="TE1108\TE1108.plcproj" TmcFilePath="TE1108\TE1108.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{9D373713-5BFD-C773-B234-26EBCB66CE21}" TmcPath="TE1108\TE1108.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{C20B8C4F-2D70-FDE6-B747-459C694E02EE}" TmcPath="TE1108\TE1108.tmc">
 					<Name>TE1108 Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -308,6 +308,14 @@
 						</Var>
 						<Var>
 							<Name>PRG_MachineControl.q_bLED_Reset</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_MachineControl.q_bLED_Pass</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_MachineControl.q_bLED_Fail</Name>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -1979,6 +1987,8 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 		</OwnerA>
 		<OwnerA Name="TIPC^TE1108^TE1108 Instance">
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1100)^Term 11 (EL2809-0015)">
+				<Link VarA="PlcTask Outputs^PRG_MachineControl.q_bLED_Fail" VarB="Channel 3^Output"/>
+				<Link VarA="PlcTask Outputs^PRG_MachineControl.q_bLED_Pass" VarB="Channel 4^Output"/>
 				<Link VarA="PlcTask Outputs^PRG_MachineControl.q_bLED_Reset" VarB="Channel 2^Output"/>
 				<Link VarA="PlcTask Outputs^PRG_MachineControl.q_bLED_Start" VarB="Channel 1^Output"/>
 			</OwnerB>

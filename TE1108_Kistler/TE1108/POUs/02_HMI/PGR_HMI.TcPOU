@@ -295,13 +295,13 @@ END_IF
     <Method Name="M_StatusHMI" Id="{6ed5e17f-430e-4297-ba97-996934b423b4}">
       <Declaration><![CDATA[METHOD M_StatusHMI : BOOL
 VAR
-sGreen				:STRING := '{"color":"rgba(0, 180, 0, 1)"}';	
-sREd				:STRING := '{"color":"rgba(255, 0, 0, 1)"}';    
-sWhite				:STRING := '{"color":"rgba(255, 255, 255, 1)"}';
-sBlack				:STRING := '{"color":"rgba(0, 0, 0, 1)"}';
-sGrey				:STRING := '{"color":"rgba(128, 128, 128, 1)"}';
-sYellow				:STRING := '{"color":"rgba(255, 255, 0, 1)"}';
-sTransparent		:STRING := '{"color":"rgba(0, 0, 0, 0)"}'; 
+// sGreen				:STRING := '{"color":"rgba(0, 180, 0, 1)"}';	
+// sREd				:STRING := '{"color":"rgba(255, 0, 0, 1)"}';    
+// sWhite				:STRING := '{"color":"rgba(255, 255, 255, 1)"}';
+// sBlack				:STRING := '{"color":"rgba(0, 0, 0, 1)"}';
+// sGrey				:STRING := '{"color":"rgba(128, 128, 128, 1)"}';
+// sYellow				:STRING := '{"color":"rgba(255, 255, 0, 1)"}';
+// sTransparent		:STRING := '{"color":"rgba(0, 0, 0, 0)"}'; 
 
 END_VAR]]></Declaration>
       <Implementation>
@@ -314,47 +314,47 @@ CASE GVL_MASTER.stMachineStatus.eMachineState OF
 
     E_MachineState.SYSTEM_INITIALISING:
         GVL_HMI.StatusHMI.sMachineStatusText := 'SYSTEM INITIALIZING';        
-        GVL_HMI.StatusHMI.sBannerBckColor    := sYellow; 
-        GVL_HMI.StatusHMI.sBannerTextColor   := sBlack;
+        GVL_HMI.StatusHMI.sBannerBckColor    := GVL_HMI.sYELLOW; 
+        GVL_HMI.StatusHMI.sBannerTextColor   := GVL_HMI.sBLACK;
 
     E_MachineState.SYSTEM_READY_TO_START:
         GVL_HMI.StatusHMI.sMachineStatusText := 'SYSTEM READY TO START';        
         IF bFlash THEN
-            GVL_HMI.StatusHMI.sBannerBckColor  := sGreen;
-            GVL_HMI.StatusHMI.sBannerTextColor := sWhite;
+            GVL_HMI.StatusHMI.sBannerBckColor  := GVL_HMI.sGREEN;
+            GVL_HMI.StatusHMI.sBannerTextColor := GVL_HMI.sWHITE;
         ELSE    
-            GVL_HMI.StatusHMI.sBannerBckColor  := sWhite;
-            GVL_HMI.StatusHMI.sBannerTextColor := sGreen;
+            GVL_HMI.StatusHMI.sBannerBckColor  := GVL_HMI.sWHITE;
+            GVL_HMI.StatusHMI.sBannerTextColor := GVL_HMI.sGREEN;
         END_IF
 
     E_MachineState.SYSTEM_AUTO_CYCLE:
         GVL_HMI.StatusHMI.sMachineStatusText := 'SYSTEM AUTO CYCLE';        
-        GVL_HMI.StatusHMI.sBannerBckColor    := sGreen;
-        GVL_HMI.StatusHMI.sBannerTextColor   := sWhite; 
+        GVL_HMI.StatusHMI.sBannerBckColor    := GVL_HMI.sGREEN;
+        GVL_HMI.StatusHMI.sBannerTextColor   := GVL_HMI.sWHITE; 
 
     E_MachineState.STOPPING:
         GVL_HMI.StatusHMI.sMachineStatusText := 'STOPPING';        
         IF bFlash THEN    
-            GVL_HMI.StatusHMI.sBannerBckColor  := sGrey;
-            GVL_HMI.StatusHMI.sBannerTextColor := sWhite;    
+            GVL_HMI.StatusHMI.sBannerBckColor  := GVL_HMI.sGREY;
+            GVL_HMI.StatusHMI.sBannerTextColor := GVL_HMI.sWHITE;    
         ELSE    
-            GVL_HMI.StatusHMI.sBannerBckColor  := sTransparent;
-            GVL_HMI.StatusHMI.sBannerTextColor := sBlack;     
+            GVL_HMI.StatusHMI.sBannerBckColor  := GVL_HMI.sTRANSP;
+            GVL_HMI.StatusHMI.sBannerTextColor := GVL_HMI.sBLACK;     
         END_IF
 
     E_MachineState.STOPPED:
         GVL_HMI.StatusHMI.sMachineStatusText := 'CYCLE STOPPED';        
-        GVL_HMI.StatusHMI.sBannerBckColor    := sGrey;
-        GVL_HMI.StatusHMI.sBannerTextColor   := sWhite;    
+        GVL_HMI.StatusHMI.sBannerBckColor    := GVL_HMI.sGREY;
+        GVL_HMI.StatusHMI.sBannerTextColor   := GVL_HMI.sWHITE;    
 
     E_MachineState.FAULT:
         GVL_HMI.StatusHMI.sMachineStatusText := 'IMMEDIATE FAULT';        
         IF bFlash THEN    
-            GVL_HMI.StatusHMI.sBannerBckColor  := sRed;
-            GVL_HMI.StatusHMI.sBannerTextColor := sWhite;   
+            GVL_HMI.StatusHMI.sBannerBckColor  := GVL_HMI.sREDFail;
+            GVL_HMI.StatusHMI.sBannerTextColor := GVL_HMI.sWHITE;   
         ELSE    
-            GVL_HMI.StatusHMI.sBannerBckColor  := sWhite;
-            GVL_HMI.StatusHMI.sBannerTextColor := sRed;
+            GVL_HMI.StatusHMI.sBannerBckColor  := GVL_HMI.sWHITE;
+            GVL_HMI.StatusHMI.sBannerTextColor := GVL_HMI.sREDFail;
         END_IF
 
 END_CASE
