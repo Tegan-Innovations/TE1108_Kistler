@@ -60,6 +60,12 @@
       },
       "themedResources": {}
     },
+    "TcHmi.Controls.System.TcHmiHtmlHost": {
+      "attributes": {
+        "MaxWidth": 100.0
+      },
+      "themedResources": {}
+    },
     "TcHmi.Controls.Beckhoff.TcHmiRectangle": {
       "attributes": {
         "StrokeColor": {

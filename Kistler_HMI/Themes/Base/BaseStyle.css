@@ -19,8 +19,8 @@ html {
     font-size: 12px;
     font-style: normal;
     font-weight: normal;
-    width: 100%;
-    height: 100%;
+    width: 100% !important;
+    height: 100% !important;
 }
 
 /* Is defined in html tag of runtime html only. */
@@ -34,6 +34,8 @@ html {
 /*  Views */
 div[data-tchmi-type="TcHmi.Controls.System.TcHmiView"] {
     background: #E3E6E9;
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
 }
 
 /**
@@ -41,7 +43,11 @@ div[data-tchmi-type="TcHmi.Controls.System.TcHmiView"] {
  */
 #tchmi-splash-container {
     position: relative;
-    background-color: #E3E6E9;
+    width: 100%;
+    height: 100%;
+    background-image: url(Images/Background.png);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
     overflow: auto;
     display: flex;
 }

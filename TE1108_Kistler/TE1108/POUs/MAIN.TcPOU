@@ -9,7 +9,8 @@ END_VAR
       <ST><![CDATA[
 PRG_SafetyLogic(); // Process emergency states and safety interlocks first
 PRG_MachineControl(); // Process standard machine state and auto cycle sequences
-PGR_HMI();// Process strings and colors for the top status banner on the HMI]]></ST>
+PGR_HMI();// Process strings and colors for the top status banner on the HMI
+PGR_HMI();]]></ST>
     </Implementation>
   </POU>
 </TcPlcObject>
