@@ -111,7 +111,7 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 		eMode_LED_Fail := E_LEDs_Mode.ON;
 		eMode_LED_PASS := E_LEDs_Mode.OFF;
 		
-        IF GVL_Master.i_bButtonReset AND GVL_IO.bSystemSafeOK THEN
+        IF GVL_Master.i_bButtonReset AND GVL_IO.stSafety.bSystemSafeOK THEN
             GVL_Master.stMachineStatus.eMachineState := E_MachineState.STOPPING;
         END_IF
 		
@@ -131,7 +131,7 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 		eMode_LED_PASS := E_LEDs_Mode.OFF;
 		eMode_LED_Fail := E_LEDs_Mode.OFF;
 		
-        IF GVL_Master.i_bButtonReset AND GVL_IO.bSystemSafeOK THEN
+        IF GVL_Master.i_bButtonReset AND GVL_IO.stSafety.bSystemSafeOK THEN
             GVL_Master.stMachineStatus.eMachineState := E_MachineState.SYSTEM_INITIALISING;
         END_IF
 		
@@ -143,7 +143,7 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 		IF tonSys_Init.Q AND bKistlerReady THEN
 			GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.SYSTEM_READY_TO_START;
 			
-		ELSIF tonSys_InitTimeout.Q OR NOT GVL_IO.bSystemSafeOK THEN
+		ELSIF tonSys_InitTimeout.Q OR NOT GVL_IO.stSafety.bSystemSafeOK THEN
 			GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.FAULT;
 		
 		ELSIF bButtonStop THEN
@@ -171,10 +171,15 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
         
         IF bButtonStop THEN
             GVL_Master.stMachineStatus.eMachineState := E_MachineState.STOPPING;
-        ELSIF GVL_Master.stMachineStatus.bFault OR NOT GVL_IO.bSystemSafeOK THEN
+        ELSIF GVL_Master.stMachineStatus.bFault OR NOT GVL_IO.stSafety.bSystemSafeOK THEN
             GVL_Master.stMachineStatus.eMachineState := E_MachineState.FAULT;
         END_IF
-
+		
+    E_MachineState.MANUAL_MODE:
+		eMode_LED_Start := E_LEDs_Mode.OFF; // Start button must flash
+        eMode_LED_Reset := E_LEDs_Mode.OFF;
+		eMode_LED_PASS := E_LEDs_Mode.OFF;
+		eMode_LED_Fail := E_LEDs_Mode.OFF;
 
 END_CASE
 
@@ -188,6 +193,7 @@ GVL_Master.stMachineStatus.bStopping      := (GVL_Master.stMachineStatus.eMachin
 GVL_Master.stMachineStatus.bAutoCycle     := (GVL_Master.stMachineStatus.eMachineState = E_MachineState.SYSTEM_AUTO_CYCLE);
 GVL_Master.stMachineStatus.bFault         := (GVL_Master.stMachineStatus.eMachineState = E_MachineState.FAULT);
 GVL_Master.stMachineStatus.bReadyToStart  := (GVL_Master.stMachineStatus.eMachineState = E_MachineState.SYSTEM_READY_TO_START);
+GVL_Master.stMachineStatus.bManualMode    := (GVL_Master.stMachineStatus.eMachineState = E_MachineState.MANUAL_MODE);
 
 
 
@@ -388,7 +394,7 @@ END_VAR
 // KISTLER TO GLOBAL STATUS MAPPING
 // =================================================================================
 // Link the software/hardware safety loop to the machine status structure
-GVL_MASTER.stMachineStatus.bSafety := GVL_IO.bSafetyOK;
+GVL_MASTER.stMachineStatus.bSafety := GVL_IO.stSafety.bSafetyOK;
 
 // Map the local Kistler hardware ready flag to our main control variable
 bKistlerReady := stKistler_Status.bReady;

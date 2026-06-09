@@ -54,6 +54,9 @@
     <Compile Include="DUTs\MASTER\ST_MachineStatus.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\SAFETY\ST_Safety.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="GVLs\GVL_HMI.TcGVL">
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
@@ -92,6 +95,7 @@
     <Folder Include="DUTs\MASTER" />
     <Folder Include="DUTs\CARDS" />
     <Folder Include="DUTs\MASTER\BUTTON" />
+    <Folder Include="DUTs\SAFETY" />
     <Folder Include="GVLs" />
     <Folder Include="POUs\00_MASTER" />
     <Folder Include="POUs\01_STATIONS" />

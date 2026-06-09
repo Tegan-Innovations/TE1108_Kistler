@@ -4,11 +4,6 @@
     <Declaration><![CDATA[PROGRAM PRG_SafetyLogic
 VAR
 	
-// =================================================================================
-    // LOCAL VARIABLES
-    // =================================================================================
-    bEstopLatched       : BOOL; // Internal latch memory for Emergency Stop active
-    fbResetTrigger      : R_TRIG; // Rising edge detector for HMI Reset command
 	
 END_VAR
 ]]></Declaration>
@@ -16,35 +11,54 @@ END_VAR
       <ST><![CDATA[// =================================================================================
 // EMERGENCY STOP LOGIC 
 // =================================================================================
-	GVL_IO.bSafetyReset := GVL_MASTER.i_bButtonReset;
-// // 1. Evaluate E-Stop triggers (Latching fault if software E-Stop is triggered)
-// // Note: Assumes bHmiEmergencyStop is TRUE when the HMI button is pressed
-// IF GVL_MASTER.bButtonEmergencyStop THEN
-//     bEstopLatched := TRUE;
-// END_IF;
-// 
-// // 2. Evaluate Reset Command Edge from HMI
-// fbResetTrigger(CLK := GVL_MASTER.bButtonReset);
-// 
-// // 3. Reset Latch condition
-// // The system can only be reset if the HMI Software E-Stop is released (FALSE)
-// IF fbResetTrigger.Q AND NOT GVL_MASTER.bButtonEmergencyStop THEN
-//     bEstopLatched := FALSE;
-// END_IF;
-// 
-// // 4. Update Global Safety Status
-// // Provisional bypass: This logic controls the safety healthy flag until TwinSafe is active
-// GVL_MASTER.bHardwareSafetyOk := NOT bEstopLatched;
+	GVL_IO.stSafety.bSafetyReset := GVL_MASTER.i_bButtonReset;
 
 
-(* =================================================================================
-   FUTURE TWINSAFE INTEGRATION ROADMAP:
-   ---------------------------------------------------------------------------------
-   When EL1918 / TwinSafe modules are commissioned:
-   1. Comment out line 20 (GVL.bHardwareSafetyOk := NOT bEstopLatched;).
-   2. Map the TwinSafe 'FB_Estop' output directly to 'GVL.bHardwareSafetyOk'.
-   3. Connect 'GVL.bHmiReset' to the Safe FB Reset Input.
-================================================================================= *)]]></ST>
+CASE GVL_Master.stMachineStatus.eMachineState OF
+
+
+    E_MachineState.SYSTEM_POWER_UP:
+	GVL_IO.stSafety.bMachineStopped := FALSE;
+		
+    E_MachineState.FAULT:
+	GVL_IO.stSafety.bMachineStopped := FALSE;
+
+	E_MachineState.STOPPING:
+	GVL_IO.stSafety.bMachineStopped := FALSE;
+	
+	E_MachineState.STOPPED:
+	GVL_IO.stSafety.bMachineStopped := TRUE;
+
+	E_MachineState.SYSTEM_INITIALISING:
+	GVL_IO.stSafety.bMachineStopped := FALSE;
+
+	E_MachineState.SYSTEM_READY_TO_START:
+	GVL_IO.stSafety.bMachineStopped := FALSE;
+ 
+	E_MachineState.SYSTEM_AUTO_CYCLE:
+    GVL_IO.stSafety.bMachineStopped := FALSE;
+	
+	E_MachineState.MANUAL_MODE:
+    GVL_IO.stSafety.bMachineStopped := FALSE;
+
+
+
+END_CASE
+
+
+GVL_Master.stMachineStatus.bSystemPowerUp := (GVL_Master.stMachineStatus.eMachineState = E_MachineState.SYSTEM_POWER_UP);
+GVL_Master.stMachineStatus.bInitialising  := (GVL_Master.stMachineStatus.eMachineState = E_MachineState.SYSTEM_INITIALISING);
+GVL_Master.stMachineStatus.bStopped       := (GVL_Master.stMachineStatus.eMachineState = E_MachineState.STOPPED);
+GVL_Master.stMachineStatus.bStopping      := (GVL_Master.stMachineStatus.eMachineState = E_MachineState.STOPPING);
+GVL_Master.stMachineStatus.bAutoCycle     := (GVL_Master.stMachineStatus.eMachineState = E_MachineState.SYSTEM_AUTO_CYCLE);
+GVL_Master.stMachineStatus.bFault         := (GVL_Master.stMachineStatus.eMachineState = E_MachineState.FAULT);
+GVL_Master.stMachineStatus.bReadyToStart  := (GVL_Master.stMachineStatus.eMachineState = E_MachineState.SYSTEM_READY_TO_START);
+GVL_Master.stMachineStatus.bManualMode  := (GVL_Master.stMachineStatus.eMachineState = E_MachineState.MANUAL_MODE);
+
+
+
+
+]]></ST>
     </Implementation>
   </POU>
 </TcPlcObject>

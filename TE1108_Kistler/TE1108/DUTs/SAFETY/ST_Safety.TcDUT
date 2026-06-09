@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_Safety" Id="{2a90dcaf-57e0-4788-9311-dcbc8abec034}">
+    <Declaration><![CDATA[TYPE ST_Safety :
+STRUCT
+	bSafetyRun    			AT %Q*	: BOOL := TRUE; // Output from PLC to TwinSAFE (Command to run)
+	bSafetyReset  			AT %Q*	: BOOL; // Output from PLC to TwinSAFE (Command to reset)
+	bSafetyOK     			AT %I*	: BOOL; // Input to PLC from TwinSAFE (System can start)
+	bSystemSafeOK 			AT %I*	: BOOL; // Input to PLC from TwinSAFE (System is safe)
+	bSafetyError  			AT %I*	: BOOL; // Input to PLC from TwinSAFE (System has a fault)	
+	
+	bMainDoorClosed			AT %I*	: BOOL; // 
+	bMachineStopped			AT %Q*	: BOOL;  //
+	bMainDoorLocked			AT %I*	: BOOL;
+	bMainDoorOpenned		AT %I*	: BOOL;
+ 
+	
+	
+	
+
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
