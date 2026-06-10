@@ -19,16 +19,20 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 
     E_MachineState.SYSTEM_POWER_UP:
 	GVL_IO.stSafety.bMachineStopped := FALSE;
+	GVL_IO.stSafety.bProcessTest := FALSE;
 		
     E_MachineState.FAULT:
 	GVL_IO.stSafety.bMachineStopped := FALSE;
 	GVL_IO.stSafety.bAirSupplyEnabled := FALSE;
+	GVL_IO.stSafety.bProcessTest := FALSE;
 
 	E_MachineState.STOPPING:
 	GVL_IO.stSafety.bMachineStopped := FALSE;
+	GVL_IO.stSafety.bProcessTest := FALSE;
 	
 	E_MachineState.STOPPED:
 	GVL_IO.stSafety.bMachineStopped := TRUE;
+	GVL_IO.stSafety.bProcessTest := FALSE;
 
 	E_MachineState.SYSTEM_INITIALISING:
 	GVL_IO.stSafety.bMachineStopped := FALSE;
@@ -36,12 +40,15 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 
 	E_MachineState.SYSTEM_READY_TO_START:
 	GVL_IO.stSafety.bMachineStopped := FALSE;
+	GVL_IO.stSafety.bProcessTest := FALSE;
  
 	E_MachineState.SYSTEM_AUTO_CYCLE:
     GVL_IO.stSafety.bMachineStopped := FALSE;
+	GVL_IO.stSafety.bProcessTest := FALSE;
 	
 	E_MachineState.MANUAL_MODE:
     GVL_IO.stSafety.bMachineStopped := FALSE;
+	GVL_IO.stSafety.bProcessTest := FALSE;
 
 
 

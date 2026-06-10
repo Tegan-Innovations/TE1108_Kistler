@@ -14,6 +14,9 @@ STRUCT
 	bMainDoorLocked			AT %I*	: BOOL;
 	bMainDoorOpenned		AT %I*	: BOOL;
 	bAirSupplyEnabled		AT %Q*	: BOOL;
+	bProcessTest			AT %Q*	: BOOL;
+	
+	bTwoHandsSafe			AT %I*	: BOOL;
  
 	
 	

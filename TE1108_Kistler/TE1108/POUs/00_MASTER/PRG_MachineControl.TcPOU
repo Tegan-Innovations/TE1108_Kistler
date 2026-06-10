@@ -181,6 +181,8 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
             GVL_Master.stMachineStatus.eMachineState := E_MachineState.FAULT;
         END_IF
 		
+		
+		
     E_MachineState.MANUAL_MODE:
 		eMode_LED_Start := E_LEDs_Mode.OFF; // Start button must flash
         eMode_LED_Reset := E_LEDs_Mode.OFF;
@@ -388,6 +390,15 @@ eMode_LED_Reset := E_LEDs_Mode.OFF;
 // =================================================================================
 // Returning TRUE confirms the pre-execution routine completed successfully
 M_PreExecution := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_ProcessCycle" Id="{e01c53ef-c471-4f56-958b-74875adab0b2}">
+      <Declaration><![CDATA[METHOD M_ProcessCycle
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_StatusMapping" Id="{e76387c3-2b6b-4ab8-8e2c-031286cbd112}">
