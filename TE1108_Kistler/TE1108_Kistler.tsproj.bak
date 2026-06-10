@@ -67,12 +67,12 @@
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{18071995-0000-0000-0000-002000000005}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..4] OF BIT</Name>
-			<BitSize>5</BitSize>
+			<Name GUID="{18071995-0000-0000-0000-002000000004}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..3] OF BIT</Name>
+			<BitSize>4</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
 			<ArrayInfo>
 				<LBound>0</LBound>
-				<Elements>5</Elements>
+				<Elements>4</Elements>
 			</ArrayInfo>
 		</DataType>
 		<DataType>
@@ -91,15 +91,6 @@
 			<ArrayInfo>
 				<LBound>0</LBound>
 				<Elements>1</Elements>
-			</ArrayInfo>
-		</DataType>
-		<DataType>
-			<Name GUID="{18071995-0000-0000-0000-002000000004}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..3] OF BIT</Name>
-			<BitSize>4</BitSize>
-			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
-			<ArrayInfo>
-				<LBound>0</LBound>
-				<Elements>4</Elements>
 			</ArrayInfo>
 		</DataType>
 		<DataType>
@@ -166,25 +157,11 @@
 		</System>
 		<Plc>
 			<Project GUID="{09826F5E-A0C6-4F2A-AB8E-A2951346EAC9}" Name="TE1108" PrjFilePath="TE1108\TE1108.plcproj" TmcFilePath="TE1108\TE1108.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{E58C7548-F42D-7A2F-1DDB-7BF31A3D28CC}" TmcPath="TE1108\TE1108.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{D267CDAF-55EF-518E-BED2-3028344AC517}" TmcPath="TE1108\TE1108.tmc">
 					<Name>TE1108 Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
 						<Name>PlcTask Outputs</Name>
-						<Var>
-							<Name>GVL_IO.stSafety.bSafetyRun</Name>
-							<Comment><![CDATA[ Output from PLC to TwinSAFE (Command to run)]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stSafety.bSafetyReset</Name>
-							<Comment><![CDATA[ Output from PLC to TwinSAFE (Command to reset)]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stSafety.bMachineStopped</Name>
-							<Type>BOOL</Type>
-						</Var>
 						<Var>
 							<Name>PRG_MachineControl.q_bLED_Start</Name>
 							<Comment><![CDATA[ Hardware digital outputs mapped to the physical LEDs]]></Comment>
@@ -202,9 +179,47 @@
 							<Name>PRG_MachineControl.q_bLED_Fail</Name>
 							<Type>BOOL</Type>
 						</Var>
+						<Var>
+							<Name>GVL_IO.stSafety.bSafetyRun</Name>
+							<Comment><![CDATA[ Output from PLC to TwinSAFE (Command to run)]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stSafety.bSafetyReset</Name>
+							<Comment><![CDATA[ Output from PLC to TwinSAFE (Command to reset)]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stSafety.bMachineStopped</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stSafety.bAirSupplyEnabled</Name>
+							<Type>BOOL</Type>
+						</Var>
 					</Vars>
 					<Vars VarGrpType="1">
 						<Name>PlcTask Inputs</Name>
+						<Var>
+							<Name>GVL_MASTER.i_bButtonStart</Name>
+							<Comment><![CDATA[  Auto Cycle start button]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.i_bButtonStop</Name>
+							<Comment><![CDATA[  cycle stop button]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.i_bButtonReset</Name>
+							<Comment><![CDATA[  fault reset button]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.i_bButtonEmergencyStop</Name>
+							<Comment><![CDATA[  software E-stop button]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
 						<Var>
 							<Name>GVL_IO.stSafety.bSafetyOK</Name>
 							<Comment><![CDATA[ Input to PLC from TwinSAFE (System can start)]]></Comment>
@@ -231,26 +246,6 @@
 						</Var>
 						<Var>
 							<Name>GVL_IO.stSafety.bMainDoorOpenned</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_MASTER.i_bButtonStart</Name>
-							<Comment><![CDATA[  Auto Cycle start button]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_MASTER.i_bButtonStop</Name>
-							<Comment><![CDATA[  cycle stop button]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_MASTER.i_bButtonReset</Name>
-							<Comment><![CDATA[  fault reset button]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_MASTER.i_bButtonEmergencyStop</Name>
-							<Comment><![CDATA[  software E-stop button]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 					</Vars>
@@ -396,8 +391,11 @@
 								<Entry Name="TwinSafeGroup1.MachineStopped_14" Index="#x6000" Sub="#x03">
 									<Type>BIT</Type>
 								</Entry>
+								<Entry Name="TwinSafeGroup1.AirSupplyEnabled_25" Index="#x6000" Sub="#x04">
+									<Type>BIT</Type>
+								</Entry>
 								<Entry>
-									<Type GUID="{18071995-0000-0000-0000-002000000005}">ARRAY [0..4] OF BIT</Type>
+									<Type GUID="{18071995-0000-0000-0000-002000000004}">ARRAY [0..3] OF BIT</Type>
 								</Entry>
 							</Pdo>
 							<Pdo Name="Device Info Data" Index="#x1bfe" Flags="#x2011" SyncMan="3">

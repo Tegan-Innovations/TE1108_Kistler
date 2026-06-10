@@ -13,6 +13,7 @@ STRUCT
 	bMachineStopped			AT %Q*	: BOOL;  //
 	bMainDoorLocked			AT %I*	: BOOL;
 	bMainDoorOpenned		AT %I*	: BOOL;
+	bAirSupplyEnabled		AT %Q*	: BOOL;
  
 	
 	

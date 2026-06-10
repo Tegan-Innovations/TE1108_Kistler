@@ -22,6 +22,7 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 		
     E_MachineState.FAULT:
 	GVL_IO.stSafety.bMachineStopped := FALSE;
+	GVL_IO.stSafety.bAirSupplyEnabled := FALSE;
 
 	E_MachineState.STOPPING:
 	GVL_IO.stSafety.bMachineStopped := FALSE;
@@ -31,6 +32,7 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 
 	E_MachineState.SYSTEM_INITIALISING:
 	GVL_IO.stSafety.bMachineStopped := FALSE;
+	GVL_IO.stSafety.bAirSupplyEnabled := TRUE;
 
 	E_MachineState.SYSTEM_READY_TO_START:
 	GVL_IO.stSafety.bMachineStopped := FALSE;
