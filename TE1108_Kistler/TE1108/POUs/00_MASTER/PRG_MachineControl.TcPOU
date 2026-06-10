@@ -6,7 +6,7 @@ VAR
     // =========================================================
     // TIMERS & TRIGGERS
     // =========================================================
-	tonSys_Init           : TON := (PT := T#3S);    // Initialization pulse timer
+	tonSys_Init           : TON := (PT := T#8S);    // Initialization pulse timer
     tonSys_InitTimeout    : TON := (PT := T#20S);   // Initialization timeout fault timer
     tonFirstAutoCycle     : TON := (PT := T#500MS); // Auto cycle start settling timer
 	tonStoppingDelay	  : TON                   ; // Time to finalize process 
@@ -85,16 +85,18 @@ END_VAR
 // =========================================================
 M_PreExecution();
 
-bStartProcessCondition := GVL_MASTER.stMachineStatus.bSafety AND 
+bStartProcessCondition := GVL_MASTER.stMachineStatus.bSafety AND GVL_MASTER.i_bButtonEmergencyStop AND
 						  NOT GVL_MASTER.stMachineStatus.bFault AND 
 						  bKistlerReady;
+						  
 						  	  
-IF NOT GVL_MASTER.stMachineStatus.bSafety AND 
+IF (NOT GVL_MASTER.stMachineStatus.bSafety OR NOT GVL_MASTER.i_bButtonEmergencyStop)AND 
    GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.FAULT THEN
     GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.FAULT;
 END_IF;
-						  
-// =========================================================
+
+
+// // =========================================================
 // 2. MAIN STATE MACHINE (CASE)
 // =========================================================
 
@@ -111,7 +113,7 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 		eMode_LED_Fail := E_LEDs_Mode.ON;
 		eMode_LED_PASS := E_LEDs_Mode.OFF;
 		
-        IF GVL_Master.i_bButtonReset AND GVL_IO.stSafety.bSystemSafeOK THEN
+        IF  GVL_MASTER.stMachineStatus.bSafety AND GVL_MASTER.i_bButtonEmergencyStop THEN
             GVL_Master.stMachineStatus.eMachineState := E_MachineState.STOPPING;
         END_IF
 		
@@ -131,7 +133,7 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 		eMode_LED_PASS := E_LEDs_Mode.OFF;
 		eMode_LED_Fail := E_LEDs_Mode.OFF;
 		
-        IF GVL_Master.i_bButtonReset AND GVL_IO.stSafety.bSystemSafeOK THEN
+        IF GVL_Master.i_bButtonReset AND bStartProcessCondition THEN
             GVL_Master.stMachineStatus.eMachineState := E_MachineState.SYSTEM_INITIALISING;
         END_IF
 		
@@ -140,7 +142,7 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 		tonSys_Init (IN := GVL_MASTER.stMachineStatus.bInitialising);
 		tonSys_InitTimeout (IN := GVL_MASTER.stMachineStatus.bInitialising);
 		
-		IF tonSys_Init.Q AND bKistlerReady THEN
+		IF tonSys_Init.Q AND bKistlerReady AND bStartProcessCondition THEN
 			GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.SYSTEM_READY_TO_START;
 			
 		ELSIF tonSys_InitTimeout.Q OR NOT GVL_IO.stSafety.bSystemSafeOK THEN
@@ -159,7 +161,7 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 		
 		IF bButtonStop THEN
             GVL_Master.stMachineStatus.eMachineState := E_MachineState.STOPPING;
-        ELSIF GVL_MASTER.i_bButtonStart THEN
+        ELSIF GVL_MASTER.i_bButtonStart AND bStartProcessCondition THEN
             GVL_Master.stMachineStatus.eMachineState := E_MachineState.SYSTEM_AUTO_CYCLE;
         END_IF	
  
@@ -171,7 +173,7 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
         
         IF bButtonStop THEN
             GVL_Master.stMachineStatus.eMachineState := E_MachineState.STOPPING;
-        ELSIF GVL_Master.stMachineStatus.bFault OR NOT GVL_IO.stSafety.bSystemSafeOK THEN
+        ELSIF GVL_Master.stMachineStatus.bFault OR NOT bStartProcessCondition THEN
             GVL_Master.stMachineStatus.eMachineState := E_MachineState.FAULT;
         END_IF
 		

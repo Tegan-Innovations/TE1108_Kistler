@@ -76,154 +76,6 @@
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{00690516-A06B-2FAC-765F-330C43E46EC8}" AutoDeleteType="true">INFODATA_3187781607</Name>
-			<BitSize>24</BitSize>
-			<SubItem>
-				<Name>Input Safe Data FSIN Module 1.Input</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>0</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Input Safe Data FSIN Module 1.Module Fault</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>1</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Input Safe Data FSIN Module 2.Input</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>2</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Input Safe Data FSIN Module 2.Module Fault</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>3</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Input Safe Data FSIN Module 3.Input</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>4</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Input Safe Data FSIN Module 3.Module Fault</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>5</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Input Safe Data FSIN Module 4.Input</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>6</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Input Safe Data FSIN Module 4.Module Fault</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>7</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Input Safe Data FSIN Module 5.Input</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>8</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Input Safe Data FSIN Module 5.Module Fault</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>9</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Input Safe Data FSIN Module 6.Input</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>10</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Input Safe Data FSIN Module 6.Module Fault</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>11</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Input Safe Data FSIN Module 7.Input</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>12</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Input Safe Data FSIN Module 7.Module Fault</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>13</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Input Safe Data FSIN Module 8.Input</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>14</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Input Safe Data FSIN Module 8.Module Fault</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>15</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Output Safe Data FSIN Module 1.ErrAck</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>16</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Output Safe Data FSIN Module 2.ErrAck</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>17</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Output Safe Data FSIN Module 3.ErrAck</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>18</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Output Safe Data FSIN Module 4.ErrAck</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>19</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Output Safe Data FSIN Module 5.ErrAck</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>20</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Output Safe Data FSIN Module 6.ErrAck</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>21</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Output Safe Data FSIN Module 7.ErrAck</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>22</BitOffs>
-			</SubItem>
-			<SubItem>
-				<Name>Output Safe Data FSIN Module 8.ErrAck</Name>
-				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
-				<BitSize>1</BitSize>
-				<BitOffs>23</BitOffs>
-			</SubItem>
-		</DataType>
-		<DataType>
 			<Name GUID="{18071995-0000-0000-0000-002000000010}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..1] OF BYTE</Name>
 			<BitSize>16</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000001}">BYTE</BaseType>
@@ -314,7 +166,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{09826F5E-A0C6-4F2A-AB8E-A2951346EAC9}" Name="TE1108" PrjFilePath="TE1108\TE1108.plcproj" TmcFilePath="TE1108\TE1108.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{5B4BD3E7-64C5-FE34-3B70-BECF32E09F43}" TmcPath="TE1108\TE1108.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{9B14C619-C4B6-5577-D941-CFB9EDC2A382}" TmcPath="TE1108\TE1108.tmc">
 					<Name>TE1108 Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -485,7 +337,7 @@
 							<SyncMan>001000012600010001000000000100010001001026010000</SyncMan>
 							<SyncMan>001100012200010002000000000100010001001122010000</SyncMan>
 							<SyncMan>001210002400010003000000000000000200001224010000</SyncMan>
-							<SyncMan>001d18002000010004000000000000000200001d20010000</SyncMan>
+							<SyncMan>001d15002000010004000000000000000200001d20010000</SyncMan>
 							<SyncMan>002e00002400000003000000000000000000002e24000000</SyncMan>
 							<SyncMan>002f00002000000004000000000000000000002f20000000</SyncMan>
 							<Fmmu>0000000000000000001200020100000001000000060000000200000000000000</Fmmu>
@@ -538,7 +390,7 @@
 								<Entry Name="TwinSafeGroup1.ErrorAcknowledgement_1" Index="#x6000" Sub="#x01">
 									<Type>BIT</Type>
 								</Entry>
-								<Entry Name="TwinSafeGroup1.Run_2" Index="#x6000" Sub="#x02">
+								<Entry Name="TwinSafeGroup1.SafetyRun_2" Index="#x6000" Sub="#x02">
 									<Type>BIT</Type>
 								</Entry>
 								<Entry Name="TwinSafeGroup1.MachineStopped_14" Index="#x6000" Sub="#x03">
@@ -546,11 +398,6 @@
 								</Entry>
 								<Entry>
 									<Type GUID="{18071995-0000-0000-0000-002000000005}">ARRAY [0..4] OF BIT</Type>
-								</Entry>
-							</Pdo>
-							<Pdo Name="Connection Info Data" Index="#x1bf9" Flags="#x2011" SyncMan="3">
-								<Entry Name="TwinSafeGroup1.Term 4 (EL1918) - Module 1 (FSOE)_3 Info Data" Index="#x7000" Sub="#x01">
-									<Type GUID="{00690516-A06B-2FAC-765F-330C43E46EC8}">INFODATA_3187781607</Type>
 								</Entry>
 							</Pdo>
 							<Pdo Name="Device Info Data" Index="#x1bfe" Flags="#x2011" SyncMan="3">
@@ -2069,7 +1916,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="PlcTask Inputs^GVL_MASTER.i_bButtonEmergencyStop" VarB="StandardInputs^TwinSafeGroup1.ESTOP_Pressed_9"/>
 				<Link VarA="PlcTask Outputs^GVL_IO.stSafety.bMachineStopped" VarB="StandardOutputs^TwinSafeGroup1.MachineStopped_14"/>
 				<Link VarA="PlcTask Outputs^GVL_IO.stSafety.bSafetyReset" VarB="StandardOutputs^TwinSafeGroup1.ErrorAcknowledgement_1"/>
-				<Link VarA="PlcTask Outputs^GVL_IO.stSafety.bSafetyRun" VarB="StandardOutputs^TwinSafeGroup1.Run_2"/>
+				<Link VarA="PlcTask Outputs^GVL_IO.stSafety.bSafetyRun" VarB="StandardOutputs^TwinSafeGroup1.SafetyRun_2"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1100)^Term 4 (EL1918)">
 				<Link VarA="PlcTask Inputs^GVL_MASTER.i_bButtonReset" VarB="Module 1 (FSOE)^FSoE Inputs^FSOE^FSIN Module 3.Input"/>
