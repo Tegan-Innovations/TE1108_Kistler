@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="E_NestState" Id="{2aaf25bc-bdd9-45da-b729-25c49d0c7a2b}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+TYPE E_NestState :
+(
+    // =================================================================
+    // 1. NEST TABLE SEQUENCE STATES
+    // =================================================================
+    IDLE               := 0,  // Waiting for commands and monitoring interlocks
+    RETRACT_SUPPORT    := 1,  // Lowering/retracting the nest support cylinders
+    ROTATING_TABLE     := 2,  // Commanding pneumatic Port A/B to rotate the table
+	STOP_TABLE 		   := 3,  // stop table
+    EXTEND_SUPPORT     := 4,  // Raising/extending the support cylinders under the new nest
+	WRONG_POSITION	   := 5,  // Nest in the WRONG position
+	TESTING			   := 6,
+    FAULT              := 99  // Emergency stop, safety loss, or timeout
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

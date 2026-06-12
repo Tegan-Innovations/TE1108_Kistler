@@ -157,7 +157,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{09826F5E-A0C6-4F2A-AB8E-A2951346EAC9}" Name="TE1108" PrjFilePath="TE1108\TE1108.plcproj" TmcFilePath="TE1108\TE1108.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{397A5661-31A3-F960-9DCA-FB580ED53471}" TmcPath="TE1108\TE1108.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{9E11722B-043D-596D-3CA2-A037028410BC}" TmcPath="TE1108\TE1108.tmc">
 					<Name>TE1108 Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -201,12 +201,47 @@
 							<Name>GVL_IO.stSafety.bProcessTest</Name>
 							<Type>BOOL</Type>
 						</Var>
+						<Var>
+							<Name>GVL_MASTER.stNestTable.qNestRotatePortA</Name>
+							<Comment><![CDATA[ Valve: Rotate indexing table Port A]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.stNestTable.qNestRotatePortB</Name>
+							<Comment><![CDATA[ Valve: Rotate indexing table Port B]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.stNestTable.qSupportExtend</Name>
+							<Comment><![CDATA[ cylinder extend (up for press)]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.stNestTable.qSupportRetract</Name>
+							<Comment><![CDATA[ cylinder retract (down for rotate)]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
 					</Vars>
 					<Vars VarGrpType="1">
 						<Name>PlcTask Inputs</Name>
 						<Var>
+							<Name>GVL_MASTER.bPartPresent_NEST</Name>
+							<Comment><![CDATA[ Part Present sensor NEST]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_MASTER.i_bButtonStart</Name>
 							<Comment><![CDATA[  Auto Cycle start button]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.bPartPresent_Kistler</Name>
+							<Comment><![CDATA[ Part Present sensor Kistler]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.bPartPresent_Reject</Name>
+							<Comment><![CDATA[ Part Present sensor Kistler]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -254,6 +289,44 @@
 						</Var>
 						<Var>
 							<Name>GVL_IO.stSafety.bTwoHandsSafe</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.stNestTable.bNestReadySensor</Name>
+							<Comment><![CDATA[ Sensor: Table air pressure and home state OK]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.stNestTable.bNestCompletedSensor</Name>
+							<Comment><![CDATA[ Sensor: Indexing cycle completed]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.stNestTable.bNestLockedSensor</Name>
+							<Comment><![CDATA[ Sensor: Table locking pin engaged]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.stNestTable.bNestPos_1_Sensor</Name>
+							<Comment><![CDATA[binary sensores]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.stNestTable.bNestPos_2_Sensor</Name>
+							<Comment><![CDATA[binary sensores]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.stNestTable.bNestPos_3_Sensor</Name>
+							<Comment><![CDATA[binary sensores]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.stNestTable.bSupportRetracted</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.stNestTable.bSupportExtended</Name>
 							<Type>BOOL</Type>
 						</Var>
 					</Vars>
@@ -339,8 +412,8 @@
 						<EtherCAT SlaveType="2" PdiType="#x0005" MboxDataLinkLayer="true" StateMBoxPolling="true" CycleMBoxPollingTime="0" CoeType="3" FoeType="1" VendorId="#x00000002" ProductCode="#x1afe3052" RevisionNo="#x00150000" BIC="1P135389SBTNsee COE!1KEL6910                        Q1    " InfoDataAddr="true" RepeatSupport="true" TimeoutStateChange1="5000" TimeoutMailbox2="10000" TComSupport="true" PortPhys="51" DebugMemory="8" SafetyLogicSupported="true" MaxSlotCount="256" MaxSlotGroupCount="1" SlotPdoIncrement="1" SlotIndexIncrement="16" Type="EL6910, TwinSAFE PLC" Desc="EL6910" PortABoxInfo="#x01000002">
 							<SyncMan>001000012600010001000000000100010001001026010000</SyncMan>
 							<SyncMan>001100012200010002000000000100010001001122010000</SyncMan>
-							<SyncMan>001217002400010003000000000000000200001224010000</SyncMan>
-							<SyncMan>001d1b002000010004000000000000000200001d20010000</SyncMan>
+							<SyncMan>00121e002400010003000000000000000200001224010000</SyncMan>
+							<SyncMan>001d21002000010004000000000000000200001d20010000</SyncMan>
 							<SyncMan>002e00002400000003000000000000000000002e24000000</SyncMan>
 							<SyncMan>002f00002000000004000000000000000000002f20000000</SyncMan>
 							<Fmmu>0000000000000000001200020100000001000000060000000200000000000000</Fmmu>
@@ -360,6 +433,9 @@
 								<Entry Name="TwinSafeGroup1.Term 5 (EL1918) - Module 1 (FSOE)_27 TxPDO" Index="#x7000" Sub="#x03">
 									<Type GUID="{2438F91B-E188-4ED7-8594-54354F9ED6A4}" Namespace="Safety">FSOE_6</Type>
 								</Entry>
+								<Entry Name="TwinSafeGroup1.Term 6 (EL1918) - Module 1 (FSOE)_32 TxPDO" Index="#x7000" Sub="#x04">
+									<Type GUID="{2438F91B-E188-4ED7-8594-54354F9ED6A4}" Namespace="Safety">FSOE_6</Type>
+								</Entry>
 							</Pdo>
 							<Pdo Name="ConnectionOutputs" Index="#x1600" InOut="1" Flags="#x2011" SyncMan="2">
 								<Entry Name="TwinSafeGroup1.Term 4 (EL1918) - Module 1 (FSOE)_3 RxPDO" Index="#x6000" Sub="#x01">
@@ -369,6 +445,9 @@
 									<Type GUID="{2438F91B-E188-4ED7-8594-54354F9ED6A4}" Namespace="Safety">FSOE_6</Type>
 								</Entry>
 								<Entry Name="TwinSafeGroup1.Term 5 (EL1918) - Module 1 (FSOE)_27 RxPDO" Index="#x6000" Sub="#x03">
+									<Type GUID="{B05FDAB7-3241-ACD3-D16C-0FDAF8825BC9}">FSOE_7</Type>
+								</Entry>
+								<Entry Name="TwinSafeGroup1.Term 6 (EL1918) - Module 1 (FSOE)_32 RxPDO" Index="#x6000" Sub="#x04">
 									<Type GUID="{B05FDAB7-3241-ACD3-D16C-0FDAF8825BC9}">FSOE_7</Type>
 								</Entry>
 							</Pdo>
@@ -1909,6 +1988,10 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 		<MappingInfo Identifier="{00000000-2001-0850-0020-500810000403}" Id="#x02030020"/>
 		<MappingInfo Identifier="{03040010-0010-0304-1000-040310000403}" Id="#x02030010" Watchdog="04000000040000000400000004000000"/>
 		<OwnerA Name="TIID^Device 1 (EtherCAT)">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1100)^Term 3 (EL6910)">
+				<Link VarA="Term 1 (EK1100)^Term 6 (EL1918)^Module 1 (FSOE)^FSoE Inputs^FSOE" VarB="ConnectionOutputs^TwinSafeGroup1.Term 6 (EL1918) - Module 1 (FSOE)_32 RxPDO"/>
+				<Link VarA="Term 1 (EK1100)^Term 6 (EL1918)^Module 1 (FSOE)^FSoE Outputs^FSOE" VarB="ConnectionInputs^TwinSafeGroup1.Term 6 (EL1918) - Module 1 (FSOE)_32 TxPDO"/>
+			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1100)^Term 4 (EL1918)">
 				<Link VarA="Term 1 (EK1100)^Term 3 (EL6910)^ConnectionInputs^TwinSafeGroup1.Term 4 (EL1918) - Module 1 (FSOE)_3 TxPDO" VarB="Module 1 (FSOE)^FSoE Outputs^FSOE"/>
 				<Link VarA="Term 1 (EK1100)^Term 3 (EL6910)^ConnectionOutputs^TwinSafeGroup1.Term 4 (EL1918) - Module 1 (FSOE)_3 RxPDO" VarB="Module 1 (FSOE)^FSoE Inputs^FSOE"/>
@@ -1923,7 +2006,15 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 			</OwnerB>
 		</OwnerA>
 		<OwnerA Name="TIPC^TE1108^TE1108 Instance">
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1100)^Term 10 (EL1809)">
+				<Link VarA="PlcTask Inputs^GVL_MASTER.stNestTable.bSupportExtended" VarB="Channel 1^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_MASTER.stNestTable.bSupportRetracted" VarB="Channel 2^Input"/>
+			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1100)^Term 11 (EL2809-0015)">
+				<Link VarA="PlcTask Outputs^GVL_MASTER.stNestTable.qNestRotatePortA" VarB="Channel 7^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_MASTER.stNestTable.qNestRotatePortB" VarB="Channel 6^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_MASTER.stNestTable.qSupportExtend" VarB="Channel 8^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_MASTER.stNestTable.qSupportRetract" VarB="Channel 9^Output"/>
 				<Link VarA="PlcTask Outputs^PRG_MachineControl.q_bLED_Fail" VarB="Channel 3^Output"/>
 				<Link VarA="PlcTask Outputs^PRG_MachineControl.q_bLED_Pass" VarB="Channel 4^Output"/>
 				<Link VarA="PlcTask Outputs^PRG_MachineControl.q_bLED_Reset" VarB="Channel 2^Output"/>
@@ -1947,8 +2038,17 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="PlcTask Inputs^GVL_MASTER.i_bButtonReset" VarB="Module 1 (FSOE)^FSoE Inputs^FSOE^FSIN Module 3.Input"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1100)^Term 9 (EL1809)">
+				<Link VarA="PlcTask Inputs^GVL_MASTER.bPartPresent_Kistler" VarB="Channel 13^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_MASTER.bPartPresent_NEST" VarB="Channel 12^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_MASTER.bPartPresent_Reject" VarB="Channel 5^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_MASTER.i_bButtonStart" VarB="Channel 1^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_MASTER.i_bButtonStop" VarB="Channel 2^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_MASTER.stNestTable.bNestCompletedSensor" VarB="Channel 9^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_MASTER.stNestTable.bNestLockedSensor" VarB="Channel 10^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_MASTER.stNestTable.bNestPos_1_Sensor" VarB="Channel 6^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_MASTER.stNestTable.bNestPos_2_Sensor" VarB="Channel 7^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_MASTER.stNestTable.bNestPos_3_Sensor" VarB="Channel 8^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_MASTER.stNestTable.bNestReadySensor" VarB="Channel 11^Input"/>
 			</OwnerB>
 		</OwnerA>
 	</Mappings>

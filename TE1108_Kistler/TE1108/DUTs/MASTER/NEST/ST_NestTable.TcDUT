@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_NestTable" Id="{4df04c6b-c2e8-4540-9873-41905cd4ef49}">
+    <Declaration><![CDATA[TYPE ST_NestTable :
+STRUCT
+	
+    // =================================================================
+    // 1. PHYSICAL DIGITAL INPUTS (HARDWARE FEEDBACK) - COMENTADOS PARA TESTE
+    // =================================================================
+ 	bNestReadySensor		AT %I*		: BOOL; // Sensor: Table air pressure and home state OK
+	bNestCompletedSensor	AT %I*		: BOOL; // Sensor: Indexing cycle completed
+	bNestLockedSensor		AT %I*		: BOOL; // Sensor: Table locking pin engaged
+	bNestPos_1_Sensor		AT %I*		: BOOL; //binary sensores
+	bNestPos_2_Sensor		AT %I*		: BOOL; //binary sensores
+	bNestPos_3_Sensor		AT %I*		: BOOL; //binary sensores
+	bSupportRetracted       AT %I*		: BOOL;
+	bSupportExtended        AT %I*		: BOOL;
+
+    // =================================================================
+    // 2. PHYSICAL DIGITAL OUTPUTS (HARDWARE COMMANDS - EL2809 TERM 11) - ATIVOS
+    // =================================================================
+    qNestRotatePortA 	 	AT %Q*		: BOOL; // Valve: Rotate indexing table Port A
+    qNestRotatePortB    	AT %Q*		: BOOL; // Valve: Rotate indexing table Port B
+    qSupportExtend       	AT %Q*		: BOOL; // cylinder extend (up for press)
+    qSupportRetract     	AT %Q*		: BOOL; // cylinder retract (down for rotate)
+    	
+    // =================================================================
+    // 3. LOGICAL CONTROL AND STATUS SIGNALS
+    // =================================================================
+    bNestStartCycle         			: BOOL; // Command: Trigger table rotation sequence (ATIVO)
+    bNestInMotion           			: BOOL; // Status: Table is currently indexing (ATIVO)
+    // bNestError              			: BOOL; // Status: Rotation fault or timeout detected (COMENTADO)
+
+
+	
+END_STRUCT
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>

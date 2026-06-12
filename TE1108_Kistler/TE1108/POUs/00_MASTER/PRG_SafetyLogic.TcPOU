@@ -22,7 +22,7 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 	GVL_IO.stSafety.bProcessTest := FALSE;
 		
     E_MachineState.FAULT:
-	GVL_IO.stSafety.bMachineStopped := FALSE;
+	GVL_IO.stSafety.bMachineStopped := TRUE;
 	GVL_IO.stSafety.bAirSupplyEnabled := FALSE;
 	GVL_IO.stSafety.bProcessTest := FALSE;
 

@@ -6,7 +6,7 @@ VAR_GLOBAL
     // =================================================================================
     // MACHINE STATUS
     // =================================================================================
-    stMachineStatus         : ST_MachineStatus; // Main machine state and flags structure
+    stMachineStatus         		  : ST_MachineStatus; // Main machine state and flags structure
 
     // =================================================================================
     // HMI COMMANDS & SIGNALS
@@ -16,21 +16,35 @@ VAR_GLOBAL
     i_bButtonReset           AT%I*    : BOOL; //  fault reset button
     i_bButtonEmergencyStop   AT%I*    : BOOL; //  software E-stop button
     
-    bStartButtonLamp        		: BOOL; // Physical start button lamp output
-    bResetButtonLamp        		: BOOL; // Physical reset button lamp output
+    bStartButtonLamp        		  : BOOL; // Physical start button lamp output
+    bResetButtonLamp        		  : BOOL; // Physical reset button lamp output
     
-    bBlink_1Hz              		: BOOL; // 1Hz system clock flash bit
-
+    bBlink_1Hz              		  : BOOL; // 1Hz system clock flash bit
+	
+	// =================================================================
+    // FESTO NEST TABLE INSTANCE
+    // =================================================================
+    stNestTable             		  : ST_NestTable;
+	bStations_Home          		  : BOOL :=TRUE; // Interlock: All station tooling retracted
+	
+		
+	// =================================================================
+    // SENSORS PART PRESENT
+    // =================================================================
+	bPartPresent_NEST          AT%I*   : BOOL; // Part Present sensor NEST
+	bPartPresent_Kistler       AT%I*   : BOOL; // Part Present sensor Kistler
+	bPartPresent_Reject        AT%I*   : BOOL; // Part Present sensor Kistler
+ 
     // =================================================================================
     // INTERLOCKS & SAFETY
     // =================================================================================
     
-    bAirPressureOk          		 : BOOL :=TRUE; // Main air supply pressure switch feedback
+    bAirPressureOk          		  : BOOL :=TRUE; // Main air supply pressure switch feedback
     
     // =================================================================================
     // HARDWARE STATUS
     // =================================================================================
-    bKistlerSystemReady    			 : BOOL :=TRUE; // Kistler system global ready feedback
+    bKistlerSystemReady    			  : BOOL :=TRUE; // Kistler system global ready feedback
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

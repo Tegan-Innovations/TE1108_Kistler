@@ -45,10 +45,19 @@
     <Compile Include="DUTs\MASTER\E_MachineState.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\MASTER\ST_Kistler_CMD.TcDUT">
+    <Compile Include="DUTs\MASTER\KISTLER\ST_Kistler_CMD.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\MASTER\ST_Kistler_Status.TcDUT">
+    <Compile Include="DUTs\MASTER\KISTLER\ST_Kistler_Status.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\MASTER\NEST\E_NestPosition.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\MASTER\NEST\E_NestState.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\MASTER\NEST\ST_NestTable.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\MASTER\ST_MachineStatus.TcDUT">
@@ -95,6 +104,8 @@
     <Folder Include="DUTs\MASTER" />
     <Folder Include="DUTs\CARDS" />
     <Folder Include="DUTs\MASTER\BUTTON" />
+    <Folder Include="DUTs\MASTER\KISTLER" />
+    <Folder Include="DUTs\MASTER\NEST" />
     <Folder Include="DUTs\SAFETY" />
     <Folder Include="GVLs" />
     <Folder Include="POUs\00_MASTER" />
