@@ -499,8 +499,8 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
         
             E_NestState.TESTING: // State 4: TESTING (Elevator Lift Sequence)
                 // Safety verification: Ensure rotation valves are fully de-energized before raising the elevator
-                IF NOT GVL_MASTER.stNestTable.qNestRotatePortA AND NOT GVL_MASTER.stNestTable.qNestRotatePortB 
-						AND GVL_MASTER.stNestTable.bNestLockedSensor AND NOT GVL_MASTER.stNestTable.bNestInMotion THEN
+                IF GVL_MASTER.stNestTable.bNestReadySensor AND GVL_MASTER.stNestTable.bNestLockedSensor 
+					AND NOT GVL_MASTER.stNestTable.bNestInMotion AND eCurrentNestPos<>E_NestPosition.Unknown THEN
                     
                     // PHASE 1: Initial stabilization pause (First 100ms)
                     IF NOT tSupportRetractDelay.Q THEN
@@ -512,7 +512,7 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
                         GVL_MASTER.stNestTable.qSupportRetract := FALSE;
                         GVL_MASTER.stNestTable.qSupportExtend  := TRUE; 
                         
-                    // PHASE 3: Test time finished! Force elevator down and WAIT for physical descent completion
+                    // PHASE 3: Test time finished! Back the initial process
                     ELSE
                         GVL_MASTER.stNestTable.bNestInMotion   := FALSE; // Mark current automated cycle as successful
                         eNestState                             := E_NestState.IDLE; // Safely return to standby
@@ -536,23 +536,11 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 					GVL_MASTER.stNestTable.bNestInMotion   		:= FALSE;
                 // Automatically clear fault and recover to standby when hardware safety is restored
                 ELSIF GVL_IO.stSafety.bSafetyOK AND NOT GVL_Master.stMachineStatus.bFault 
-					  AND  GVL_MASTER.stNestTable.bNestReadySensor THEN
-                    eNestState := E_NestState.IDLE;
+					  AND  GVL_MASTER.stNestTable.bNestReadySensor AND eCurrentNestPos<>E_NestPosition.Unknown THEN
+                    //eNestState := E_NestState.IDLE;
+					eNestState := E_NestState.STOP_TABLE;
                 END_IF
 				
-// 			E_NestState.WRONG_POSITION: // State 5: Wrong Position
-// 				IF GVL_IO.stSafety.bTwoHandsSafe THEN
-// 					GVL_MASTER.stNestTable.qNestRotatePortA := TRUE;  // Pressurize rotation advance chamber
-// 					GVL_MASTER.stNestTable.qNestRotatePortB := FALSE;
-// 					IF tTwoHandHoldTimer.Q THEN
-// 						eNestState := E_NestState.IDLE; // Segue para o reset mecânico normal
-// 					END_IF
-// 				ELSE
-// 					// Se o operador soltar as mãos antes do timer acabar, desliga tudo de novo e espera
-// 					GVL_MASTER.stNestTable.qNestRotatePortA := FALSE;
-// 					GVL_MASTER.stNestTable.qNestRotatePortB := FALSE;
-// 					
-// 				END_IF
 
                 
         END_CASE
