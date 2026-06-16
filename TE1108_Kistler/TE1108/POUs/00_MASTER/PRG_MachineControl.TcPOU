@@ -104,12 +104,12 @@ END_VAR
 // =========================================================
 M_PreExecution();
 
-bStartProcessCondition := GVL_MASTER.stMachineStatus.bSafety AND GVL_MASTER.i_bButtonEmergencyStop AND
+bStartProcessCondition := GVL_MASTER.stMachineStatus.bSafety AND NOT GVL_MASTER.i_bButtonEmergencyStop AND
 						  NOT GVL_MASTER.stMachineStatus.bFault AND 
 						  bKistlerReady;
 						  
 						  	  
-IF (NOT GVL_MASTER.stMachineStatus.bSafety OR NOT GVL_MASTER.i_bButtonEmergencyStop)AND 
+IF (NOT GVL_MASTER.stMachineStatus.bSafety OR GVL_MASTER.i_bButtonEmergencyStop)AND 
    GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.FAULT THEN
     GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.FAULT;
 END_IF;
@@ -132,7 +132,7 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 		eMode_LED_Fail := E_LEDs_Mode.ON;
 		eMode_LED_PASS := E_LEDs_Mode.OFF;
 		
-        IF  GVL_MASTER.stMachineStatus.bSafety AND GVL_MASTER.i_bButtonEmergencyStop AND GVL_Master.i_bButtonReset THEN
+        IF  GVL_MASTER.stMachineStatus.bSafety AND NOT GVL_MASTER.i_bButtonEmergencyStop AND GVL_Master.i_bButtonReset THEN
             GVL_Master.stMachineStatus.eMachineState := E_MachineState.STOPPING;
         END_IF
 		
@@ -407,7 +407,7 @@ IF GVL_MASTER.i_bButtonReset OR NOT GVL_MASTER.i_bButtonStop THEN
 END_IF
 
 // Global Safety Interlock: Force fault state immediately if air/safety is lost
-IF NOT GVL_IO.stSafety.bSafetyOK THEN
+IF NOT GVL_IO.stSafety.bSafetyOK AND GVL_Master.stMachineStatus.bFault THEN
     eNestState := E_NestState.FAULT;
 END_IF
 
@@ -534,11 +534,18 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
                  	GVL_MASTER.stNestTable.qNestRotatePortA     := TRUE;
                  	GVL_MASTER.stNestTable.qNestRotatePortB     := FALSE;
 					GVL_MASTER.stNestTable.bNestInMotion   		:= FALSE;
-                // Automatically clear fault and recover to standby when hardware safety is restored
-                ELSIF GVL_IO.stSafety.bSafetyOK AND NOT GVL_Master.stMachineStatus.bFault 
+                // Automatically clear fault and recover to standby when hardware safety is restore
+                ELSIF GVL_IO.stSafety.bSafetyOK AND NOT GVL_Master.stMachineStatus.bFault
 					  AND  GVL_MASTER.stNestTable.bNestReadySensor AND eCurrentNestPos<>E_NestPosition.Unknown THEN
-                    //eNestState := E_NestState.IDLE;
-					eNestState := E_NestState.STOP_TABLE;
+ 
+					IF 	GVL_Master.stMachineStatus.bStopped OR GVL_Master.stMachineStatus.bStopping	THEN
+							eNestState := E_NestState.IDLE;  
+					ELSE
+						//eNestState := E_NestState.IDLE;
+						eNestState := E_NestState.STOP_TABLE;
+					END_IF
+
+
                 END_IF
 				
 
