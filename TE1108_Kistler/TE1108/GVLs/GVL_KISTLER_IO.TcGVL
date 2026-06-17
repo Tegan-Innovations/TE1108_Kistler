@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <GVL Name="GVL_KISTLER_IO" Id="{613015f5-64b5-41ad-bf74-99e71be07f06}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	aKistlerOut AT %Q* : ARRAY[0..199] OF BYTE; // PLC -> maXYmos
+    aKistlerIn  AT %I* : ARRAY[0..199] OF BYTE; // maXYmos -> PLC
+	
+	
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

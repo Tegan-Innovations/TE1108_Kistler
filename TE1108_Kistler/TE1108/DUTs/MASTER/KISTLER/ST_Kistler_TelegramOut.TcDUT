@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_Kistler_TelegramOut" Id="{ea42d073-b701-48c5-8e73-547a846014ee}">
+    <Declaration><![CDATA[TYPE ST_Kistler_TelegramOut :
+STRUCT
+    // Byte 0
+    bMirrorStart              : BOOL;
+    bMirrorTareY              : BOOL;
+    bMirrorZeroX              : BOOL;
+    bMirrorSensorTestX        : BOOL;
+    bMirrorSensorTestY        : BOOL;
+    bMirrorMasterMeasurement  : BOOL;
+    bMirrorIncZero            : BOOL;
+
+    // Byte 1
+    bMirrorAckAdminGlobal     : BOOL;
+    bMirrorAckAdmin           : BOOL;
+    bMirrorAccess             : BOOL;
+    bMirrorAuto               : BOOL;
+    bMirrorStatReset          : BOOL;
+    bMirrorStatDisable        : BOOL;
+    bMirrorTareExtendedY      : BOOL;
+
+    // Byte 2
+    byMirrorMeasurementProgram : BYTE;
+
+    // Byte 4
+    bMirrorInput00            : BOOL;
+    bMirrorInput01            : BOOL;
+    bMirrorInput02            : BOOL;
+    bMirrorInput03            : BOOL;
+    bMirrorInput04            : BOOL;
+    bMirrorInput05            : BOOL;
+    bMirrorInput06            : BOOL;
+    bMirrorInput07            : BOOL;
+
+    // Byte 6
+    bReady                    : BOOL;
+    bOkTotal                  : BOOL;
+    bNokTotal                 : BOOL;
+    bNoPass                   : BOOL;
+    bWarning                  : BOOL;
+    bAlarm                    : BOOL;
+
+    // Byte 7
+    bS1                       : BOOL;
+    bS2                       : BOOL;
+
+    // Byte 8
+    bOutput00                 : BOOL;
+    bOutput01                 : BOOL;
+    bOutput02                 : BOOL;
+    bOutput03                 : BOOL;
+    bOutput04                 : BOOL;
+    bOutput05                 : BOOL;
+    bOutput06                 : BOOL;
+    bOutput07                 : BOOL;
+
+    // Byte 9
+    bMirrorDriveEnable        : BOOL;
+    bMirrorRunSequence        : BOOL;
+    bMirrorDriveToHomePos     : BOOL;
+    bMirrorDriveToRefPos      : BOOL;
+    bMirrorJogForward         : BOOL;
+    bMirrorJogBackward        : BOOL;
+    bWaitRequest              : BOOL;
+    bBrakeTestDone            : BOOL;
+
+    // Byte 10
+    bSequenceStopped          : BOOL;
+    bSequenceEnd              : BOOL;
+    bOnlineEoNok              : BOOL;
+    bExternStop               : BOOL;
+    bSequenceError            : BOOL;
+    bDriveEnabled             : BOOL;
+    bHomePosReached           : BOOL;
+    bRefPosReached            : BOOL;
+
+    // Byte 11
+    bStandStill               : BOOL;
+    bBrakeTestRequired        : BOOL;
+    bServoWarning             : BOOL;
+    bServoError               : BOOL;
+    bSMES_STO                 : BOOL;
+    bSMST                     : BOOL;
+    bSMM                      : BOOL;
+    bUserModeActive           : BOOL;
+
+    // Byte 12
+    bMirrorCurrentSequence0   : BOOL;
+    bMirrorCurrentSequence1   : BOOL;
+
+    // Byte 13
+    byLabelId                 : BYTE;
+
+    // Byte 14..19
+    byMirrorCfgMP             : BYTE;
+    bGlobalCfgMP              : BOOL;
+    byMirrorCfgAddress        : BYTE;
+    byMirrorCfgLength         : BYTE;
+    byMirrorSelectPage        : BYTE;
+    bTransmissionFault        : BOOL;
+    bAck                      : BOOL;
+    bDeviceAvailable          : BOOL;
+    bChangedSelectedMP        : BOOL;
+    bChangedGlobal            : BOOL;
+    bBackupComplete           : BOOL;
+END_STRUCT
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -8,7 +8,9 @@ STRUCT
 		bAbort 		: BOOL;
 		bStart		: BOOL;
 		bReset		: BOOL;
-		bManualMode	: BOOL;
+		bManualMode	: BOOL;	
+    	bRunSequence  : BOOL;
+    	bDriveToHome  : BOOL;
 
 END_STRUCT
 END_TYPE

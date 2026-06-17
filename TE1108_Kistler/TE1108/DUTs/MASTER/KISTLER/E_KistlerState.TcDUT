@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="E_KistlerState" Id="{467b03d3-333e-48bb-a569-3d149864fd7e}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+TYPE E_KistlerState :
+(
+    DISABLED 		:= 0,
+    READY 			:= 1,
+    HOMING 			:= 2,
+    HOME_DONE 		:= 3,
+    RUN_SEQUENCE 	:= 4,
+    BUSY 			:= 5,
+    DONE 			:= 6,
+    ERROR 			:= 99
+
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

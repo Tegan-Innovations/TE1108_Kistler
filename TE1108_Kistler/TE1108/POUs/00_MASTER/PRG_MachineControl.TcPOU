@@ -26,6 +26,8 @@ VAR
     bKistlerReady          : BOOL;   // Press healthy and ready feedback flag
     i                      : INT;    // Loop index counter
     sMachineMessage        : STRING; // Diagnostics and status message string
+	stKistlerInTelegram  : ST_Kistler_TelegramIn;
+	stKistlerOutTelegram : ST_Kistler_TelegramOut;
 	
 	// =================================================================
     // NEST TABLE INTERNAL CONTROL VARIABLES
@@ -77,27 +79,7 @@ END_VAR
 
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[// // =================================================================================
-// // SIMULATION: AUTOMATIC HMI BUTTON RELEASE (PULSE SIMULATION)
-// // =================================================================================
-// // If the HMI buttons are forced TRUE, turn them FALSE on the very next scan cycle
-// tonSimulation[1] (IN:= GVL_MASTER.bButtonStart, PT:= T#1S);
-// IF tonSimulation[1].Q AND GVL_MASTER.bButtonStart THEN
-//     GVL_MASTER.bButtonStart := FALSE;
-// END_IF
-// 
-// tonSimulation[2] (IN:= GVL_MASTER.bButtonReset, PT:= T#1S);
-// IF tonSimulation[2].Q THEN
-//     GVL_MASTER.bButtonReset := FALSE;
-// END_IF
-// 
-// tonSimulation[3] (IN:= GVL_MASTER.bButtonStop, PT:= T#1S);
-// IF tonSimulation[3].Q THEN
-//     GVL_MASTER.bButtonStop := FALSE;
-// END_IF
-
-
-
+      <ST><![CDATA[
 
 // =========================================================
 // 1. PRE-CONDITION LOGIC
@@ -230,18 +212,37 @@ GVL_Master.stMachineStatus.bManualMode    := (GVL_Master.stMachineStatus.eMachin
 
 // 5. METHOD POST-EXECUTION ROUTINE
 // =================================================================================
-// Pass the freshly calculated machine state into the Kistler hardware controller
-M_KistlerControl(eCurrentState := GVL_MASTER.stMachineStatus.eMachineState);
+// Generate Kistler commands based on current machine state
+M_KistlerControl(
+    eCurrentState := GVL_MASTER.stMachineStatus.eMachineState);
 
-// Map Kistler hardware feedbacks and update panel/HMI indicators
+
+// PLC -> Kistler command telegram
+M_KistlerConfig_Input();
+
+
+// Map Kistler EtherCAT telegram to PLC status structure
+M_KistlerConfig_Output();
+
+
+// Update machine status from Kistler status
 M_StatusMapping();
+
+M_KistlerStateMachine();
+
+// Update HMI and panel LEDs
 M_LEDsButtons();
+
+// Control Nest Table operation
 M_NestTableControl();
+
 
 
 ]]></ST>
     </Implementation>
-    <Method Name="M_GetCurrentPosition" Id="{5ad458d2-2562-4615-8d3c-a8c74f1cf84a}">
+    <Folder Name="Kistler" Id="{9e17cfcd-c98c-45cb-bd0b-324e8c0aff3a}" />
+    <Folder Name="Nest_Table" Id="{b7ca633f-afa1-44ec-8055-793fa5c0679e}" />
+    <Method Name="M_GetCurrentPosition" Id="{5ad458d2-2562-4615-8d3c-a8c74f1cf84a}" FolderPath="Nest_Table\">
       <Declaration><![CDATA[METHOD M_GetCurrentPosition : E_NestPosition
 VAR_INST
 	iBinaryValue : BYTE;
@@ -266,7 +267,211 @@ ELSE
 END_CASE]]></ST>
       </Implementation>
     </Method>
-    <Method Name="M_KistlerControl" Id="{142f0c7b-5ff7-4bb2-a407-a7b85664501f}">
+    <Method Name="M_KistlerCommandMapping" Id="{5cfa21d9-3cc5-49b3-924c-97638c44a598}" FolderPath="Kistler\">
+      <Declaration><![CDATA[METHOD PRIVATE M_KistlerCommandMapping : BOOL
+VAR
+    i : INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+// =================================================================================
+// PLC -> KISTLER COMMAND MAPPING
+// =================================================================================
+// Clear command telegram
+FOR i := 0 TO 199 DO
+    GVL_KISTLER_IO.aKistlerOut[i] := 0;
+END_FOR
+
+// Enable maXYmos access and automatic mode
+IF stKistler_CMD.bEnable THEN
+    GVL_KISTLER_IO.aKistlerOut[1].3 := TRUE; // Access
+    GVL_KISTLER_IO.aKistlerOut[1].4 := TRUE; // Auto
+    GVL_KISTLER_IO.aKistlerOut[9].0 := TRUE; // Drive_Enable
+END_IF
+
+// Reset / acknowledge maXYmos faults/statistics
+IF stKistler_CMD.bReset THEN
+    GVL_KISTLER_IO.aKistlerOut[1].0 := TRUE; // Ack_Admin_Glob
+    GVL_KISTLER_IO.aKistlerOut[1].1 := TRUE; // Ack_Admin
+    GVL_KISTLER_IO.aKistlerOut[1].5 := TRUE; // Start_Reset
+END_IF
+
+// Abort / external sequence stop
+IF stKistler_CMD.bAbort THEN
+    GVL_KISTLER_IO.aKistlerOut[10].3 := TRUE; // Seq_Ext_Stop
+END_IF
+
+// Force Measurement Program 1 for first commissioning test
+GVL_KISTLER_IO.aKistlerOut[2].0 := TRUE; // MP_01
+
+M_KistlerCommandMapping := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_KistlerConfig_Input" Id="{14c376fa-cf59-47d0-a1ae-92a997aeb833}" FolderPath="Kistler\">
+      <Declaration><![CDATA[METHOD PRIVATE M_KistlerConfig_Input : BOOL
+VAR
+    i : INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+// =================================================================================
+// KISTLER CONFIG INPUT
+// PLC -> maXYmos NC input/control telegram
+// =================================================================================
+// Source:
+//     stKistler_CMD
+//
+// Internal telegram:
+//     stKistlerInTelegram
+//
+// Destination:
+//     GVL_KISTLER_IO.aKistlerOut[]
+// =================================================================================
+
+
+// =================================================================================
+// CLEAR OUTPUT TELEGRAM
+// =================================================================================
+
+FOR i := 0 TO 199 DO
+    GVL_KISTLER_IO.aKistlerOut[i] := 0;
+END_FOR
+
+
+// =================================================================================
+// HIGH LEVEL COMMANDS -> KISTLER INPUT TELEGRAM STRUCT
+// =================================================================================
+
+stKistlerInTelegram.bStart          := stKistler_CMD.bStart;
+
+stKistlerInTelegram.bAckAdminGlobal := stKistler_CMD.bReset;
+stKistlerInTelegram.bAckAdmin       := stKistler_CMD.bReset;
+stKistlerInTelegram.bAccess         := stKistler_CMD.bEnable;
+stKistlerInTelegram.bAuto           := stKistler_CMD.bEnable;
+stKistlerInTelegram.bStatReset      := stKistler_CMD.bReset;
+
+// Measurement program selection
+// Byte 2 bits 0..6 = MP selection
+// 1 = MP_01
+stKistlerInTelegram.byMeasurementProgram := 1;
+
+// Drive / sequence commands
+stKistlerInTelegram.bDriveEnable     := stKistler_CMD.bEnable;
+stKistlerInTelegram.bRunSequence     := stKistler_CMD.bRunSequence;
+stKistlerInTelegram.bDriveToHomePos  := stKistler_CMD.bDriveToHome;
+stKistlerInTelegram.bSeqExtStopReq   := stKistler_CMD.bAbort;
+
+
+// =================================================================================
+// KISTLER INPUT TELEGRAM STRUCT -> OUTPUT BYTES
+// =================================================================================
+
+// Byte 0 - Measurement commands
+GVL_KISTLER_IO.aKistlerOut[0].0 := stKistlerInTelegram.bStart;
+
+// Byte 1 - General control
+GVL_KISTLER_IO.aKistlerOut[1].0 := stKistlerInTelegram.bAckAdminGlobal;
+GVL_KISTLER_IO.aKistlerOut[1].1 := stKistlerInTelegram.bAckAdmin;
+GVL_KISTLER_IO.aKistlerOut[1].3 := stKistlerInTelegram.bAccess;
+GVL_KISTLER_IO.aKistlerOut[1].4 := stKistlerInTelegram.bAuto;
+GVL_KISTLER_IO.aKistlerOut[1].5 := stKistlerInTelegram.bStatReset;
+
+// Byte 2 - Measurement program selection
+GVL_KISTLER_IO.aKistlerOut[2] := stKistlerInTelegram.byMeasurementProgram;
+
+// Byte 9 - Drive / sequence commands
+GVL_KISTLER_IO.aKistlerOut[9].0 := stKistlerInTelegram.bDriveEnable;
+GVL_KISTLER_IO.aKistlerOut[9].1 := stKistlerInTelegram.bRunSequence;
+GVL_KISTLER_IO.aKistlerOut[9].2 := stKistlerInTelegram.bDriveToHomePos;
+
+// Byte 10 - External sequence stop request
+GVL_KISTLER_IO.aKistlerOut[10].3 := stKistlerInTelegram.bSeqExtStopReq;
+
+
+// =================================================================================
+// METHOD EXECUTION FEEDBACK
+// =================================================================================
+
+M_KistlerConfig_Input := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_KistlerConfig_Output" Id="{8ae5f917-1437-4f6b-8e62-9b5bec1a92a3}" FolderPath="Kistler\">
+      <Declaration><![CDATA[METHOD PRIVATE M_KistlerConfig_Output : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// =================================================================================
+// INPUT BYTES -> KISTLER OUTPUT TELEGRAM STRUCT
+// =================================================================================
+
+// Byte 6 - General status
+stKistlerOutTelegram.bReady    := GVL_KISTLER_IO.aKistlerIn[6].0;
+stKistlerOutTelegram.bOkTotal  := GVL_KISTLER_IO.aKistlerIn[6].1;
+stKistlerOutTelegram.bNokTotal := GVL_KISTLER_IO.aKistlerIn[6].2;
+stKistlerOutTelegram.bWarning  := GVL_KISTLER_IO.aKistlerIn[6].6;
+stKistlerOutTelegram.bAlarm    := GVL_KISTLER_IO.aKistlerIn[6].7;
+
+// Byte 9 - Mirrored commands
+stKistlerOutTelegram.bMirrorDriveEnable    := GVL_KISTLER_IO.aKistlerIn[9].0;
+stKistlerOutTelegram.bMirrorRunSequence    := GVL_KISTLER_IO.aKistlerIn[9].1;
+stKistlerOutTelegram.bMirrorDriveToHomePos := GVL_KISTLER_IO.aKistlerIn[9].2;
+
+// Byte 10 - Sequence / drive status
+stKistlerOutTelegram.bSequenceStopped := GVL_KISTLER_IO.aKistlerIn[10].0;
+stKistlerOutTelegram.bSequenceEnd     := GVL_KISTLER_IO.aKistlerIn[10].1;
+stKistlerOutTelegram.bSequenceError   := GVL_KISTLER_IO.aKistlerIn[10].4;
+stKistlerOutTelegram.bDriveEnabled    := GVL_KISTLER_IO.aKistlerIn[10].5;
+stKistlerOutTelegram.bHomePosReached  := GVL_KISTLER_IO.aKistlerIn[10].6;
+stKistlerOutTelegram.bRefPosReached   := GVL_KISTLER_IO.aKistlerIn[10].7;
+
+// Byte 11 - Servo / safety status
+stKistlerOutTelegram.bStandStill       := GVL_KISTLER_IO.aKistlerIn[11].0;
+stKistlerOutTelegram.bServoWarning     := GVL_KISTLER_IO.aKistlerIn[11].2;
+stKistlerOutTelegram.bServoError       := GVL_KISTLER_IO.aKistlerIn[11].3;
+stKistlerOutTelegram.bSMES_STO         := GVL_KISTLER_IO.aKistlerIn[11].4;
+stKistlerOutTelegram.bSMST             := GVL_KISTLER_IO.aKistlerIn[11].5;
+stKistlerOutTelegram.bSMM              := GVL_KISTLER_IO.aKistlerIn[11].6;
+stKistlerOutTelegram.bUserModeActive   := GVL_KISTLER_IO.aKistlerIn[11].7;
+
+// Byte 19 - Communication status
+stKistlerOutTelegram.bTransmissionFault := GVL_KISTLER_IO.aKistlerIn[19].0;
+stKistlerOutTelegram.bAck               := GVL_KISTLER_IO.aKistlerIn[19].1;
+stKistlerOutTelegram.bDeviceAvailable   := GVL_KISTLER_IO.aKistlerIn[19].2;
+
+// =================================================================================
+// KISTLER OUTPUT TELEGRAM STRUCT -> INTERNAL STATUS
+// =================================================================================
+
+
+stKistler_Status.bReady :=
+    stKistlerOutTelegram.bDeviceAvailable
+    AND NOT stKistlerOutTelegram.bServoError;
+
+stKistler_Status.bBusy :=
+    stKistlerOutTelegram.bSMM;
+
+stKistler_Status.bDone :=
+    stKistlerOutTelegram.bSequenceEnd
+    AND stKistlerOutTelegram.bOkTotal;
+
+stKistler_Status.bError :=
+    stKistlerOutTelegram.bServoError
+    OR stKistlerOutTelegram.bTransmissionFault;
+
+stKistler_Status.bInPosition :=
+    stKistlerOutTelegram.bHomePosReached;
+
+// =================================================================================
+// METHOD EXECUTION FEEDBACK
+// =================================================================================
+
+M_KistlerConfig_Output := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_KistlerControl" Id="{142f0c7b-5ff7-4bb2-a407-a7b85664501f}" FolderPath="Kistler\">
       <Declaration><![CDATA[METHOD PRIVATE M_KistlerControl : BOOL
 VAR_INPUT
 	eCurrentState : E_MachineState;
@@ -274,36 +479,165 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[// =================================================================================
-// KISTLER DYNAMIC COMMAND MAPPING
+// KISTLER COMMAND GENERATION
 // =================================================================================
-// If the system is stopping or in a fault condition, trigger the abort command
-stKistler_CMD.bAbort := (eCurrentState = E_MachineState.STOPPING OR eCurrentState = E_MachineState.FAULT);
+// This method generates high-level Kistler commands based on the current machine state.
+// It does NOT write directly to EtherCAT bytes.
+// EtherCAT byte mapping is done in M_KistlerConfig_Input().
+// =================================================================================
 
-// Enable the press only when it is not in stopping or fault states
-stKistler_CMD.bEnable := (eCurrentState <> E_MachineState.STOPPING AND eCurrentState <> E_MachineState.FAULT);
 
-// Activate manual override operations only when the machine is in manual mode
-stKistler_CMD.bManualMode := (eCurrentState = E_MachineState.MANUAL_MODE);
+// Abort command when machine is stopping or in fault
+stKistler_CMD.bAbort :=
+    (eCurrentState = E_MachineState.STOPPING)
+    OR (eCurrentState = E_MachineState.FAULT);
+
+
+// Enable Kistler only when machine is safe and not stopping/faulted
+stKistler_CMD.bEnable :=
+    GVL_MASTER.stMachineStatus.bSafety
+    AND (eCurrentState <> E_MachineState.STOPPING)
+    AND (eCurrentState <> E_MachineState.FAULT);
+
+
+// Manual mode command
+stKistler_CMD.bManualMode :=
+    (eCurrentState = E_MachineState.MANUAL_MODE);
+
 
 // =================================================================================
 // COMPONENT RESET MANAGEMENT
 // =================================================================================
-// Toggle the hardware reset command based on the HMI/Panel button falling edge
+
 fbResetTrigger(CLK := GVL_MASTER.i_bButtonReset);
+stKistler_CMD.bReset := fbResetTrigger.Q;
 
-	IF fbResetTrigger.Q THEN
-		stKistler_CMD.bReset := TRUE;
-	ELSE
-		stKistler_CMD.bReset := FALSE;
-	END_IF
 
 // =================================================================================
-// METHOD EXECUTION FEEDBACK (Return True)
+// MOTION / SEQUENCE COMMAND DEFAULTS
 // =================================================================================
-// Returning TRUE confirms that the Kistler component commands were successfully processed
+// These commands are controlled later by the Kistler state machine.
+// They are reset here to avoid keeping motion commands latched unintentionally.
 
-M_KistlerControl := TRUE;
-]]></ST>
+// Temporary Home movement test
+stKistler_CMD.bStart := TRUE;
+stKistler_CMD.bRunSequence := TRUE;
+stKistler_CMD.bDriveToHome := FALSE;
+
+
+// =================================================================================
+// METHOD EXECUTION FEEDBACK
+// =================================================================================
+
+M_KistlerControl := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_KistlerStateMachine" Id="{537fbedf-c4eb-4029-b5fd-b3d3431bc3e9}" FolderPath="Kistler\">
+      <Declaration><![CDATA[METHOD PRIVATE M_KistlerStateMachine : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+// =================================================================================
+// KISTLER STATE MACHINE
+// =================================================================================
+
+CASE stKistler_Status.eKistlerState OF
+
+    E_KistlerState.DISABLED:
+
+        IF stKistler_CMD.bEnable THEN
+            stKistler_Status.eKistlerState := E_KistlerState.READY;
+        END_IF
+
+
+    E_KistlerState.READY:
+
+        IF stKistler_Status.bError THEN
+            stKistler_Status.eKistlerState := E_KistlerState.ERROR;
+
+        ELSIF stKistler_Status.bBusy THEN
+            stKistler_Status.eKistlerState := E_KistlerState.BUSY;
+
+        ELSIF stKistler_Status.bInPosition THEN
+            stKistler_Status.eKistlerState := E_KistlerState.HOME_DONE;
+        END_IF
+
+
+    E_KistlerState.HOMING:
+
+        stKistler_CMD.bDriveToHome := TRUE;
+
+        IF stKistler_Status.bError THEN
+            stKistler_CMD.bDriveToHome := FALSE;
+            stKistler_Status.eKistlerState := E_KistlerState.ERROR;
+
+        ELSIF stKistler_Status.bInPosition THEN
+            stKistler_CMD.bDriveToHome := FALSE;
+            stKistler_Status.eKistlerState := E_KistlerState.HOME_DONE;
+        END_IF
+
+
+    E_KistlerState.HOME_DONE:
+
+        stKistler_CMD.bDriveToHome := FALSE;
+
+        IF stKistler_Status.bError THEN
+            stKistler_Status.eKistlerState := E_KistlerState.ERROR;
+
+        ELSIF stKistler_Status.bBusy THEN
+            stKistler_Status.eKistlerState := E_KistlerState.BUSY;
+        END_IF
+
+
+    E_KistlerState.RUN_SEQUENCE:
+
+        stKistler_CMD.bRunSequence := TRUE;
+
+        IF stKistler_Status.bError THEN
+            stKistler_CMD.bRunSequence := FALSE;
+            stKistler_Status.eKistlerState := E_KistlerState.ERROR;
+
+        ELSIF stKistler_Status.bBusy THEN
+            stKistler_Status.eKistlerState := E_KistlerState.BUSY;
+        END_IF
+
+
+    E_KistlerState.BUSY:
+
+        IF stKistler_Status.bError THEN
+            stKistler_Status.eKistlerState := E_KistlerState.ERROR;
+
+        ELSIF stKistler_Status.bDone THEN
+            stKistler_CMD.bRunSequence := FALSE;
+            stKistler_Status.eKistlerState := E_KistlerState.DONE;
+        END_IF
+
+
+    E_KistlerState.DONE:
+
+        stKistler_CMD.bRunSequence := FALSE;
+        stKistler_CMD.bStart := FALSE;
+
+        IF NOT stKistler_Status.bDone THEN
+            stKistler_Status.eKistlerState := E_KistlerState.READY;
+        END_IF
+
+
+    E_KistlerState.ERROR:
+
+        stKistler_CMD.bRunSequence := FALSE;
+        stKistler_CMD.bDriveToHome := FALSE;
+        stKistler_CMD.bStart := FALSE;
+
+        IF NOT stKistler_Status.bError AND stKistler_CMD.bEnable THEN
+            stKistler_Status.eKistlerState := E_KistlerState.READY;
+        END_IF
+
+END_CASE
+
+M_KistlerStateMachine := TRUE;]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_LEDsButtons" Id="{a6680c49-408d-47a5-bfa3-499d1bfac7ad}">
@@ -382,7 +716,7 @@ END_CASE;
 M_LEDsButtons := TRUE;]]></ST>
       </Implementation>
     </Method>
-    <Method Name="M_NestTableControl" Id="{73045679-2a70-4e2a-a7bb-96539b2fce6a}">
+    <Method Name="M_NestTableControl" Id="{73045679-2a70-4e2a-a7bb-96539b2fce6a}" FolderPath="Nest_Table\">
       <Declaration><![CDATA[METHOD M_NestTableControl
 VAR_INST
     rTrigTwoHands : R_TRIG; // Edge trigger to detect single press of the two-hand safety signal
@@ -708,7 +1042,7 @@ END_VAR
         <ST><![CDATA[]]></ST>
       </Implementation>
     </Method>
-    <Method Name="M_StatusMapping" Id="{e76387c3-2b6b-4ab8-8e2c-031286cbd112}">
+    <Method Name="M_StatusMapping" Id="{e76387c3-2b6b-4ab8-8e2c-031286cbd112}" FolderPath="Kistler\">
       <Declaration><![CDATA[METHOD PRIVATE M_StatusMapping : BOOL
 VAR_INPUT
 

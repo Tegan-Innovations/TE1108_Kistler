@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_Kistler_TelegramIn" Id="{1761cc27-2f64-46fa-b156-bb6b90984d8f}">
+    <Declaration><![CDATA[TYPE ST_Kistler_TelegramIn :
+STRUCT
+    // Byte 0
+    bStart              : BOOL;
+    bTareY              : BOOL;
+    bZeroX              : BOOL;
+    bSensorTestX        : BOOL;
+    bSensorTestY        : BOOL;
+    bMasterMeasurement  : BOOL;
+    bIncZero            : BOOL;
+
+    // Byte 1
+    bAckAdminGlobal     : BOOL;
+    bAckAdmin           : BOOL;
+    bAccess             : BOOL;
+    bAuto               : BOOL;
+    bStatReset          : BOOL;
+    bStatDisable        : BOOL;
+    bTareExtendedY      : BOOL;
+
+    // Byte 2
+    byMeasurementProgram : BYTE;
+
+    // Byte 4
+    bInput00            : BOOL;
+    bInput01            : BOOL;
+    bInput02            : BOOL;
+    bInput03            : BOOL;
+    bInput04            : BOOL;
+    bInput05            : BOOL;
+    bInput06            : BOOL;
+    bInput07            : BOOL;
+
+    // Byte 9
+    bDriveEnable        : BOOL;
+    bRunSequence        : BOOL;
+    bDriveToHomePos     : BOOL;
+    bDriveToRefPos      : BOOL;
+    bJogForward         : BOOL;
+    bJogBackward        : BOOL;
+    bContinueFromWait   : BOOL;
+    bManualBrakeTest    : BOOL;
+
+    // Byte 10
+    bSeqExtStopReq      : BOOL;
+
+    // Byte 12
+    bCurrentSequence0   : BOOL;
+    bCurrentSequence1   : BOOL;
+
+    // Byte 14..19
+    byCfgMP             : BYTE;
+    byCfgAddress        : BYTE;
+    byCfgLength         : BYTE;
+    bySelectPage        : BYTE;
+    bSaveToMP           : BOOL;
+    bStrobe             : BOOL;
+    bResetChangedMP     : BOOL;
+    bResetChangedGlobal : BOOL;
+    bBackupRequest      : BOOL;
+END_STRUCT
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>
