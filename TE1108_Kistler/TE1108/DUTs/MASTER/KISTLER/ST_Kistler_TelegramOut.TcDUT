@@ -23,6 +23,11 @@ STRUCT
 
     // Byte 2
     byMirrorMeasurementProgram : BYTE;
+	// Byte 3 - Mirrored special commands / reserved
+	bMirrorResetSNGenerator	   : BOOL;
+	bMirrorBrakeTestActive     : BOOL;
+	bMirrorExportPVTStatus     : BOOL;
+	byReserved05               : BYTE; // Byte 5 - Reserved
 
     // Byte 4
     bMirrorInput00            : BOOL;

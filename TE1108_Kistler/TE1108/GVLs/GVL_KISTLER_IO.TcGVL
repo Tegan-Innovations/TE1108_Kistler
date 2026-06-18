@@ -6,6 +6,8 @@ VAR_GLOBAL
 	aKistlerOut AT %Q* : ARRAY[0..199] OF BYTE; // PLC -> maXYmos
     aKistlerIn  AT %I* : ARRAY[0..199] OF BYTE; // maXYmos -> PLC
 	
+	bKistlerSafetyEnableOK AT %I* : BOOL; //kistler safety
+	
 	
 END_VAR]]></Declaration>
   </GVL>

@@ -75,6 +75,7 @@ VAR
     // =========================================================
     //fbWritePersistent      : FB_WritePersistentData;
 	bWriteTrigger          : BOOL; // Test and simulation sequence trigger
+	eCurrentState: INT;
 END_VAR
 
 ]]></Declaration>
@@ -86,9 +87,17 @@ END_VAR
 // =========================================================
 M_PreExecution();
 
-bStartProcessCondition := GVL_MASTER.stMachineStatus.bSafety AND NOT GVL_MASTER.i_bButtonEmergencyStop AND
-						  NOT GVL_MASTER.stMachineStatus.bFault AND 
-						  bKistlerReady;
+// Generate Kistler commands based on current machine state
+// Map Kistler EtherCAT telegram to PLC status structure
+M_KistlerConfig_Output();
+
+
+
+bStartProcessCondition :=
+    GVL_MASTER.stMachineStatus.bSafety
+    AND NOT GVL_MASTER.i_bButtonEmergencyStop
+    AND NOT GVL_MASTER.stMachineStatus.bFault
+    AND stKistler_Status.bReady;
 						  
 						  	  
 IF (NOT GVL_MASTER.stMachineStatus.bSafety OR GVL_MASTER.i_bButtonEmergencyStop)AND 
@@ -163,8 +172,13 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 		
 		IF NOT GVL_Master.i_bButtonStop THEN
             GVL_Master.stMachineStatus.eMachineState := E_MachineState.STOPPING;
-        ELSIF GVL_MASTER.i_bButtonStart AND bStartProcessCondition THEN
+			
+        ELSIF GVL_MASTER.i_bButtonStart
+    			AND bStartProcessCondition
+    			AND (stKistler_Status.eKistlerState = E_KistlerState.READY
+        		OR stKistler_Status.eKistlerState = E_KistlerState.HOME_DONE) THEN
             GVL_Master.stMachineStatus.eMachineState := E_MachineState.SYSTEM_AUTO_CYCLE;
+			
 		ELSIF  NOT GVL_IO.stSafety.bSafetyOK THEN
 			GVL_Master.stMachineStatus.eMachineState := E_MachineState.FAULT;
         END_IF	
@@ -209,33 +223,26 @@ GVL_Master.stMachineStatus.bReadyToStart  := (GVL_Master.stMachineStatus.eMachin
 GVL_Master.stMachineStatus.bManualMode    := (GVL_Master.stMachineStatus.eMachineState = E_MachineState.MANUAL_MODE);
 
 
-
+// =========================================================
 // 5. METHOD POST-EXECUTION ROUTINE
-// =================================================================================
-// Generate Kistler commands based on current machine state
+// =========================================================
+
+// Generate base Kistler commands from machine state
 M_KistlerControl(
     eCurrentState := GVL_MASTER.stMachineStatus.eMachineState);
 
+// Kistler internal state machine may request movement/sequence
+M_KistlerStateMachine(
+    eCurrentState := GVL_MASTER.stMachineStatus.eMachineState);
 
 // PLC -> Kistler command telegram
 M_KistlerConfig_Input();
 
-
-// Map Kistler EtherCAT telegram to PLC status structure
-M_KistlerConfig_Output();
-
-
 // Update machine status from Kistler status
 M_StatusMapping();
 
-M_KistlerStateMachine();
-
-// Update HMI and panel LEDs
 M_LEDsButtons();
-
-// Control Nest Table operation
 M_NestTableControl();
-
 
 
 ]]></ST>
@@ -355,7 +362,7 @@ stKistlerInTelegram.bStatReset      := stKistler_CMD.bReset;
 // Measurement program selection
 // Byte 2 bits 0..6 = MP selection
 // 1 = MP_01
-stKistlerInTelegram.byMeasurementProgram := 1;
+stKistlerInTelegram.byMeasurementProgram := 0;
 
 // Drive / sequence commands
 stKistlerInTelegram.bDriveEnable     := stKistler_CMD.bEnable;
@@ -406,6 +413,44 @@ END_VAR
         <ST><![CDATA[// =================================================================================
 // INPUT BYTES -> KISTLER OUTPUT TELEGRAM STRUCT
 // =================================================================================
+// Byte 0 - Mirrored measurement commands
+stKistlerOutTelegram.bMirrorStart             := GVL_KISTLER_IO.aKistlerIn[0].0;
+stKistlerOutTelegram.bMirrorTareY             := GVL_KISTLER_IO.aKistlerIn[0].1;
+stKistlerOutTelegram.bMirrorZeroX             := GVL_KISTLER_IO.aKistlerIn[0].2;
+stKistlerOutTelegram.bMirrorSensorTestX       := GVL_KISTLER_IO.aKistlerIn[0].3;
+stKistlerOutTelegram.bMirrorSensorTestY       := GVL_KISTLER_IO.aKistlerIn[0].4;
+stKistlerOutTelegram.bMirrorMasterMeasurement := GVL_KISTLER_IO.aKistlerIn[0].6;
+stKistlerOutTelegram.bMirrorIncZero           := GVL_KISTLER_IO.aKistlerIn[0].7;
+
+// Byte 1 - Mirrored general control
+stKistlerOutTelegram.bMirrorAckAdminGlobal := GVL_KISTLER_IO.aKistlerIn[1].0;
+stKistlerOutTelegram.bMirrorAckAdmin       := GVL_KISTLER_IO.aKistlerIn[1].1;
+stKistlerOutTelegram.bMirrorAccess         := GVL_KISTLER_IO.aKistlerIn[1].3;
+stKistlerOutTelegram.bMirrorAuto           := GVL_KISTLER_IO.aKistlerIn[1].4;
+stKistlerOutTelegram.bMirrorStatReset      := GVL_KISTLER_IO.aKistlerIn[1].5;
+stKistlerOutTelegram.bMirrorStatDisable    := GVL_KISTLER_IO.aKistlerIn[1].6;
+stKistlerOutTelegram.bMirrorTareExtendedY  := GVL_KISTLER_IO.aKistlerIn[1].7;
+
+// Byte 2 - Mirrored MP
+stKistlerOutTelegram.byMirrorMeasurementProgram := GVL_KISTLER_IO.aKistlerIn[2];
+
+// Byte 3 - Mirrored special commands / reserved
+stKistlerOutTelegram.bMirrorResetSNGenerator := GVL_KISTLER_IO.aKistlerIn[3].1;
+stKistlerOutTelegram.bMirrorBrakeTestActive  := GVL_KISTLER_IO.aKistlerIn[3].5;
+stKistlerOutTelegram.bMirrorExportPVTStatus  := GVL_KISTLER_IO.aKistlerIn[3].6;
+
+// Byte 5 - Reserved
+stKistlerOutTelegram.byReserved05 := GVL_KISTLER_IO.aKistlerIn[5];
+
+// Byte 4 - Mirrored configurable inputs
+stKistlerOutTelegram.bMirrorInput00 := GVL_KISTLER_IO.aKistlerIn[4].0;
+stKistlerOutTelegram.bMirrorInput01 := GVL_KISTLER_IO.aKistlerIn[4].1;
+stKistlerOutTelegram.bMirrorInput02 := GVL_KISTLER_IO.aKistlerIn[4].2;
+stKistlerOutTelegram.bMirrorInput03 := GVL_KISTLER_IO.aKistlerIn[4].3;
+stKistlerOutTelegram.bMirrorInput04 := GVL_KISTLER_IO.aKistlerIn[4].4;
+stKistlerOutTelegram.bMirrorInput05 := GVL_KISTLER_IO.aKistlerIn[4].5;
+stKistlerOutTelegram.bMirrorInput06 := GVL_KISTLER_IO.aKistlerIn[4].6;
+stKistlerOutTelegram.bMirrorInput07 := GVL_KISTLER_IO.aKistlerIn[4].7;
 
 // Byte 6 - General status
 stKistlerOutTelegram.bReady    := GVL_KISTLER_IO.aKistlerIn[6].0;
@@ -451,7 +496,8 @@ stKistler_Status.bReady :=
     AND NOT stKistlerOutTelegram.bServoError;
 
 stKistler_Status.bBusy :=
-    stKistlerOutTelegram.bSMM;
+    stKistlerOutTelegram.bMirrorRunSequence
+    AND NOT stKistlerOutTelegram.bSequenceEnd;
 
 stKistler_Status.bDone :=
     stKistlerOutTelegram.bSequenceEnd
@@ -476,7 +522,10 @@ M_KistlerConfig_Output := TRUE;]]></ST>
 VAR_INPUT
 	eCurrentState : E_MachineState;
 END_VAR
-]]></Declaration>
+
+VAR
+	bKistlerSafetyEnableOK: BOOL;
+END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[// =================================================================================
 // KISTLER COMMAND GENERATION
@@ -487,7 +536,7 @@ END_VAR
 // =================================================================================
 
 
-// Abort command when machine is stopping or in fault
+// Abort when machine is stopping or faulted
 stKistler_CMD.bAbort :=
     (eCurrentState = E_MachineState.STOPPING)
     OR (eCurrentState = E_MachineState.FAULT);
@@ -496,14 +545,18 @@ stKistler_CMD.bAbort :=
 // Enable Kistler only when machine is safe and not stopping/faulted
 stKistler_CMD.bEnable :=
     GVL_MASTER.stMachineStatus.bSafety
-    AND (eCurrentState <> E_MachineState.STOPPING)
-    AND (eCurrentState <> E_MachineState.FAULT);
-
-
-// Manual mode command
+    AND GVL_KISTLER_IO.bKistlerSafetyEnableOK
+    AND NOT GVL_MASTER.i_bButtonEmergencyStop
+    AND NOT GVL_MASTER.stMachineStatus.bFault
+    AND (
+        eCurrentState = E_MachineState.SYSTEM_INITIALISING
+        OR eCurrentState = E_MachineState.SYSTEM_READY_TO_START
+        OR eCurrentState = E_MachineState.SYSTEM_AUTO_CYCLE
+    );
+// Manual mode
 stKistler_CMD.bManualMode :=
     (eCurrentState = E_MachineState.MANUAL_MODE);
-
+	
 
 // =================================================================================
 // COMPONENT RESET MANAGEMENT
@@ -520,8 +573,8 @@ stKistler_CMD.bReset := fbResetTrigger.Q;
 // They are reset here to avoid keeping motion commands latched unintentionally.
 
 // Temporary Home movement test
-stKistler_CMD.bStart := TRUE;
-stKistler_CMD.bRunSequence := TRUE;
+stKistler_CMD.bStart := FALSE;
+stKistler_CMD.bRunSequence := FALSE;
 stKistler_CMD.bDriveToHome := FALSE;
 
 
@@ -535,34 +588,69 @@ M_KistlerControl := TRUE;]]></ST>
     <Method Name="M_KistlerStateMachine" Id="{537fbedf-c4eb-4029-b5fd-b3d3431bc3e9}" FolderPath="Kistler\">
       <Declaration><![CDATA[METHOD PRIVATE M_KistlerStateMachine : BOOL
 VAR_INPUT
+	  eCurrentState : E_MachineState;
 END_VAR
+
+
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
+// =================================================================================
+// KISTLER CONDITION
+// =================================================================================
+
+// Only allow sequence run in AutoCycle
+IF (eCurrentState <> E_MachineState.SYSTEM_AUTO_CYCLE)
+   OR NOT GVL_KISTLER_IO.bKistlerSafetyEnableOK THEN
+    stKistler_CMD.bStart := FALSE;
+    stKistler_CMD.bRunSequence := FALSE;
+END_IF
+
+IF (eCurrentState = E_MachineState.FAULT)
+   OR (eCurrentState = E_MachineState.STOPPING)
+   OR (eCurrentState = E_MachineState.STOPPED) THEN
+
+    stKistler_CMD.bStart := FALSE;
+    stKistler_CMD.bRunSequence := FALSE;
+    stKistler_CMD.bDriveToHome := FALSE;
+
+    stKistler_Status.eKistlerState := E_KistlerState.DISABLED;
+
+    M_KistlerStateMachine := TRUE;
+    RETURN;
+END_IF
+
 // =================================================================================
 // KISTLER STATE MACHINE
 // =================================================================================
 
 CASE stKistler_Status.eKistlerState OF
 
-    E_KistlerState.DISABLED:
+	E_KistlerState.DISABLED:
+	
+		stKistler_CMD.bStart := FALSE;
+		stKistler_CMD.bRunSequence := FALSE;
+		stKistler_CMD.bDriveToHome := FALSE;
+	
+		IF stKistler_CMD.bEnable THEN
+			stKistler_Status.eKistlerState := E_KistlerState.READY;
+		END_IF
 
-        IF stKistler_CMD.bEnable THEN
-            stKistler_Status.eKistlerState := E_KistlerState.READY;
-        END_IF
 
-
-    E_KistlerState.READY:
-
-        IF stKistler_Status.bError THEN
-            stKistler_Status.eKistlerState := E_KistlerState.ERROR;
-
-        ELSIF stKistler_Status.bBusy THEN
-            stKistler_Status.eKistlerState := E_KistlerState.BUSY;
-
-        ELSIF stKistler_Status.bInPosition THEN
-            stKistler_Status.eKistlerState := E_KistlerState.HOME_DONE;
-        END_IF
+	E_KistlerState.READY:
+	
+		IF stKistler_Status.bError THEN
+			stKistler_Status.eKistlerState := E_KistlerState.ERROR;
+	
+		ELSIF eCurrentState = E_MachineState.SYSTEM_AUTO_CYCLE THEN
+			stKistler_Status.eKistlerState := E_KistlerState.RUN_SEQUENCE;
+	
+		ELSIF stKistler_Status.bBusy THEN
+			stKistler_Status.eKistlerState := E_KistlerState.BUSY;
+	
+		ELSIF stKistler_Status.bInPosition THEN
+			stKistler_Status.eKistlerState := E_KistlerState.HOME_DONE;
+		END_IF
 
 
     E_KistlerState.HOMING:
@@ -586,33 +674,54 @@ CASE stKistler_Status.eKistlerState OF
         IF stKistler_Status.bError THEN
             stKistler_Status.eKistlerState := E_KistlerState.ERROR;
 
-        ELSIF stKistler_Status.bBusy THEN
-            stKistler_Status.eKistlerState := E_KistlerState.BUSY;
-        END_IF
+        ELSIF (eCurrentState = E_MachineState.SYSTEM_AUTO_CYCLE)
+        AND GVL_KISTLER_IO.bKistlerSafetyEnableOK THEN
+
+        	stKistler_Status.eKistlerState := E_KistlerState.RUN_SEQUENCE;
+			
+    	END_IF
 
 
     E_KistlerState.RUN_SEQUENCE:
 
         stKistler_CMD.bRunSequence := TRUE;
+		stKistler_CMD.bStart := TRUE;
 
         IF stKistler_Status.bError THEN
             stKistler_CMD.bRunSequence := FALSE;
+			stKistler_CMD.bStart := FALSE;
             stKistler_Status.eKistlerState := E_KistlerState.ERROR;
 
         ELSIF stKistler_Status.bBusy THEN
+			stKistler_CMD.bStart := FALSE;
             stKistler_Status.eKistlerState := E_KistlerState.BUSY;
         END_IF
 
 
-    E_KistlerState.BUSY:
-
-        IF stKistler_Status.bError THEN
-            stKistler_Status.eKistlerState := E_KistlerState.ERROR;
-
-        ELSIF stKistler_Status.bDone THEN
-            stKistler_CMD.bRunSequence := FALSE;
-            stKistler_Status.eKistlerState := E_KistlerState.DONE;
-        END_IF
+	E_KistlerState.BUSY:
+	
+		// Keep sequence command active while machine is in AutoCycle
+		IF eCurrentState = E_MachineState.SYSTEM_AUTO_CYCLE THEN
+			stKistler_CMD.bRunSequence := TRUE;
+		ELSE
+			stKistler_CMD.bRunSequence := FALSE;
+			stKistler_CMD.bStart := FALSE;
+			stKistler_Status.eKistlerState := E_KistlerState.DISABLED;
+		END_IF
+	
+		IF stKistler_Status.bError THEN
+			stKistler_CMD.bRunSequence := FALSE;
+			stKistler_CMD.bStart := FALSE;
+			stKistler_Status.eKistlerState := E_KistlerState.ERROR;
+	
+		ELSIF stKistler_Status.bDone THEN
+			stKistler_CMD.bRunSequence := FALSE;
+			stKistler_CMD.bStart := FALSE;
+			stKistler_Status.eKistlerState := E_KistlerState.DONE;
+	
+		ELSIF NOT stKistler_Status.bBusy THEN
+			stKistler_Status.eKistlerState := E_KistlerState.RUN_SEQUENCE;
+		END_IF
 
 
     E_KistlerState.DONE:
@@ -624,16 +733,20 @@ CASE stKistler_Status.eKistlerState OF
             stKistler_Status.eKistlerState := E_KistlerState.READY;
         END_IF
 
-
-    E_KistlerState.ERROR:
-
-        stKistler_CMD.bRunSequence := FALSE;
-        stKistler_CMD.bDriveToHome := FALSE;
-        stKistler_CMD.bStart := FALSE;
-
-        IF NOT stKistler_Status.bError AND stKistler_CMD.bEnable THEN
-            stKistler_Status.eKistlerState := E_KistlerState.READY;
-        END_IF
+	
+	E_KistlerState.ERROR:
+	
+		stKistler_CMD.bRunSequence := FALSE;
+		stKistler_CMD.bDriveToHome := FALSE;
+		stKistler_CMD.bStart := FALSE;
+	
+		IF NOT stKistler_Status.bError THEN
+			IF stKistler_CMD.bEnable THEN
+				stKistler_Status.eKistlerState := E_KistlerState.READY;
+			ELSE
+				stKistler_Status.eKistlerState := E_KistlerState.DISABLED;
+			END_IF
+		END_IF
 
 END_CASE
 

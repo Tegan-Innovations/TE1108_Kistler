@@ -67,6 +67,15 @@
 			</SubItem>
 		</DataType>
 		<DataType>
+			<Name GUID="{18071995-0000-0000-0000-002000000007}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..6] OF BIT</Name>
+			<BitSize>7</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
+			<ArrayInfo>
+				<LBound>0</LBound>
+				<Elements>7</Elements>
+			</ArrayInfo>
+		</DataType>
+		<DataType>
 			<Name GUID="{18071995-0000-0000-0000-002000000003}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..2] OF BIT</Name>
 			<BitSize>3</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
@@ -166,7 +175,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{09826F5E-A0C6-4F2A-AB8E-A2951346EAC9}" Name="TE1108" PrjFilePath="TE1108\TE1108.plcproj" TmcFilePath="TE1108\TE1108.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{6D48A03D-BAE9-B793-FFCF-093AA47B0AE5}" TmcPath="TE1108\TE1108.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{28984AC3-B0A7-11F2-E98C-94CE15090354}" TmcPath="TE1108\TE1108.tmc">
 					<Name>TE1108 Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -241,6 +250,11 @@
 						<Var>
 							<Name>GVL_MASTER.i_bButtonStart</Name>
 							<Comment><![CDATA[  Auto Cycle start button]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_KISTLER_IO.bKistlerSafetyEnableOK</Name>
+							<Comment><![CDATA[kistler safety]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -432,7 +446,7 @@
 							<SyncMan>001000012600010001000000000100010001001026010000</SyncMan>
 							<SyncMan>001100012200010002000000000100010001001122010000</SyncMan>
 							<SyncMan>001224002400010003000000000000000200001224010000</SyncMan>
-							<SyncMan>001d27002000010004000000000000000200001d20010000</SyncMan>
+							<SyncMan>001d28002000010004000000000000000200001d20010000</SyncMan>
 							<SyncMan>002e00002400000003000000000000000000002e24000000</SyncMan>
 							<SyncMan>002f00002000000004000000000000000000002f20000000</SyncMan>
 							<Fmmu>0000000000000000001200020100000001000000060000000200000000000000</Fmmu>
@@ -500,6 +514,12 @@
 								</Entry>
 								<Entry Name="TwinSafeGroup1.MainDoorLocked_33" Index="#x7000" Sub="#x08">
 									<Type>BIT</Type>
+								</Entry>
+								<Entry Name="TwinSafeGroup1.KistlerSafetyEnableOK_36" Index="#x7000" Sub="#x09">
+									<Type>BIT</Type>
+								</Entry>
+								<Entry>
+									<Type GUID="{18071995-0000-0000-0000-002000000007}">ARRAY [0..6] OF BIT</Type>
 								</Entry>
 							</Pdo>
 							<Pdo Name="StandardOutputs" Index="#x17f0" InOut="1" Flags="#x2011" SyncMan="2">
@@ -3684,6 +3704,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="PlcTask Inputs^GVL_IO.stSafety.bSafetyOK" VarB="StandardInputs^TwinSafeGroup1.Safety_OK_8"/>
 				<Link VarA="PlcTask Inputs^GVL_IO.stSafety.bSystemSafeOK" VarB="StandardInputs^TwinSafeGroup1.System_Safe_OK_11"/>
 				<Link VarA="PlcTask Inputs^GVL_IO.stSafety.bTwoHandsSafe" VarB="StandardInputs^TwinSafeGroup1.TouchButton_OK_29"/>
+				<Link VarA="PlcTask Inputs^GVL_KISTLER_IO.bKistlerSafetyEnableOK" VarB="StandardInputs^TwinSafeGroup1.KistlerSafetyEnableOK_36"/>
 				<Link VarA="PlcTask Inputs^GVL_MASTER.i_bButtonEmergencyStop" VarB="StandardInputs^TwinSafeGroup1.ESTOP_Pressed_9"/>
 				<Link VarA="PlcTask Outputs^GVL_IO.stSafety.bAirSupplyEnabled" VarB="StandardOutputs^TwinSafeGroup1.AirSupplyEnabled_25"/>
 				<Link VarA="PlcTask Outputs^GVL_IO.stSafety.bMachineStopped" VarB="StandardOutputs^TwinSafeGroup1.MachineStopped_14"/>

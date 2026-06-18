@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<safetyApplication Crc="2774011523" xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.5.0.0" Id="58726efb-ca0e-4ec3-a32f-24c30087c454" name="" mapState="false" mapDiag="false" groupOrderId="0" passificationAllowed="false" temporaryDeactivationAllowed="false" permamentDeactivationAllowed="false" xmlid="0" analogFBOutputReplacementValues="Zero" verifyAnalogFBInputsIfStart="false" userFbId="00000000-0000-0000-0000-000000000000" xmlns="http://schemas.microsoft.com/dsltools/SafetyApplicationLanguage">
+<safetyApplication Crc="2960717342" xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.5.0.0" Id="58726efb-ca0e-4ec3-a32f-24c30087c454" name="" mapState="false" mapDiag="false" groupOrderId="0" passificationAllowed="false" temporaryDeactivationAllowed="false" permamentDeactivationAllowed="false" xmlid="0" analogFBOutputReplacementValues="Zero" verifyAnalogFBInputsIfStart="false" userFbId="00000000-0000-0000-0000-000000000000" xmlns="http://schemas.microsoft.com/dsltools/SafetyApplicationLanguage">
   <networks>
     <safetyApplicationHasNetworks Id="01c47acc-f1d4-4b40-9d8f-1e6f8d38d370">
       <Network Id="fd340fe8-aab7-470e-b31c-0733c122d585" name="Network1" networkName="SafeCondition" intId="1" networkOrderId="0">
@@ -876,7 +876,13 @@
               </inPorts>
               <outPorts>
                 <functionBlockHasOutPorts Id="d1148654-fd7f-4102-a0b5-24c07bc6a2cb">
-                  <outPort Id="e092b194-b576-46e8-9396-b2d818ab22f5" name="AndOut" portName="AndOut" portNum="8" objectIndex="1" varId="20" filter="7" portDataType="1" replacementValue="0" />
+                  <outPort Id="e092b194-b576-46e8-9396-b2d818ab22f5" name="AndOut" portName="AndOut" portNum="8" objectIndex="1" varId="20" filter="7" portDataType="1" replacementValue="0">
+                    <targetFunctionBlockPorts>
+                      <wiredLink Id="9c5eda7e-cf2d-4666-b7ec-35f4285b37ef">
+                        <inPortMoniker name="//Network7/FBTon3/TonIn" />
+                      </wiredLink>
+                    </targetFunctionBlockPorts>
+                  </outPort>
                 </functionBlockHasOutPorts>
               </outPorts>
             </fBAnd>
@@ -921,6 +927,25 @@
                 </functionBlockHasOutPorts>
               </outPorts>
             </fBAnd>
+          </networkHasFunctionBlocks>
+          <networkHasFunctionBlocks Id="545b7f22-db23-4e52-8c89-6c32295aac22">
+            <fBTon Id="217eab6d-eaaf-424b-be63-66dfecebc1f4" name="FBTon3" instanceName="FBTon10" orderOfExecution="27" mapState="false" mapDiag="false" functionName="safeTon">
+              <inPorts>
+                <functioBlockHasInPorts Id="57093650-6d96-43c6-ade4-31d3ac722669">
+                  <inPort Id="eb8f6b28-9ad4-460e-b4dd-6b694191ae0d" name="TonIn" portName="TonIn" portNum="2" objectIndex="8" varId="1" filter="2" portDataType="1" channelInterface="Activated" deactivate1="Break Contact (NC)" maxDeviation="0" resetTime="0" />
+                </functioBlockHasInPorts>
+              </inPorts>
+              <outPorts>
+                <functionBlockHasOutPorts Id="7c7ce567-ac67-4ce1-b0cc-7804c8754ee6">
+                  <outPort Id="23a57201-8012-4861-8a3f-0fb832233bf8" name="TonOut" portName="TonOut" portNum="4" objectIndex="1" varId="4" filter="6" portDataType="1" replacementValue="0" />
+                </functionBlockHasOutPorts>
+              </outPorts>
+              <parameterPorts>
+                <functionBlockHasParamPorts Id="b1a6c8a1-d45e-4acf-b01d-e341d4577b5c">
+                  <parameterPort Id="df9ffceb-468c-4474-9160-a87552250e5c" name="Delay Time (s)" portName="Delay Time (s)" portNum="4" objectIndex="0" varId="0" filter="0" portDataType="0" timing="0.1" userFbPortName="Delay Time (s)" useInUserFb="false" />
+                </functionBlockHasParamPorts>
+              </parameterPorts>
+            </fBTon>
           </networkHasFunctionBlocks>
         </functionBlocks>
       </Network>
@@ -2406,6 +2431,38 @@
                       </fbPortUsageReferencesFunctionBlockPort>
                     </functionBlockPort>
                   </fbPortUsage>
+                </variableUsagesHasUsages>
+              </usages>
+            </variableUsages>
+          </variableHasTargetUsages>
+        </targetUsages>
+      </variable>
+    </safetyApplicationHasVariables>
+    <safetyApplicationHasVariables Id="b9d3e8ed-2dee-49fe-8e18-a422371316b4">
+      <variable Id="0b061535-a054-42a4-9cf9-1662164d4b59" name="KistlerSafetyEnableOK" isLocal="false">
+        <sourceUsages>
+          <variableHasSourceUsages Id="6f000ac6-6a03-4eaa-9b89-f1dc1f2938d5">
+            <variableUsages Id="fa695292-e597-4a96-91fb-70d67268d766">
+              <usages>
+                <variableUsagesHasUsages Id="9f315f05-e76a-4a48-b285-62d2d558de41">
+                  <fbPortUsage Id="4af94a1a-fc0c-4d8c-a134-2749b15e1b40">
+                    <functionBlockPort>
+                      <fbPortUsageReferencesFunctionBlockPort Id="9c27aadf-6d80-445f-9308-781fa31e6ea0">
+                        <outPortMoniker name="//Network7/FBTon3/TonOut" />
+                      </fbPortUsageReferencesFunctionBlockPort>
+                    </functionBlockPort>
+                  </fbPortUsage>
+                </variableUsagesHasUsages>
+              </usages>
+            </variableUsages>
+          </variableHasSourceUsages>
+        </sourceUsages>
+        <targetUsages>
+          <variableHasTargetUsages Id="739835cf-0e8b-46c0-b7a1-d7b1ad7a54e6">
+            <variableUsages Id="93522553-832e-4ed3-9b5f-f58433549055">
+              <usages>
+                <variableUsagesHasUsages Id="52b31ff8-02ac-4b47-8e9d-0f4b54061c15">
+                  <aliasDeviceIoUsage Id="c9dbfe0c-e1aa-4bc9-9c21-08d2ccfc84d7" sdsId="36" channelId="1" functionId="1131179972" />
                 </variableUsagesHasUsages>
               </usages>
             </variableUsages>
