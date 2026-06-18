@@ -97,6 +97,7 @@ bStartProcessCondition :=
     GVL_MASTER.stMachineStatus.bSafety
     AND NOT GVL_MASTER.i_bButtonEmergencyStop
     AND NOT GVL_MASTER.stMachineStatus.bFault
+    AND NOT stKistler_Status.bError
     AND stKistler_Status.bReady;
 						  
 						  	  
@@ -105,6 +106,17 @@ IF (NOT GVL_MASTER.stMachineStatus.bSafety OR GVL_MASTER.i_bButtonEmergencyStop)
     GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.FAULT;
 END_IF;
 
+
+IF (
+    NOT GVL_MASTER.stMachineStatus.bSafety
+    OR GVL_MASTER.i_bButtonEmergencyStop
+    OR stKistler_Status.bError
+)
+AND GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.FAULT THEN
+
+    GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.FAULT;
+
+END_IF
 
 // // =========================================================
 // 2. MAIN STATE MACHINE (CASE)
@@ -505,7 +517,8 @@ stKistler_Status.bDone :=
 
 stKistler_Status.bError :=
     stKistlerOutTelegram.bServoError
-    OR stKistlerOutTelegram.bTransmissionFault;
+    OR stKistlerOutTelegram.bTransmissionFault
+    OR stKistlerOutTelegram.bSequenceError;
 
 stKistler_Status.bInPosition :=
     stKistlerOutTelegram.bHomePosReached;
@@ -620,6 +633,18 @@ IF (eCurrentState = E_MachineState.FAULT)
     RETURN;
 END_IF
 
+IF stKistlerOutTelegram.bSequenceError
+   OR stKistlerOutTelegram.bServoError
+   OR stKistlerOutTelegram.bTransmissionFault THEN
+
+    stKistler_CMD.bStart := FALSE;
+    stKistler_CMD.bRunSequence := FALSE;
+    stKistler_CMD.bDriveToHome := FALSE;
+
+    stKistler_Status.eKistlerState := E_KistlerState.ERROR;
+
+END_IF
+
 // =================================================================================
 // KISTLER STATE MACHINE
 // =================================================================================
@@ -681,22 +706,27 @@ CASE stKistler_Status.eKistlerState OF
 			
     	END_IF
 
-
-    E_KistlerState.RUN_SEQUENCE:
-
-        stKistler_CMD.bRunSequence := TRUE;
-		stKistler_CMD.bStart := TRUE;
-
-        IF stKistler_Status.bError THEN
-            stKistler_CMD.bRunSequence := FALSE;
+	
+	E_KistlerState.RUN_SEQUENCE:
+	
+		IF stKistlerOutTelegram.bAlarm
+		   OR stKistlerOutTelegram.bSequenceError
+		   OR stKistlerOutTelegram.bServoError
+		   OR stKistlerOutTelegram.bTransmissionFault THEN
+	
 			stKistler_CMD.bStart := FALSE;
-            stKistler_Status.eKistlerState := E_KistlerState.ERROR;
-
-        ELSIF stKistler_Status.bBusy THEN
+			stKistler_CMD.bRunSequence := FALSE;
+			stKistler_Status.eKistlerState := E_KistlerState.ERROR;
+	
+		ELSE
+			stKistler_CMD.bRunSequence := TRUE;
+			stKistler_CMD.bStart := TRUE;
+		END_IF
+	
+		IF stKistler_Status.bBusy THEN
 			stKistler_CMD.bStart := FALSE;
-            stKistler_Status.eKistlerState := E_KistlerState.BUSY;
-        END_IF
-
+			stKistler_Status.eKistlerState := E_KistlerState.BUSY;
+		END_IF
 
 	E_KistlerState.BUSY:
 	
