@@ -4,13 +4,16 @@
     <Declaration><![CDATA[TYPE ST_Kistler_CMD :
 STRUCT
 
-		bEnable		: BOOL;
-		bAbort 		: BOOL;
-		bStart		: BOOL;
-		bReset		: BOOL;
-		bManualMode	: BOOL;	
-    	bRunSequence  : BOOL;
-    	bDriveToHome  : BOOL;
+		bEnable				: BOOL;
+		bAbort 				: BOOL;
+		bStart				: BOOL;
+		bReset				: BOOL;
+		bManualMode			: BOOL;	
+    	bRunSequence  		: BOOL;
+    	bDriveToHome  		: BOOL;
+		bDriveToRef 		: BOOL; // Command drive to reference position
+		bContinueFromWait 	: BOOL; // Continue sequence after WAIT request
+		bTareY 				: BOOL; // Byte 0.1 - Tare Y
 
 END_STRUCT
 END_TYPE

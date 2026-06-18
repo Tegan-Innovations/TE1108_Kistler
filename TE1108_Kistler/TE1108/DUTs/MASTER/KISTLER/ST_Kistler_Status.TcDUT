@@ -3,20 +3,17 @@
   <DUT Name="ST_Kistler_Status" Id="{13fe1f7e-c843-4ff0-b94a-cef6c7ea4e07}">
     <Declaration><![CDATA[TYPE ST_Kistler_Status :
 STRUCT
-	
-// =================================================================================
-    // KISTLER PRESS HARDWARE STATUS INTERFACE
-    // =================================================================================
-    bReady       : BOOL; // Hardware is healthy, clear of faults, and ready to press
-    bBusy        : BOOL; // Pressing cycle is currently active/running
-    bDone        : BOOL; // Cycle completed successfully (Evaluation OK)
-    bError       : BOOL; // Press hardware is in a fault condition
-    bInPosition  : BOOL; // Press head is at its home/retracted position
-	
-	eKistlerState : E_KistlerState;
-	
+    bReady       : BOOL;
+    bBusy        : BOOL;
+    bDone        : BOOL;
+    bError       : BOOL;
+    bInPosition  : BOOL;
+
+    bPartOK      : BOOL;
+    bPartNOK     : BOOL;
+
+    eKistlerState : E_KistlerState;
 END_STRUCT
-END_TYPE
-]]></Declaration>
+END_TYPE]]></Declaration>
   </DUT>
 </TcPlcObject>

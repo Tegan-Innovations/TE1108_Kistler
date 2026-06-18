@@ -53,7 +53,7 @@ VAR
 	//==========================================================
 	stKistler_CMD          : ST_Kistler_CMD;    // Commands sent to Kistler press
     stKistler_Status       : ST_Kistler_Status; // Feedbacks read from Kistler press
-
+	tonKistlerTareYDelay : TON;
 	//==========================================================
 	//LEDS COMMAND INTERFACE 
 	//==========================================================
@@ -101,11 +101,12 @@ bStartProcessCondition :=
     AND stKistler_Status.bReady;
 						  
 						  	  
-IF (NOT GVL_MASTER.stMachineStatus.bSafety OR GVL_MASTER.i_bButtonEmergencyStop)AND 
-   GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.FAULT THEN
-    GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.FAULT;
-END_IF;
-
+// =========================================================
+// GLOBAL FAULT DETECTION
+// =========================================================
+// Only technical Kistler errors shall put the machine in FAULT.
+// Kistler NOK result is a rejected part, not a machine fault.
+// =========================================================
 
 IF (
     NOT GVL_MASTER.stMachineStatus.bSafety
@@ -116,7 +117,7 @@ AND GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.FAULT THEN
 
     GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.FAULT;
 
-END_IF
+END_IF;
 
 // // =========================================================
 // 2. MAIN STATE MACHINE (CASE)
@@ -334,8 +335,7 @@ VAR
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[
-// =================================================================================
+        <ST><![CDATA[// =================================================================================
 // KISTLER CONFIG INPUT
 // PLC -> maXYmos NC input/control telegram
 // =================================================================================
@@ -359,11 +359,26 @@ FOR i := 0 TO 199 DO
 END_FOR
 
 
+
 // =================================================================================
 // HIGH LEVEL COMMANDS -> KISTLER INPUT TELEGRAM STRUCT
 // =================================================================================
 
-stKistlerInTelegram.bStart          := stKistler_CMD.bStart;
+// -----------------------------------------------------------------------------
+// Byte 0 - Measurement commands
+// NOTE:
+// Byte 0.0 = Measurement START.
+// This is NOT the same as Start Sequence.
+// Start Sequence is controlled by Byte 9.1 = Run Sequence.
+// -----------------------------------------------------------------------------
+
+stKistlerInTelegram.bStart := stKistler_CMD.bStart;
+stKistlerInTelegram.bTareY := stKistler_CMD.bTareY;
+
+
+// -----------------------------------------------------------------------------
+// Byte 1 - General control
+// -----------------------------------------------------------------------------
 
 stKistlerInTelegram.bAckAdminGlobal := stKistler_CMD.bReset;
 stKistlerInTelegram.bAckAdmin       := stKistler_CMD.bReset;
@@ -371,42 +386,132 @@ stKistlerInTelegram.bAccess         := stKistler_CMD.bEnable;
 stKistlerInTelegram.bAuto           := stKistler_CMD.bEnable;
 stKistlerInTelegram.bStatReset      := stKistler_CMD.bReset;
 
-// Measurement program selection
+
+// -----------------------------------------------------------------------------
+// Byte 2 - Measurement program selection
 // Byte 2 bits 0..6 = MP selection
-// 1 = MP_01
+// 0 = MP_000
+// -----------------------------------------------------------------------------
+
 stKistlerInTelegram.byMeasurementProgram := 0;
 
-// Drive / sequence commands
-stKistlerInTelegram.bDriveEnable     := stKistler_CMD.bEnable;
-stKistlerInTelegram.bRunSequence     := stKistler_CMD.bRunSequence;
-stKistlerInTelegram.bDriveToHomePos  := stKistler_CMD.bDriveToHome;
-stKistlerInTelegram.bSeqExtStopReq   := stKistler_CMD.bAbort;
+
+// -----------------------------------------------------------------------------
+// Byte 9 - Drive / sequence commands
+// -----------------------------------------------------------------------------
+
+stKistlerInTelegram.bDriveEnable      := stKistler_CMD.bEnable;
+stKistlerInTelegram.bRunSequence      := stKistler_CMD.bRunSequence;
+stKistlerInTelegram.bDriveToHomePos   := stKistler_CMD.bDriveToHome;
+stKistlerInTelegram.bDriveToRefPos    := stKistler_CMD.bDriveToRef;
+stKistlerInTelegram.bContinueFromWait := stKistler_CMD.bContinueFromWait;
+
+
+// -----------------------------------------------------------------------------
+// Byte 10 - External sequence stop request
+// -----------------------------------------------------------------------------
+
+stKistlerInTelegram.bSeqExtStopReq := stKistler_CMD.bAbort;
+
+
+// -----------------------------------------------------------------------------
+// Byte 12 - Current sequence selection
+// 00 = Main sequence
+// 01 = Sub1
+// 10 = Sub2
+// 11 = Sub3
+//
+// For current commissioning, always use Main Sequence.
+// -----------------------------------------------------------------------------
+
+stKistlerInTelegram.bCurrentSequence0 := FALSE;
+stKistlerInTelegram.bCurrentSequence1 := FALSE;
 
 
 // =================================================================================
 // KISTLER INPUT TELEGRAM STRUCT -> OUTPUT BYTES
 // =================================================================================
 
-// Byte 0 - Measurement commands
-GVL_KISTLER_IO.aKistlerOut[0].0 := stKistlerInTelegram.bStart;
+IF stKistlerInTelegram.bDriveToHomePos THEN
 
+    stKistlerInTelegram.bDriveToRefPos := FALSE;
+    stKistlerInTelegram.bRunSequence   := FALSE;
+
+ELSIF stKistlerInTelegram.bDriveToRefPos THEN
+
+    stKistlerInTelegram.bDriveToHomePos := FALSE;
+    stKistlerInTelegram.bRunSequence    := FALSE;
+
+ELSIF stKistlerInTelegram.bRunSequence THEN
+
+    stKistlerInTelegram.bDriveToHomePos := FALSE;
+    stKistlerInTelegram.bDriveToRefPos  := FALSE;
+
+END_IF
+// -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+// Byte 0 - Measurement commands
+// Bit 0 = Measurement Start
+// Bit 1 = Tare Y
+// -----------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+
+GVL_KISTLER_IO.aKistlerOut[0].0 := stKistlerInTelegram.bStart;
+GVL_KISTLER_IO.aKistlerOut[0].1 := stKistlerInTelegram.bTareY;
+
+
+// -----------------------------------------------------------------------------
 // Byte 1 - General control
+// -----------------------------------------------------------------------------
+
 GVL_KISTLER_IO.aKistlerOut[1].0 := stKistlerInTelegram.bAckAdminGlobal;
 GVL_KISTLER_IO.aKistlerOut[1].1 := stKistlerInTelegram.bAckAdmin;
 GVL_KISTLER_IO.aKistlerOut[1].3 := stKistlerInTelegram.bAccess;
 GVL_KISTLER_IO.aKistlerOut[1].4 := stKistlerInTelegram.bAuto;
 GVL_KISTLER_IO.aKistlerOut[1].5 := stKistlerInTelegram.bStatReset;
 
+
+// -----------------------------------------------------------------------------
 // Byte 2 - Measurement program selection
+// -----------------------------------------------------------------------------
+
 GVL_KISTLER_IO.aKistlerOut[2] := stKistlerInTelegram.byMeasurementProgram;
 
+
+// -----------------------------------------------------------------------------
 // Byte 9 - Drive / sequence commands
+// Bit 0 = Drive Enable
+// Bit 1 = Run Sequence / Start Sequence
+// Bit 2 = Drive To Home Position
+// Bit 3 = Drive To Reference Position
+// Bit 6 = Continue From Wait
+// -----------------------------------------------------------------------------
+
 GVL_KISTLER_IO.aKistlerOut[9].0 := stKistlerInTelegram.bDriveEnable;
 GVL_KISTLER_IO.aKistlerOut[9].1 := stKistlerInTelegram.bRunSequence;
 GVL_KISTLER_IO.aKistlerOut[9].2 := stKistlerInTelegram.bDriveToHomePos;
+GVL_KISTLER_IO.aKistlerOut[9].3 := stKistlerInTelegram.bDriveToRefPos;
+GVL_KISTLER_IO.aKistlerOut[9].6 := stKistlerInTelegram.bContinueFromWait;
 
+
+// -----------------------------------------------------------------------------
 // Byte 10 - External sequence stop request
+// Bit 3 = Sequence External Stop Request
+// -----------------------------------------------------------------------------
+
 GVL_KISTLER_IO.aKistlerOut[10].3 := stKistlerInTelegram.bSeqExtStopReq;
+
+
+// -----------------------------------------------------------------------------
+// Byte 12 - Current sequence selection
+// 00 = Main sequence
+// 01 = Sub1
+// 10 = Sub2
+// 11 = Sub3
+// -----------------------------------------------------------------------------
+
+GVL_KISTLER_IO.aKistlerOut[12].0 := stKistlerInTelegram.bCurrentSequence0;
+GVL_KISTLER_IO.aKistlerOut[12].1 := stKistlerInTelegram.bCurrentSequence1;
 
 
 // =================================================================================
@@ -471,10 +576,12 @@ stKistlerOutTelegram.bNokTotal := GVL_KISTLER_IO.aKistlerIn[6].2;
 stKistlerOutTelegram.bWarning  := GVL_KISTLER_IO.aKistlerIn[6].6;
 stKistlerOutTelegram.bAlarm    := GVL_KISTLER_IO.aKistlerIn[6].7;
 
-// Byte 9 - Mirrored commands
+// Byte 9 - Mirrored commands / sequence request
 stKistlerOutTelegram.bMirrorDriveEnable    := GVL_KISTLER_IO.aKistlerIn[9].0;
 stKistlerOutTelegram.bMirrorRunSequence    := GVL_KISTLER_IO.aKistlerIn[9].1;
 stKistlerOutTelegram.bMirrorDriveToHomePos := GVL_KISTLER_IO.aKistlerIn[9].2;
+stKistlerOutTelegram.bMirrorDriveToRefPos  := GVL_KISTLER_IO.aKistlerIn[9].3;
+stKistlerOutTelegram.bWaitRequest          := GVL_KISTLER_IO.aKistlerIn[9].6;
 
 // Byte 10 - Sequence / drive status
 stKistlerOutTelegram.bSequenceStopped := GVL_KISTLER_IO.aKistlerIn[10].0;
@@ -502,24 +609,53 @@ stKistlerOutTelegram.bDeviceAvailable   := GVL_KISTLER_IO.aKistlerIn[19].2;
 // KISTLER OUTPUT TELEGRAM STRUCT -> INTERNAL STATUS
 // =================================================================================
 
+// =================================================================================
+// INTERNAL STATUS
+// =================================================================================
 
+// Kistler is ready from communication/device point of view.
+// This does not mean machine is allowed to run.
 stKistler_Status.bReady :=
     stKistlerOutTelegram.bDeviceAvailable
-    AND NOT stKistlerOutTelegram.bServoError;
+    AND NOT stKistlerOutTelegram.bServoError
+    AND NOT stKistlerOutTelegram.bTransmissionFault;
 
+
+// Sequence is running.
+// MirrorRunSequence confirms command accepted, and SequenceEnd is still false.
 stKistler_Status.bBusy :=
     stKistlerOutTelegram.bMirrorRunSequence
-    AND NOT stKistlerOutTelegram.bSequenceEnd;
+    AND NOT stKistlerOutTelegram.bSequenceEnd
+    AND NOT stKistlerOutTelegram.bSequenceStopped;
 
+
+// Sequence finished, regardless of OK or NOK result.
 stKistler_Status.bDone :=
+    stKistlerOutTelegram.bSequenceEnd;
+
+
+// Part result OK.
+stKistler_Status.bPartOK :=
     stKistlerOutTelegram.bSequenceEnd
     AND stKistlerOutTelegram.bOkTotal;
 
+
+// Part result NOK / rejected part.
+// Important: this is NOT a technical error.
+stKistler_Status.bPartNOK :=
+    stKistlerOutTelegram.bSequenceEnd
+    AND stKistlerOutTelegram.bNokTotal;
+
+
+// Technical error only.
+// NOK result must not be included here.
 stKistler_Status.bError :=
     stKistlerOutTelegram.bServoError
     OR stKistlerOutTelegram.bTransmissionFault
     OR stKistlerOutTelegram.bSequenceError;
 
+
+// Position status
 stKistler_Status.bInPosition :=
     stKistlerOutTelegram.bHomePosReached;
 
@@ -586,10 +722,12 @@ stKistler_CMD.bReset := fbResetTrigger.Q;
 // They are reset here to avoid keeping motion commands latched unintentionally.
 
 // Temporary Home movement test
-stKistler_CMD.bStart := FALSE;
-stKistler_CMD.bRunSequence := FALSE;
-stKistler_CMD.bDriveToHome := FALSE;
-
+stKistler_CMD.bStart 			:= FALSE;
+stKistler_CMD.bRunSequence 		:= FALSE;
+stKistler_CMD.bDriveToHome 		:= FALSE;
+stKistler_CMD.bDriveToRef 		:= FALSE;
+stKistler_CMD.bContinueFromWait := FALSE;
+stKistler_CMD.bTareY 			:= FALSE;
 
 // =================================================================================
 // METHOD EXECUTION FEEDBACK
@@ -607,32 +745,49 @@ END_VAR
 
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[
+        <ST><![CDATA[// =================================================================================
+// KISTLER STATE MACHINE
+// maXYmos NC logical sequence control
 // =================================================================================
-// KISTLER CONDITION
+// Input:
+//     eCurrentState
+//     stKistlerOutTelegram
+//     stKistler_Status
+//
+// Output:
+//     stKistler_CMD
 // =================================================================================
 
-// Only allow sequence run in AutoCycle
-IF (eCurrentState <> E_MachineState.SYSTEM_AUTO_CYCLE)
-   OR NOT GVL_KISTLER_IO.bKistlerSafetyEnableOK THEN
-    stKistler_CMD.bStart := FALSE;
-    stKistler_CMD.bRunSequence := FALSE;
-END_IF
 
+// =================================================================================
+// LOCAL / GLOBAL SAFETY AND MACHINE OVERRIDES
+// =================================================================================
+
+// Machine stopped, stopping, faulted or Kistler safety not enabled:
+// no Kistler movement command is allowed.
 IF (eCurrentState = E_MachineState.FAULT)
    OR (eCurrentState = E_MachineState.STOPPING)
-   OR (eCurrentState = E_MachineState.STOPPED) THEN
+   OR (eCurrentState = E_MachineState.STOPPED)
+   OR NOT GVL_KISTLER_IO.bKistlerSafetyEnableOK THEN
 
-    stKistler_CMD.bStart := FALSE;
-    stKistler_CMD.bRunSequence := FALSE;
-    stKistler_CMD.bDriveToHome := FALSE;
+    stKistler_CMD.bStart := FALSE;              // Byte 0.0 - Measurement Start
+    stKistler_CMD.bRunSequence := FALSE;        // Byte 9.1 - Run Sequence
+    stKistler_CMD.bDriveToHome := FALSE;        // Byte 9.2 - Drive To Home
+    stKistler_CMD.bDriveToRef := FALSE;         // Byte 9.3 - Drive To Reference
+    stKistler_CMD.bContinueFromWait := FALSE;   // Byte 9.6 - Continue From Wait
+    stKistler_CMD.bTareY := FALSE;              // Byte 0.1 - Tare Y
 
     stKistler_Status.eKistlerState := E_KistlerState.DISABLED;
 
     M_KistlerStateMachine := TRUE;
     RETURN;
-END_IF
 
+END_IF;
+
+
+// Technical Kistler error.
+// Important: NOK part result must NOT be treated here as technical error.
+// Technical errors are: sequence error, servo error, communication/transmission fault.
 IF stKistlerOutTelegram.bSequenceError
    OR stKistlerOutTelegram.bServoError
    OR stKistlerOutTelegram.bTransmissionFault THEN
@@ -640,10 +795,43 @@ IF stKistlerOutTelegram.bSequenceError
     stKistler_CMD.bStart := FALSE;
     stKistler_CMD.bRunSequence := FALSE;
     stKistler_CMD.bDriveToHome := FALSE;
+    stKistler_CMD.bDriveToRef := FALSE;
+    stKistler_CMD.bContinueFromWait := FALSE;
+    stKistler_CMD.bTareY := FALSE;
 
     stKistler_Status.eKistlerState := E_KistlerState.ERROR;
 
-END_IF
+END_IF;
+
+
+// If machine is not in AutoCycle, no sequence/home/reference movement is allowed.
+// Keep Kistler enabled/ready, but remove movement commands.
+IF eCurrentState <> E_MachineState.SYSTEM_AUTO_CYCLE THEN
+
+    stKistler_CMD.bStart := FALSE;
+    stKistler_CMD.bRunSequence := FALSE;
+    stKistler_CMD.bDriveToHome := FALSE;
+    stKistler_CMD.bDriveToRef := FALSE;
+    stKistler_CMD.bContinueFromWait := FALSE;
+    stKistler_CMD.bTareY := FALSE;
+
+    IF (stKistler_Status.eKistlerState = E_KistlerState.HOMING)
+       OR (stKistler_Status.eKistlerState = E_KistlerState.REFERENCING)
+       OR (stKistler_Status.eKistlerState = E_KistlerState.SET_PARAMETERS)
+       OR (stKistler_Status.eKistlerState = E_KistlerState.PRESS_READY)
+       OR (stKistler_Status.eKistlerState = E_KistlerState.RUN_SEQUENCE)
+       OR (stKistler_Status.eKistlerState = E_KistlerState.BUSY) THEN
+
+        IF stKistler_CMD.bEnable THEN
+            stKistler_Status.eKistlerState := E_KistlerState.READY;
+        ELSE
+            stKistler_Status.eKistlerState := E_KistlerState.DISABLED;
+        END_IF
+
+    END_IF
+
+END_IF;
+
 
 // =================================================================================
 // KISTLER STATE MACHINE
@@ -651,134 +839,392 @@ END_IF
 
 CASE stKistler_Status.eKistlerState OF
 
-	E_KistlerState.DISABLED:
-	
-		stKistler_CMD.bStart := FALSE;
-		stKistler_CMD.bRunSequence := FALSE;
-		stKistler_CMD.bDriveToHome := FALSE;
-	
-		IF stKistler_CMD.bEnable THEN
-			stKistler_Status.eKistlerState := E_KistlerState.READY;
-		END_IF
 
+    // =========================================================================
+    // DISABLED
+    // =========================================================================
+    E_KistlerState.DISABLED:
 
-	E_KistlerState.READY:
-	
-		IF stKistler_Status.bError THEN
-			stKistler_Status.eKistlerState := E_KistlerState.ERROR;
-	
-		ELSIF eCurrentState = E_MachineState.SYSTEM_AUTO_CYCLE THEN
-			stKistler_Status.eKistlerState := E_KistlerState.RUN_SEQUENCE;
-	
-		ELSIF stKistler_Status.bBusy THEN
-			stKistler_Status.eKistlerState := E_KistlerState.BUSY;
-	
-		ELSIF stKistler_Status.bInPosition THEN
-			stKistler_Status.eKistlerState := E_KistlerState.HOME_DONE;
-		END_IF
-
-
-    E_KistlerState.HOMING:
-
-        stKistler_CMD.bDriveToHome := TRUE;
-
-        IF stKistler_Status.bError THEN
-            stKistler_CMD.bDriveToHome := FALSE;
-            stKistler_Status.eKistlerState := E_KistlerState.ERROR;
-
-        ELSIF stKistler_Status.bInPosition THEN
-            stKistler_CMD.bDriveToHome := FALSE;
-            stKistler_Status.eKistlerState := E_KistlerState.HOME_DONE;
-        END_IF
-
-
-    E_KistlerState.HOME_DONE:
-
-        stKistler_CMD.bDriveToHome := FALSE;
-
-        IF stKistler_Status.bError THEN
-            stKistler_Status.eKistlerState := E_KistlerState.ERROR;
-
-        ELSIF (eCurrentState = E_MachineState.SYSTEM_AUTO_CYCLE)
-        AND GVL_KISTLER_IO.bKistlerSafetyEnableOK THEN
-
-        	stKistler_Status.eKistlerState := E_KistlerState.RUN_SEQUENCE;
-			
-    	END_IF
-
-	
-	E_KistlerState.RUN_SEQUENCE:
-	
-		IF stKistlerOutTelegram.bAlarm
-		   OR stKistlerOutTelegram.bSequenceError
-		   OR stKistlerOutTelegram.bServoError
-		   OR stKistlerOutTelegram.bTransmissionFault THEN
-	
-			stKistler_CMD.bStart := FALSE;
-			stKistler_CMD.bRunSequence := FALSE;
-			stKistler_Status.eKistlerState := E_KistlerState.ERROR;
-	
-		ELSE
-			stKistler_CMD.bRunSequence := TRUE;
-			stKistler_CMD.bStart := TRUE;
-		END_IF
-	
-		IF stKistler_Status.bBusy THEN
-			stKistler_CMD.bStart := FALSE;
-			stKistler_Status.eKistlerState := E_KistlerState.BUSY;
-		END_IF
-
-	E_KistlerState.BUSY:
-	
-		// Keep sequence command active while machine is in AutoCycle
-		IF eCurrentState = E_MachineState.SYSTEM_AUTO_CYCLE THEN
-			stKistler_CMD.bRunSequence := TRUE;
-		ELSE
-			stKistler_CMD.bRunSequence := FALSE;
-			stKistler_CMD.bStart := FALSE;
-			stKistler_Status.eKistlerState := E_KistlerState.DISABLED;
-		END_IF
-	
-		IF stKistler_Status.bError THEN
-			stKistler_CMD.bRunSequence := FALSE;
-			stKistler_CMD.bStart := FALSE;
-			stKistler_Status.eKistlerState := E_KistlerState.ERROR;
-	
-		ELSIF stKistler_Status.bDone THEN
-			stKistler_CMD.bRunSequence := FALSE;
-			stKistler_CMD.bStart := FALSE;
-			stKistler_Status.eKistlerState := E_KistlerState.DONE;
-	
-		ELSIF NOT stKistler_Status.bBusy THEN
-			stKistler_Status.eKistlerState := E_KistlerState.RUN_SEQUENCE;
-		END_IF
-
-
-    E_KistlerState.DONE:
-
-        stKistler_CMD.bRunSequence := FALSE;
         stKistler_CMD.bStart := FALSE;
+        stKistler_CMD.bRunSequence := FALSE;
+        stKistler_CMD.bDriveToHome := FALSE;
+        stKistler_CMD.bDriveToRef := FALSE;
+        stKistler_CMD.bContinueFromWait := FALSE;
+        stKistler_CMD.bTareY := FALSE;
 
-        IF NOT stKistler_Status.bDone THEN
+        IF stKistler_CMD.bEnable THEN
             stKistler_Status.eKistlerState := E_KistlerState.READY;
         END_IF
 
+
+    // =========================================================================
+    // READY
+    // Kistler is enabled and waiting for machine AutoCycle.
+    // =========================================================================
+    E_KistlerState.READY:
+
+        stKistler_CMD.bStart := FALSE;
+        stKistler_CMD.bRunSequence := FALSE;
+        stKistler_CMD.bDriveToHome := FALSE;
+        stKistler_CMD.bDriveToRef := FALSE;
+        stKistler_CMD.bContinueFromWait := FALSE;
+        stKistler_CMD.bTareY := FALSE;
+
+        IF stKistler_Status.bError THEN
+
+            stKistler_Status.eKistlerState := E_KistlerState.ERROR;
+
+        ELSIF eCurrentState = E_MachineState.SYSTEM_AUTO_CYCLE THEN
+
+            // In this project, RefPosReached can be used as initial/home position reference.
+            // If both Home and Ref are false, request homing using DriveToRef.
+            IF NOT stKistlerOutTelegram.bHomePosReached
+               AND NOT stKistlerOutTelegram.bRefPosReached THEN
+
+                stKistler_Status.eKistlerState := E_KistlerState.HOMING;
+
+            ELSE
+
+                stKistler_Status.eKistlerState := E_KistlerState.SET_PARAMETERS;
+
+            END_IF
+
+        END_IF
+
+
+    // =========================================================================
+    // HOMING
+    // Based on reference project TE1096:
+    // GOTO_HOME_POS uses DriveToRef command and waits for HomePosReached/RefPosReached.
+    // =========================================================================
+    E_KistlerState.HOMING:
+
+        stKistler_CMD.bStart := FALSE;
+        stKistler_CMD.bRunSequence := FALSE;
+        stKistler_CMD.bDriveToHome := FALSE;
+        stKistler_CMD.bContinueFromWait := FALSE;
+        stKistler_CMD.bTareY := FALSE;
+
+        // Use DriveToRef for initial/home movement.
+        stKistler_CMD.bDriveToRef := TRUE;
+
+        IF stKistler_Status.bError THEN
+
+            stKistler_CMD.bDriveToRef := FALSE;
+            stKistler_Status.eKistlerState := E_KistlerState.ERROR;
+
+        ELSIF stKistlerOutTelegram.bHomePosReached
+           OR stKistlerOutTelegram.bRefPosReached THEN
+
+            stKistler_CMD.bDriveToRef := FALSE;
+            stKistler_Status.eKistlerState := E_KistlerState.HOME_DONE;
+
+        END_IF
+
+
+    // =========================================================================
+    // HOME_DONE
+    // Home/reference reached. Next step: prepare parameters.
+    // =========================================================================
+    E_KistlerState.HOME_DONE:
+
+        stKistler_CMD.bStart := FALSE;
+        stKistler_CMD.bRunSequence := FALSE;
+        stKistler_CMD.bDriveToHome := FALSE;
+        stKistler_CMD.bDriveToRef := FALSE;
+        stKistler_CMD.bContinueFromWait := FALSE;
+        stKistler_CMD.bTareY := FALSE;
+
+        IF stKistler_Status.bError THEN
+
+            stKistler_Status.eKistlerState := E_KistlerState.ERROR;
+
+        ELSIF eCurrentState = E_MachineState.SYSTEM_AUTO_CYCLE THEN
+
+            stKistler_Status.eKistlerState := E_KistlerState.SET_PARAMETERS;
+
+        END_IF
+
+
+    // =========================================================================
+    // SET_PARAMETERS
+    // Prepare maXYmos before running sequence.
+    // Based on reference project: Tare Y before press cycle.
+    // =========================================================================
+   // =========================================================================
+// SET_PARAMETERS
+// Prepare maXYmos before running sequence.
+// Based on reference project: Tare Y before press cycle.
+// =========================================================================
+	E_KistlerState.SET_PARAMETERS:
 	
-	E_KistlerState.ERROR:
-	
+		stKistler_CMD.bStart := FALSE;
 		stKistler_CMD.bRunSequence := FALSE;
 		stKistler_CMD.bDriveToHome := FALSE;
-		stKistler_CMD.bStart := FALSE;
+		stKistler_CMD.bDriveToRef := FALSE;
+		stKistler_CMD.bContinueFromWait := FALSE;
 	
-		IF NOT stKistler_Status.bError THEN
-			IF stKistler_CMD.bEnable THEN
-				stKistler_Status.eKistlerState := E_KistlerState.READY;
-			ELSE
-				stKistler_Status.eKistlerState := E_KistlerState.DISABLED;
-			END_IF
-		END_IF
+		// Tare Y command
+		stKistler_CMD.bTareY := TRUE;
+	
+		// Wait a short time after maXYmos mirrors TareY
+		tonKistlerTareYDelay(
+			IN := stKistlerOutTelegram.bMirrorTareY,
+			PT := T#500MS
+		);
+	
+		IF stKistler_Status.bError THEN
+	
+			stKistler_CMD.bTareY := FALSE;
+			tonKistlerTareYDelay(IN := FALSE);
+			stKistler_Status.eKistlerState := E_KistlerState.ERROR;
+	
+		ELSIF tonKistlerTareYDelay.Q THEN
+	
+			stKistler_CMD.bTareY := FALSE;
+			tonKistlerTareYDelay(IN := FALSE);
+			stKistler_Status.eKistlerState := E_KistlerState.PRESS_READY;
 
-END_CASE
+   		END_IF
+
+
+    // =========================================================================
+    // PRESS_READY
+    // Preparation done. Next step: run sequence.
+    // =========================================================================
+    E_KistlerState.PRESS_READY:
+		
+		tonKistlerTareYDelay(IN := FALSE);
+
+        stKistler_CMD.bStart := FALSE;
+        stKistler_CMD.bRunSequence := FALSE;
+        stKistler_CMD.bDriveToHome := FALSE;
+        stKistler_CMD.bDriveToRef := FALSE;
+        stKistler_CMD.bContinueFromWait := FALSE;
+        stKistler_CMD.bTareY := FALSE;
+
+        IF stKistler_Status.bError THEN
+
+            stKistler_Status.eKistlerState := E_KistlerState.ERROR;
+
+        ELSIF eCurrentState = E_MachineState.SYSTEM_AUTO_CYCLE THEN
+
+            stKistler_Status.eKistlerState := E_KistlerState.RUN_SEQUENCE;
+
+        END_IF
+
+
+    // =========================================================================
+    // REFERENCING
+    // Optional state. Currently not used in normal flow.
+    // =========================================================================
+    E_KistlerState.REFERENCING:
+
+        stKistler_CMD.bStart := FALSE;
+        stKistler_CMD.bRunSequence := FALSE;
+        stKistler_CMD.bDriveToHome := FALSE;
+        stKistler_CMD.bContinueFromWait := FALSE;
+        stKistler_CMD.bTareY := FALSE;
+
+        stKistler_CMD.bDriveToRef := TRUE;
+
+        IF stKistler_Status.bError THEN
+
+            stKistler_CMD.bDriveToRef := FALSE;
+            stKistler_Status.eKistlerState := E_KistlerState.ERROR;
+
+        ELSIF stKistlerOutTelegram.bRefPosReached THEN
+
+            stKistler_CMD.bDriveToRef := FALSE;
+            stKistler_Status.eKistlerState := E_KistlerState.REF_DONE;
+
+        END_IF
+
+
+    // =========================================================================
+    // REF_DONE
+    // Optional state. Currently not used in normal flow.
+    // =========================================================================
+    E_KistlerState.REF_DONE:
+
+        stKistler_CMD.bStart := FALSE;
+        stKistler_CMD.bRunSequence := FALSE;
+        stKistler_CMD.bDriveToHome := FALSE;
+        stKistler_CMD.bDriveToRef := FALSE;
+        stKistler_CMD.bContinueFromWait := FALSE;
+        stKistler_CMD.bTareY := FALSE;
+
+        IF stKistler_Status.bError THEN
+
+            stKistler_Status.eKistlerState := E_KistlerState.ERROR;
+
+        ELSIF eCurrentState = E_MachineState.SYSTEM_AUTO_CYCLE THEN
+
+            stKistler_Status.eKistlerState := E_KistlerState.SET_PARAMETERS;
+
+        END_IF
+
+
+    // =========================================================================
+    // RUN_SEQUENCE
+    // Command: Start Sequence through RUN-SEQUENCE bit.
+    //
+    // Important:
+    // Byte 9.1 RunSequence = Start Sequence
+    // Byte 0.0 Start       = Measurement Start, not sequence start
+    // =========================================================================
+    E_KistlerState.RUN_SEQUENCE:
+
+        stKistler_CMD.bStart := FALSE;          // Do not use Measurement Start here
+        stKistler_CMD.bDriveToHome := FALSE;
+        stKistler_CMD.bDriveToRef := FALSE;
+        stKistler_CMD.bContinueFromWait := FALSE;
+        stKistler_CMD.bTareY := FALSE;
+
+        IF stKistler_Status.bError THEN
+
+            stKistler_CMD.bRunSequence := FALSE;
+            stKistler_Status.eKistlerState := E_KistlerState.ERROR;
+
+        ELSE
+
+            stKistler_CMD.bRunSequence := TRUE;
+
+        END_IF
+
+        IF stKistler_Status.bBusy THEN
+            stKistler_Status.eKistlerState := E_KistlerState.BUSY;
+        END_IF
+
+
+    // =========================================================================
+    // BUSY
+    // Sequence is running.
+    // Keep RunSequence active during AutoCycle.
+    // Handle WAIT request if the MP contains WAIT element.
+    // =========================================================================
+    E_KistlerState.BUSY:
+
+        IF eCurrentState = E_MachineState.SYSTEM_AUTO_CYCLE THEN
+
+            stKistler_CMD.bRunSequence := TRUE;
+            stKistler_CMD.bDriveToHome := FALSE;
+            stKistler_CMD.bDriveToRef := FALSE;
+            stKistler_CMD.bStart := FALSE;
+            stKistler_CMD.bTareY := FALSE;
+
+            // Process WAIT handling
+            IF stKistlerOutTelegram.bWaitRequest THEN
+                stKistler_CMD.bContinueFromWait := TRUE;
+            ELSE
+                stKistler_CMD.bContinueFromWait := FALSE;
+            END_IF
+
+        ELSE
+
+            stKistler_CMD.bRunSequence := FALSE;
+            stKistler_CMD.bDriveToHome := FALSE;
+            stKistler_CMD.bDriveToRef := FALSE;
+            stKistler_CMD.bStart := FALSE;
+            stKistler_CMD.bContinueFromWait := FALSE;
+            stKistler_CMD.bTareY := FALSE;
+
+            stKistler_Status.eKistlerState := E_KistlerState.READY;
+
+        END_IF
+
+        IF stKistler_Status.bError THEN
+
+            stKistler_CMD.bRunSequence := FALSE;
+            stKistler_CMD.bDriveToHome := FALSE;
+            stKistler_CMD.bDriveToRef := FALSE;
+            stKistler_CMD.bStart := FALSE;
+            stKistler_CMD.bContinueFromWait := FALSE;
+            stKistler_CMD.bTareY := FALSE;
+
+            stKistler_Status.eKistlerState := E_KistlerState.ERROR;
+
+        ELSIF stKistlerOutTelegram.bSequenceEnd THEN
+
+            stKistler_CMD.bRunSequence := FALSE;
+            stKistler_CMD.bDriveToHome := FALSE;
+            stKistler_CMD.bDriveToRef := FALSE;
+            stKistler_CMD.bStart := FALSE;
+            stKistler_CMD.bContinueFromWait := FALSE;
+            stKistler_CMD.bTareY := FALSE;
+
+            stKistler_Status.eKistlerState := E_KistlerState.DONE;
+
+        ELSIF NOT stKistler_Status.bBusy THEN
+
+            stKistler_CMD.bContinueFromWait := FALSE;
+            stKistler_CMD.bTareY := FALSE;
+            stKistler_Status.eKistlerState := E_KistlerState.RUN_SEQUENCE;
+
+        END_IF
+
+
+    // =========================================================================
+    // DONE
+    // Sequence finished.
+    // Result can be OK or NOK.
+    // NOK is not a technical error here.
+    // =========================================================================
+    E_KistlerState.DONE:
+
+        stKistler_CMD.bStart := FALSE;
+        stKistler_CMD.bRunSequence := FALSE;
+        stKistler_CMD.bDriveToHome := FALSE;
+        stKistler_CMD.bDriveToRef := FALSE;
+        stKistler_CMD.bContinueFromWait := FALSE;
+        stKistler_CMD.bTareY := FALSE;
+
+        IF stKistler_Status.bError THEN
+
+            stKistler_Status.eKistlerState := E_KistlerState.ERROR;
+
+        ELSIF NOT stKistlerOutTelegram.bSequenceEnd THEN
+
+            IF stKistler_CMD.bEnable THEN
+                stKistler_Status.eKistlerState := E_KistlerState.READY;
+            ELSE
+                stKistler_Status.eKistlerState := E_KistlerState.DISABLED;
+            END_IF
+
+        END_IF
+
+
+    // =========================================================================
+    // ERROR
+    // Technical error state.
+    // Commands are disabled until error clears and reset/enable condition returns.
+    // =========================================================================
+    E_KistlerState.ERROR:
+
+        stKistler_CMD.bStart := FALSE;
+        stKistler_CMD.bRunSequence := FALSE;
+        stKistler_CMD.bDriveToHome := FALSE;
+        stKistler_CMD.bDriveToRef := FALSE;
+        stKistler_CMD.bContinueFromWait := FALSE;
+        stKistler_CMD.bTareY := FALSE;
+
+        IF NOT stKistler_Status.bError THEN
+
+            IF stKistler_CMD.bEnable THEN
+                stKistler_Status.eKistlerState := E_KistlerState.READY;
+            ELSE
+                stKistler_Status.eKistlerState := E_KistlerState.DISABLED;
+            END_IF
+
+        END_IF
+
+
+END_CASE;
+
+
+// =================================================================================
+// METHOD EXECUTION FEEDBACK
+// =================================================================================
 
 M_KistlerStateMachine := TRUE;]]></ST>
       </Implementation>

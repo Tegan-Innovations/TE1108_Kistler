@@ -3,18 +3,23 @@
   <DUT Name="E_KistlerState" Id="{467b03d3-333e-48bb-a569-3d149864fd7e}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 {attribute 'strict'}
+{attribute 'qualified_only'}
+{attribute 'strict'}
 {attribute 'to_string'}
 TYPE E_KistlerState :
 (
-    DISABLED 		:= 0,
-    READY 			:= 1,
-    HOMING 			:= 2,
-    HOME_DONE 		:= 3,
-    RUN_SEQUENCE 	:= 4,
-    BUSY 			:= 5,
-    DONE 			:= 6,
-    ERROR 			:= 99
-
+    DISABLED        := 0,
+    READY           := 1,
+    HOMING          := 2,
+    HOME_DONE       := 3,
+    REFERENCING     := 4,
+    REF_DONE        := 5,
+    SET_PARAMETERS  := 6,
+    PRESS_READY     := 7,
+    RUN_SEQUENCE    := 8,
+    BUSY            := 9,
+    DONE            := 10,
+    ERROR           := 99
 );
 END_TYPE
 ]]></Declaration>
