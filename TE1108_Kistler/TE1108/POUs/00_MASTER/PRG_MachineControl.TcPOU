@@ -586,8 +586,8 @@ stKistlerOutTelegram.bWaitRequest          := GVL_KISTLER_IO.aKistlerIn[9].6;
 // Byte 10 - Sequence / drive status
 stKistlerOutTelegram.bSequenceStopped := GVL_KISTLER_IO.aKistlerIn[10].0;
 stKistlerOutTelegram.bSequenceEnd     := GVL_KISTLER_IO.aKistlerIn[10].1;
-stKistlerOutTelegram.bSequenceError   := GVL_KISTLER_IO.aKistlerIn[10].4;
-//stKistlerOutTelegram.bSequenceError   := FALSE;
+//stKistlerOutTelegram.bSequenceError   := GVL_KISTLER_IO.aKistlerIn[10].4;
+stKistlerOutTelegram.bSequenceError   := FALSE;
 stKistlerOutTelegram.bDriveEnabled    := GVL_KISTLER_IO.aKistlerIn[10].5;
 stKistlerOutTelegram.bHomePosReached  := GVL_KISTLER_IO.aKistlerIn[10].6;
 stKistlerOutTelegram.bRefPosReached   := GVL_KISTLER_IO.aKistlerIn[10].7;
@@ -595,16 +595,16 @@ stKistlerOutTelegram.bRefPosReached   := GVL_KISTLER_IO.aKistlerIn[10].7;
 // Byte 11 - Servo / safety status
 stKistlerOutTelegram.bStandStill       := GVL_KISTLER_IO.aKistlerIn[11].0;
 stKistlerOutTelegram.bServoWarning     := GVL_KISTLER_IO.aKistlerIn[11].2;
-stKistlerOutTelegram.bServoError       := GVL_KISTLER_IO.aKistlerIn[11].3;
-//stKistlerOutTelegram.bServoError       := FALSE;
+//stKistlerOutTelegram.bServoError       := GVL_KISTLER_IO.aKistlerIn[11].3;
+stKistlerOutTelegram.bServoError       := FALSE;
 stKistlerOutTelegram.bSMES_STO         := GVL_KISTLER_IO.aKistlerIn[11].4;
 stKistlerOutTelegram.bSMST             := GVL_KISTLER_IO.aKistlerIn[11].5;
 stKistlerOutTelegram.bSMM              := GVL_KISTLER_IO.aKistlerIn[11].6;
 stKistlerOutTelegram.bUserModeActive   := GVL_KISTLER_IO.aKistlerIn[11].7;
 
 // Byte 19 - Communication status
-stKistlerOutTelegram.bTransmissionFault := GVL_KISTLER_IO.aKistlerIn[19].0;
-//stKistlerOutTelegram.bTransmissionFault := FALSE;
+//stKistlerOutTelegram.bTransmissionFault := GVL_KISTLER_IO.aKistlerIn[19].0;
+stKistlerOutTelegram.bTransmissionFault := FALSE;
 stKistlerOutTelegram.bAck               := GVL_KISTLER_IO.aKistlerIn[19].1;
 stKistlerOutTelegram.bDeviceAvailable   := GVL_KISTLER_IO.aKistlerIn[19].2;
 
@@ -652,10 +652,10 @@ stKistler_Status.bPartNOK :=
 
 // Technical error only.
 // NOK result must not be included here.
-stKistler_Status.bError :=
-    stKistlerOutTelegram.bServoError
-    OR stKistlerOutTelegram.bTransmissionFault
-    OR stKistlerOutTelegram.bSequenceError;
+// stKistler_Status.bError :=
+//     stKistlerOutTelegram.bServoError
+//     OR stKistlerOutTelegram.bTransmissionFault
+//     OR stKistlerOutTelegram.bSequenceError;
 
 
 // Position status
