@@ -9,6 +9,14 @@ VAR_GLOBAL
 	ePowerCmd : E_PLC_Power := E_PLC_Power.Idle;
 	
 // =================================================================
+//                         HMI COMMANDS 
+// =================================================================
+	i_bHMIManualModeRequest 			: BOOL := FALSE;
+    i_bHMIIndexerManualEnable 			: BOOL := FALSE;
+    i_bHMIKistlerManualEnable 			: BOOL := FALSE;
+
+	
+// =================================================================
 //                         HMI COLORS 
 // =================================================================
 

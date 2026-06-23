@@ -1108,6 +1108,43 @@
             },
             "USEMAPPING": true
         },
+        "ADS.PLC1.GVL_HMI.i_bHMIIndexerManualEnable": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::i_bHMIIndexerManualEnable",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.i_bHMIKistlerManualEnable": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::i_bHMIKistlerManualEnable",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.i_bHMIManualModeRequest": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::i_bHMIManualModeRequest",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:general#/definitions/BOOL"
+                    },
+                    {
+                        "comment": "=================================================================\r\n                         HMI COMMANDS \r\n ================================================================="
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
         "ADS.PLC1.GVL_MASTER.bHmiEmergencyStop": {
             "ACCESS": 3,
             "DOMAIN": "ADS",
@@ -1171,6 +1208,23 @@
                     },
                     {
                         "comment": "HMI cycle stop button"
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_MASTER.stMachineStatus.bReadyToStart": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_MASTER::stMachineStatus::bReadyToStart",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:general#/definitions/BOOL"
+                    },
+                    {
+                        "propertyOrder": 5
                     }
                 ]
             },
@@ -4515,10 +4569,14 @@
                 "ADS.PLC1.GVL_HMI.StatusHMI.sMachineStatusText": 3,
                 "ADS.PLC1.GVL_HMI.arrAlarmHistory": 3,
                 "ADS.PLC1.GVL_HMI.ePowerCmd": 3,
+                "ADS.PLC1.GVL_HMI.i_bHMIIndexerManualEnable": 3,
+                "ADS.PLC1.GVL_HMI.i_bHMIKistlerManualEnable": 3,
+                "ADS.PLC1.GVL_HMI.i_bHMIManualModeRequest": 3,
                 "ADS.PLC1.GVL_MASTER.bHmiEmergencyStop": 3,
                 "ADS.PLC1.GVL_MASTER.bHmiReset": 3,
                 "ADS.PLC1.GVL_MASTER.bHmiStart": 3,
                 "ADS.PLC1.GVL_MASTER.bHmiStop": 3,
+                "ADS.PLC1.GVL_MASTER.stMachineStatus.bReadyToStart": 3,
                 "ADS.PLC1.GVL_MASTER.stMachineStatus.eMachineState": 3,
                 "ADS.PLC1.PGR_HMI.iCountdownValue": 3,
                 "ChangeUserSettings": 3,

@@ -175,7 +175,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{09826F5E-A0C6-4F2A-AB8E-A2951346EAC9}" Name="TE1108" PrjFilePath="TE1108\TE1108.plcproj" TmcFilePath="TE1108\TE1108.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{761AE9D6-2D37-9B6E-F65B-D10FC5A3C8D0}" TmcPath="TE1108\TE1108.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{72945F7C-B33F-F1BC-374E-B3DC64564BB7}" TmcPath="TE1108\TE1108.tmc">
 					<Name>TE1108 Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -195,6 +195,26 @@
 						</Var>
 						<Var>
 							<Name>PRG_MachineControl.q_bLED_Fail</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.stNestTable.qNestRotatePortA</Name>
+							<Comment><![CDATA[ Valve: Rotate indexing table Port A]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.stNestTable.qNestRotatePortB</Name>
+							<Comment><![CDATA[ Valve: Rotate indexing table Port B]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.stNestTable.qSupportExtend</Name>
+							<Comment><![CDATA[ cylinder extend (up for press)]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.stNestTable.qSupportRetract</Name>
+							<Comment><![CDATA[ cylinder retract (down for rotate)]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -220,26 +240,6 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_MASTER.stNestTable.qNestRotatePortA</Name>
-							<Comment><![CDATA[ Valve: Rotate indexing table Port A]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_MASTER.stNestTable.qNestRotatePortB</Name>
-							<Comment><![CDATA[ Valve: Rotate indexing table Port B]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_MASTER.stNestTable.qSupportExtend</Name>
-							<Comment><![CDATA[ cylinder extend (up for press)]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_MASTER.stNestTable.qSupportRetract</Name>
-							<Comment><![CDATA[ cylinder retract (down for rotate)]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_KISTLER_IO.aKistlerOut</Name>
 							<Comment><![CDATA[ PLC -> maXYmos]]></Comment>
 							<Type GUID="{2B6B47C9-DB58-8D37-72B9-9344E5A5275A}">ARRAY [0..199] OF BYTE</Type>
@@ -250,11 +250,6 @@
 						<Var>
 							<Name>GVL_MASTER.i_bButtonStart</Name>
 							<Comment><![CDATA[  Auto Cycle start button]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_KISTLER_IO.bKistlerSafetyEnableOK</Name>
-							<Comment><![CDATA[kistler safety]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -270,38 +265,6 @@
 						<Var>
 							<Name>GVL_MASTER.i_bButtonEmergencyStop</Name>
 							<Comment><![CDATA[  software E-stop button]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stSafety.bSafetyOK</Name>
-							<Comment><![CDATA[ Input to PLC from TwinSAFE (System can start)]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stSafety.bSystemSafeOK</Name>
-							<Comment><![CDATA[ Input to PLC from TwinSAFE (System is safe)]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stSafety.bSafetyError</Name>
-							<Comment><![CDATA[ Input to PLC from TwinSAFE (System has a fault)	]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stSafety.bMainDoorClosed</Name>
-							<Comment><![CDATA[ ]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stSafety.bMainDoorLocked</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stSafety.bMainDoorOpenned</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stSafety.bTwoHandsSafe</Name>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -355,6 +318,43 @@
 						<Var>
 							<Name>GVL_MASTER.bPartPresent_Reject</Name>
 							<Comment><![CDATA[ Part Present sensor Kistler]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_KISTLER_IO.bKistlerSafetyEnableOK</Name>
+							<Comment><![CDATA[kistler safety]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stSafety.bSafetyOK</Name>
+							<Comment><![CDATA[ Input to PLC from TwinSAFE (System can start)]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stSafety.bSystemSafeOK</Name>
+							<Comment><![CDATA[ Input to PLC from TwinSAFE (System is safe)]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stSafety.bSafetyError</Name>
+							<Comment><![CDATA[ Input to PLC from TwinSAFE (System has a fault)	]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stSafety.bMainDoorClosed</Name>
+							<Comment><![CDATA[ ]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stSafety.bMainDoorLocked</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stSafety.bMainDoorOpenned</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stSafety.bTwoHandsSafe</Name>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>

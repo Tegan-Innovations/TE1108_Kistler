@@ -171,6 +171,9 @@
     <Content Include="Contents\CSS_JAVA\Enable buttons.js">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Contents\CSS_JAVA\ManualMode.js">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Contents\CSS_JAVA\PDF Maker\jspdf.min.js">
       <SubType>Content</SubType>
     </Content>
@@ -247,7 +250,7 @@
     <Content Include="Contents\Screens\Alarms.content">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Contents\Screens\Content1.content">
+    <Content Include="Contents\Screens\Manual_Mode.content">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Contents\Screens\UserManagement.content">
@@ -630,13 +633,37 @@
     <Content Include="Images\Project\Kistler.png">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Images\Project\kistler_.PNG">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Images\Project\kistler_Main.PNG">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Images\Project\Kistler_Nest2.png">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Images\Project\Kistler_Nest.png">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Images\Project\kistler_pos_2.PNG">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Images\Project\nest.PNG">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Images\Project\nest_pos_2.PNG">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Images\Project\nest_pos_3.PNG">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Images\Project\nest_pos_4.PNG">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Imports\Images\C6015-0010_2.png">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Imports\Images\Kistler_Nest.png">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Server\TcHmiLua\TcHmiLua.Config.default.json">

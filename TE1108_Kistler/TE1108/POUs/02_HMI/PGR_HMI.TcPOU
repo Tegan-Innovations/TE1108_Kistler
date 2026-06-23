@@ -356,6 +356,11 @@ CASE GVL_MASTER.stMachineStatus.eMachineState OF
             GVL_HMI.StatusHMI.sBannerBckColor  := GVL_HMI.sWHITE;
             GVL_HMI.StatusHMI.sBannerTextColor := GVL_HMI.sREDFail;
         END_IF
+	E_MachineState.MANUAL_MODE:
+        GVL_HMI.StatusHMI.sMachineStatusText := 'MANUAL MODE';        
+        GVL_HMI.StatusHMI.sBannerBckColor  := GVL_HMI.sBLUEInProgress;
+        GVL_HMI.StatusHMI.sBannerTextColor := GVL_HMI.sWHITE;   
+
 
 END_CASE
 
