@@ -6,8 +6,8 @@ VAR
     // =========================================================
     // TIMERS & TRIGGERS
     // =========================================================
-	tonSys_Init           : TON := (PT := T#8S);    // Initialization pulse timer
-    tonSys_InitTimeout    : TON := (PT := T#12S);   // Initialization timeout fault timer
+	tonSys_Init           : TON := (PT := T#10S);    // Initialization pulse timer
+    tonSys_InitTimeout    : TON := (PT := T#20S);   // Initialization timeout fault timer
     tonFirstAutoCycle     : TON := (PT := T#500MS); // Auto cycle start settling timer
 	tonStoppingDelay	  : TON                   ; // Time to finalize process 
     tonSafety             : TON := (PT := T#10S);   // Safety interlock debounce timer
@@ -37,6 +37,11 @@ VAR
     bProcessCycleAllowed   		: BOOL;
     bAutoProcessAllowed    		: BOOL;
     bManualKistlerAllowed  		: BOOL;
+	
+	bAirInitialised     		: BOOL;
+	bNestInitialised    		: BOOL;
+	bKistlerInitialised 		: BOOL;
+	bMachineInitialised 		: BOOL;
 	
 	// =================================================================
     // NEST TABLE INTERNAL CONTROL VARIABLES
@@ -124,7 +129,25 @@ bStartProcessCondition :=
     AND NOT GVL_MASTER.stMachineStatus.bFault
 	AND NOT stKistler_Status.bError
     AND stKistler_Status.bReady;
-						  
+
+
+ // Initialisation conditions
+    bAirInitialised := GVL_MASTER.bAirSupply_Ok;
+
+    bNestInitialised :=
+        (eNestState = E_NestState.IDLE)
+        AND NOT GVL_MASTER.stNestTable.bNestInMotion
+        AND GVL_MASTER.stNestTable.bNestReadySensor
+        AND GVL_MASTER.stNestTable.bNestLockedSensor;
+
+    bKistlerInitialised :=
+         stKistler_Status.bInPosition
+	      AND NOT stKistler_Status.bError;
+
+    bMachineInitialised :=
+        bAirInitialised
+        AND bNestInitialised
+        AND bKistlerInitialised;
 		  	  
 // =========================================================
 // GLOBAL FAULT DETECTION
@@ -207,10 +230,14 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 		tonSys_Init (IN := GVL_MASTER.stMachineStatus.bInitialising);
 		tonSys_InitTimeout (IN := GVL_MASTER.stMachineStatus.bInitialising);
 		
-		IF tonSys_Init.Q AND GVL_IO.stSafety.bSafetyOK AND bStartProcessCondition THEN
+		IF tonSys_Init.Q 
+			AND GVL_IO.stSafety.bSafetyOK 
+			AND bStartProcessCondition  
+			AND bMachineInitialised THEN
 			GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.SYSTEM_READY_TO_START;
 			
-		ELSIF tonSys_InitTimeout.Q AND NOT GVL_IO.stSafety.bSafetyOK THEN
+		ELSIF tonSys_InitTimeout.Q 
+			AND NOT GVL_IO.stSafety.bSafetyOK THEN
 			GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.FAULT;
 		
 		ELSIF NOT GVL_Master.i_bButtonStop THEN

@@ -39,7 +39,7 @@ VAR_GLOBAL
     // INTERLOCKS & SAFETY
     // =================================================================================
     
-    bAirPressureOk          		  : BOOL :=TRUE; // Main air supply pressure switch feedback
+    bAirSupply_Ok          	AT%I*	  : BOOL; // Main air supply pressure switch feedback
     
     // =================================================================================
     // HARDWARE STATUS

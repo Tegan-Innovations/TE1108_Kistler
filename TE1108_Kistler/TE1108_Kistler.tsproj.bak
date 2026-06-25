@@ -67,12 +67,12 @@
 			</SubItem>
 		</DataType>
 		<DataType>
-			<Name GUID="{18071995-0000-0000-0000-002000000007}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..6] OF BIT</Name>
-			<BitSize>7</BitSize>
+			<Name GUID="{18071995-0000-0000-0000-002000000006}" IecBaseType="true" BitType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..5] OF BIT</Name>
+			<BitSize>6</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
 			<ArrayInfo>
 				<LBound>0</LBound>
-				<Elements>7</Elements>
+				<Elements>6</Elements>
 			</ArrayInfo>
 		</DataType>
 		<DataType>
@@ -129,15 +129,6 @@
 				<Elements>1</Elements>
 			</ArrayInfo>
 		</DataType>
-		<DataType>
-			<Name GUID="{18071995-0000-0000-0000-002000000006}" IecBaseType="true" BitType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..5] OF BIT</Name>
-			<BitSize>6</BitSize>
-			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
-			<ArrayInfo>
-				<LBound>0</LBound>
-				<Elements>6</Elements>
-			</ArrayInfo>
-		</DataType>
 	</DataTypes>
 	<ImageDatas>
 		<ImageData Id="1000">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000c40e0000c40e00000000000000000000ff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000bfff00bfffc0c0c0808080c0c0c000ffffc0c0c000ffff808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000bfff00bfffc0c0c0808080c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000bfff00bfffc0c0c0808080c0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0ff0000c0c0c0ff0000808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000bfff00bfffc0c0c0808080c0c0c00000ffc0c0c00000ff808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000bfff00bfffc0c0c0808080c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000bfff00bfffc0c0c0808080c0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0008000c0c0c0008000808080ff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff</ImageData>
@@ -175,7 +166,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{09826F5E-A0C6-4F2A-AB8E-A2951346EAC9}" Name="TE1108" PrjFilePath="TE1108\TE1108.plcproj" TmcFilePath="TE1108\TE1108.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{C541CBE8-BCE8-E2AD-2C23-4C4338C8EBE5}" TmcPath="TE1108\TE1108.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{3FF312DF-8BAF-F1F5-71A8-1EA00C6DB189}" TmcPath="TE1108\TE1108.tmc">
 					<Name>TE1108 Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -247,6 +238,11 @@
 					</Vars>
 					<Vars VarGrpType="1">
 						<Name>PlcTask Inputs</Name>
+						<Var>
+							<Name>GVL_MASTER.bAirSupply_Ok</Name>
+							<Comment><![CDATA[ Main air supply pressure switch feedback]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
 						<Var>
 							<Name>GVL_MASTER.i_bButtonStart</Name>
 							<Comment><![CDATA[  Auto Cycle start button]]></Comment>
@@ -518,8 +514,11 @@
 								<Entry Name="TwinSafeGroup1.KistlerSafetyEnableOK_36" Index="#x7000" Sub="#x09">
 									<Type>BIT</Type>
 								</Entry>
+								<Entry Name="TwinSafeGroup1.AirSupply_OK_37" Index="#x7000" Sub="#x0a">
+									<Type>BIT</Type>
+								</Entry>
 								<Entry>
-									<Type GUID="{18071995-0000-0000-0000-002000000007}">ARRAY [0..6] OF BIT</Type>
+									<Type GUID="{18071995-0000-0000-0000-002000000006}">ARRAY [0..5] OF BIT</Type>
 								</Entry>
 							</Pdo>
 							<Pdo Name="StandardOutputs" Index="#x17f0" InOut="1" Flags="#x2011" SyncMan="2">
@@ -3705,6 +3704,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="PlcTask Inputs^GVL_IO.stSafety.bSystemSafeOK" VarB="StandardInputs^TwinSafeGroup1.System_Safe_OK_11"/>
 				<Link VarA="PlcTask Inputs^GVL_IO.stSafety.bTwoHandsSafe" VarB="StandardInputs^TwinSafeGroup1.TouchButton_OK_29"/>
 				<Link VarA="PlcTask Inputs^GVL_KISTLER_IO.bKistlerSafetyEnableOK" VarB="StandardInputs^TwinSafeGroup1.KistlerSafetyEnableOK_36"/>
+				<Link VarA="PlcTask Inputs^GVL_MASTER.bAirSupply_Ok" VarB="StandardInputs^TwinSafeGroup1.AirSupply_OK_37"/>
 				<Link VarA="PlcTask Inputs^GVL_MASTER.i_bButtonEmergencyStop" VarB="StandardInputs^TwinSafeGroup1.ESTOP_Pressed_9"/>
 				<Link VarA="PlcTask Outputs^GVL_IO.stSafety.bAirSupplyEnabled" VarB="StandardOutputs^TwinSafeGroup1.AirSupplyEnabled_25"/>
 				<Link VarA="PlcTask Outputs^GVL_IO.stSafety.bMachineStopped" VarB="StandardOutputs^TwinSafeGroup1.MachineStopped_14"/>
