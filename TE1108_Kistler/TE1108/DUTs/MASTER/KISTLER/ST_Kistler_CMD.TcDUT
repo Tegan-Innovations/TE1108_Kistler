@@ -14,6 +14,9 @@ STRUCT
 		bDriveToRef 		: BOOL; // Command drive to reference position
 		bContinueFromWait 	: BOOL; // Continue sequence after WAIT request
 		bTareY 				: BOOL; // Byte 0.1 - Tare Y
+		
+		bAckAdminGlob 		: BOOL;
+		bAckAdmin     		: BOOL;
 
 END_STRUCT
 END_TYPE

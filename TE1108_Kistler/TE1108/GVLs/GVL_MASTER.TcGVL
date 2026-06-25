@@ -45,6 +45,15 @@ VAR_GLOBAL
     // HARDWARE STATUS
     // =================================================================================
     bKistlerSystemReady    			  : BOOL :=TRUE; // Kistler system global ready feedback
+	
+	 // =================================================================================
+    // PROCESS VARIABLES 
+    // =================================================================================
+	eProcessCycleState 				  : E_ProcessCycle_State;
+	stProcess 						  : ST_Process;
+
+	
+	
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

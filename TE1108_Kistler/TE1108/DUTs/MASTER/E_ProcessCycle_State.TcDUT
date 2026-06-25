@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="E_ProcessCycle_State" Id="{ba21c920-85b2-47e7-979a-be376b5f06e8}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+TYPE E_ProcessCycle_State :
+(
+	IDLE,
+    WAIT_NEST_TESTING_READY,
+    REQUEST_KISTLER,
+    WAIT_KISTLER_DONE,
+    WAIT_KISTLER_HOME,
+    WAIT_AFTER_KISTLER,
+    RELEASE_NEST,
+    FAULT
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
