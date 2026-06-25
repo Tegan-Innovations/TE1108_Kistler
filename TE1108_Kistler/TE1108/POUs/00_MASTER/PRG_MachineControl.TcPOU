@@ -232,9 +232,16 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 		
 		IF tonSys_Init.Q 
 			AND GVL_IO.stSafety.bSafetyOK 
-			AND bStartProcessCondition  
-			AND bMachineInitialised THEN
-			GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.SYSTEM_READY_TO_START;
+			AND bStartProcessCondition THEN
+			
+			IF NOT bMachineInitialised THEN 
+				
+				 stKistler_Status.eKistlerState := E_KistlerState.HOMING;
+    			 bKistlerRecoveryHomeRequest := TRUE;
+				
+			ELSE
+   				GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.SYSTEM_READY_TO_START;
+			END_IF
 			
 		ELSIF tonSys_InitTimeout.Q 
 			AND NOT GVL_IO.stSafety.bSafetyOK THEN
@@ -861,6 +868,7 @@ M_KistlerControl := TRUE;]]></ST>
 
 VAR_INPUT
     eCurrentState : E_MachineState;
+
 END_VAR
 
 VAR
@@ -868,6 +876,8 @@ VAR
     bKistlerAutoCycleAllowed : BOOL;
     bKistlerManualAllowed    : BOOL;
     bKistlerSequenceAllowed  : BOOL;
+	
+	Teste 			: INT;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[// =================================================================================
@@ -901,7 +911,8 @@ bKistlerEnableAllowed :=
 
 // Kistler is allowed to run automatically during Auto Cycle.
 bKistlerAutoCycleAllowed :=
-    (eCurrentState = E_MachineState.SYSTEM_AUTO_CYCLE);
+    (eCurrentState = E_MachineState.SYSTEM_AUTO_CYCLE 
+	OR eCurrentState = E_MachineState.SYSTEM_INITIALISING );
 
 // Kistler is allowed to run in Manual Mode only when the HMI manual enable is active.
 bKistlerManualAllowed :=
@@ -1027,6 +1038,7 @@ CASE eCurrentState OF
     // AUTO CYCLE OR MANUAL MODE WITH HMI KISTLER ENABLE
     // =========================================================================
     E_MachineState.SYSTEM_AUTO_CYCLE,
+	E_MachineState.SYSTEM_INITIALISING,
     E_MachineState.MANUAL_MODE:
 
         CASE stKistler_Status.eKistlerState OF
@@ -1037,12 +1049,12 @@ CASE eCurrentState OF
             // =========================================================================
             E_KistlerState.DISABLED:
 
-                stKistler_CMD.bStart := FALSE;
-                stKistler_CMD.bRunSequence := FALSE;
-                stKistler_CMD.bDriveToHome := FALSE;
-                stKistler_CMD.bDriveToRef := FALSE;
+                stKistler_CMD.bStart 			:= FALSE;
+                stKistler_CMD.bRunSequence 		:= FALSE;
+                stKistler_CMD.bDriveToHome 		:= FALSE;
+                stKistler_CMD.bDriveToRef 		:= FALSE;
                 stKistler_CMD.bContinueFromWait := FALSE;
-                stKistler_CMD.bTareY := FALSE;
+                stKistler_CMD.bTareY 			:= FALSE;
 
                 IF stKistler_CMD.bEnable THEN
                     stKistler_Status.eKistlerState := E_KistlerState.READY;
@@ -1055,16 +1067,20 @@ CASE eCurrentState OF
             // =========================================================================
             E_KistlerState.READY:
 
-                stKistler_CMD.bStart := FALSE;
-                stKistler_CMD.bRunSequence := FALSE;
-                stKistler_CMD.bDriveToHome := FALSE;
-                stKistler_CMD.bDriveToRef := FALSE;
+                stKistler_CMD.bStart 			:= FALSE;
+                stKistler_CMD.bRunSequence 		:= FALSE;
+                stKistler_CMD.bDriveToHome 		:= FALSE;
+                stKistler_CMD.bDriveToRef 		:= FALSE;
                 stKistler_CMD.bContinueFromWait := FALSE;
-                stKistler_CMD.bTareY := FALSE;
+                stKistler_CMD.bTareY 			:= FALSE;
 
                 IF stKistler_Status.bError THEN
 
                     stKistler_Status.eKistlerState := E_KistlerState.ERROR;
+					
+				ELSIF NOT bKistlerInitialised OR bKistlerRecoveryHomeRequest THEN
+					 //Teste := 1;
+					stKistler_Status.eKistlerState := E_KistlerState.HOMING;
 
                 ELSIF bKistlerSequenceAllowed
       				AND GVL_MASTER.stProcess.bKistlerCycleRequest THEN
@@ -1075,11 +1091,12 @@ CASE eCurrentState OF
                        AND NOT stKistlerOutTelegram.bRefPosReached THEN
 
                         stKistler_Status.eKistlerState := E_KistlerState.HOMING;
-
+						//Teste := 2;
+						
                     ELSE
 
                         stKistler_Status.eKistlerState := E_KistlerState.SET_PARAMETERS;
-
+						//Teste := 3;
                     END_IF
 
                 END_IF
@@ -1092,14 +1109,20 @@ CASE eCurrentState OF
             // =========================================================================
             E_KistlerState.HOMING:
 
-                stKistler_CMD.bStart := FALSE;
-                stKistler_CMD.bRunSequence := FALSE;
-                stKistler_CMD.bDriveToHome := FALSE;
-                stKistler_CMD.bContinueFromWait := FALSE;
-                stKistler_CMD.bTareY := FALSE;
+                stKistler_CMD.bStart 				:= FALSE;
+                stKistler_CMD.bRunSequence 			:= FALSE;
+                stKistler_CMD.bDriveToHome 			:= FALSE;
+                stKistler_CMD.bContinueFromWait 	:= FALSE;
+                stKistler_CMD.bTareY 				:= FALSE;
 
                 // Use DriveToRef for initial/home movement.
                 stKistler_CMD.bDriveToRef := TRUE;
+				
+				IF stKistler_Status.bInPosition THEN
+
+    				bKistlerRecoveryHomeRequest := FALSE;
+
+				END_IF;
 
                 IF stKistler_Status.bError THEN
 
@@ -1435,12 +1458,12 @@ CASE eCurrentState OF
     // =========================================================================
     E_MachineState.FAULT:
 
-        stKistler_CMD.bStart := FALSE;
-        stKistler_CMD.bRunSequence := FALSE;
-        stKistler_CMD.bDriveToHome := FALSE;
-        stKistler_CMD.bDriveToRef := FALSE;
-        stKistler_CMD.bContinueFromWait := FALSE;
-        stKistler_CMD.bTareY := FALSE;
+        stKistler_CMD.bStart 				:= FALSE;
+        stKistler_CMD.bRunSequence 			:= FALSE;
+        stKistler_CMD.bDriveToHome 			:= FALSE;
+        stKistler_CMD.bDriveToRef 			:= FALSE;
+        stKistler_CMD.bContinueFromWait 	:= FALSE;
+        stKistler_CMD.bTareY 				:= FALSE;
 
         IF stKistler_Status.eKistlerState <> E_KistlerState.DISABLED THEN
             stKistler_Status.eKistlerState := E_KistlerState.ERROR;
@@ -1450,14 +1473,14 @@ CASE eCurrentState OF
     // =========================================================================
     // OTHER MACHINE STATES
     // =========================================================================
-    ELSE
-
-        stKistler_CMD.bStart := FALSE;
-        stKistler_CMD.bRunSequence := FALSE;
-        stKistler_CMD.bDriveToHome := FALSE;
-        stKistler_CMD.bDriveToRef := FALSE;
-        stKistler_CMD.bContinueFromWait := FALSE;
-        stKistler_CMD.bTareY := FALSE;
+		ELSE
+	
+			stKistler_CMD.bStart 			:= FALSE;
+			stKistler_CMD.bRunSequence 		:= FALSE;
+			stKistler_CMD.bDriveToHome 		:= FALSE;
+			stKistler_CMD.bDriveToRef 		:= FALSE;
+			stKistler_CMD.bContinueFromWait := FALSE;
+			stKistler_CMD.bTareY 			:= FALSE;
 
 END_CASE;
 
