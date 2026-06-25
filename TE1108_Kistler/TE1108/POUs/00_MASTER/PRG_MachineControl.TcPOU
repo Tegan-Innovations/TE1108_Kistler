@@ -6,8 +6,8 @@ VAR
     // =========================================================
     // TIMERS & TRIGGERS
     // =========================================================
-	tonSys_Init           : TON := (PT := T#10S);    // Initialization pulse timer
-    tonSys_InitTimeout    : TON := (PT := T#20S);   // Initialization timeout fault timer
+	tonSys_Init           : TON := (PT := T#8S);    // Initialization pulse timer
+    tonSys_InitTimeout    : TON := (PT := T#15S);   // Initialization timeout fault timer
     tonFirstAutoCycle     : TON := (PT := T#500MS); // Auto cycle start settling timer
 	tonStoppingDelay	  : TON                   ; // Time to finalize process 
     tonSafety             : TON := (PT := T#10S);   // Safety interlock debounce timer
@@ -239,12 +239,11 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 				 stKistler_Status.eKistlerState := E_KistlerState.HOMING;
     			 bKistlerRecoveryHomeRequest := TRUE;
 				
-			ELSE
+			ELSIF   stKistler_Status.eKistlerState = E_KistlerState.READY AND bMachineInitialised THEN
    				GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.SYSTEM_READY_TO_START;
 			END_IF
 			
-		ELSIF tonSys_InitTimeout.Q 
-			AND NOT GVL_IO.stSafety.bSafetyOK THEN
+		ELSIF tonSys_InitTimeout.Q THEN
 			GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.FAULT;
 		
 		ELSIF NOT GVL_Master.i_bButtonStop THEN
@@ -904,6 +903,7 @@ END_VAR]]></Declaration>
 bKistlerEnableAllowed :=
     (eCurrentState = E_MachineState.SYSTEM_READY_TO_START)
     OR (eCurrentState = E_MachineState.SYSTEM_AUTO_CYCLE)
+	OR (eCurrentState = E_MachineState.SYSTEM_INITIALISING)
     OR (
         (eCurrentState = E_MachineState.MANUAL_MODE)
         AND GVL_HMI.i_bHMIKistlerManualEnable
@@ -912,7 +912,7 @@ bKistlerEnableAllowed :=
 // Kistler is allowed to run automatically during Auto Cycle.
 bKistlerAutoCycleAllowed :=
     (eCurrentState = E_MachineState.SYSTEM_AUTO_CYCLE 
-	OR eCurrentState = E_MachineState.SYSTEM_INITIALISING );
+	OR eCurrentState = E_MachineState.SYSTEM_INITIALISING);
 
 // Kistler is allowed to run in Manual Mode only when the HMI manual enable is active.
 bKistlerManualAllowed :=
@@ -1111,16 +1111,24 @@ CASE eCurrentState OF
 
                 stKistler_CMD.bStart 				:= FALSE;
                 stKistler_CMD.bRunSequence 			:= FALSE;
-                stKistler_CMD.bDriveToHome 			:= FALSE;
+                //stKistler_CMD.bDriveToHome 			:= FALSE;
                 stKistler_CMD.bContinueFromWait 	:= FALSE;
                 stKistler_CMD.bTareY 				:= FALSE;
+				
+				IF stKistler_CMD.bDriveToRef THEN
+
+    				stKistler_CMD.bDriveToRef := FALSE;
+
+				END_IF;
 
                 // Use DriveToRef for initial/home movement.
                 stKistler_CMD.bDriveToRef := TRUE;
 				
-				IF stKistler_Status.bInPosition THEN
+				IF stKistler_Status.bInPosition 
+					AND eCurrentState = E_MachineState.SYSTEM_INITIALISING THEN
 
     				bKistlerRecoveryHomeRequest := FALSE;
+					
 
 				END_IF;
 
@@ -1129,8 +1137,9 @@ CASE eCurrentState OF
                     stKistler_CMD.bDriveToRef := FALSE;
                     stKistler_Status.eKistlerState := E_KistlerState.ERROR;
 
-                ELSIF stKistlerOutTelegram.bHomePosReached
-                   OR stKistlerOutTelegram.bRefPosReached THEN
+                ELSIF stKistler_Status.bInPosition 
+					OR stKistlerOutTelegram.bHomePosReached
+                    OR stKistlerOutTelegram.bRefPosReached THEN
 
                     stKistler_CMD.bDriveToRef := FALSE;
                     stKistler_Status.eKistlerState := E_KistlerState.HOME_DONE;
