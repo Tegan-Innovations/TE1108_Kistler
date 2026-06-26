@@ -2278,9 +2278,13 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[// Reset process coordinator state
-// eProcessCycleState := E_ProcessCycle_State.IDLE;
-// 
+        <ST><![CDATA[// =========================================================
+// RESET PROCESS CYCLE
+// =========================================================
+
+// Reset process coordinator state
+eProcessCycleState := E_ProcessCycle_State.IDLE;
+
 // Reset process interlock flags
 GVL_MASTER.stProcess.bKistlerCycleRequest := FALSE;
 GVL_MASTER.stProcess.bKistlerCycleDone    := FALSE;
@@ -2293,7 +2297,7 @@ GVL_MASTER.stProcess.bKistlerResultNOK    := FALSE;
 // Reset process timers
 tonAfterKistlerDelay(IN := FALSE);
 
-// Reset Kistler process commands
+// Reset Kistler process commands only
 stKistler_CMD.bStart            := FALSE;
 stKistler_CMD.bRunSequence      := FALSE;
 stKistler_CMD.bDriveToHome      := FALSE;
@@ -2301,8 +2305,15 @@ stKistler_CMD.bDriveToRef       := FALSE;
 stKistler_CMD.bContinueFromWait := FALSE;
 stKistler_CMD.bTareY            := FALSE;
 
-// //Do not force bEnable here if you still need Kistler enabled in READY_TO_START.
-// //bEnable is controlled by M_KistlerControl().
+// Do NOT reset these here:
+// stKistler_CMD.bEnable
+// stKistler_CMD.bReset
+// stKistler_CMD.bAbort
+// stKistler_CMD.bManualMode
+// stKistler_Status.eKistlerState
+// eNestState
+// bStopRequested
+
 M_ResetProcessCycle := TRUE;]]></ST>
       </Implementation>
     </Method>
