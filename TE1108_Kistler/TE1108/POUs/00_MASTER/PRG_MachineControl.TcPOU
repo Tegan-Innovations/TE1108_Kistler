@@ -50,20 +50,23 @@ VAR
 	// =================================================================
     // NEST TABLE INTERNAL CONTROL VARIABLES
     // =================================================================
-	eNestState           : E_NestState := E_NestState.IDLE;
-	bSequenceToggle      : BOOL := FALSE;                   // Toggle flag for manual bench testing
-	eCurrentNestPos 	 : E_NestPosition := E_NestPosition.UNKNOWN;
+	eNestState           		: E_NestState := E_NestState.IDLE;
+	bSequenceToggle      		: BOOL := FALSE;                   // Toggle flag for manual bench testing
+	eCurrentNestPos 	 		: E_NestPosition := E_NestPosition.UNKNOWN;
 	
     // HMI PARAMETERS & SAFETY TIMERS
-    rHmiTwoHandPresetTime : REAL := 250.0; // Time preset from HMI in milliseconds (e.g., 1500.0 ms = 1.5s)
-    tTwoHandTargetTime    : TIME;           // Converted time to be used by the PLC timer
-    tTwoHandHoldTimer     : TON;            // Timer to verify if operator held the buttons long enough
+    rHmiTwoHandPresetTime 		: REAL := 250.0; // Time preset from HMI in milliseconds (e.g., 1500.0 ms = 1.5s)
+    tTwoHandTargetTime    		: TIME;           // Converted time to be used by the PLC timer
+    tTwoHandHoldTimer     		: TON;            // Timer to verify if operator held the buttons long enough
 	
 	// Timers for pneumatic steps control without sensors
-	tSupportRetractDelay : TON;  // Time for elevator cylinder to retract down
-	tRotatingTableDelay  : TON;  // Simulated time for index table to complete rotation
-	tPortB_ResetDelay    : TON;  // Pulse time for Port B air relief / mechanism reset
-	tSupportExtendDelay  : TON;  // Time for elevator cylinder to extend back up
+	tSupportRetractDelay 		: TON;  // Time for elevator cylinder to retract down
+	tRotatingTableDelay  		: TON;  // Simulated time for index table to complete rotation
+	tPortB_ResetDelay    		: TON;  // Pulse time for Port B air relief / mechanism reset
+	tSupportExtendDelay  		: TON;  // Time for elevator cylinder to extend back up
+	
+	eLastTestedNestPos 			: E_NestPosition := E_NestPosition.UNKNOWN;
+	bNestNewPositionReady 		: BOOL;
 
 	
 	//==========================================================
@@ -252,6 +255,7 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 	
 		tonSys_Init (IN := GVL_MASTER.stMachineStatus.bInitialising);
 		tonSys_InitTimeout (IN := GVL_MASTER.stMachineStatus.bInitialising);
+		eLastTestedNestPos := E_NestPosition.UNKNOWN;
 		
 		IF tonSys_Init.Q 
 			AND GVL_IO.stSafety.bSafetyOK 
@@ -501,12 +505,12 @@ stKistlerInTelegram.bTareY := stKistler_CMD.bTareY;
 // Byte 1 - General control
 // -----------------------------------------------------------------------------
 
-stKistlerInTelegram.bAckAdminGlobal := stKistler_CMD.bReset;
-stKistlerInTelegram.bAckAdmin       := stKistler_CMD.bReset;
-stKistlerInTelegram.bAccess         := stKistler_CMD.bEnable;
-stKistlerInTelegram.bAuto           := stKistler_CMD.bEnable;
-stKistlerInTelegram.bStatReset      := stKistler_CMD.bReset;
-
+ stKistlerInTelegram.bAckAdminGlobal := stKistler_CMD.bReset;
+ stKistlerInTelegram.bAckAdmin       := stKistler_CMD.bReset;
+//stKistlerInTelegram.bStatReset     := stKistler_CMD.bReset;
+stKistlerInTelegram.bAccess          := stKistler_CMD.bEnable;
+stKistlerInTelegram.bAuto            := stKistler_CMD.bEnable;
+stKistlerInTelegram.bStatReset       := FALSE;
 
 // -----------------------------------------------------------------------------
 // Byte 2 - Measurement program selection
@@ -842,9 +846,10 @@ stKistler_CMD.bReset := fbResetTrigger.Q;
 // ================================================================
 // Reset button trigger
 // ================================================================
-fbResetTrigger(CLK := GVL_MASTER.i_bButtonReset);
 
-IF fbResetTrigger.Q THEN
+
+IF fbResetTrigger.Q 
+	AND GVL_Master.stMachineStatus.eMachineState <> E_MachineState.SYSTEM_AUTO_CYCLE THEN
 
     // Reset internal process flags
     M_ResetProcessCycle();
@@ -1636,7 +1641,7 @@ IF NOT GVL_IO.stSafety.bSafetyOK AND GVL_Master.stMachineStatus.bFault THEN
     eNestState := E_NestState.FAULT;
 END_IF
 
-eCurrentNestPos := M_GetCurrentPosition();
+//eCurrentNestPos := M_GetCurrentPosition();
 
 // =================================================================
 // 2. INPUT SIGNAL PROCESSING (TRIGGERS)
@@ -1696,7 +1701,8 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
                 IF GVL_IO.stSafety.bSafetyOK 
 					AND rTrigTwoHands.Q 
 					AND GVL_MASTER.stNestTable.bNestReadySensor 
-					AND GVL_MASTER.stNestTable.bNestLockedSensor THEN
+					AND GVL_MASTER.stNestTable.bNestLockedSensor 
+					AND stKistler_Status.bInPosition THEN
                     eNestState                             := E_NestState.ROTATING_TABLE; // Move to State 2
                 END_IF
         
@@ -2085,6 +2091,17 @@ IF NOT bProcessCycleAllowed THEN
 
 END_IF
 
+// =================================================================
+// PROCESS CYCLE COORDINATOR
+// Coordinates Nest position, Kistler cycle and Nest release.
+// =================================================================
+
+eCurrentNestPos := M_GetCurrentPosition();
+
+bNestNewPositionReady :=
+    (eCurrentNestPos <> E_NestPosition.UNKNOWN)
+    AND (eCurrentNestPos <> eLastTestedNestPos);
+
 
 // =================================================================
 // PROCESS CYCLE COORDINATOR
@@ -2110,9 +2127,7 @@ CASE eProcessCycleState OF
         END_IF
 
 
-    E_ProcessCycle_State.WAIT_NEST_TESTING_READY:
-
-
+	E_ProcessCycle_State.WAIT_NEST_TESTING_READY:
 	
 		GVL_MASTER.stProcess.bKistlerCycleRequest := FALSE;
 		GVL_MASTER.stProcess.bReleaseNestRotation := FALSE;
@@ -2123,38 +2138,63 @@ CASE eProcessCycleState OF
 	
 			eProcessCycleState := E_ProcessCycle_State.IDLE;
 	
-		// If Nest is ready and Kistler is READY, request a new Kistler cycle.
+		// Nest is in testing position, but position feedback is invalid.
+		// Do not allow Kistler execution with unknown table position.
 		ELSIF GVL_MASTER.stProcess.bNestTestingReady
-      		AND eNestState = E_NestState.TESTING
-      		AND GVL_MASTER.stNestTable.bNestReadySensor
-      		AND GVL_MASTER.stNestTable.bNestLockedSensor
-      		AND NOT GVL_MASTER.stNestTable.bNestInMotion
-     		AND GVL_MASTER.stNestTable.qSupportExtend
-      		AND NOT GVL_MASTER.stNestTable.qSupportRetract
-      		AND stKistler_Status.eKistlerState = E_KistlerState.READY
-      		AND NOT stKistler_Status.bError
-      		AND NOT bKistlerRecoveryHomeRequest THEN
-
-    			GVL_MASTER.stProcess.bKistlerCycleDone := FALSE;
-    			GVL_MASTER.stProcess.bKistlerHomeDone  := FALSE;
-
-    			eProcessCycleState := E_ProcessCycle_State.REQUEST_KISTLER;
-
+			  AND eNestState = E_NestState.TESTING
+			  AND eCurrentNestPos = E_NestPosition.UNKNOWN THEN
+	
+			GVL_MASTER.stProcess.bKistlerCycleRequest := FALSE;
+			GVL_MASTER.stProcess.bReleaseNestRotation := FALSE;
+			GVL_MASTER.stProcess.bKistlerCycleDone    := FALSE;
+			GVL_MASTER.stProcess.bKistlerHomeDone     := FALSE;
+	
+			eProcessCycleState := E_ProcessCycle_State.FAULT;
+	
+		// Nest is ready, but it is still the same physical position already tested.
+		// Do not run Kistler again. Release Nest to rotate to the next valid position.
+		ELSIF GVL_MASTER.stProcess.bNestTestingReady
+			  AND eNestState = E_NestState.TESTING
+			  AND GVL_MASTER.stNestTable.bNestReadySensor
+			  AND GVL_MASTER.stNestTable.bNestLockedSensor
+			  AND NOT GVL_MASTER.stNestTable.bNestInMotion
+			  AND GVL_MASTER.stNestTable.qSupportExtend
+			  AND NOT GVL_MASTER.stNestTable.qSupportRetract
+			  AND eCurrentNestPos <> E_NestPosition.UNKNOWN
+			  AND NOT bNestNewPositionReady THEN
+	
+			GVL_MASTER.stProcess.bKistlerCycleRequest := FALSE;
+			GVL_MASTER.stProcess.bKistlerCycleDone    := FALSE;
+	
+			// Consider Kistler side complete because this position must not be tested again.
+			GVL_MASTER.stProcess.bKistlerHomeDone := TRUE;
+	
+			// Release Nest so the table can move to a new physical position.
+			GVL_MASTER.stProcess.bReleaseNestRotation := TRUE;
+	
+			eProcessCycleState := E_ProcessCycle_State.RELEASE_NEST;
+	
+		// Valid new Nest position. Kistler may execute the test.
+		ELSIF GVL_MASTER.stProcess.bNestTestingReady
+			  AND eNestState = E_NestState.TESTING
+			  AND GVL_MASTER.stNestTable.bNestReadySensor
+			  AND GVL_MASTER.stNestTable.bNestLockedSensor
+			  AND NOT GVL_MASTER.stNestTable.bNestInMotion
+			  AND GVL_MASTER.stNestTable.qSupportExtend
+			  AND NOT GVL_MASTER.stNestTable.qSupportRetract
+			  AND stKistler_Status.eKistlerState = E_KistlerState.READY
+			  AND NOT stKistler_Status.bError
+			  AND NOT bKistlerRecoveryHomeRequest
+			  AND bNestNewPositionReady THEN
+	
+			GVL_MASTER.stProcess.bKistlerCycleDone := FALSE;
+			GVL_MASTER.stProcess.bKistlerHomeDone  := FALSE;
+	
+			eProcessCycleState := E_ProcessCycle_State.REQUEST_KISTLER;
+	
 		END_IF
 	
-		// If Kistler is already DONE while Nest is still in TESTING,
-		// continue the process and release the Nest after the delay.
-// 		ELSIF GVL_MASTER.stProcess.bNestTestingReady
-// 			  AND eNestState = E_NestState.TESTING
-// 			  AND stKistler_Status.eKistlerState = E_KistlerState.DONE
-// 			  AND NOT stKistler_Status.bError THEN
-// 	
-// 			GVL_MASTER.stProcess.bKistlerCycleDone := TRUE;
-// 	
-// 			eProcessCycleState := E_ProcessCycle_State.WAIT_KISTLER_HOME;
 	
-		//END_IF
-
 	
 	E_ProcessCycle_State.REQUEST_KISTLER:
 	
@@ -2184,8 +2224,9 @@ CASE eProcessCycleState OF
 
         ELSIF stKistler_Status.eKistlerState = E_KistlerState.DONE THEN
 
-            GVL_MASTER.stProcess.bKistlerCycleRequest := FALSE;
-            GVL_MASTER.stProcess.bKistlerCycleDone    := TRUE;
+            GVL_MASTER.stProcess.bKistlerCycleRequest   := FALSE;
+            GVL_MASTER.stProcess.bKistlerCycleDone      := TRUE;
+			eLastTestedNestPos 							:= eCurrentNestPos;
 
             eProcessCycleState := E_ProcessCycle_State.WAIT_KISTLER_HOME;
 
