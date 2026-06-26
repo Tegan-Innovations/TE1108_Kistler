@@ -77,6 +77,7 @@ VAR
     tonKistlerReset     		: TON;
 	
 	bKistlerRecoveryHomeRequest : BOOL;
+	bNestRecoveryHomeRequest	: BOOL;
 	
 
 	//==========================================================
@@ -256,12 +257,12 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 			AND GVL_IO.stSafety.bSafetyOK 
 			AND bStartProcessCondition THEN
 			
-			IF NOT bMachineInitialised THEN 
+			IF NOT bKistlerInitialised THEN 
 				
 				 stKistler_Status.eKistlerState := E_KistlerState.HOMING;
     			 bKistlerRecoveryHomeRequest := TRUE;
 				
-			ELSIF   stKistler_Status.eKistlerState = E_KistlerState.READY AND bMachineInitialised THEN
+			ELSIF   stKistler_Status.eKistlerState = E_KistlerState.READY THEN
    				GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.SYSTEM_READY_TO_START;
 			END_IF
 			
