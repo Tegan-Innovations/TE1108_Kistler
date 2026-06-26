@@ -16,6 +16,7 @@ STRUCT
 	bStopping					:BOOL;
 	bFault 						:BOOL;
 	bManualMode					:BOOL;
+	bBusy						:BOOL;
 	bSafety						:BOOL;
 	
 

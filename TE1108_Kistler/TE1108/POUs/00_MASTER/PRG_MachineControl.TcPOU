@@ -28,6 +28,7 @@ VAR
     // PROCESS CYCLE CONTROL
     // =========================================================
 	bStartProcessCondition 		: BOOL;   // OK to Start checklist condition flag
+	bAutoCyclePermissive		: BOOL;
     bKistlerReady          		: BOOL;   // Press healthy and ready feedback flag
     i                      		: INT;    // Loop index counter
     sMachineMessage        		: STRING; // Diagnostics and status message string
@@ -42,6 +43,9 @@ VAR
 	bNestInitialised    		: BOOL;
 	bKistlerInitialised 		: BOOL;
 	bMachineInitialised 		: BOOL;
+	
+	bStopRequested 				: BOOL;
+	bStopAllowed   				: BOOL;
 	
 	// =================================================================
     // NEST TABLE INTERNAL CONTROL VARIABLES
@@ -106,6 +110,8 @@ VAR
 	i_bHMIManualModeRequest: INT;
 	
 	
+	E_ProcessCycleState: INT;
+	IDLE: INT;
 END_VAR
 
 ]]></Declaration>
@@ -148,6 +154,15 @@ bStartProcessCondition :=
         bAirInitialised
         AND bNestInitialised
         AND bKistlerInitialised;
+		
+	GVL_MASTER.bProcessBusy := 
+	(eProcessCycleState <> E_ProcessCycle_State.WAIT_NEST_TESTING_READY)
+    OR (eNestState <> E_NestState.IDLE)
+    OR GVL_MASTER.stNestTable.bNestInMotion
+    OR GVL_MASTER.stProcess.bKistlerCycleRequest
+    OR GVL_MASTER.stProcess.bReleaseNestRotation
+    OR stKistler_Status.bBusy
+    OR NOT stKistler_Status.bInPosition;
 		  	  
 // =========================================================
 // GLOBAL FAULT DETECTION
@@ -178,6 +193,12 @@ ELSE
 	bHMIManualModeRequest := FALSE;
     GVL_HMI.i_bHMIManualModeRequest := FALSE;
 END_IF;
+
+
+IF NOT GVL_MASTER.i_bButtonStop THEN
+    bStopRequested := TRUE;
+END_IF
+
 // // =========================================================
 // 2. MAIN STATE MACHINE (CASE)
 // =========================================================
@@ -208,6 +229,7 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 		eMode_LED_Fail := E_LEDs_Mode.OFF;
         rtFirstAutoCycle(CLK := FALSE);
         tonStoppingDelay(IN := GVL_Master.stMachineStatus.bStopping, PT := T#2S);
+		bStopRequested := FALSE;
 		IF tonStoppingDelay.Q THEN
 			tonStoppingDelay(IN := FALSE);
         	GVL_Master.stMachineStatus.eMachineState := E_MachineState.STOPPED;
@@ -246,7 +268,7 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 		ELSIF tonSys_InitTimeout.Q THEN
 			GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.FAULT;
 		
-		ELSIF NOT GVL_Master.i_bButtonStop THEN
+		ELSIF bStopRequested THEN
             GVL_Master.stMachineStatus.eMachineState := E_MachineState.STOPPING;
  		END_IF
 // 		
@@ -257,7 +279,7 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 		eMode_LED_PASS := E_LEDs_Mode.OFF;
 		eMode_LED_Fail := E_LEDs_Mode.OFF;
 		
-		IF NOT GVL_Master.i_bButtonStop THEN
+		IF bStopRequested THEN
             GVL_Master.stMachineStatus.eMachineState := E_MachineState.STOPPING;
 	    		
         ELSIF bHMIManualModeRequest
@@ -283,8 +305,11 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
         rtFirstAutoCycle(CLK := TRUE);
         tonFirstAutoCycle(IN := rtFirstAutoCycle.Q);
         
-        IF NOT GVL_Master.i_bButtonStop THEN
+        IF bStopRequested 
+			AND NOT GVL_MASTER.bProcessBusy THEN
+			
             GVL_Master.stMachineStatus.eMachineState := E_MachineState.STOPPING;
+			
         ELSIF GVL_Master.stMachineStatus.bFault OR NOT bStartProcessCondition OR NOT GVL_IO.stSafety.bSafetyOK THEN
             GVL_Master.stMachineStatus.eMachineState := E_MachineState.FAULT;
         END_IF
@@ -416,6 +441,9 @@ END_IF
 
 // Force Measurement Program 1 for first commissioning test
 GVL_KISTLER_IO.aKistlerOut[2].0 := TRUE; // MP_01
+
+
+
 
 M_KistlerCommandMapping := TRUE;]]></ST>
       </Implementation>
@@ -782,8 +810,7 @@ END_VAR]]></Declaration>
 
 // Abort when machine is stopping or faulted
 stKistler_CMD.bAbort :=
-    (eCurrentState = E_MachineState.STOPPING)
-    OR (eCurrentState = E_MachineState.FAULT);
+    (eCurrentState = E_MachineState.FAULT);
 
 
 // Enable Kistler only when machine is safe and not stopping/faulted
@@ -796,6 +823,7 @@ stKistler_CMD.bEnable :=
         eCurrentState = E_MachineState.SYSTEM_INITIALISING
         OR eCurrentState = E_MachineState.SYSTEM_READY_TO_START
         OR eCurrentState = E_MachineState.SYSTEM_AUTO_CYCLE
+		OR (eCurrentState = E_MachineState.STOPPING)
     );
 // Manual mode
 stKistler_CMD.bManualMode :=
@@ -1590,7 +1618,7 @@ END_VAR
 // 1. EMERGENCY RESET AND GLOBAL INTERLOCK PROCESSING
 // =================================================================
 // Global asynchronous reset: Forces the system to IDLE and drops all outputs immediately
-IF GVL_MASTER.i_bButtonReset OR NOT GVL_MASTER.i_bButtonStop THEN
+IF GVL_MASTER.i_bButtonReset THEN
     eNestState                              := E_NestState.IDLE;
     bSequenceToggle                         := FALSE; // Always restart from rotation step after reset
     GVL_MASTER.stNestTable.bNestStartCycle  := FALSE;
@@ -2032,7 +2060,7 @@ M_PreExecution := TRUE;]]></ST>
     <Method Name="M_ProcessCycle" Id="{e01c53ef-c471-4f56-958b-74875adab0b2}">
       <Declaration><![CDATA[METHOD M_ProcessCycle : BOOL
 VAR
-
+bControlledStopActive 	: BOOL;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[// Process cycle is only allowed during Auto Cycle.

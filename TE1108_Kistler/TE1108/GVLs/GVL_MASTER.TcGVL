@@ -51,6 +51,7 @@ VAR_GLOBAL
     // =================================================================================
 	eProcessCycleState 				  : E_ProcessCycle_State;
 	stProcess 						  : ST_Process;
+	bProcessBusy					  :BOOL;
 
 	
 	
