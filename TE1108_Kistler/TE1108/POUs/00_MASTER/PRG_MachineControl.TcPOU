@@ -829,10 +829,15 @@ stKistler_CMD.bEnable :=
         OR eCurrentState = E_MachineState.SYSTEM_READY_TO_START
         OR eCurrentState = E_MachineState.SYSTEM_AUTO_CYCLE
 		OR (eCurrentState = E_MachineState.STOPPING)
+		OR (
+			eCurrentState = E_MachineState.MANUAL_MODE
+            AND GVL_HMI.i_bHMIKistlerManualEnable
+		    )
     );
 // Manual mode
 stKistler_CMD.bManualMode :=
-    (eCurrentState = E_MachineState.MANUAL_MODE);
+    (eCurrentState = E_MachineState.MANUAL_MODE 
+	 AND GVL_HMI.i_bHMIKistlerManualEnable);
 	
 
 
@@ -1903,8 +1908,13 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
             E_NestState.ROTATING_TABLE: // State 2: ROTATING TABLE
 			
 				GVL_MASTER.stNestTable.bNestInMotion   := TRUE;
+				GVL_MASTER.stProcess.bNestTestingReady 	   := FALSE;
+				
                 // Internal safety interlock: Abort if hand is released before the HMI verification timer expires
-                IF NOT GVL_IO.stSafety.bTwoHandsSafe 
+				IF NOT GVL_IO.stSafety.bSafetyOK THEN
+                    eNestState                              := E_NestState.FAULT; // Abort to recovery state
+					
+                ELSIF NOT GVL_IO.stSafety.bTwoHandsSafe 
 					AND NOT tTwoHandHoldTimer.Q THEN
 					
                     GVL_MASTER.stNestTable.qNestRotatePortA := FALSE; // Instantly cut advance air supply
@@ -1936,33 +1946,70 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
                     eNestState                              := E_NestState.TESTING;  
                 END_IF
         
-            E_NestState.TESTING: // State 4: TESTING (Elevator Lift Sequence)
-                // Safety verification: Ensure rotation valves are fully de-energized before raising the elevator
-                IF GVL_MASTER.stNestTable.bNestReadySensor 
-					AND GVL_MASTER.stNestTable.bNestLockedSensor 
-					AND NOT GVL_MASTER.stNestTable.bNestInMotion 
-					AND eCurrentNestPos<>E_NestPosition.Unknown 
-					AND GVL_HMI.i_bHMIIndexerManualEnable THEN
-                    
-                    // PHASE 1: Initial stabilization pause (First 100ms)
-                    IF NOT tSupportRetractDelay.Q THEN
-                        GVL_MASTER.stNestTable.qSupportRetract := TRUE;
-                        GVL_MASTER.stNestTable.qSupportExtend  := FALSE;
-                        
-                    // PHASE 2: Actuate and hold the elevator up (During the 2-second hold test)
-                    ELSIF NOT tSupportExtendDelay.Q THEN
-                        GVL_MASTER.stNestTable.qSupportRetract := FALSE;
-                        GVL_MASTER.stNestTable.qSupportExtend  := TRUE; 
-                        
-                    // PHASE 3: Test time finished! Back the initial process
-                    ELSE
-                        GVL_MASTER.stNestTable.bNestInMotion   := FALSE; // Mark current automated cycle as successful
-                        eNestState                             := E_NestState.IDLE; // Safely return to standby
-                    END_IF
-                ELSE
-                    // Safe fallback: Generate critical fault if rotation outputs are active unexpectedly
-                    eNestState := E_NestState.FAULT; 
-                END_IF
+			E_NestState.TESTING:
+			
+				IF GVL_MASTER.stNestTable.bNestReadySensor 
+				   AND GVL_MASTER.stNestTable.bNestLockedSensor 
+				   AND NOT GVL_MASTER.stNestTable.bNestInMotion 
+				   AND eCurrentNestPos <> E_NestPosition.Unknown 
+				   AND GVL_HMI.i_bHMIIndexerManualEnable THEN
+			
+					// PHASE 1: Initial stabilization pause
+					IF NOT tSupportRetractDelay.Q THEN
+			
+						GVL_MASTER.stNestTable.qSupportRetract := TRUE;
+						GVL_MASTER.stNestTable.qSupportExtend  := FALSE;
+						GVL_MASTER.stProcess.bNestTestingReady := FALSE;
+			
+					// PHASE 2: Raise support
+					ELSIF NOT tSupportExtendDelay.Q THEN
+			
+						GVL_MASTER.stNestTable.qSupportRetract := FALSE;
+						GVL_MASTER.stNestTable.qSupportExtend  := TRUE;
+						GVL_MASTER.stProcess.bNestTestingReady := FALSE;
+			
+					// PHASE 3: Support is up
+					ELSE
+			
+						GVL_MASTER.stNestTable.qSupportRetract := FALSE;
+						GVL_MASTER.stNestTable.qSupportExtend  := TRUE;
+			
+						// Manual Mode WITHOUT Kistler:
+						// behave as before, finish Nest cycle directly.
+						IF NOT GVL_HMI.i_bHMIKistlerManualEnable THEN
+			
+							GVL_MASTER.stProcess.bNestTestingReady    := FALSE;
+							GVL_MASTER.stProcess.bReleaseNestRotation := FALSE;
+			
+							GVL_MASTER.stNestTable.bNestInMotion := FALSE;
+							eNestState := E_NestState.IDLE;
+			
+						// Manual Mode WITH Kistler:
+						// use ProcessCycle/Kistler synchronization.
+						ELSE
+			
+							GVL_MASTER.stProcess.bNestTestingReady := TRUE;
+			
+							IF GVL_MASTER.stProcess.bReleaseNestRotation THEN
+			
+								GVL_MASTER.stProcess.bNestTestingReady    := FALSE;
+								GVL_MASTER.stProcess.bReleaseNestRotation := FALSE;
+			
+								GVL_MASTER.stNestTable.bNestInMotion := FALSE;
+								eNestState := E_NestState.IDLE;
+			
+							END_IF
+			
+						END_IF
+			
+					END_IF
+			
+				ELSE
+			
+					GVL_MASTER.stProcess.bNestTestingReady := FALSE;
+					eNestState := E_NestState.FAULT;
+			
+				END_IF
 				
 			E_NestState.WRONG_POSITION: // State 99: WRONG_POSITION (Emergency Stop or Air Loss)
 			
@@ -1973,11 +2020,18 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
                 GVL_MASTER.stNestTable.qSupportExtend       := FALSE;
                 GVL_MASTER.stNestTable.qSupportRetract      := TRUE;
 				//GVL_Master.stMachineStatus.eMachineState := E_MachineState.FAULT;
-				IF rTrigTwoHands.CLK THEN
+				IF tTwoHandReturnTimeout.Q THEN
+					GVL_MASTER.stNestTable.qNestRotatePortA     := FALSE;
+					GVL_MASTER.stNestTable.qNestRotatePortB     := FALSE;
+					GVL_MASTER.stNestTable.bNestInMotion   		:= FALSE;
+					eNestState := E_NestState.fault;
+
+				ELSIF rTrigTwoHands.CLK THEN
                  	GVL_MASTER.stNestTable.qNestRotatePortA     := TRUE;
                  	GVL_MASTER.stNestTable.qNestRotatePortB     := FALSE;
 					GVL_MASTER.stNestTable.bNestInMotion   		:= FALSE;
                 // Automatically clear fault and recover to standby when hardware safety is restore
+
                 ELSIF GVL_IO.stSafety.bSafetyOK 
 						AND NOT GVL_Master.stMachineStatus.bFault
 					  	AND  GVL_MASTER.stNestTable.bNestReadySensor 
@@ -1989,9 +2043,9 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 						//eNestState := E_NestState.IDLE;
 						eNestState := E_NestState.STOP_TABLE;
 					END_IF
-                ELSIF NOT GVL_IO.stSafety.bSafetyOK THEN
-						eNestState := E_NestState.Fault;
-                END_IF
+
+
+                END_IF	
         
             E_NestState.FAULT: // State 99: FAULT STATE (Emergency Stop or Air Loss)
                 
@@ -2126,7 +2180,7 @@ CASE eProcessCycleState OF
 
         tonAfterKistlerDelay(IN := FALSE);
 
-        IF GVL_MASTER.stMachineStatus.bAutoCycle THEN
+        IF bProcessCycleAllowed THEN
             eProcessCycleState := E_ProcessCycle_State.WAIT_NEST_TESTING_READY;
         END_IF
 
@@ -2138,7 +2192,7 @@ CASE eProcessCycleState OF
 	
 		tonAfterKistlerDelay(IN := FALSE);
 	
-		IF NOT GVL_MASTER.stMachineStatus.bAutoCycle THEN
+		IF NOT bProcessCycleAllowed THEN
 	
 			eProcessCycleState := E_ProcessCycle_State.IDLE;
 	
