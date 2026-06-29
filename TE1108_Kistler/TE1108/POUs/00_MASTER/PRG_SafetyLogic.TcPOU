@@ -11,7 +11,7 @@ END_VAR
       <ST><![CDATA[// =================================================================================
 // EMERGENCY STOP LOGIC 
 // =================================================================================
-	GVL_IO.stSafety.bSafetyReset := GVL_MASTER.i_bButtonReset;
+	//GVL_IO.stSafety.bSafetyReset := GVL_MASTER.i_bButtonReset;
 
 
 CASE GVL_Master.stMachineStatus.eMachineState OF

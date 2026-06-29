@@ -224,7 +224,7 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
     	M_ResetProcessCycle();
 
 
-        IF  GVL_MASTER.stMachineStatus.bSafety AND NOT GVL_MASTER.i_bButtonEmergencyStop AND GVL_Master.i_bButtonReset THEN
+        IF  GVL_MASTER.stMachineStatus.bSafety AND NOT GVL_MASTER.i_bButtonEmergencyStop AND fbResetTrigger.Q THEN
             GVL_Master.stMachineStatus.eMachineState := E_MachineState.STOPPING;
         END_IF
 		
@@ -245,7 +245,7 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 		eMode_LED_PASS := E_LEDs_Mode.OFF;
 		eMode_LED_Fail := E_LEDs_Mode.OFF;
 
-		IF GVL_Master.i_bButtonReset AND bStartProcessCondition THEN
+		IF fbResetTrigger.Q AND bStartProcessCondition THEN
             GVL_Master.stMachineStatus.eMachineState := E_MachineState.SYSTEM_INITIALISING;
 			
         END_IF
@@ -332,7 +332,7 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 		
 			GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.FAULT;
 		
-		ELSIF GVL_Master.i_bButtonReset THEN
+		ELSIF fbResetTrigger.Q THEN
 			GVL_HMI.i_bHMIManualModeRequest				 := FALSE;
     		GVL_HMI.i_bHMIIndexerManualEnable 			 := FALSE;
     		GVL_HMI.i_bHMIKistlerManualEnable 			 := FALSE;
@@ -849,7 +849,8 @@ stKistler_CMD.bReset := fbResetTrigger.Q;
 
 
 IF fbResetTrigger.Q 
-	AND GVL_Master.stMachineStatus.eMachineState <> E_MachineState.SYSTEM_AUTO_CYCLE THEN
+	AND GVL_Master.stMachineStatus.eMachineState <> E_MachineState.SYSTEM_AUTO_CYCLE 
+	AND GVL_Master.stMachineStatus.eMachineState <> E_MachineState.SYSTEM_READY_TO_START THEN
 
     // Reset internal process flags
     M_ResetProcessCycle();
@@ -1624,7 +1625,10 @@ END_VAR
 // 1. EMERGENCY RESET AND GLOBAL INTERLOCK PROCESSING
 // =================================================================
 // Global asynchronous reset: Forces the system to IDLE and drops all outputs immediately
-IF GVL_MASTER.i_bButtonReset THEN
+IF fbResetTrigger.Q 
+	AND NOT GVL_Master.stMachineStatus.bAutoCycle
+	AND NOT GVL_Master.stMachineStatus.bReadyToStart THEN
+	
     eNestState                              := E_NestState.IDLE;
     bSequenceToggle                         := FALSE; // Always restart from rotation step after reset
     GVL_MASTER.stNestTable.bNestStartCycle  := FALSE;
