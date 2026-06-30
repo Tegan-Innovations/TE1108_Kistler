@@ -1130,7 +1130,7 @@ CASE eCurrentState OF
                     stKistler_Status.eKistlerState := E_KistlerState.ERROR;
 					
 				ELSIF NOT bKistlerInitialised OR bKistlerRecoveryHomeRequest THEN
-					 //Teste := 1;
+					
 					stKistler_Status.eKistlerState := E_KistlerState.HOMING;
 
                 ELSIF bKistlerSequenceAllowed
@@ -1140,35 +1140,36 @@ CASE eCurrentState OF
                     // If both Home and Ref are false, request homing using DriveToRef.
                     IF NOT stKistlerOutTelegram.bHomePosReached
                        AND NOT stKistlerOutTelegram.bRefPosReached THEN
-
+					   
                         stKistler_Status.eKistlerState := E_KistlerState.HOMING;
-						//Teste := 2;	
+	
                     ELSE
+						
                         stKistler_Status.eKistlerState := E_KistlerState.SET_PARAMETERS;
-						//Teste := 3;
+						
                     END_IF
 
-				 ELSIF bKistlerSequenceAllowed 
-						AND GVL_HMI.i_bHMIKistlerManualEnable THEN
-	
-						IF NOT stKistlerOutTelegram.bHomePosReached
-							AND NOT stKistlerOutTelegram.bRefPosReached THEN
-				
-							stKistler_Status.eKistlerState := E_KistlerState.HOMING;
-										//Teste := 2;				
-						ELSIF GVL_IO.stSafety.bSafetyOK 
-							AND rTrigTwoHands.Q 
-							AND GVL_MASTER.stNestTable.bNestReadySensor 
-							AND GVL_MASTER.stNestTable.bNestLockedSensor 
-							AND stKistler_Status.bInPosition 
-							AND NOT GVL_HMI.i_bHMIIndexerManualEnable THEN
-				
-							stKistler_Status.eKistlerState := E_KistlerState.SET_PARAMETERS;
-										//Teste := 3;
-
-						END_IF
-
-                END_IF
+// 				 ELSIF bKistlerSequenceAllowed 
+// 						AND GVL_HMI.i_bHMIKistlerManualEnable THEN
+// 	
+// 						IF NOT stKistlerOutTelegram.bHomePosReached
+// 							AND NOT stKistlerOutTelegram.bRefPosReached THEN
+// 				
+// 							stKistler_Status.eKistlerState := E_KistlerState.HOMING;
+// 										//Teste := 2;				
+// 						ELSIF GVL_IO.stSafety.bSafetyOK 
+// 							AND rTrigTwoHands.Q 
+// 							AND GVL_MASTER.stNestTable.bNestReadySensor 
+// 							AND GVL_MASTER.stNestTable.bNestLockedSensor 
+// 							AND stKistler_Status.bInPosition 
+// 							AND NOT GVL_HMI.i_bHMIIndexerManualEnable THEN
+// 				
+// 							stKistler_Status.eKistlerState := E_KistlerState.SET_PARAMETERS;
+// 										//Teste := 3;
+// 
+// 						END_IF
+// 
+               END_IF
 
 
             // =========================================================================
