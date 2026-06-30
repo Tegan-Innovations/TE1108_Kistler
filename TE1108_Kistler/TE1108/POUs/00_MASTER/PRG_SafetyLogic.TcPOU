@@ -3,12 +3,24 @@
   <POU Name="PRG_SafetyLogic" Id="{c1ae741e-7d84-482a-8ac0-230607928d2d}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM PRG_SafetyLogic
 VAR
-	
+	fbResetTrigger        : F_TRIG; // Detects HMI Reset button release
 	
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[// =================================================================================
+// SAFETY RESET ACK ERROR
+// =================================================================================
+
+fbResetTrigger(CLK := GVL_MASTER.i_bButtonReset);
+
+IF NOT GVL_IO.stSafety.bSystemSafeOK AND fbResetTrigger.Q THEN 
+		GVL_IO.stSafety.bSafetyReset := fbResetTrigger.Q;
+ELSE 
+		GVL_IO.stSafety.bSafetyReset := FALSE;
+END_IF
+
+// =================================================================================
 // EMERGENCY STOP LOGIC 
 // =================================================================================
 	//GVL_IO.stSafety.bSafetyReset := GVL_MASTER.i_bButtonReset;
