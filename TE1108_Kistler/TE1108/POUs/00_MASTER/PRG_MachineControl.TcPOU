@@ -15,8 +15,8 @@ VAR
     
     rtFirstAutoCycle      : R_TRIG; // Detects entry into Auto Cycle
     fbResetTrigger        : F_TRIG; // Detects HMI Reset button release
-	fbStopTrigger         : F_TRIG;// Detects phisical button input
-	bButtonStop           : BOOL; // Logic signal (pulses TRUE for 1 cycle when pressed)
+	//fbStopTrigger         : F_TRIG;// Detects phisical button input
+	//bButtonStop           : BOOL; // Logic signal (pulses TRUE for 1 cycle when pressed)
 	tTwoHandReturnTimeout : TON := (PT := T#2S);
 	tonAfterKistlerDelay  : TON;
 	
@@ -323,7 +323,7 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 		
     E_MachineState.MANUAL_MODE:
 		eMode_LED_Start := E_LEDs_Mode.OFF; // Start button must flash
-        eMode_LED_Reset := E_LEDs_Mode.ON;
+        eMode_LED_Reset := E_LEDs_Mode.OFF;
 		eMode_LED_PASS := E_LEDs_Mode.OFF;
 		eMode_LED_Fail := E_LEDs_Mode.OFF;
 		eLastTestedNestPos := E_NestPosition.UNKNOWN;
@@ -333,7 +333,7 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 		
 			GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.FAULT;
 		
-		ELSIF fbResetTrigger.Q THEN
+		ELSIF  bStopRequested THEN
 			GVL_HMI.i_bHMIManualModeRequest				 := FALSE;
     		GVL_HMI.i_bHMIIndexerManualEnable 			 := FALSE;
     		GVL_HMI.i_bHMIKistlerManualEnable 			 := FALSE;
@@ -1149,26 +1149,6 @@ CASE eCurrentState OF
 						
                     END_IF
 
-// 				 ELSIF bKistlerSequenceAllowed 
-// 						AND GVL_HMI.i_bHMIKistlerManualEnable THEN
-// 	
-// 						IF NOT stKistlerOutTelegram.bHomePosReached
-// 							AND NOT stKistlerOutTelegram.bRefPosReached THEN
-// 				
-// 							stKistler_Status.eKistlerState := E_KistlerState.HOMING;
-// 										//Teste := 2;				
-// 						ELSIF GVL_IO.stSafety.bSafetyOK 
-// 							AND rTrigTwoHands.Q 
-// 							AND GVL_MASTER.stNestTable.bNestReadySensor 
-// 							AND GVL_MASTER.stNestTable.bNestLockedSensor 
-// 							AND stKistler_Status.bInPosition 
-// 							AND NOT GVL_HMI.i_bHMIIndexerManualEnable THEN
-// 				
-// 							stKistler_Status.eKistlerState := E_KistlerState.SET_PARAMETERS;
-// 										//Teste := 3;
-// 
-// 						END_IF
-// 
                END_IF
 
 
@@ -1607,7 +1587,6 @@ CASE eCurrentState OF
 
                 stKistler_CMD.bStart 				:= FALSE;
                 stKistler_CMD.bRunSequence 			:= FALSE;
-                //stKistler_CMD.bDriveToHome 			:= FALSE;
                 stKistler_CMD.bContinueFromWait 	:= FALSE;
                 stKistler_CMD.bTareY 				:= FALSE;
 				
@@ -1617,7 +1596,6 @@ CASE eCurrentState OF
 
 				END_IF;
 
-                // Use DriveToRef for initial/home movement.
                 stKistler_CMD.bDriveToRef := TRUE;
 				
 				IF stKistler_Status.bInPosition 
@@ -2551,9 +2529,9 @@ tonSys_InitTimeout(IN := GVL_MASTER.stMachineStatus.bInitialising);
 // TwinSAFE circuit stabilization timer (10 seconds)
 tonSafety(IN := (GVL_MASTER.stMachineStatus.eMachineState = E_MachineState.SAFETY), PT := T#10S);
 
-
-fbStopTrigger(CLK := GVL_Master.i_bButtonStop);
-bButtonStop := fbStopTrigger.Q;
+// 
+//  fbStopTrigger(CLK := GVL_Master.i_bButtonStop);
+//  bButtonStop := fbStopTrigger.Q;
 
 // =================================================================================
 // HMI MESSAGE CLEARING
