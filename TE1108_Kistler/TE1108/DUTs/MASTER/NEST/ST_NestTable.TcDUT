@@ -23,6 +23,8 @@ STRUCT
     qNestRotatePortB    	AT %Q*		: BOOL; // Valve: Rotate indexing table Port B
     qSupportExtend       	AT %Q*		: BOOL; // cylinder extend (up for press)
     qSupportRetract     	AT %Q*		: BOOL; // cylinder retract (down for rotate)
+	
+
     	
     // =================================================================
     // 3. LOGICAL CONTROL AND STATUS SIGNALS
@@ -31,9 +33,12 @@ STRUCT
     bNestInMotion           			: BOOL; // Status: Table is currently indexing (ATIVO)
     // bNestError              			: BOOL; // Status: Rotation fault or timeout detected (COMENTADO)
 
+	bSupportExtendRequest  				: BOOL; // Request from Kistler to lift support
+	bSupportRetractRequest 				: BOOL; // Request from Kistler to lower support
 
 	
 END_STRUCT
-END_TYPE]]></Declaration>
+END_TYPE
+]]></Declaration>
   </DUT>
 </TcPlcObject>
