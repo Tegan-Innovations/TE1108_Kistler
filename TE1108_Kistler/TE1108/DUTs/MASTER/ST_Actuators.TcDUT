@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_Actuators" Id="{0b95669e-2627-48ae-8163-db63e3330e6f}">
+    <Declaration><![CDATA[TYPE ST_Actuators :
+STRUCT
+    qGuideCylinder 			AT %Q* 				: BOOL;
+
+    bGuideCylinderExtendRequest 				: BOOL;
+	
+END_STRUCT
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>

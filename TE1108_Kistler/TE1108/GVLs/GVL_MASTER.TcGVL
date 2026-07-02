@@ -39,7 +39,7 @@ VAR_GLOBAL
     // INTERLOCKS & SAFETY
     // =================================================================================
     
-    bAirSupply_Ok          	AT%I*	  : BOOL; // Main air supply pressure switch feedback
+    bAirSupply_Ok          		AT%I*	  : BOOL; // Main air supply pressure switch feedback
     
     // =================================================================================
     // HARDWARE STATUS
@@ -52,6 +52,9 @@ VAR_GLOBAL
 	eProcessCycleState 				  : E_ProcessCycle_State;
 	stProcess 						  : ST_Process;
 	bProcessBusy					  :BOOL;
+	
+	stSensors   					  : ST_Sensors;
+	stActuators 					  : ST_Actuators;
 
 	
 	

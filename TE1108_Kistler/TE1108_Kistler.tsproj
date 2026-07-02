@@ -166,7 +166,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{09826F5E-A0C6-4F2A-AB8E-A2951346EAC9}" Name="TE1108" PrjFilePath="TE1108\TE1108.plcproj" TmcFilePath="TE1108\TE1108.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{B2254759-8883-F694-255B-4F4EA8A27A24}" TmcPath="TE1108\TE1108.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{D9F6F61E-5C98-73A2-74AD-5B29ADB85620}" TmcPath="TE1108\TE1108.tmc">
 					<Name>TE1108 Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -235,24 +235,13 @@
 							<Comment><![CDATA[ cylinder retract (down for rotate)]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
+						<Var>
+							<Name>GVL_MASTER.stActuators.qGuideCylinder</Name>
+							<Type>BOOL</Type>
+						</Var>
 					</Vars>
 					<Vars VarGrpType="1">
 						<Name>PlcTask Inputs</Name>
-						<Var>
-							<Name>GVL_KISTLER_IO.bKistlerSafetyEnableOK</Name>
-							<Comment><![CDATA[kistler safety]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_MASTER.i_bButtonStart</Name>
-							<Comment><![CDATA[  Auto Cycle start button]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_MASTER.i_bButtonStop</Name>
-							<Comment><![CDATA[  cycle stop button]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
 						<Var>
 							<Name>GVL_IO.stSafety.bSafetyOK</Name>
 							<Comment><![CDATA[ Input to PLC from TwinSAFE (System can start)]]></Comment>
@@ -291,6 +280,21 @@
 							<Type GUID="{2B6B47C9-DB58-8D37-72B9-9344E5A5275A}">ARRAY [0..199] OF BYTE</Type>
 						</Var>
 						<Var>
+							<Name>GVL_KISTLER_IO.bKistlerSafetyEnableOK</Name>
+							<Comment><![CDATA[kistler safety]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.i_bButtonStop</Name>
+							<Comment><![CDATA[  cycle stop button]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.i_bButtonStart</Name>
+							<Comment><![CDATA[  Auto Cycle start button]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_MASTER.i_bButtonReset</Name>
 							<Comment><![CDATA[  fault reset button]]></Comment>
 							<Type>BOOL</Type>
@@ -298,26 +302,6 @@
 						<Var>
 							<Name>GVL_MASTER.i_bButtonEmergencyStop</Name>
 							<Comment><![CDATA[  software E-stop button]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_MASTER.bPartPresent_NEST</Name>
-							<Comment><![CDATA[ Part Present sensor NEST]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_MASTER.bPartPresent_Kistler</Name>
-							<Comment><![CDATA[ Part Present sensor Kistler]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_MASTER.bPartPresent_Reject</Name>
-							<Comment><![CDATA[ Part Present sensor Kistler]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_MASTER.bAirSupply_Ok</Name>
-							<Comment><![CDATA[ Main air supply pressure switch feedback]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -356,6 +340,30 @@
 						</Var>
 						<Var>
 							<Name>GVL_MASTER.stNestTable.bSupportExtended</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.bPartPresent_NEST</Name>
+							<Comment><![CDATA[ Part Present sensor NEST]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.bPartPresent_Kistler</Name>
+							<Comment><![CDATA[ Part Present sensor Kistler]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.bPartPresent_Reject</Name>
+							<Comment><![CDATA[ Part Present sensor Kistler]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.bAirSupply_Ok</Name>
+							<Comment><![CDATA[ Main air supply pressure switch feedback]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.stSensors.bGuideCylinderExtended</Name>
 							<Type>BOOL</Type>
 						</Var>
 					</Vars>
@@ -3686,6 +3694,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="PlcTask Inputs^GVL_MASTER.stNestTable.bSupportRetracted" VarB="Channel 1^Input"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1100)^Term 11 (EL2809-0015)">
+				<Link VarA="PlcTask Outputs^GVL_MASTER.stActuators.qGuideCylinder" VarB="Channel 10^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_MASTER.stNestTable.qNestRotatePortA" VarB="Channel 7^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_MASTER.stNestTable.qNestRotatePortB" VarB="Channel 6^Output"/>
 				<Link VarA="PlcTask Outputs^GVL_MASTER.stNestTable.qSupportExtend" VarB="Channel 8^Output"/>

@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_Sensors" Id="{8a0cb0a3-aba0-4d14-a0bd-bce9665f96d6}">
+    <Declaration><![CDATA[TYPE ST_Sensors :
+STRUCT
+    bGuideCylinderExtended AT %I* : BOOL;
+END_STRUCT
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>

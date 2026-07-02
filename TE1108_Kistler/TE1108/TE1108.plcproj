@@ -72,10 +72,16 @@
     <Compile Include="DUTs\MASTER\NEST\ST_NestTable.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\MASTER\ST_Actuators.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\MASTER\ST_MachineStatus.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\MASTER\ST_Process.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\MASTER\ST_Sensors.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\SAFETY\ST_Safety.TcDUT">
