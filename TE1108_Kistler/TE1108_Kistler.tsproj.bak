@@ -166,7 +166,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{09826F5E-A0C6-4F2A-AB8E-A2951346EAC9}" Name="TE1108" PrjFilePath="TE1108\TE1108.plcproj" TmcFilePath="TE1108\TE1108.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{DCAC92D2-0614-799A-56E0-0EBD009EA5B8}" TmcPath="TE1108\TE1108.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{0B497981-68B9-F9C2-8D33-C5EE9AADBA04}" TmcPath="TE1108\TE1108.tmc">
 					<Name>TE1108 Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -301,6 +301,26 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_MASTER.bPartPresent_NEST</Name>
+							<Comment><![CDATA[ Part Present sensor NEST]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.bPartPresent_Kistler</Name>
+							<Comment><![CDATA[ Part Present sensor Kistler]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.bPartPresent_Reject</Name>
+							<Comment><![CDATA[ Part Present sensor Kistler]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.bAirSupply_Ok</Name>
+							<Comment><![CDATA[ Main air supply pressure switch feedback]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_MASTER.stNestTable.bNestReadySensor</Name>
 							<Comment><![CDATA[ Sensor: Table air pressure and home state OK]]></Comment>
 							<Type>BOOL</Type>
@@ -336,26 +356,6 @@
 						</Var>
 						<Var>
 							<Name>GVL_MASTER.stNestTable.bSupportExtended</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_MASTER.bPartPresent_NEST</Name>
-							<Comment><![CDATA[ Part Present sensor NEST]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_MASTER.bPartPresent_Kistler</Name>
-							<Comment><![CDATA[ Part Present sensor Kistler]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_MASTER.bPartPresent_Reject</Name>
-							<Comment><![CDATA[ Part Present sensor Kistler]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_MASTER.bAirSupply_Ok</Name>
-							<Comment><![CDATA[ Main air supply pressure switch feedback]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 					</Vars>
