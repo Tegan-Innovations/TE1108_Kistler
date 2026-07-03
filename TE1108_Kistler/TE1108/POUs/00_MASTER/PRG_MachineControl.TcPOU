@@ -225,6 +225,7 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 
     E_MachineState.SYSTEM_POWER_UP:
 	    GVL_Master.stMachineStatus.eMachineState := E_MachineState.STOPPING;
+		M_ResetProcessCycle();
 		
     E_MachineState.FAULT:
  		eMode_LED_Start := E_LEDs_Mode.OFF;
@@ -233,7 +234,7 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 		eMode_LED_PASS := E_LEDs_Mode.OFF;
 		
 		bHMIManualModeRequest := FALSE;
-    	//M_ResetProcessCycle();
+    	M_ResetProcessCycle();
 
 
         IF  GVL_MASTER.stMachineStatus.bSafety AND NOT GVL_MASTER.i_bButtonEmergencyStop AND fbResetTrigger.Q THEN
