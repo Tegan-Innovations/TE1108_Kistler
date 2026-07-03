@@ -3,7 +3,12 @@
   <DUT Name="ST_Sensors" Id="{8a0cb0a3-aba0-4d14-a0bd-bce9665f96d6}">
     <Declaration><![CDATA[TYPE ST_Sensors :
 STRUCT
-    bGuideCylinderExtended AT %I* : BOOL;
+    bGuideCylinderExtended     AT %I* : BOOL;
+	
+	bPartPresent_NEST          AT%I*   : BOOL; // Part Present sensor NEST
+	bPartPresent_Kistler       AT%I*   : BOOL; // Part Present sensor Kistler
+	bPartPresent_Reject        AT%I*   : BOOL; // Part Present sensor Kistler
+	
 END_STRUCT
 END_TYPE]]></Declaration>
   </DUT>

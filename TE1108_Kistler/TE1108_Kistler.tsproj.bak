@@ -166,7 +166,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{09826F5E-A0C6-4F2A-AB8E-A2951346EAC9}" Name="TE1108" PrjFilePath="TE1108\TE1108.plcproj" TmcFilePath="TE1108\TE1108.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{9CCBE247-9202-366B-52AD-2BE6D8783FD9}" TmcPath="TE1108\TE1108.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{6578FB9E-E8EB-8690-F59B-9C092E9CBADC}" TmcPath="TE1108\TE1108.tmc">
 					<Name>TE1108 Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -189,6 +189,16 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_IO.stSafety.bSafetyRun</Name>
+							<Comment><![CDATA[ Output from PLC to TwinSAFE (Command to run)]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stSafety.bSafetyReset</Name>
+							<Comment><![CDATA[ Output from PLC to TwinSAFE (Command to reset)]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_IO.stSafety.bMachineStopped</Name>
 							<Type>BOOL</Type>
 						</Var>
@@ -204,16 +214,6 @@
 							<Name>GVL_KISTLER_IO.aKistlerOut</Name>
 							<Comment><![CDATA[ PLC -> maXYmos]]></Comment>
 							<Type GUID="{2B6B47C9-DB58-8D37-72B9-9344E5A5275A}">ARRAY [0..199] OF BYTE</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stSafety.bSafetyRun</Name>
-							<Comment><![CDATA[ Output from PLC to TwinSAFE (Command to run)]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stSafety.bSafetyReset</Name>
-							<Comment><![CDATA[ Output from PLC to TwinSAFE (Command to reset)]]></Comment>
-							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_MASTER.stNestTable.qNestRotatePortA</Name>
@@ -242,6 +242,25 @@
 					</Vars>
 					<Vars VarGrpType="1">
 						<Name>PlcTask Inputs</Name>
+						<Var>
+							<Name>GVL_MASTER.stSensors.bGuideCylinderExtended</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.stSensors.bPartPresent_NEST</Name>
+							<Comment><![CDATA[ Part Present sensor NEST]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.stSensors.bPartPresent_Kistler</Name>
+							<Comment><![CDATA[ Part Present sensor Kistler]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.stSensors.bPartPresent_Reject</Name>
+							<Comment><![CDATA[ Part Present sensor Kistler]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
 						<Var>
 							<Name>GVL_IO.stSafety.bSafetyOK</Name>
 							<Comment><![CDATA[ Input to PLC from TwinSAFE (System can start)]]></Comment>
@@ -285,11 +304,6 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_MASTER.i_bButtonReset</Name>
-							<Comment><![CDATA[  fault reset button]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_MASTER.i_bButtonStart</Name>
 							<Comment><![CDATA[  Auto Cycle start button]]></Comment>
 							<Type>BOOL</Type>
@@ -297,6 +311,11 @@
 						<Var>
 							<Name>GVL_MASTER.i_bButtonStop</Name>
 							<Comment><![CDATA[  cycle stop button]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.i_bButtonReset</Name>
+							<Comment><![CDATA[  fault reset button]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -343,27 +362,8 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_MASTER.bPartPresent_NEST</Name>
-							<Comment><![CDATA[ Part Present sensor NEST]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_MASTER.bPartPresent_Kistler</Name>
-							<Comment><![CDATA[ Part Present sensor Kistler]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_MASTER.bPartPresent_Reject</Name>
-							<Comment><![CDATA[ Part Present sensor Kistler]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_MASTER.bAirSupply_Ok</Name>
 							<Comment><![CDATA[ Main air supply pressure switch feedback]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_MASTER.stSensors.bGuideCylinderExtended</Name>
 							<Type>BOOL</Type>
 						</Var>
 					</Vars>
@@ -378,6 +378,15 @@
 							<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1100)^Term 3 (EL6910)">
 								<Link VarA="GVL_IO.bSafetyReset" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="StandardOutputs^TwinSafeGroup1.ErrorAcknowledgement_1" Size="1" RestoreInfo="ANotFound"/>
 								<Link VarA="GVL_IO.bSafetyRun" TypeA="BOOL" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="StandardOutputs^TwinSafeGroup1.Run_2" Size="1" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+					</UnrestoredVarLinks>
+					<UnrestoredVarLinks ImportTime="2026-07-02T16:04:25">
+						<OwnerA Name="InputDst" Prefix="TIPC^TE1108^TE1108 Instance" Type="1">
+							<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1100)^Term 9 (EL1809)">
+								<Link VarA="GVL_MASTER.bPartPresent_Kistler" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 13^Input" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_MASTER.bPartPresent_NEST" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 12^Input" Size="1" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_MASTER.bPartPresent_Reject" TypeA="BOOL" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000030}" VarB="Channel 5^Input" Size="1" RestoreInfo="ANotFound"/>
 							</OwnerB>
 						</OwnerA>
 					</UnrestoredVarLinks>
@@ -3725,9 +3734,6 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="PlcTask Inputs^GVL_MASTER.i_bButtonReset" VarB="Module 1 (FSOE)^FSoE Inputs^FSOE^FSIN Module 3.Input"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1100)^Term 9 (EL1809)">
-				<Link VarA="PlcTask Inputs^GVL_MASTER.bPartPresent_Kistler" VarB="Channel 13^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_MASTER.bPartPresent_NEST" VarB="Channel 12^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_MASTER.bPartPresent_Reject" VarB="Channel 5^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_MASTER.i_bButtonStart" VarB="Channel 1^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_MASTER.i_bButtonStop" VarB="Channel 2^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_MASTER.stNestTable.bNestCompletedSensor" VarB="Channel 9^Input"/>
@@ -3736,6 +3742,9 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="PlcTask Inputs^GVL_MASTER.stNestTable.bNestPos_2_Sensor" VarB="Channel 7^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_MASTER.stNestTable.bNestPos_3_Sensor" VarB="Channel 8^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_MASTER.stNestTable.bNestReadySensor" VarB="Channel 11^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_MASTER.stSensors.bPartPresent_Kistler" VarB="Channel 13^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_MASTER.stSensors.bPartPresent_NEST" VarB="Channel 12^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_MASTER.stSensors.bPartPresent_Reject" VarB="Channel 5^Input"/>
 			</OwnerB>
 		</OwnerA>
 	</Mappings>

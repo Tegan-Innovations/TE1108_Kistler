@@ -27,13 +27,6 @@ VAR_GLOBAL
     stNestTable             		  : ST_NestTable;
 	bStations_Home          		  : BOOL :=TRUE; // Interlock: All station tooling retracted
 	
-		
-	// =================================================================
-    // SENSORS PART PRESENT
-    // =================================================================
-	bPartPresent_NEST          AT%I*   : BOOL; // Part Present sensor NEST
-	bPartPresent_Kistler       AT%I*   : BOOL; // Part Present sensor Kistler
-	bPartPresent_Reject        AT%I*   : BOOL; // Part Present sensor Kistler
  
     // =================================================================================
     // INTERLOCKS & SAFETY
