@@ -15,6 +15,7 @@ VAR_GLOBAL
     i_bHMIIndexerManualEnable 			: BOOL := FALSE;
     i_bHMIKistlerManualEnable 			: BOOL := FALSE;
 
+	iNestRotationAngle 					: INT;
 	
 // =================================================================
 //                         HMI COLORS 

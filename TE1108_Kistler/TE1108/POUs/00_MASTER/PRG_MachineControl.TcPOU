@@ -435,6 +435,24 @@ CASE iBinaryValue OF
 ELSE
     // Default fallback: If 000 or any unmapped pattern occurs (e.g., 111), the table might be misaligned or in motion
     M_GetCurrentPosition := E_NestPosition.UNKNOWN; 
+END_CASE
+
+
+CASE eCurrentNestPos OF
+    E_NestPosition.POSITION_1:
+        GVL_HMI.iNestRotationAngle := 0;
+
+    E_NestPosition.POSITION_2:
+        GVL_HMI.iNestRotationAngle := 90;
+
+    E_NestPosition.POSITION_3:
+        GVL_HMI.iNestRotationAngle := 180;
+
+    E_NestPosition.POSITION_4:
+        GVL_HMI.iNestRotationAngle := 270;
+
+ELSE
+    GVL_HMI.iNestRotationAngle := 0;
 END_CASE]]></ST>
       </Implementation>
     </Method>
@@ -2359,7 +2377,26 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 						  OR stKistler_Status.bInPosition THEN
 				
 						GVL_MASTER.stProcess.bKistlerHomeDone := TRUE;
-				
+						
+						
+						// Kistler executed the test and returned the part result
+						IF stKistler_Status.bPartOK THEN
+							GVL_MASTER.stProcess.bKistlerResultOK  := TRUE;
+							GVL_MASTER.stProcess.bKistlerResultNOK := FALSE;
+					
+						ELSIF stKistler_Status.bPartNOK THEN
+							GVL_MASTER.stProcess.bKistlerResultOK  := FALSE;
+							GVL_MASTER.stProcess.bKistlerResultNOK := TRUE;
+					
+						ELSE
+							// Test finished but no valid OK/NOK result was received
+							GVL_MASTER.stProcess.bKistlerResultOK  := FALSE;
+							GVL_MASTER.stProcess.bKistlerResultNOK := FALSE;
+							//eProcessCycleState := E_ProcessCycle_State.FAULT;
+							RETURN;
+						END_IF
+						
+						eLastTestedNestPos := eCurrentNestPos;
 						eProcessCycleState := E_ProcessCycle_State.WAIT_AFTER_KISTLER;
 				
 					END_IF

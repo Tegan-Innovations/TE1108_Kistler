@@ -627,6 +627,9 @@
     <Content Include="Images\IO\Wieland_Switch.PNG">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Images\Project\IndexKistler.png">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Images\Project\KistlerMAchine.png">
       <SubType>Content</SubType>
     </Content>
@@ -663,7 +666,25 @@
     <Content Include="Imports\Images\C6015-0010_2.png">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Imports\Images\Kistler_Nest-0-0.png">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Imports\Images\Kistler_Nest-0.png">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Imports\Images\Kistler_Nest.png">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Imports\Images\left_hand - green.png">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Imports\Images\left_hand.png">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Imports\Images\right_hand - green.png">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Imports\Images\right_hand.png">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Server\TcHmiLua\TcHmiLua.Config.default.json">

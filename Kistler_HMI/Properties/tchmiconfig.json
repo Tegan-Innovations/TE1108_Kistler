@@ -449,6 +449,18 @@
         "type": "tchmi:general#/definitions/String",
         "persist": false,
         "readonly": false
+      },
+      "IndexPosition": {
+        "value": 0,
+        "type": "tchmi:general#/definitions/INT",
+        "persist": false,
+        "readonly": false
+      },
+      "PASa_FAULT_PART": {
+        "value": "FAULT",
+        "type": "tchmi:general#/definitions/String",
+        "persist": false,
+        "readonly": false
       }
     },
     "themedResources": {},

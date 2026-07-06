@@ -1108,6 +1108,16 @@
             },
             "USEMAPPING": true
         },
+        "ADS.PLC1.GVL_HMI.iNestRotationAngle": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::iNestRotationAngle",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/INT"
+            },
+            "USEMAPPING": true
+        },
         "ADS.PLC1.GVL_HMI.i_bHMIIndexerManualEnable": {
             "ACCESS": 3,
             "DOMAIN": "ADS",
@@ -1140,6 +1150,46 @@
                     },
                     {
                         "comment": "=================================================================\r\n                         HMI COMMANDS \r\n ================================================================="
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_IO.stSafety.bTwoHandsLeft": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_IO::stSafety::bTwoHandsLeft",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:general#/definitions/BOOL"
+                    },
+                    {
+                        "attributes": {
+                            "TcDataArea": "Input"
+                        },
+                        "propertyOrder": 13
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_IO.stSafety.bTwoHandsRight": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_IO::stSafety::bTwoHandsRight",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:general#/definitions/BOOL"
+                    },
+                    {
+                        "attributes": {
+                            "TcDataArea": "Input"
+                        },
+                        "propertyOrder": 14
                     }
                 ]
             },
@@ -1243,6 +1293,65 @@
                     {
                         "comment": "/////////////////////////:",
                         "propertyOrder": 1
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_MASTER.stProcess.bKistlerCycleDone": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_MASTER::stProcess::bKistlerCycleDone",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:general#/definitions/BOOL"
+                    },
+                    {
+                        "propertyOrder": 2
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_MASTER.stSensors.bPartPresent_NEST": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_MASTER::stSensors::bPartPresent_NEST",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:general#/definitions/BOOL"
+                    },
+                    {
+                        "attributes": {
+                            "TcDataArea": "Input"
+                        },
+                        "comment": "Part Present sensor NEST",
+                        "propertyOrder": 2
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_MASTER.stSensors.bPartPresent_Reject": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_MASTER::stSensors::bPartPresent_Reject",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:general#/definitions/BOOL"
+                    },
+                    {
+                        "attributes": {
+                            "TcDataArea": "Input"
+                        },
+                        "comment": "Part Present sensor Kistler",
+                        "propertyOrder": 4
                     }
                 ]
             },
@@ -4569,15 +4678,21 @@
                 "ADS.PLC1.GVL_HMI.StatusHMI.sMachineStatusText": 3,
                 "ADS.PLC1.GVL_HMI.arrAlarmHistory": 3,
                 "ADS.PLC1.GVL_HMI.ePowerCmd": 3,
+                "ADS.PLC1.GVL_HMI.iNestRotationAngle": 3,
                 "ADS.PLC1.GVL_HMI.i_bHMIIndexerManualEnable": 3,
                 "ADS.PLC1.GVL_HMI.i_bHMIKistlerManualEnable": 3,
                 "ADS.PLC1.GVL_HMI.i_bHMIManualModeRequest": 3,
+                "ADS.PLC1.GVL_IO.stSafety.bTwoHandsLeft": 3,
+                "ADS.PLC1.GVL_IO.stSafety.bTwoHandsRight": 3,
                 "ADS.PLC1.GVL_MASTER.bHmiEmergencyStop": 3,
                 "ADS.PLC1.GVL_MASTER.bHmiReset": 3,
                 "ADS.PLC1.GVL_MASTER.bHmiStart": 3,
                 "ADS.PLC1.GVL_MASTER.bHmiStop": 3,
                 "ADS.PLC1.GVL_MASTER.stMachineStatus.bReadyToStart": 3,
                 "ADS.PLC1.GVL_MASTER.stMachineStatus.eMachineState": 3,
+                "ADS.PLC1.GVL_MASTER.stProcess.bKistlerCycleDone": 3,
+                "ADS.PLC1.GVL_MASTER.stSensors.bPartPresent_NEST": 3,
+                "ADS.PLC1.GVL_MASTER.stSensors.bPartPresent_Reject": 3,
                 "ADS.PLC1.PGR_HMI.iCountdownValue": 3,
                 "ChangeUserSettings": 3,
                 "ConfirmAlarm": 3,
