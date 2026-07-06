@@ -1315,6 +1315,23 @@
             },
             "USEMAPPING": true
         },
+        "ADS.PLC1.GVL_MASTER.stProcess.bKistlerResultOK": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_MASTER::stProcess::bKistlerResultOK",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:general#/definitions/BOOL"
+                    },
+                    {
+                        "propertyOrder": 6
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
         "ADS.PLC1.GVL_MASTER.stSensors.bPartPresent_NEST": {
             "ACCESS": 3,
             "DOMAIN": "ADS",
@@ -4691,6 +4708,7 @@
                 "ADS.PLC1.GVL_MASTER.stMachineStatus.bReadyToStart": 3,
                 "ADS.PLC1.GVL_MASTER.stMachineStatus.eMachineState": 3,
                 "ADS.PLC1.GVL_MASTER.stProcess.bKistlerCycleDone": 3,
+                "ADS.PLC1.GVL_MASTER.stProcess.bKistlerResultOK": 3,
                 "ADS.PLC1.GVL_MASTER.stSensors.bPartPresent_NEST": 3,
                 "ADS.PLC1.GVL_MASTER.stSensors.bPartPresent_Reject": 3,
                 "ADS.PLC1.PGR_HMI.iCountdownValue": 3,

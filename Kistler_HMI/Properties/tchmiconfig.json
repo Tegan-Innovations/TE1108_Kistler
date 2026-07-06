@@ -456,9 +456,27 @@
         "persist": false,
         "readonly": false
       },
-      "PASa_FAULT_PART": {
+      "PASS_FAULT_PART": {
         "value": "FAULT",
         "type": "tchmi:general#/definitions/String",
+        "persist": false,
+        "readonly": false
+      },
+      "TEST": {
+        "value": false,
+        "type": "tchmi:general#/definitions/BOOL",
+        "persist": false,
+        "readonly": false
+      },
+      "Position": {
+        "value": 1,
+        "type": "tchmi:general#/definitions/INT",
+        "persist": false,
+        "readonly": false
+      },
+      "Kistlerworded": {
+        "value": false,
+        "type": "tchmi:general#/definitions/BOOL",
         "persist": false,
         "readonly": false
       }
