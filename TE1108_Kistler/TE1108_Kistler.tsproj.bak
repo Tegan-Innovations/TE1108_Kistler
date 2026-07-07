@@ -166,7 +166,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{09826F5E-A0C6-4F2A-AB8E-A2951346EAC9}" Name="TE1108" PrjFilePath="TE1108\TE1108.plcproj" TmcFilePath="TE1108\TE1108.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{C9F8E572-BEEB-F0BE-F45D-52D720474953}" TmcPath="TE1108\TE1108.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{5D1025DB-16D3-56A4-88B9-1CF3532ED614}" TmcPath="TE1108\TE1108.tmc">
 					<Name>TE1108 Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -213,11 +213,6 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_KISTLER_IO.aKistlerOut</Name>
-							<Comment><![CDATA[ PLC -> maXYmos]]></Comment>
-							<Type GUID="{2B6B47C9-DB58-8D37-72B9-9344E5A5275A}">ARRAY [0..199] OF BYTE</Type>
-						</Var>
-						<Var>
 							<Name>GVL_IO.stSafety.bSafetyRun</Name>
 							<Comment><![CDATA[ Output from PLC to TwinSAFE (Command to run)]]></Comment>
 							<Type>BOOL</Type>
@@ -238,6 +233,11 @@
 						<Var>
 							<Name>GVL_IO.stSafety.bProcessTest</Name>
 							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_KISTLER_IO.aKistlerOut</Name>
+							<Comment><![CDATA[ PLC -> maXYmos]]></Comment>
+							<Type GUID="{2B6B47C9-DB58-8D37-72B9-9344E5A5275A}">ARRAY [0..199] OF BYTE</Type>
 						</Var>
 					</Vars>
 					<Vars VarGrpType="1">
@@ -325,16 +325,6 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_KISTLER_IO.aKistlerIn</Name>
-							<Comment><![CDATA[ maXYmos -> PLC]]></Comment>
-							<Type GUID="{2B6B47C9-DB58-8D37-72B9-9344E5A5275A}">ARRAY [0..199] OF BYTE</Type>
-						</Var>
-						<Var>
-							<Name>GVL_KISTLER_IO.bKistlerSafetyEnableOK</Name>
-							<Comment><![CDATA[kistler safety]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_IO.stSafety.bSafetyOK</Name>
 							<Comment><![CDATA[ Input to PLC from TwinSAFE (System can start)]]></Comment>
 							<Type>BOOL</Type>
@@ -372,6 +362,16 @@
 						</Var>
 						<Var>
 							<Name>GVL_IO.stSafety.bTwoHandsRight</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_KISTLER_IO.aKistlerIn</Name>
+							<Comment><![CDATA[ maXYmos -> PLC]]></Comment>
+							<Type GUID="{2B6B47C9-DB58-8D37-72B9-9344E5A5275A}">ARRAY [0..199] OF BYTE</Type>
+						</Var>
+						<Var>
+							<Name>GVL_KISTLER_IO.bKistlerSafetyEnableOK</Name>
+							<Comment><![CDATA[kistler safety]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 					</Vars>

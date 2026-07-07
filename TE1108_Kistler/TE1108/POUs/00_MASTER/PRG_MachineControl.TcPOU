@@ -2247,8 +2247,8 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 					GVL_MASTER.stProcess.bKistlerCycleDone    := FALSE;
 					GVL_MASTER.stProcess.bKistlerHomeDone     := FALSE;
 					GVL_MASTER.stProcess.bReleaseNestRotation := FALSE;
-					GVL_MASTER.stProcess.bKistlerResultOK     := FALSE;
-					GVL_MASTER.stProcess.bKistlerResultNOK    := FALSE;
+					//GVL_MASTER.stProcess.bKistlerResultOK     := FALSE;
+					//GVL_MASTER.stProcess.bKistlerResultNOK    := FALSE;
 			
 					tonAfterKistlerDelay(IN := FALSE);
 			
@@ -2357,7 +2357,7 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 			
 						GVL_MASTER.stProcess.bKistlerCycleRequest   := FALSE;
 						GVL_MASTER.stProcess.bKistlerCycleDone      := TRUE;
-						eLastTestedNestPos 							:= eCurrentNestPos;
+						//eLastTestedNestPos 							:= eCurrentNestPos;
 			
 						eProcessCycleState := E_ProcessCycle_State.WAIT_KISTLER_HOME;
 			
@@ -2395,7 +2395,6 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 							//eProcessCycleState := E_ProcessCycle_State.FAULT;
 							RETURN;
 						END_IF
-						
 						eLastTestedNestPos := eCurrentNestPos;
 						eProcessCycleState := E_ProcessCycle_State.WAIT_AFTER_KISTLER;
 				
@@ -2403,6 +2402,8 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 			
 			
 				E_ProcessCycle_State.WAIT_AFTER_KISTLER:
+					
+					
 				
 					IF stKistlerOutTelegram.bSequenceEnd
 					   AND (
@@ -2427,6 +2428,7 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 					   OR NOT GVL_MASTER.stProcess.bNestTestingReady THEN
 				
 						// Clear release and process cycle flags.
+						
 						GVL_MASTER.stProcess.bReleaseNestRotation := FALSE;
 						GVL_MASTER.stProcess.bKistlerCycleRequest := FALSE;
 						GVL_MASTER.stProcess.bKistlerCycleDone    := FALSE;
@@ -2635,6 +2637,7 @@ E_MachineState.MANUAL_MODE:
 
             IF (eNestState <> E_NestState.TESTING)
                OR NOT GVL_MASTER.stProcess.bNestTestingReady THEN
+			  
 
                 GVL_MASTER.stProcess.bReleaseNestRotation := FALSE;
                 GVL_MASTER.stProcess.bKistlerCycleRequest := FALSE;
