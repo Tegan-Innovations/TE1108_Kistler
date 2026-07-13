@@ -48,6 +48,9 @@
     <Compile Include="DUTs\MASTER\E_ProcessCycle_State.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\MASTER\KISTLER\E_HMIKistlerResult.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\MASTER\KISTLER\E_KistlerState.TcDUT">
       <SubType>Code</SubType>
     </Compile>

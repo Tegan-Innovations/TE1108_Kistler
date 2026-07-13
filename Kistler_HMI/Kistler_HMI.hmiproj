@@ -247,6 +247,9 @@
     <Content Include="Contents\Screens\0_Simulation.content">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Contents\Screens\Settings_Kistler.content">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Contents\Screens\Alarms.content">
       <SubType>Content</SubType>
     </Content>

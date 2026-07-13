@@ -48,6 +48,8 @@ VAR_GLOBAL
 	
 	stSensors   					  : ST_Sensors;
 	stActuators 					  : ST_Actuators;
+	
+	test 							  :INT;
 
 	
 	

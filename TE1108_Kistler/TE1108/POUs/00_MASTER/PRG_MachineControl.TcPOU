@@ -13,6 +13,7 @@ VAR
 	tonStoppingDelay	  : TON                   ; // Time to finalize process 
     tonSafety             : TON := (PT := T#10S);   // Safety interlock debounce timer
 	tonSimulation		  : ARRAY[1..4] OF TON; //timer for simulations  
+	rtKistlerResultDone   : R_TRIG;
     
     rtFirstAutoCycle      : R_TRIG; // Detects entry into Auto Cycle
     fbResetTrigger        : F_TRIG; // Detects HMI Reset button release
@@ -84,6 +85,9 @@ VAR
 	
 	bKistlerRecoveryHomeRequest : BOOL;
 	bNestRecoveryHomeRequest	: BOOL;
+	
+	bStartKistler 				:BOOL;
+	//bFinishKistler 				:BOOL;
 	
 
 	//==========================================================
@@ -234,12 +238,32 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 		eMode_LED_PASS := E_LEDs_Mode.OFF;
 		
 		bHMIManualModeRequest := FALSE;
-    	M_ResetProcessCycle();
+    	//M_ResetProcessCycle();
 
 
-        IF  GVL_MASTER.stMachineStatus.bSafety AND NOT GVL_MASTER.i_bButtonEmergencyStop AND fbResetTrigger.Q THEN
-            GVL_Master.stMachineStatus.eMachineState := E_MachineState.STOPPING;
-        END_IF
+		IF GVL_MASTER.stMachineStatus.bSafety
+			AND NOT GVL_MASTER.i_bButtonEmergencyStop
+			AND fbResetTrigger.Q
+		THEN
+			bKistlerResetPulse := TRUE;
+		END_IF;
+	
+	
+		IF bKistlerResetPulse THEN
+	
+			IF M_ResetProcessCycle() THEN
+	
+				GVL_MASTER.stMachineStatus.eMachineState :=
+					E_MachineState.STOPPING;
+	
+			END_IF;
+	
+		END_IF;
+
+// 
+//         IF  GVL_MASTER.stMachineStatus.bSafety AND NOT GVL_MASTER.i_bButtonEmergencyStop AND fbResetTrigger.Q THEN
+//             GVL_Master.stMachineStatus.eMachineState := E_MachineState.STOPPING;
+//         END_IF
 		
 	E_MachineState.STOPPING:
 		eMode_LED_PASS := E_LEDs_Mode.OFF;
@@ -397,7 +421,6 @@ M_GuideCylinderControl(
     bExtendRequest := GVL_MASTER.stActuators.bGuideCylinderExtendRequest
 );
 
-// PLC -> Kistler command telegram
 M_KistlerConfig_Input();
 
 // Update machine status from Kistler status
@@ -440,19 +463,24 @@ END_CASE
 
 CASE eCurrentNestPos OF
     E_NestPosition.POSITION_1:
-        GVL_HMI.iNestRotationAngle := 0;
+        GVL_HMI.iNestRotationAngle      := 0;
+		GVL_HMI.iNestPositionTesting    :=1;
 
     E_NestPosition.POSITION_2:
-        GVL_HMI.iNestRotationAngle := 90;
-
+        GVL_HMI.iNestRotationAngle 		:= 90;
+		GVL_HMI.iNestPositionTesting    :=2;
+		
     E_NestPosition.POSITION_3:
-        GVL_HMI.iNestRotationAngle := 180;
-
+        GVL_HMI.iNestRotationAngle 		:= 180;
+	    GVL_HMI.iNestPositionTesting    :=3;
+		
     E_NestPosition.POSITION_4:
-        GVL_HMI.iNestRotationAngle := 270;
+        GVL_HMI.iNestRotationAngle 		:= 270;
+		GVL_HMI.iNestPositionTesting    :=4;
 
 ELSE
-    GVL_HMI.iNestRotationAngle := 0;
+    GVL_HMI.iNestRotationAngle      := 0;
+	GVL_HMI.iNestPositionTesting    := 0;
 END_CASE]]></ST>
       </Implementation>
     </Method>
@@ -474,6 +502,68 @@ END_VAR]]></Declaration>
 // FALSE -> Retract guide cylinder automatically.
 
 GVL_MASTER.stActuators.qGuideCylinder := bExtendRequest;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_HMIKistlerResult" Id="{5ec231b7-f8ff-4c60-8cb2-2f6710f94bba}" FolderPath="Kistler\">
+      <Declaration><![CDATA[METHOD PRIVATE M_HMIKistlerResult : BOOL
+VAR_INPUT
+    eNestPosition : E_NestPosition;
+    bPartOK       : BOOL;
+    bPartNOK      : BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+M_HMIKistlerResult := FALSE;
+
+
+// Validate nest position
+CASE eNestPosition OF
+
+    E_NestPosition.Position_1:
+        IF bPartOK THEN
+            GVL_HMI.aKistlerNestResult[1] := E_HMIKistlerResult.PASS;
+        ELSIF bPartNOK THEN
+            GVL_HMI.aKistlerNestResult[1] := E_HMIKistlerResult.FAIL;
+        ELSE
+			GVL_HMI.aKistlerNestResult[1] := E_HMIKistlerResult.NONE;
+            RETURN;
+        END_IF
+
+    E_NestPosition.Position_2:
+        IF bPartOK THEN
+            GVL_HMI.aKistlerNestResult[2] := E_HMIKistlerResult.PASS;
+        ELSIF bPartNOK THEN
+            GVL_HMI.aKistlerNestResult[2] := E_HMIKistlerResult.FAIL;
+        ELSE
+            RETURN;
+        END_IF
+
+    E_NestPosition.Position_3:
+        IF bPartOK THEN
+            GVL_HMI.aKistlerNestResult[3] := E_HMIKistlerResult.PASS;
+        ELSIF bPartNOK THEN
+            GVL_HMI.aKistlerNestResult[3] := E_HMIKistlerResult.FAIL;
+        ELSE
+            RETURN;
+        END_IF
+
+    E_NestPosition.Position_4:
+        IF bPartOK THEN
+            GVL_HMI.aKistlerNestResult[4] := E_HMIKistlerResult.PASS;
+        ELSIF bPartNOK THEN
+            GVL_HMI.aKistlerNestResult[4] := E_HMIKistlerResult.FAIL;
+        ELSE
+            RETURN;
+        END_IF
+
+ELSE
+    RETURN;
+
+END_CASE
+
+
+M_HMIKistlerResult := TRUE;]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_KistlerCommandMapping" Id="{5cfa21d9-3cc5-49b3-924c-97638c44a598}" FolderPath="Kistler\">
@@ -780,7 +870,7 @@ stKistlerOutTelegram.bSequenceStopped := GVL_KISTLER_IO.aKistlerIn[10].0;
 stKistlerOutTelegram.bSequenceEnd     := GVL_KISTLER_IO.aKistlerIn[10].1;
 //stKistlerOutTelegram.bSequenceError   := GVL_KISTLER_IO.aKistlerIn[10].4;
 stKistlerOutTelegram.bSequenceError   := FALSE;
-stKistlerOutTelegram.bDriveEnabled    := GVL_KISTLER_IO.aKistlerIn[10].5;
+stKistlerOutTelegram.bDriveEnabled    := GVL_KISTLER_IO.aKistlerIn[10].5; // olhar essa 
 stKistlerOutTelegram.bHomePosReached  := GVL_KISTLER_IO.aKistlerIn[10].6;
 stKistlerOutTelegram.bRefPosReached   := GVL_KISTLER_IO.aKistlerIn[10].7;
 
@@ -864,107 +954,120 @@ M_KistlerConfig_Output := TRUE;]]></ST>
     <Method Name="M_KistlerControl" Id="{142f0c7b-5ff7-4bb2-a407-a7b85664501f}" FolderPath="Kistler\">
       <Declaration><![CDATA[METHOD PRIVATE M_KistlerControl : BOOL
 VAR_INPUT
-	eCurrentState : E_MachineState;
+    eCurrentState : E_MachineState;
 END_VAR
 
 VAR
-	bKistlerSafetyEnableOK: BOOL;
-END_VAR]]></Declaration>
+    bKistlerSafetyEnableOK : BOOL;
+END_VAR
+
+
+]]></Declaration>
       <Implementation>
-        <ST><![CDATA[// =================================================================================
-// KISTLER COMMAND GENERATION
-// =================================================================================
-// This method generates high-level Kistler commands based on the current machine state.
-// It does NOT write directly to EtherCAT bytes.
-// EtherCAT byte mapping is done in M_KistlerConfig_Input().
-// =================================================================================
+        <ST><![CDATA[
+
+// =========================================================
+// RESET BUTTON DETECTION
+// =========================================================
+
+// F_TRIG generates the event when the reset button is released
+fbResetTrigger(
+    CLK := GVL_MASTER.i_bButtonReset
+);
 
 
-// Abort when machine is stopping or faulted
+// Perform the complete process reset only in allowed states
+IF fbResetTrigger.Q
+    AND eCurrentState <> E_MachineState.SYSTEM_AUTO_CYCLE
+    AND eCurrentState <> E_MachineState.SYSTEM_READY_TO_START
+THEN
+
+    M_ResetProcessCycle();
+
+END_IF;
+
+
+// =========================================================
+// KISTLER RESET / ALARM ACKNOWLEDGEMENT PULSE
+// =========================================================
+
+// bKistlerResetPulse is set by M_ResetProcessCycle()
+tonKistlerReset(
+    IN := bKistlerResetPulse,
+    PT := T#500MS
+);
+
+// This is the command that is actually sent to the Kistler
+stKistler_CMD.bReset := bKistlerResetPulse;
+
+
+// End the pulse after 500 ms
+IF tonKistlerReset.Q THEN
+
+    bKistlerResetPulse := FALSE;
+
+END_IF;
+
+
+// =========================================================
+// ABORT
+// =========================================================
+
+// Keep abort active while the machine is faulted
 stKistler_CMD.bAbort :=
-    (eCurrentState = E_MachineState.FAULT);
+    eCurrentState = E_MachineState.FAULT;
 
 
-// Enable Kistler only when machine is safe and not stopping/faulted
+// =========================================================
+// ENABLE
+// =========================================================
+
 stKistler_CMD.bEnable :=
     GVL_MASTER.stMachineStatus.bSafety
     AND GVL_KISTLER_IO.bKistlerSafetyEnableOK
     AND NOT GVL_MASTER.i_bButtonEmergencyStop
     AND NOT GVL_MASTER.stMachineStatus.bFault
-    AND (
+    AND
+    (
         eCurrentState = E_MachineState.SYSTEM_INITIALISING
         OR eCurrentState = E_MachineState.SYSTEM_READY_TO_START
         OR eCurrentState = E_MachineState.SYSTEM_AUTO_CYCLE
-		OR (eCurrentState = E_MachineState.STOPPING)
-		OR (
-			eCurrentState = E_MachineState.MANUAL_MODE
+        OR eCurrentState = E_MachineState.STOPPING
+        OR
+        (
+            eCurrentState = E_MachineState.MANUAL_MODE
             AND GVL_HMI.i_bHMIKistlerManualEnable
-		    )
+        )
     );
-// Manual mode
+
+
+// =========================================================
+// MANUAL MODE
+// =========================================================
+
 stKistler_CMD.bManualMode :=
-    (eCurrentState = E_MachineState.MANUAL_MODE 
-	 AND GVL_HMI.i_bHMIKistlerManualEnable);
-	
+    eCurrentState = E_MachineState.MANUAL_MODE
+    AND GVL_HMI.i_bHMIKistlerManualEnable;
 
 
-// =================================================================================
-// COMPONENT RESET MANAGEMENT
-// =================================================================================
-
-fbResetTrigger(CLK := GVL_MASTER.i_bButtonReset);
-stKistler_CMD.bReset := fbResetTrigger.Q OR bKistlerResetPulse;
-
-// ================================================================
-// Reset button trigger
-// ================================================================
-
-
-IF fbResetTrigger.Q 
-	AND GVL_Master.stMachineStatus.eMachineState <> E_MachineState.SYSTEM_AUTO_CYCLE 
-	AND GVL_Master.stMachineStatus.eMachineState <> E_MachineState.SYSTEM_READY_TO_START THEN
-
-    // Reset internal process flags
-    M_ResetProcessCycle();
-
-    // Start Kistler Reset / Ack Error pulse
-    bKistlerResetPulse := TRUE;
-	
-	// After interruption, request Kistler to return home/ref
-    bKistlerRecoveryHomeRequest := TRUE;
-
-END_IF
-
-
-// ================================================================
-// Kistler Reset / Ack Error pulse timer
-// ================================================================
-// Keep Kistler reset active long enough for the maXYmos to acknowledge it
-tonKistlerReset(IN := bKistlerResetPulse, PT := T#500MS);
-
-IF bKistlerResetPulse AND tonKistlerReset.Q THEN
-
-    bKistlerResetPulse := FALSE;
-
-END_IF
-
-// =================================================================================
+// =========================================================
 // MOTION / SEQUENCE COMMAND DEFAULTS
-// =================================================================================
-// These commands are controlled later by the Kistler state machine.
-// They are reset here to avoid keeping motion commands latched unintentionally.
+// =========================================================
 
-// Temporary Home movement test
-stKistler_CMD.bStart 			:= FALSE;
-stKistler_CMD.bRunSequence 		:= FALSE;
-stKistler_CMD.bDriveToHome 		:= FALSE;
-stKistler_CMD.bDriveToRef 		:= FALSE;
+// M_KistlerStateMachine(), called later in the PLC cycle,
+// may activate these commands when required.
+
+stKistler_CMD.bStart            := FALSE;
+stKistler_CMD.bRunSequence      := FALSE;
+stKistler_CMD.bDriveToHome      := FALSE;
+stKistler_CMD.bDriveToRef       := FALSE;
 stKistler_CMD.bContinueFromWait := FALSE;
-stKistler_CMD.bTareY 			:= FALSE;
+stKistler_CMD.bTareY            := FALSE;
 
-// =================================================================================
+
+// =========================================================
 // METHOD EXECUTION FEEDBACK
-// =================================================================================
+// =========================================================
 
 M_KistlerControl := TRUE;]]></ST>
       </Implementation>
@@ -2178,6 +2281,8 @@ bManualIndexerOnly        : BOOL;
 bManualKistlerOnly        : BOOL;
 bManualIndexerAndKistler  : BOOL;
 
+
+
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[// Process cycle is only allowed during Auto Cycle.
@@ -2249,7 +2354,7 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 					GVL_MASTER.stProcess.bReleaseNestRotation := FALSE;
 					//GVL_MASTER.stProcess.bKistlerResultOK     := FALSE;
 					//GVL_MASTER.stProcess.bKistlerResultNOK    := FALSE;
-			
+					
 					tonAfterKistlerDelay(IN := FALSE);
 			
 					IF bProcessCycleAllowed THEN
@@ -2261,6 +2366,7 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 				
 					GVL_MASTER.stProcess.bKistlerCycleRequest := FALSE;
 					GVL_MASTER.stProcess.bReleaseNestRotation := FALSE;
+					
 				
 					tonAfterKistlerDelay(IN := FALSE);
 				
@@ -2358,7 +2464,8 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 						GVL_MASTER.stProcess.bKistlerCycleRequest   := FALSE;
 						GVL_MASTER.stProcess.bKistlerCycleDone      := TRUE;
 						//eLastTestedNestPos 							:= eCurrentNestPos;
-			
+						//bFinishKistler  						    :=FALSE;
+						
 						eProcessCycleState := E_ProcessCycle_State.WAIT_KISTLER_HOME;
 			
 					END_IF
@@ -2375,27 +2482,40 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 					ELSIF stKistlerOutTelegram.bHomePosReached
 						  OR stKistlerOutTelegram.bRefPosReached
 						  OR stKistler_Status.bInPosition THEN
-				
+						GVL_MASTER.test := GVL_MASTER.test + 1;
 						GVL_MASTER.stProcess.bKistlerHomeDone := TRUE;
+						GVL_MASTER.stProcess.bKistlerCycleDone := TRUE;
 						
 						
 						// Kistler executed the test and returned the part result
 						IF stKistler_Status.bPartOK THEN
 							GVL_MASTER.stProcess.bKistlerResultOK  := TRUE;
 							GVL_MASTER.stProcess.bKistlerResultNOK := FALSE;
+							GVL_HMI.bResultTest					   := TRUE;
 					
 						ELSIF stKistler_Status.bPartNOK THEN
 							GVL_MASTER.stProcess.bKistlerResultOK  := FALSE;
 							GVL_MASTER.stProcess.bKistlerResultNOK := TRUE;
+							GVL_HMI.bResultTest					   := TRUE;
 					
 						ELSE
 							// Test finished but no valid OK/NOK result was received
-							GVL_MASTER.stProcess.bKistlerResultOK  := FALSE;
-							GVL_MASTER.stProcess.bKistlerResultNOK := FALSE;
+							//GVL_MASTER.stProcess.bKistlerResultOK  := FALSE;
+							//GVL_MASTER.stProcess.bKistlerResultNOK := FALSE;
 							//eProcessCycleState := E_ProcessCycle_State.FAULT;
 							RETURN;
 						END_IF
 						eLastTestedNestPos := eCurrentNestPos;
+
+						//bFinishKistler  	:=TRUE;
+						IF NOT M_HMIKistlerResult(
+							eNestPosition := eCurrentNestPos,
+							bPartOK       := stKistler_Status.bPartOK,
+							bPartNOK      := stKistler_Status.bPartNOK
+						) THEN
+							RETURN;
+						END_IF
+						
 						eProcessCycleState := E_ProcessCycle_State.WAIT_AFTER_KISTLER;
 				
 					END_IF
@@ -2433,12 +2553,13 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 						GVL_MASTER.stProcess.bKistlerCycleRequest := FALSE;
 						GVL_MASTER.stProcess.bKistlerCycleDone    := FALSE;
 						GVL_MASTER.stProcess.bKistlerHomeDone     := FALSE;
-						GVL_MASTER.stProcess.bKistlerResultOK     := FALSE;
-						GVL_MASTER.stProcess.bKistlerResultNOK    := FALSE;
+						//GVL_MASTER.stProcess.bKistlerResultOK     := FALSE;
+						//GVL_MASTER.stProcess.bKistlerResultNOK    := FALSE;
 				
 						tonAfterKistlerDelay(IN := FALSE);
 				
 						// Return to wait for the next Nest testing position.
+						//GVL_HMI.bResultTest					   := FALSE;
 						eProcessCycleState := E_ProcessCycle_State.WAIT_NEST_TESTING_READY;
 				
 					END_IF
@@ -2675,57 +2796,119 @@ M_ProcessCycle := TRUE;]]></ST>
     <Method Name="M_ResetProcessCycle" Id="{454cd463-1fae-4730-b15d-6fd1047cb008}">
       <Declaration><![CDATA[METHOD PRIVATE M_ResetProcessCycle : BOOL
 VAR_INPUT
+
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[// =========================================================
-// RESET PROCESS CYCLE
-// =========================================================
+        <ST><![CDATA[
+M_ResetProcessCycle := FALSE;
 
-// Reset process coordinator state
 eProcessCycleState := E_ProcessCycle_State.IDLE;
 
-// Reset process interlock flags
-GVL_MASTER.stProcess.bKistlerCycleRequest 				:= FALSE;
-GVL_MASTER.stProcess.bKistlerCycleDone    				:= FALSE;
-GVL_MASTER.stProcess.bKistlerHomeDone    				:= FALSE;
-GVL_MASTER.stProcess.bNestTestingReady    				:= FALSE;
-GVL_MASTER.stProcess.bReleaseNestRotation 				:= FALSE;
-GVL_MASTER.stProcess.bKistlerResultOK     				:= FALSE;
-GVL_MASTER.stProcess.bKistlerResultNOK    				:= FALSE;
 
+// =========================================================
+// RESET PROCESS FLAGS
+// =========================================================
+
+GVL_MASTER.stProcess.bKistlerCycleRequest := FALSE;
+GVL_MASTER.stProcess.bKistlerCycleDone := FALSE;
+GVL_MASTER.stProcess.bKistlerHomeDone := FALSE;
+GVL_MASTER.stProcess.bNestTestingReady := FALSE;
+GVL_MASTER.stProcess.bReleaseNestRotation := FALSE;
+GVL_MASTER.stProcess.bKistlerResultOK := FALSE;
+GVL_MASTER.stProcess.bKistlerResultNOK := FALSE;
+
+
+// =========================================================
+// RESET PROCESS TIMERS
+// =========================================================
 
 tonGuideCylinderDelay(IN := FALSE);
 tonGuideCylinderRetractDelay(IN := FALSE);
-
-GVL_MASTER.stActuators.bGuideCylinderExtendRequest 		:= FALSE;
-GVL_MASTER.stNestTable.bSupportExtendRequest 			:= FALSE;
-GVL_MASTER.stNestTable.bSupportRetractRequest 			:= TRUE;
-GVL_HMI.i_bHMIManualModeRequest 						:= FALSE;
-GVL_HMI.i_bHMIIndexerManualEnable 						:= FALSE;
-GVL_HMI.i_bHMIKistlerManualEnable 						:= FALSE;
-
-// Reset process timers
 tonAfterKistlerDelay(IN := FALSE);
 
-// Reset Kistler process commands only
-stKistler_CMD.bStart            						:= FALSE;
-stKistler_CMD.bRunSequence     							:= FALSE;
-stKistler_CMD.bDriveToHome      						:= FALSE;
-stKistler_CMD.bDriveToRef       						:= FALSE;
-stKistler_CMD.bContinueFromWait 						:= FALSE;
-stKistler_CMD.bTareY            						:= FALSE;
 
-// Do NOT reset these here:
-// stKistler_CMD.bEnable
-stKistler_CMD.bReset     								:=TRUE;
-stKistler_CMD.bAbort									:=TRUE;
-// stKistler_CMD.bManualMode
-// stKistler_Status.eKistlerState
-// eNestState
-// bStopRequested
+// =========================================================
+// RESET ACTUATOR REQUESTS
+// =========================================================
 
-M_ResetProcessCycle := TRUE;]]></ST>
+GVL_MASTER.stActuators.bGuideCylinderExtendRequest := FALSE;
+
+GVL_MASTER.stNestTable.bSupportExtendRequest := FALSE;
+GVL_MASTER.stNestTable.bSupportRetractRequest := TRUE;
+
+
+// =========================================================
+// RESET HMI MANUAL COMMANDS
+// =========================================================
+
+GVL_HMI.i_bHMIManualModeRequest := FALSE;
+GVL_HMI.i_bHMIIndexerManualEnable := FALSE;
+GVL_HMI.i_bHMIKistlerManualEnable := FALSE;
+
+
+// =========================================================
+// RESET KISTLER SEQUENCE COMMANDS
+// =========================================================
+
+stKistler_CMD.bStart := FALSE;
+stKistler_CMD.bRunSequence := FALSE;
+stKistler_CMD.bDriveToHome := FALSE;
+stKistler_CMD.bDriveToRef := FALSE;
+stKistler_CMD.bContinueFromWait := FALSE;
+stKistler_CMD.bTareY := FALSE;
+
+
+// =========================================================
+// START RESET PULSE
+// =========================================================
+
+// Start the pulse only on the first execution
+IF NOT bKistlerResetPulse AND NOT tonKistlerReset.Q THEN
+    bKistlerResetPulse := TRUE;
+END_IF;
+
+
+// Reset/Acknowledge command sent to the Kistler
+stKistler_CMD.bReset := bKistlerResetPulse;
+
+
+// Do not send Abort at the same time as Reset
+stKistler_CMD.bAbort := NOT bKistlerResetPulse;
+
+
+// =========================================================
+// RESET PULSE TIMER
+// =========================================================
+
+tonKistlerReset(
+    IN := bKistlerResetPulse,
+    PT := T#500MS
+);
+
+
+// =========================================================
+// RESET ROUTINE COMPLETE
+// =========================================================
+
+IF tonKistlerReset.Q THEN
+
+    // End pulse commands
+    bKistlerResetPulse := FALSE;
+
+    stKistler_CMD.bReset := FALSE;
+    stKistler_CMD.bAbort := FALSE;
+
+    // Reset the timer for the next fault/reset
+    tonKistlerReset(IN := FALSE);
+
+    // Request recovery movement on the next initialization
+    bKistlerRecoveryHomeRequest := TRUE;
+
+    // Inform caller that the reset routine is complete
+    M_ResetProcessCycle := TRUE;
+
+END_IF;]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_StatusMapping" Id="{e76387c3-2b6b-4ab8-8e2c-031286cbd112}" FolderPath="Kistler\">
