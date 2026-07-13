@@ -1174,6 +1174,57 @@
             },
             "USEMAPPING": true
         },
+        "ADS.PLC1.GVL_HMI.aKistlerNestResult.0.eResult": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::aKistlerNestResult[0]::eResult",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:server#/definitions/ADS-PLC1.E_HMIKistlerResult"
+                    },
+                    {
+                        "propertyOrder": 1
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.aKistlerNestResult.0.rDistance": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::aKistlerNestResult[0]::rDistance",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:general#/definitions/REAL"
+                    },
+                    {
+                        "propertyOrder": 3
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.aKistlerNestResult.0.rForce": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::aKistlerNestResult[0]::rForce",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:general#/definitions/REAL"
+                    },
+                    {
+                        "propertyOrder": 2
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
         "ADS.PLC1.GVL_HMI.aKistlerNestResult.1": {
             "ACCESS": 3,
             "DOMAIN": "ADS",
@@ -1181,6 +1232,23 @@
             "MAPPING": "PLC1::GVL_HMI::aKistlerNestResult[1]",
             "SCHEMA": {
                 "$ref": "tchmi:server#/definitions/ADS-PLC1.E_HMIKistlerResult"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.aKistlerNestResult.1.eResult": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::aKistlerNestResult[1]::eResult",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:server#/definitions/ADS-PLC1.E_HMIKistlerResult"
+                    },
+                    {
+                        "propertyOrder": 1
+                    }
+                ]
             },
             "USEMAPPING": true
         },
@@ -1194,6 +1262,23 @@
             },
             "USEMAPPING": true
         },
+        "ADS.PLC1.GVL_HMI.aKistlerNestResult.2.eResult": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::aKistlerNestResult[2]::eResult",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:server#/definitions/ADS-PLC1.E_HMIKistlerResult"
+                    },
+                    {
+                        "propertyOrder": 1
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
         "ADS.PLC1.GVL_HMI.aKistlerNestResult.3": {
             "ACCESS": 3,
             "DOMAIN": "ADS",
@@ -1201,6 +1286,23 @@
             "MAPPING": "PLC1::GVL_HMI::aKistlerNestResult[3]",
             "SCHEMA": {
                 "$ref": "tchmi:server#/definitions/ADS-PLC1.E_HMIKistlerResult"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.aKistlerNestResult.3.eResult": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::aKistlerNestResult[3]::eResult",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:server#/definitions/ADS-PLC1.E_HMIKistlerResult"
+                    },
+                    {
+                        "propertyOrder": 1
+                    }
+                ]
             },
             "USEMAPPING": true
         },
@@ -1406,6 +1508,23 @@
             "MAPPING": "PLC1::GVL_MASTER::bProcessBusy",
             "SCHEMA": {
                 "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_MASTER.stMachineStatus.bBusy": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_MASTER::stMachineStatus::bBusy",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:general#/definitions/BOOL"
+                    },
+                    {
+                        "propertyOrder": 10
+                    }
+                ]
             },
             "USEMAPPING": true
         },
@@ -1640,6 +1759,23 @@
             },
             "USEMAPPING": true
         },
+        "ADS.PLC1.PRG_MachineControl.bKistlerReady": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::PRG_MachineControl::bKistlerReady",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:general#/definitions/BOOL"
+                    },
+                    {
+                        "comment": "Press healthy and ready feedback flag"
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
         "ADS.PLC1.PRG_MachineControl.bNestNewPositionReady": {
             "ACCESS": 3,
             "DOMAIN": "ADS",
@@ -1660,6 +1796,40 @@
             },
             "USEMAPPING": true
         },
+        "ADS.PLC1.PRG_MachineControl.stKistlerInTelegram.bDriveToHomePos": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::PRG_MachineControl::stKistlerInTelegram::bDriveToHomePos",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:general#/definitions/BOOL"
+                    },
+                    {
+                        "propertyOrder": 26
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.PRG_MachineControl.stKistler_Status.bBusy": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::PRG_MachineControl::stKistler_Status::bBusy",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:general#/definitions/BOOL"
+                    },
+                    {
+                        "propertyOrder": 2
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
         "ADS.PLC1.PRG_MachineControl.stKistler_Status.bError": {
             "ACCESS": 3,
             "DOMAIN": "ADS",
@@ -1672,6 +1842,40 @@
                     },
                     {
                         "propertyOrder": 4
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.PRG_MachineControl.stKistler_Status.bInPosition": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::PRG_MachineControl::stKistler_Status::bInPosition",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:general#/definitions/BOOL"
+                    },
+                    {
+                        "propertyOrder": 5
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.PRG_MachineControl.stKistler_Status.bReady": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::PRG_MachineControl::stKistler_Status::bReady",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:general#/definitions/BOOL"
+                    },
+                    {
+                        "propertyOrder": 1
                     }
                 ]
             },
@@ -4980,9 +5184,15 @@
                 "ADS.PLC1.GVL_HMI.StatusHMI.sBannerTextColor": 3,
                 "ADS.PLC1.GVL_HMI.StatusHMI.sMachineStatusText": 3,
                 "ADS.PLC1.GVL_HMI.aKistlerNestResult.0": 3,
+                "ADS.PLC1.GVL_HMI.aKistlerNestResult.0.eResult": 3,
+                "ADS.PLC1.GVL_HMI.aKistlerNestResult.0.rDistance": 3,
+                "ADS.PLC1.GVL_HMI.aKistlerNestResult.0.rForce": 3,
                 "ADS.PLC1.GVL_HMI.aKistlerNestResult.1": 3,
+                "ADS.PLC1.GVL_HMI.aKistlerNestResult.1.eResult": 3,
                 "ADS.PLC1.GVL_HMI.aKistlerNestResult.2": 3,
+                "ADS.PLC1.GVL_HMI.aKistlerNestResult.2.eResult": 3,
                 "ADS.PLC1.GVL_HMI.aKistlerNestResult.3": 3,
+                "ADS.PLC1.GVL_HMI.aKistlerNestResult.3.eResult": 3,
                 "ADS.PLC1.GVL_HMI.arrAlarmHistory": 3,
                 "ADS.PLC1.GVL_HMI.bResultTest": 3,
                 "ADS.PLC1.GVL_HMI.ePowerCmd": 3,
@@ -4998,6 +5208,7 @@
                 "ADS.PLC1.GVL_MASTER.bHmiStart": 3,
                 "ADS.PLC1.GVL_MASTER.bHmiStop": 3,
                 "ADS.PLC1.GVL_MASTER.bProcessBusy": 3,
+                "ADS.PLC1.GVL_MASTER.stMachineStatus.bBusy": 3,
                 "ADS.PLC1.GVL_MASTER.stMachineStatus.bReadyToStart": 3,
                 "ADS.PLC1.GVL_MASTER.stMachineStatus.eMachineState": 3,
                 "ADS.PLC1.GVL_MASTER.stNestTable.bNestCompletedSensor": 3,
@@ -5011,9 +5222,14 @@
                 "ADS.PLC1.GVL_MASTER.stSensors.bPartPresent_Reject": 3,
                 "ADS.PLC1.PGR_HMI.iCountdownValue": 3,
                 "ADS.PLC1.PRG_MachineControl.bFinishKistler": 3,
+                "ADS.PLC1.PRG_MachineControl.bKistlerReady": 3,
                 "ADS.PLC1.PRG_MachineControl.bNestNewPositionReady": 3,
                 "ADS.PLC1.PRG_MachineControl.eCurrentNestPos": 3,
+                "ADS.PLC1.PRG_MachineControl.stKistlerInTelegram.bDriveToHomePos": 3,
+                "ADS.PLC1.PRG_MachineControl.stKistler_Status.bBusy": 3,
                 "ADS.PLC1.PRG_MachineControl.stKistler_Status.bError": 3,
+                "ADS.PLC1.PRG_MachineControl.stKistler_Status.bInPosition": 3,
+                "ADS.PLC1.PRG_MachineControl.stKistler_Status.bReady": 3,
                 "ChangeUserSettings": 3,
                 "ConfirmAlarm": 3,
                 "CreateEvent": 3,

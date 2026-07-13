@@ -54,6 +54,9 @@
     <Compile Include="DUTs\MASTER\KISTLER\E_KistlerState.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\MASTER\KISTLER\ST_HMIKistlerResult.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\MASTER\KISTLER\ST_Kistler_CMD.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -64,6 +67,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\MASTER\KISTLER\ST_Kistler_TelegramOut.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\MASTER\KISTLER\U_BytesToReal.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\MASTER\NEST\E_NestPosition.TcDUT">

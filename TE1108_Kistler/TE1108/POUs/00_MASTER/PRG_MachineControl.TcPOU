@@ -85,9 +85,13 @@ VAR
 	
 	bKistlerRecoveryHomeRequest : BOOL;
 	bNestRecoveryHomeRequest	: BOOL;
+	uKistlerCurrentValueX 		: U_BytesToReal;
+	uKistlerCurrentValueY 		: U_BytesToReal;
 	
-	bStartKistler 				:BOOL;
-	//bFinishKistler 				:BOOL;
+	// Maximum values recorded during the current Kistler test
+	rKistlerCycleMaxForce    	: REAL := 0.0;
+	rKistlerCycleMaxDistance 	: REAL := 0.0;
+
 	
 
 	//==========================================================
@@ -510,57 +514,101 @@ VAR_INPUT
     eNestPosition : E_NestPosition;
     bPartOK       : BOOL;
     bPartNOK      : BOOL;
+    rForce        : REAL;
+    rDistance     : REAL;
+	bResetValues  : BOOL;
 END_VAR
+
+VAR
+    iNestIndex : INT;
+END_VAR
+
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[
+
 M_HMIKistlerResult := FALSE;
 
 
-// Validate nest position
+// =========================================================
+// CONVERT NEST POSITION TO ARRAY INDEX
+// =========================================================
+
 CASE eNestPosition OF
 
     E_NestPosition.Position_1:
-        IF bPartOK THEN
-            GVL_HMI.aKistlerNestResult[1] := E_HMIKistlerResult.PASS;
-        ELSIF bPartNOK THEN
-            GVL_HMI.aKistlerNestResult[1] := E_HMIKistlerResult.FAIL;
-        ELSE
-			GVL_HMI.aKistlerNestResult[1] := E_HMIKistlerResult.NONE;
-            RETURN;
-        END_IF
+        iNestIndex := 1;
 
     E_NestPosition.Position_2:
-        IF bPartOK THEN
-            GVL_HMI.aKistlerNestResult[2] := E_HMIKistlerResult.PASS;
-        ELSIF bPartNOK THEN
-            GVL_HMI.aKistlerNestResult[2] := E_HMIKistlerResult.FAIL;
-        ELSE
-            RETURN;
-        END_IF
+        iNestIndex := 2;
 
     E_NestPosition.Position_3:
-        IF bPartOK THEN
-            GVL_HMI.aKistlerNestResult[3] := E_HMIKistlerResult.PASS;
-        ELSIF bPartNOK THEN
-            GVL_HMI.aKistlerNestResult[3] := E_HMIKistlerResult.FAIL;
-        ELSE
-            RETURN;
-        END_IF
+        iNestIndex := 3;
 
     E_NestPosition.Position_4:
-        IF bPartOK THEN
-            GVL_HMI.aKistlerNestResult[4] := E_HMIKistlerResult.PASS;
-        ELSIF bPartNOK THEN
-            GVL_HMI.aKistlerNestResult[4] := E_HMIKistlerResult.FAIL;
-        ELSE
-            RETURN;
-        END_IF
+        iNestIndex := 4;
 
 ELSE
     RETURN;
 
-END_CASE
+END_CASE;
+
+
+// =========================================================
+// RESET VALUES BEFORE A NEW TEST
+// =========================================================
+
+IF bResetValues THEN
+
+    GVL_HMI.aKistlerNestResult[iNestIndex].rForce := 0.0;
+    GVL_HMI.aKistlerNestResult[iNestIndex].rDistance := 0.0;
+
+    GVL_HMI.aKistlerNestResult[iNestIndex].eResult :=
+        E_HMIKistlerResult.NONE;
+
+    M_HMIKistlerResult := TRUE;
+    RETURN;
+
+END_IF;
+
+
+// =========================================================
+// STORE MAXIMUM TEST VALUES
+// =========================================================
+
+IF ABS(rForce) >
+   ABS(GVL_HMI.aKistlerNestResult[iNestIndex].rForce) THEN
+
+    GVL_HMI.aKistlerNestResult[iNestIndex].rForce :=
+        rForce;
+
+END_IF;
+
+
+IF ABS(rDistance) >
+   ABS(GVL_HMI.aKistlerNestResult[iNestIndex].rDistance) THEN
+
+    GVL_HMI.aKistlerNestResult[iNestIndex].rDistance :=
+        rDistance;
+
+END_IF;
+
+
+// =========================================================
+// STORE FINAL RESULT
+// =========================================================
+
+IF bPartOK THEN
+
+    GVL_HMI.aKistlerNestResult[iNestIndex].eResult :=
+        E_HMIKistlerResult.PASS;
+
+ELSIF bPartNOK THEN
+
+    GVL_HMI.aKistlerNestResult[iNestIndex].eResult :=
+        E_HMIKistlerResult.FAIL;
+
+END_IF;
 
 
 M_HMIKistlerResult := TRUE;]]></ST>
@@ -944,6 +992,56 @@ stKistler_Status.bPartNOK :=
 stKistler_Status.bInPosition :=
     stKistlerOutTelegram.bHomePosReached;
 
+
+
+// =================================================================================
+// BYTES 20..23 - CURRENT X VALUE
+// X = DISTANCE / DISPLACEMENT / TRAVEL
+// =================================================================================
+
+uKistlerCurrentValueX.aBytes[0] := GVL_KISTLER_IO.aKistlerIn[20];
+uKistlerCurrentValueX.aBytes[1] := GVL_KISTLER_IO.aKistlerIn[21];
+uKistlerCurrentValueX.aBytes[2] := GVL_KISTLER_IO.aKistlerIn[22];
+uKistlerCurrentValueX.aBytes[3] := GVL_KISTLER_IO.aKistlerIn[23];
+
+stKistlerOutTelegram.rCurrentValueX :=
+    uKistlerCurrentValueX.rValue;
+
+
+// =================================================================================
+// BYTES 24..27 - CURRENT Y VALUE
+// Y = FORCE
+// =================================================================================
+
+uKistlerCurrentValueY.aBytes[0] := GVL_KISTLER_IO.aKistlerIn[24];
+uKistlerCurrentValueY.aBytes[1] := GVL_KISTLER_IO.aKistlerIn[25];
+uKistlerCurrentValueY.aBytes[2] := GVL_KISTLER_IO.aKistlerIn[26];
+uKistlerCurrentValueY.aBytes[3] := GVL_KISTLER_IO.aKistlerIn[27];
+
+stKistlerOutTelegram.rCurrentValueY :=
+    uKistlerCurrentValueY.rValue;
+	
+	
+	// =================================================================================
+// MAP LIVE VALUES TO INTERNAL KISTLER STATUS
+// =================================================================================
+
+stKistler_Status.rLiveDistance :=
+    stKistlerOutTelegram.rCurrentValueX;
+
+stKistler_Status.rLiveForce :=
+    stKistlerOutTelegram.rCurrentValueY;
+
+
+// =================================================================================
+// OPTIONAL LIVE VALUES FOR HMI
+// =================================================================================
+
+GVL_HMI.rKistlerLiveDistance :=
+    stKistler_Status.rLiveDistance;
+
+GVL_HMI.rKistlerLiveForce :=
+    stKistler_Status.rLiveForce;
 // =================================================================================
 // METHOD EXECUTION FEEDBACK
 // =================================================================================
@@ -2334,6 +2432,21 @@ eCurrentNestPos := M_GetCurrentPosition();
 bNestNewPositionReady :=
     (eCurrentNestPos <> E_NestPosition.UNKNOWN)
     AND (eCurrentNestPos <> eLastTestedNestPos);
+	
+	
+IF GVL_MASTER.stProcess.bKistlerCycleRequest
+   AND NOT stKistlerOutTelegram.bSequenceEnd THEN
+
+    M_HMIKistlerResult(
+        eNestPosition := eCurrentNestPos,
+        bPartOK       := FALSE,
+        bPartNOK      := FALSE,
+        rForce        := stKistler_Status.rLiveForce,
+        rDistance     := stKistler_Status.rLiveDistance,
+        bResetValues  := FALSE
+    );
+
+END_IF;
 
 
 // =================================================================
@@ -2366,8 +2479,7 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 				
 					GVL_MASTER.stProcess.bKistlerCycleRequest := FALSE;
 					GVL_MASTER.stProcess.bReleaseNestRotation := FALSE;
-					
-				
+
 					tonAfterKistlerDelay(IN := FALSE);
 				
 					IF NOT bProcessCycleAllowed THEN
@@ -2425,7 +2537,16 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 				
 						GVL_MASTER.stProcess.bKistlerCycleDone := FALSE;
 						GVL_MASTER.stProcess.bKistlerHomeDone  := FALSE;
-				
+						    // Clear the previous measurements for this nest
+						M_HMIKistlerResult(
+							eNestPosition := eCurrentNestPos,
+							bPartOK       := FALSE,
+							bPartNOK      := FALSE,
+							rForce        := 0.0,
+							rDistance     := 0.0,
+							bResetValues  := TRUE
+						);
+					
 						eProcessCycleState := E_ProcessCycle_State.REQUEST_KISTLER;
 						
 				
@@ -2436,7 +2557,7 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 				E_ProcessCycle_State.REQUEST_KISTLER:
 				
 					GVL_MASTER.stProcess.bKistlerCycleRequest := TRUE;
-				
+					
 					IF stKistler_Status.bError THEN
 				
 						GVL_MASTER.stProcess.bKistlerCycleRequest := FALSE;
@@ -2491,12 +2612,12 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 						IF stKistler_Status.bPartOK THEN
 							GVL_MASTER.stProcess.bKistlerResultOK  := TRUE;
 							GVL_MASTER.stProcess.bKistlerResultNOK := FALSE;
-							GVL_HMI.bResultTest					   := TRUE;
+				
 					
 						ELSIF stKistler_Status.bPartNOK THEN
 							GVL_MASTER.stProcess.bKistlerResultOK  := FALSE;
 							GVL_MASTER.stProcess.bKistlerResultNOK := TRUE;
-							GVL_HMI.bResultTest					   := TRUE;
+
 					
 						ELSE
 							// Test finished but no valid OK/NOK result was received
@@ -2507,11 +2628,13 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 						END_IF
 						eLastTestedNestPos := eCurrentNestPos;
 
-						//bFinishKistler  	:=TRUE;
 						IF NOT M_HMIKistlerResult(
 							eNestPosition := eCurrentNestPos,
 							bPartOK       := stKistler_Status.bPartOK,
-							bPartNOK      := stKistler_Status.bPartNOK
+							bPartNOK      := stKistler_Status.bPartNOK,
+							rForce        := stKistler_Status.rLiveForce,
+							rDistance     := stKistler_Status.rLiveDistance,
+							bResetValues  := FALSE
 						) THEN
 							RETURN;
 						END_IF
@@ -2701,6 +2824,16 @@ E_MachineState.MANUAL_MODE:
                 eProcessCycleState := E_ProcessCycle_State.FAULT;
 
             ELSIF stKistler_Status.eKistlerState = E_KistlerState.DONE THEN
+				
+						// Capture the last available measurement
+			M_HMIKistlerResult(
+				eNestPosition := eCurrentNestPos,
+				bPartOK       := FALSE,
+				bPartNOK      := FALSE,
+				rForce        := stKistler_Status.rLiveForce,
+				rDistance     := stKistler_Status.rLiveDistance,
+				bResetValues  := FALSE
+			);
 
 			GVL_MASTER.stProcess.bKistlerCycleRequest := FALSE;
 			GVL_MASTER.stProcess.bKistlerCycleDone := TRUE;

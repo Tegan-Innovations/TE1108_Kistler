@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_HMIKistlerResult" Id="{7f0fb4f6-b57f-42d7-9118-25971f45da18}">
+    <Declaration><![CDATA[TYPE ST_HMIKistlerResult :
+STRUCT
+    eResult     : E_HMIKistlerResult;
+    rForce      : REAL;
+    rDistance   : REAL;
+END_STRUCT
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>
