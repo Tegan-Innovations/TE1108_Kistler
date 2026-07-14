@@ -1252,6 +1252,40 @@
             },
             "USEMAPPING": true
         },
+        "ADS.PLC1.GVL_HMI.aKistlerNestResult.1.rDistance": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::aKistlerNestResult[1]::rDistance",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:general#/definitions/REAL"
+                    },
+                    {
+                        "propertyOrder": 3
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.aKistlerNestResult.1.rForce": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::aKistlerNestResult[1]::rForce",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:general#/definitions/REAL"
+                    },
+                    {
+                        "propertyOrder": 2
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
         "ADS.PLC1.GVL_HMI.aKistlerNestResult.2": {
             "ACCESS": 3,
             "DOMAIN": "ADS",
@@ -1279,6 +1313,40 @@
             },
             "USEMAPPING": true
         },
+        "ADS.PLC1.GVL_HMI.aKistlerNestResult.2.rDistance": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::aKistlerNestResult[2]::rDistance",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:general#/definitions/REAL"
+                    },
+                    {
+                        "propertyOrder": 3
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.aKistlerNestResult.2.rForce": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::aKistlerNestResult[2]::rForce",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:general#/definitions/REAL"
+                    },
+                    {
+                        "propertyOrder": 2
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
         "ADS.PLC1.GVL_HMI.aKistlerNestResult.3": {
             "ACCESS": 3,
             "DOMAIN": "ADS",
@@ -1301,6 +1369,40 @@
                     },
                     {
                         "propertyOrder": 1
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.aKistlerNestResult.3.rDistance": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::aKistlerNestResult[3]::rDistance",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:general#/definitions/REAL"
+                    },
+                    {
+                        "propertyOrder": 3
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.aKistlerNestResult.3.rForce": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::aKistlerNestResult[3]::rForce",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:general#/definitions/REAL"
+                    },
+                    {
+                        "propertyOrder": 2
                     }
                 ]
             },
@@ -5189,10 +5291,16 @@
                 "ADS.PLC1.GVL_HMI.aKistlerNestResult.0.rForce": 3,
                 "ADS.PLC1.GVL_HMI.aKistlerNestResult.1": 3,
                 "ADS.PLC1.GVL_HMI.aKistlerNestResult.1.eResult": 3,
+                "ADS.PLC1.GVL_HMI.aKistlerNestResult.1.rDistance": 3,
+                "ADS.PLC1.GVL_HMI.aKistlerNestResult.1.rForce": 3,
                 "ADS.PLC1.GVL_HMI.aKistlerNestResult.2": 3,
                 "ADS.PLC1.GVL_HMI.aKistlerNestResult.2.eResult": 3,
+                "ADS.PLC1.GVL_HMI.aKistlerNestResult.2.rDistance": 3,
+                "ADS.PLC1.GVL_HMI.aKistlerNestResult.2.rForce": 3,
                 "ADS.PLC1.GVL_HMI.aKistlerNestResult.3": 3,
                 "ADS.PLC1.GVL_HMI.aKistlerNestResult.3.eResult": 3,
+                "ADS.PLC1.GVL_HMI.aKistlerNestResult.3.rDistance": 3,
+                "ADS.PLC1.GVL_HMI.aKistlerNestResult.3.rForce": 3,
                 "ADS.PLC1.GVL_HMI.arrAlarmHistory": 3,
                 "ADS.PLC1.GVL_HMI.bResultTest": 3,
                 "ADS.PLC1.GVL_HMI.ePowerCmd": 3,

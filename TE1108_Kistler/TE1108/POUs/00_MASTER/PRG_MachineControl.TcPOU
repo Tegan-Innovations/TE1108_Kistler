@@ -471,7 +471,7 @@ CASE eCurrentNestPos OF
 		GVL_HMI.iNestPositionTesting    :=1;
 
     E_NestPosition.POSITION_2:
-        GVL_HMI.iNestRotationAngle 		:= 90;
+        GVL_HMI.iNestRotationAngle 		:= 270;
 		GVL_HMI.iNestPositionTesting    :=2;
 		
     E_NestPosition.POSITION_3:
@@ -479,7 +479,7 @@ CASE eCurrentNestPos OF
 	    GVL_HMI.iNestPositionTesting    :=3;
 		
     E_NestPosition.POSITION_4:
-        GVL_HMI.iNestRotationAngle 		:= 270;
+        GVL_HMI.iNestRotationAngle 		:= 90;
 		GVL_HMI.iNestPositionTesting    :=4;
 
 ELSE
