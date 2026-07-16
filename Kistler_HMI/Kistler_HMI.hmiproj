@@ -257,6 +257,9 @@
     <Content Include="Contents\Screens\popups\Content_Popup_Logout.content">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Contents\Screens\popups\Content_Popup_Puck.content">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Contents\Screens\Settings\Distances - Copy (2).content">
       <SubType>Content</SubType>
     </Content>

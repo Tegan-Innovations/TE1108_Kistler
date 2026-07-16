@@ -235,10 +235,48 @@
                 ],
                 "type": "integer"
             },
+            "ADS-PLC1.E_PuckLockerMode": {
+                "attributes": {
+                    "generate_implicit_init_function": "",
+                    "qualified_only": "",
+                    "strict": "",
+                    "to_string": ""
+                },
+                "enum": [
+                    0,
+                    1,
+                    2
+                ],
+                "options": [
+                    {
+                        "label": "Disabled",
+                        "value": 0
+                    },
+                    {
+                        "label": "Enabled",
+                        "value": 1
+                    },
+                    {
+                        "label": "EnabledWithEmptyPuckBypass",
+                        "value": 2
+                    }
+                ],
+                "type": "integer"
+            },
             "ADS-PLC1.STRING-120": {
                 "allOf": [
                     {
                         "maxLength": 120
+                    },
+                    {
+                        "$ref": "tchmi:general#/definitions/String"
+                    }
+                ]
+            },
+            "ADS-PLC1.STRING-255": {
+                "allOf": [
+                    {
+                        "maxLength": 255
                     },
                     {
                         "$ref": "tchmi:general#/definitions/String"
@@ -1490,6 +1528,211 @@
                     },
                     {
                         "comment": "=================================================================\r\n                         HMI COMMANDS \r\n ================================================================="
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.stPuckLocker.bCmdAcknowledgeRemovalFault": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::stPuckLocker::bCmdAcknowledgeRemovalFault",
+            "REAUTHENTICATION_REQUIRED": true,
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:general#/definitions/BOOL"
+                    },
+                    {
+                        "propertyOrder": 4
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.stPuckLocker.bCmdEmptyPuckBypass": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::stPuckLocker::bCmdEmptyPuckBypass",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:general#/definitions/BOOL"
+                    },
+                    {
+                        "propertyOrder": 3
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.stPuckLocker.bEnableEmptyPuckBypass": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::stPuckLocker::bEnableEmptyPuckBypass",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:general#/definitions/BOOL"
+                    },
+                    {
+                        "propertyOrder": 2
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.stPuckLocker.bPuckDetected": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::stPuckLocker::bPuckDetected",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:general#/definitions/BOOL"
+                    },
+                    {
+                        "propertyOrder": 5
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.stPuckLocker.bPuckLocked": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::stPuckLocker::bPuckLocked",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:general#/definitions/BOOL"
+                    },
+                    {
+                        "propertyOrder": 6
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.stPuckLocker.bPuckSensorMismatch": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::stPuckLocker::bPuckSensorMismatch",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:general#/definitions/BOOL"
+                    },
+                    {
+                        "propertyOrder": 7
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.stPuckLocker.bShowEmptyPuckPopup": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::stPuckLocker::bShowEmptyPuckPopup",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:general#/definitions/BOOL"
+                    },
+                    {
+                        "propertyOrder": 10
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.stPuckLocker.bShowUnexpectedRemovalPopup": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::stPuckLocker::bShowUnexpectedRemovalPopup",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:general#/definitions/BOOL"
+                    },
+                    {
+                        "propertyOrder": 9
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.stPuckLocker.bUnexpectedRemovalFault": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::stPuckLocker::bUnexpectedRemovalFault",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:general#/definitions/BOOL"
+                    },
+                    {
+                        "propertyOrder": 8
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.stPuckLocker.eMode": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::stPuckLocker::eMode",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:server#/definitions/ADS-PLC1.E_PuckLockerMode"
+                    },
+                    {
+                        "propertyOrder": 1
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.stPuckLocker.nPucksAllowedToPass": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::stPuckLocker::nPucksAllowedToPass",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:general#/definitions/USINT"
+                    },
+                    {
+                        "propertyOrder": 11
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.stPuckLocker.sMessage": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::stPuckLocker::sMessage",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:server#/definitions/ADS-PLC1.STRING-255"
+                    },
+                    {
+                        "propertyOrder": 12
                     }
                 ]
             },
@@ -5365,6 +5608,18 @@
                 "ADS.PLC1.GVL_HMI.i_bHMIIndexerManualEnable": 3,
                 "ADS.PLC1.GVL_HMI.i_bHMIKistlerManualEnable": 3,
                 "ADS.PLC1.GVL_HMI.i_bHMIManualModeRequest": 3,
+                "ADS.PLC1.GVL_HMI.stPuckLocker.bCmdAcknowledgeRemovalFault": 3,
+                "ADS.PLC1.GVL_HMI.stPuckLocker.bCmdEmptyPuckBypass": 3,
+                "ADS.PLC1.GVL_HMI.stPuckLocker.bEnableEmptyPuckBypass": 3,
+                "ADS.PLC1.GVL_HMI.stPuckLocker.bPuckDetected": 3,
+                "ADS.PLC1.GVL_HMI.stPuckLocker.bPuckLocked": 3,
+                "ADS.PLC1.GVL_HMI.stPuckLocker.bPuckSensorMismatch": 3,
+                "ADS.PLC1.GVL_HMI.stPuckLocker.bShowEmptyPuckPopup": 3,
+                "ADS.PLC1.GVL_HMI.stPuckLocker.bShowUnexpectedRemovalPopup": 3,
+                "ADS.PLC1.GVL_HMI.stPuckLocker.bUnexpectedRemovalFault": 3,
+                "ADS.PLC1.GVL_HMI.stPuckLocker.eMode": 3,
+                "ADS.PLC1.GVL_HMI.stPuckLocker.nPucksAllowedToPass": 3,
+                "ADS.PLC1.GVL_HMI.stPuckLocker.sMessage": 3,
                 "ADS.PLC1.GVL_IO.stSafety.bTwoHandsLeft": 3,
                 "ADS.PLC1.GVL_IO.stSafety.bTwoHandsRight": 3,
                 "ADS.PLC1.GVL_MASTER.bHmiEmergencyStop": 3,

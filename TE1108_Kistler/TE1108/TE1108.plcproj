@@ -93,6 +93,9 @@
     <Compile Include="DUTs\MASTER\NEST\ST_NestTracking.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\MASTER\PUCK_LOCKER\E_OperatorInstruction.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\MASTER\PUCK_LOCKER\E_PuckLockerMode.TcDUT">
       <SubType>Code</SubType>
     </Compile>

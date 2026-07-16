@@ -31,6 +31,8 @@ STRUCT
 	
 	bMachinePermissive : BOOL;
 	bIndexPermissive   : BOOL;
+	
+	eOperatorInstruction : E_OperatorInstruction;
 
     sMessage                : STRING(255);
 END_STRUCT

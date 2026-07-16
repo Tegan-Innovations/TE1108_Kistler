@@ -57,9 +57,10 @@ VAR
 	// =================================================================
     // NEST TABLE INTERNAL CONTROL VARIABLES
     // =================================================================
-	eNestState           		: E_NestState := E_NestState.IDLE;
-	bSequenceToggle      		: BOOL := FALSE;                   // Toggle flag for manual bench testing
-	eCurrentNestPos 	 		: E_NestPosition := E_NestPosition.UNKNOWN;
+	eNestState           			: E_NestState := E_NestState.IDLE;
+	bSequenceToggle      			: BOOL := FALSE;                   // Toggle flag for manual bench testing
+	eCurrentNestPos 	 			: E_NestPosition := E_NestPosition.UNKNOWN;
+	eCompletedOperatorExchangeNest 	: E_NestPosition;
 	
     // HMI PARAMETERS & SAFETY TIMERS
     rHmiTwoHandPresetTime 		: REAL := 250.0; // Time preset from HMI in milliseconds (e.g., 1500.0 ms = 1.5s)
@@ -127,6 +128,7 @@ VAR
     iOperatorNestIndex    : INT;
 	
 	bKistlerResultStored : BOOL;
+	bPartRemovedConfirmedForExchange : BOOL;
 	
     // =========================================================
     // PERSISTENT DATA & LOGGING
@@ -465,6 +467,34 @@ M_NestTableControl();
     <Folder Name="Nest_Table" Id="{b7ca633f-afa1-44ec-8055-793fa5c0679e}" />
     <Folder Name="Pick_Locker" Id="{df051fcd-8c9f-4620-b035-4bdfd7cf7977}" />
     <Folder Name="SupportElevator" Id="{7f702417-a10d-4779-8751-86ff4b21f60e}" />
+    <Method Name="M_ClearCompletedOperatorNestResult" Id="{01b8ae27-8d16-43ef-a386-7432c49082ed}" FolderPath="Nest_Table\">
+      <Declaration><![CDATA[METHOD PRIVATE M_ClearCompletedOperatorNestResult
+VAR
+	iCompletedNestIndex : INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// The nest associated with the completed exchange must be known.
+IF eCompletedOperatorExchangeNest = E_NestPosition.Unknown THEN
+    RETURN;
+END_IF
+
+iCompletedNestIndex := TO_INT(eCompletedOperatorExchangeNest);
+
+IF (iCompletedNestIndex < 1) OR (iCompletedNestIndex > 4) THEN
+    RETURN;
+END_IF
+
+
+// Clear only after the complete operator disposition has finished.
+GVL_MASTER.astNestProcessResult[iCompletedNestIndex].bResultValid := FALSE;
+GVL_MASTER.astNestProcessResult[iCompletedNestIndex].bPass := FALSE;
+GVL_MASTER.astNestProcessResult[iCompletedNestIndex].bFail := FALSE;
+GVL_MASTER.astNestProcessResult[iCompletedNestIndex].bDispositionSent := FALSE;
+
+eCompletedOperatorExchangeNest := E_NestPosition.Unknown;]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="M_ClearRemovedOperatorNestResult" Id="{c718cf76-b546-4927-a46e-0e5025b89a81}" FolderPath="Nest_Table\">
       <Declaration><![CDATA[METHOD PRIVATE M_ClearRemovedOperatorNestResult
 VAR
@@ -2218,7 +2248,7 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 				GVL_MASTER.stNestTable.qNestRotatePortB := FALSE;
 				GVL_MASTER.stNestTable.bNestInMotion    := FALSE;
 				GVL_MASTER.stProcess.bNestTestingReady  := FALSE;
-			
+			//
 				IF GVL_IO.stSafety.bSafetyOK
 				   AND rTrigTwoHands.Q
 				   AND GVL_MASTER.bStations_Home
@@ -2491,6 +2521,7 @@ VAR
 	iOperatorNestIndex 	: INT;
     bOperatorResultPass : BOOL;
     bOperatorResultFail : BOOL;
+	bOperatorResultValid : BOOL;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -2515,12 +2546,26 @@ END_IF
 // -----------------------------------------------------------------------------
 // Result associated with the nest currently accessible to the operator.
 // -----------------------------------------------------------------------------
+bOperatorResultValid := GVL_MASTER.astNestProcessResult[iOperatorNestIndex].bResultValid;
+
 bOperatorResultPass := 	GVL_MASTER.astNestProcessResult[iOperatorNestIndex].bResultValid
     					AND GVL_MASTER.astNestProcessResult[iOperatorNestIndex].bPass;
 
 
 bOperatorResultFail := 	GVL_MASTER.astNestProcessResult[iOperatorNestIndex].bResultValid
     					AND GVL_MASTER.astNestProcessResult[iOperatorNestIndex].bFail;
+						
+
+// Retain the tested-part removal event.
+// The physical removal pulse lasts only one PLC scan.
+IF (eNestState = E_NestState.WAIT_OPERATOR_EXCHANGE
+    OR eOperatorExchangeState = E_OperatorExchangeState.WaitingForPartRemoval)
+    AND GVL_MASTER.astNestTracking[iOperatorNestIndex].bPartRemovedPulse THEN
+
+    bPartRemovedConfirmedForExchange := TRUE;
+
+END_IF
+
 
 // ============================================================================
 // Operator exchange sequence
@@ -2532,48 +2577,78 @@ CASE eOperatorExchangeState OF
 	E_OperatorExchangeState.Idle:
 	// ========================================================================
 	
-		// Normal exchange after a completed Kistler test.
-		IF eNestState = E_NestState.WAIT_OPERATOR_EXCHANGE
+		bOperatorExchangeComplete := FALSE;
+		
+		// Preserve the physical nest associated with this exchange.
+		eCompletedOperatorExchangeNest := eOperatorNestPosition;
+
+		// --------------------------------------------------------------------
+		// Case 1: A tested result is pending at the operator nest.
+		// The processed part must be handled before the table may index.
+		// --------------------------------------------------------------------
+		IF (eNestState = E_NestState.IDLE OR eNestState = E_NestState.WAIT_OPERATOR_EXCHANGE)
 		   AND NOT GVL_MASTER.stNestTable.bNestInMotion
 		   AND GVL_MASTER.stNestTable.bNestReadySensor
 		   AND GVL_MASTER.stNestTable.bNestLockedSensor
-		   AND (bOperatorResultPass OR bOperatorResultFail) THEN
+		   AND bOperatorResultValid THEN
 	
-			// Preserve the result for the complete operator exchange.
-			// The per-nest result may be cleared after the part is removed.
 			bPendingOperatorResultPass := bOperatorResultPass;
-	
 			bPendingOperatorResultFail := bOperatorResultFail;
 	
 			bRejectConfirmedForExchange := FALSE;
 	
-			eOperatorExchangeState := E_OperatorExchangeState.WaitingForPartRemoval;
+			// If the tested part is still present, require a real removal.
+			IF GVL_MASTER.stSensors.bPartPresent_NEST THEN
+	
+				bPartRemovedConfirmedForExchange := FALSE;
+	
+				eOperatorExchangeState := E_OperatorExchangeState.WaitingForPartRemoval;
+	
+			ELSE
+	
+				// The part is already absent, for example after a shift change.
+				// Continue the disposition according to the stored result.
+				bPartRemovedConfirmedForExchange := TRUE;
+	
+				IF bOperatorResultPass THEN
+	
+					eOperatorExchangeState := E_OperatorExchangeState.WaitingForPuckRemoval;
+	
+				ELSIF bOperatorResultFail THEN
+	
+					eOperatorExchangeState := E_OperatorExchangeState.WaitingForRejectConfirmation;
+	
+				END_IF
+	
+			END_IF
 	
 	
-		// Initial machine loading.
-		ELSIF eNestState = E_NestState.IDLE
+		// --------------------------------------------------------------------
+		// Case 2: No tested result is pending.
+		// The table may index as soon as the puck is physically locked.
+		//
+		// A part may or may not be present in the nest.
+		// --------------------------------------------------------------------
+		ELSIF (eNestState = E_NestState.IDLE OR eNestState = E_NestState.WAIT_OPERATOR_EXCHANGE)
 			  AND NOT GVL_MASTER.stNestTable.bNestInMotion
 			  AND GVL_MASTER.stNestTable.bNestReadySensor
 			  AND GVL_MASTER.stNestTable.bNestLockedSensor
-			  AND NOT GVL_MASTER.astNestProcessResult[
-					iOperatorNestIndex
-				  ].bResultValid
-			  AND GVL_MASTER.astNestTracking[
-					iOperatorNestIndex
-				  ].bPartLoadedPulse
+			  AND NOT bOperatorResultValid
 			  AND GVL_MASTER.stPuckLocker.bPuckDetected
 			  AND GVL_MASTER.stPuckLocker.bPuckLocked
-			  AND GVL_MASTER.stPuckLocker.eState =
-					E_PuckLockerState.Locked THEN
-	
-			// Initial loading has no previous PASS or FAIL result.
+			  AND GVL_MASTER.stPuckLocker.eState = E_PuckLockerState.Locked THEN
+		
 			bPendingOperatorResultPass := FALSE;
 			bPendingOperatorResultFail := FALSE;
+			
+			bPartRemovedConfirmedForExchange := FALSE;
 			bRejectConfirmedForExchange := FALSE;
-	
-			eOperatorExchangeState :=
-				E_OperatorExchangeState.ExchangeComplete;
-	
+		
+			// No tested result is pending.
+			// The operator nest may be empty or may contain a new untested part.
+			// A physically present and locked puck is sufficient to index.
+			eOperatorExchangeState := E_OperatorExchangeState.ExchangeComplete;
+		
 		END_IF
 
 
@@ -2581,24 +2656,23 @@ CASE eOperatorExchangeState OF
     E_OperatorExchangeState.WaitingForPartRemoval:
     // ========================================================================
 
-        // Require an actual ON -> OFF transition from the operator nest sensor.
-		IF GVL_MASTER.astNestTracking[
-				iOperatorNestIndex
-			].bPartRemovedPulse THEN
+        bOperatorExchangeComplete := FALSE;
+
+		IF bPartRemovedConfirmedForExchange
+		   AND NOT GVL_MASTER.stSensors.bPartPresent_NEST THEN
 	
 			IF bPendingOperatorResultPass THEN
 	
-				// PASS:
-				// The approved puck will be released and replaced.
+				// Passed tested part has been removed.
+				// Locker may now release the approved puck.
 				eOperatorExchangeState :=
 					E_OperatorExchangeState.WaitingForPuckRemoval;
 	
 	
 			ELSIF bPendingOperatorResultFail THEN
 	
-				// FAIL:
-				// The current puck remains locked.
-				// Wait until the failed part is confirmed in the reject bin.
+				// Failed tested part has been removed.
+				// Confirm disposal through the reject-bin sensor.
 				eOperatorExchangeState :=
 					E_OperatorExchangeState.WaitingForRejectConfirmation;
 	
@@ -2611,39 +2685,45 @@ CASE eOperatorExchangeState OF
     E_OperatorExchangeState.WaitingForPuckRemoval:
     // ========================================================================
 
-        // The locker state machine only allows this after the processed
-        // part has been removed.
-        IF GVL_MASTER.stPuckLocker.eState =
-            E_PuckLockerState.ReleasingPuck
-           AND NOT GVL_MASTER.stPuckLocker.bPuckDetected THEN
-		   
-            eOperatorExchangeState := E_OperatorExchangeState.WaitingForNewPuck;
-			
-        END_IF
+        bOperatorExchangeComplete := FALSE;
 
+		// Once the locker accepts the release request,
+		// the part-removal handshake is no longer needed.
+		IF GVL_MASTER.stPuckLocker.eState =
+			E_PuckLockerState.ReleasingPuck THEN
+	
+			bPartRemovedConfirmedForExchange := FALSE;
+	
+		END_IF
+	
+		// Advance when the old puck is physically gone.
+		// Do not require the locker to remain in ReleasingPuck.
+		IF NOT GVL_MASTER.stPuckLocker.bPuckDetected THEN
+			
+			eOperatorExchangeState := E_OperatorExchangeState.WaitingForNewPuck;
+			
+		END_IF
 	
 	// ========================================================================
 	E_OperatorExchangeState.WaitingForRejectConfirmation:
 	// ========================================================================
 	
-		// Capture one valid rising edge from the reject-bin sensor.
+		bOperatorExchangeComplete := FALSE;
+
 		IF rtPartPresentReject.Q THEN
-	
 			bRejectConfirmedForExchange := TRUE;
-	
 		END_IF
 	
-	
-		// The failed-result puck must remain physically present and locked.
-		// Loading a new part into the operator nest is not required.
 		IF bRejectConfirmedForExchange
+		   AND NOT GVL_MASTER.stSensors.bPartPresent_NEST
 		   AND GVL_MASTER.stPuckLocker.bPuckDetected
 		   AND GVL_MASTER.stPuckLocker.bPuckLocked
 		   AND GVL_MASTER.stPuckLocker.eState =
 				E_PuckLockerState.Locked THEN
 	
-			eOperatorExchangeState :=
-				E_OperatorExchangeState.ExchangeComplete;
+			bPartRemovedConfirmedForExchange := FALSE;
+	
+			eOperatorExchangeState := E_OperatorExchangeState.ExchangeComplete;
 	
 		END_IF
 	
@@ -2653,11 +2733,13 @@ CASE eOperatorExchangeState OF
     // ========================================================================
 
         // Require the new puck to arrive at the sensors.
-        IF GVL_MASTER.stPuckLocker.bPuckDetected THEN
+        bOperatorExchangeComplete := FALSE;
 
-            eOperatorExchangeState := E_OperatorExchangeState.WaitingForPuckLocked;
-
-        END_IF
+		IF GVL_MASTER.stPuckLocker.bPuckDetected THEN
+	
+			eOperatorExchangeState := E_OperatorExchangeState.WaitingForPuckLocked;
+	
+		END_IF
 
 
     // ========================================================================
@@ -2669,11 +2751,14 @@ CASE eOperatorExchangeState OF
 		//
 		// Loading a new part is optional, allowing the operator to empty
 		// the remaining nests at the end of production.
+		bOperatorExchangeComplete := FALSE;
+
 		IF GVL_MASTER.stPuckLocker.bPuckDetected
 		   AND GVL_MASTER.stPuckLocker.bPuckLocked
 		   AND GVL_MASTER.stPuckLocker.eState =
 				E_PuckLockerState.Locked THEN
 	
+			// New part is optional.
 			eOperatorExchangeState := E_OperatorExchangeState.ExchangeComplete;
 	
 		END_IF
@@ -2701,9 +2786,20 @@ CASE eOperatorExchangeState OF
 
         // Keep the index permission active until the table has started moving.
 		bOperatorExchangeComplete := TRUE;
-	
+		
+		// The previous result and its complete disposition are finished.
+		M_ClearCompletedOperatorNestResult();
+
 		IF GVL_MASTER.stNestTable.bNestInMotion THEN
+	
+			bPendingOperatorResultPass := FALSE;
+			bPendingOperatorResultFail := FALSE;
+	
+			bPartRemovedConfirmedForExchange := FALSE;
+			bRejectConfirmedForExchange := FALSE;
+	
 			eOperatorExchangeState := E_OperatorExchangeState.WaitingForTableIndexComplete;
+	
 		END_IF
 
 	
@@ -2711,9 +2807,8 @@ CASE eOperatorExchangeState OF
 	E_OperatorExchangeState.WaitingForTableIndexComplete:
 	// ========================================================================
 	
-		// Keep the index permission active during the complete table movement.
 		bOperatorExchangeComplete := TRUE;
-	
+
 		IF eNestState = E_NestState.TESTING
 		   AND NOT GVL_MASTER.stNestTable.bNestInMotion
 		   AND GVL_MASTER.stNestTable.bNestReadySensor
@@ -2724,6 +2819,8 @@ CASE eOperatorExchangeState OF
 	
 			bPendingOperatorResultPass := FALSE;
 			bPendingOperatorResultFail := FALSE;
+	
+			bPartRemovedConfirmedForExchange := FALSE;
 			bRejectConfirmedForExchange := FALSE;
 	
 			eOperatorExchangeState := E_OperatorExchangeState.Idle;
@@ -2869,7 +2966,7 @@ M_PuckLockerDisposition();
 
 M_OperatorExchangeControl();
 
-M_ClearRemovedOperatorNestResult();
+//M_ClearRemovedOperatorNestResult();
 
 bNestNewPositionReady :=
     (eCurrentNestPos <> E_NestPosition.UNKNOWN)
@@ -3782,6 +3879,15 @@ ELSE
 END_IF;]]></ST>
       </Implementation>
     </Method>
+    <Method Name="M_UpdateOperatorInstruction" Id="{9003e453-721d-4c1e-a060-193bc77fe83e}" FolderPath="Nest_Table\">
+      <Declaration><![CDATA[METHOD PRIVATE M_UpdateOperatorInstruction
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="M_UpdateOperatorNestTracking" Id="{d4e87f72-d62a-4a59-bdf7-747a3fa48afb}" FolderPath="Nest_Table\">
       <Declaration><![CDATA[METHOD PRIVATE M_UpdateOperatorNestTracking
 VAR
@@ -3848,25 +3954,11 @@ VAR
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[// Default value prevents a stale one-scan removal pulse
-// from remaining active when the table position is invalid.
-GVL_MASTER.stPuckLocker.bPartRemovedFromNest := FALSE;
-
-// The operator nest cannot be identified.
-IF eOperatorNestPosition = E_NestPosition.Unknown THEN
-    RETURN;
-END_IF
-
-// E_NestPosition values correspond to array indexes 1..4.
-iOperatorNestIndex := TO_INT(eOperatorNestPosition);
-
-IF (iOperatorNestIndex < 1) OR (iOperatorNestIndex > 4) THEN
-    RETURN;
-END_IF
-
-// Forward the one-scan removal event from the nest currently
-// accessible to the operator.
-GVL_MASTER.stPuckLocker.bPartRemovedFromNest := GVL_MASTER.astNestTracking[iOperatorNestIndex].bPartRemovedPulse;]]></ST>
+        <ST><![CDATA[// Keep the removal confirmation active until the Puck Locker
+// acknowledges it by leaving the Locked state.
+//
+// Do not forward the one-scan physical sensor pulse directly.
+GVL_MASTER.stPuckLocker.bPartRemovedFromNest := bPendingOperatorResultPass AND bPartRemovedConfirmedForExchange;]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_UpdatePuckLockerPermissives" Id="{a5082c5a-ff24-4e5c-a334-ef2912094065}" FolderPath="Pick_Locker\">
@@ -3889,7 +3981,7 @@ GVL_MASTER.stPuckLocker.bMachinePermissive :=
 // Keeping a separate variable allows additional table-specific
 // interlocks to be added later.
 GVL_MASTER.stPuckLocker.bIndexPermissive := GVL_MASTER.stPuckLocker.bMachinePermissive
-    AND ( GVL_HMI.stPuckLocker.eMode = E_PuckLockerMode.Disabled OR bOperatorExchangeComplete );]]></ST>
+    										AND (GVL_HMI.stPuckLocker.eMode = E_PuckLockerMode.Disabled OR bOperatorExchangeComplete);]]></ST>
       </Implementation>
     </Method>
   </POU>
