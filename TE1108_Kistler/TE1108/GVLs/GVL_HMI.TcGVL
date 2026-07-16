@@ -22,7 +22,7 @@ VAR_GLOBAL
 	rKistlerLiveDistance 				: REAL;
 	rKistlerLiveForce    				: REAL;
 
-	
+	stPuckLocker 						: ST_PuckLockerHMI;
 	
 // =================================================================
 //                         HMI COLORS 

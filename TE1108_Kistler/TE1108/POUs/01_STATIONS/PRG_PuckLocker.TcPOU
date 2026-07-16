@@ -1,0 +1,491 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="PRG_PuckLocker" Id="{d5f14a7d-2934-4622-bc51-7f3c2362ef8c}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_PuckLocker
+VAR
+	ePuckLockerState		   : E_PuckLockerState;
+
+	tonLockingTimeout          : TON := (PT := T#190S);
+    tonUnlockingTimeout        : TON := (PT := T#190S);
+    tonUnexpectedRemoval       : TON := (PT := T#100MS);
+    tonPuckRemovedConfirmation : TON := (PT := T#300MS);
+    tonSensorMismatch          : TON := (PT := T#500MS);
+
+    rtAdminAcknowledge         : R_TRIG;
+    rtEmptyPuckBypass          : R_TRIG;
+
+    bLockerEnabled             : BOOL;
+    bEmptyPuckBypassEnabled    : BOOL;
+
+    bPuckExpectedToRemain      : BOOL;
+    bAdminAcknowledgeAccepted  : BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// ============================================================================
+// PUCK LOCKER CONTROL
+//
+// Application:
+//     - One puck is handled at a time.
+//     - PASS authorises one puck release.
+//     - FAIL keeps the current puck locked.
+//     - A future PASS releases the puck retained after one or more FAIL results.
+//     - Removing the puck while it is expected to remain locked generates a
+//       latched machine fault.
+// ============================================================================
+
+
+// ----------------------------------------------------------------------------
+// Mode configuration
+// ----------------------------------------------------------------------------
+
+bLockerEnabled := GVL_HMI.stPuckLocker.eMode <> E_PuckLockerMode.Disabled;
+
+bEmptyPuckBypassEnabled := GVL_HMI.stPuckLocker.eMode = E_PuckLockerMode.EnabledWithEmptyPuckBypass AND GVL_HMI.stPuckLocker.bEnableEmptyPuckBypass;
+
+
+// ----------------------------------------------------------------------------
+// Physical input mapping
+//
+// Replace the expressions below with the actual mapped I/O variables.
+// Do not map the same physical input in more than one POU.
+// ----------------------------------------------------------------------------
+
+GVL_MASTER.stPuckLocker.bPuckSensorUp := GVL_MASTER.stPuckLockerIO.bPuckLockerSensor1;
+
+GVL_MASTER.stPuckLocker.bPuckSensorDown := GVL_MASTER.stPuckLockerIO.bPuckLockerSensor2;
+
+GVL_MASTER.stPuckLocker.bPuckDetected := GVL_MASTER.stPuckLockerIO.bPuckLockerSensor1 AND GVL_MASTER.stPuckLockerIO.bPuckLockerSensor2;
+
+// ----------------------------------------------------------------------------
+// Command edges
+// ----------------------------------------------------------------------------
+
+rtAdminAcknowledge( CLK := GVL_HMI.stPuckLocker.bCmdAcknowledgeRemovalFault);
+
+rtEmptyPuckBypass( CLK := GVL_HMI.stPuckLocker.bCmdEmptyPuckBypass);
+
+// ----------------------------------------------------------------------------
+// One-scan handshake defaults
+// ----------------------------------------------------------------------------
+
+// This signal must be a one-scan pulse. It is set again below only when a new
+// disposition has actually been consumed.
+GVL_MASTER.stPuckLocker.bDispositionHandled := FALSE;
+
+
+// ----------------------------------------------------------------------------
+// General calculated status
+// ----------------------------------------------------------------------------
+
+GVL_MASTER.stPuckLocker.bPuckLocked := GVL_MASTER.stPuckLocker.bPuckDetected;
+
+GVL_MASTER.stPuckLocker.bRemovalAllowed := GVL_MASTER.stPuckLocker.eState = E_PuckLockerState.ReleasingPuck;
+
+
+// ----------------------------------------------------------------------------
+// Unexpected puck removal supervision
+//
+// The supervision is based on the state in which the puck is expected to
+// remain present. It must not depend on bPuckLocked, because bPuckLocked becomes
+// FALSE immediately when the presence sensor turns OFF.
+// ----------------------------------------------------------------------------
+
+bPuckExpectedToRemain :=
+    bLockerEnabled
+    AND (
+        GVL_MASTER.stPuckLocker.eState =
+            E_PuckLockerState.LockingPuck
+
+        OR GVL_MASTER.stPuckLocker.eState =
+            E_PuckLockerState.Locked
+
+        OR GVL_MASTER.stPuckLocker.eState =
+            E_PuckLockerState.WaitingForPartRemoval
+    )
+    AND NOT GVL_MASTER.stPuckLocker.bRemovalAllowed;
+
+
+// Short debounce to avoid reacting to a single-scan sensor fluctuation.
+tonUnexpectedRemoval(IN := bPuckExpectedToRemain AND NOT GVL_MASTER.stPuckLocker.bPuckDetected, PT := T#100MS);
+
+IF tonUnexpectedRemoval.Q THEN
+
+    GVL_MASTER.stPuckLocker.bUnexpectedRemovalFault := TRUE;
+
+    GVL_MASTER.stPuckLocker.eState := E_PuckLockerState.UnexpectedPuckRemovalFault;
+
+END_IF
+
+
+// ----------------------------------------------------------------------------
+// Disposition handshake
+//
+// PRG_MachineControl writes:
+//     nRequestedRelease
+//     nRequestedRemoval
+//     bApplyDisposition
+//
+// PASS:
+//     Generates one release credit.
+//
+// FAIL:
+//     Is acknowledged but generates no release credit. An existing PASS credit
+//     is never cancelled by a later FAIL.
+// ----------------------------------------------------------------------------
+
+IF GVL_MASTER.stPuckLocker.bApplyDisposition AND NOT GVL_MASTER.stPuckLocker.bDispositionPending THEN
+
+    GVL_MASTER.stPuckLocker.bDispositionPending := TRUE;
+
+    IF GVL_MASTER.stPuckLocker.nRequestedRelease > 0 THEN
+
+        // Only one puck can be handled at a time.
+        GVL_MASTER.stPuckLocker.nPucksAllowedToPass := 1;
+
+
+    ELSIF GVL_MASTER.stPuckLocker.nRequestedRemoval > 0 THEN
+
+        // FAIL disposition:
+        // The puck remains locked. Do not create release permission and do not
+        // cancel a release that may already have been authorised.
+        GVL_MASTER.stPuckLocker.nPucksToRemove := 0;
+
+    END_IF
+
+    // Clear request data after consuming it.
+    GVL_MASTER.stPuckLocker.nRequestedRelease := 0;
+    GVL_MASTER.stPuckLocker.nRequestedRemoval := 0;
+    GVL_MASTER.stPuckLocker.bApplyDisposition := FALSE;
+
+    GVL_MASTER.stPuckLocker.bDispositionPending := FALSE;
+    GVL_MASTER.stPuckLocker.bDispositionHandled := TRUE;
+
+END_IF
+
+
+// ----------------------------------------------------------------------------
+// Optional empty-puck bypass
+//
+// This mode creates a single authorised release. The HMI action must be
+// protected according to the machine access policy.
+// ----------------------------------------------------------------------------
+
+IF rtEmptyPuckBypass.Q THEN
+
+    GVL_HMI.stPuckLocker.bCmdEmptyPuckBypass := FALSE;
+
+    IF bEmptyPuckBypassEnabled AND GVL_MASTER.stPuckLocker.eState = E_PuckLockerState.Locked AND NOT GVL_MASTER.stPuckLocker.bUnexpectedRemovalFault THEN
+        GVL_MASTER.stPuckLocker.nPucksAllowedToPass := 1;
+    END_IF
+
+END_IF
+
+// ----------------------------------------------------------------------------
+// Disabled mode selection
+// ----------------------------------------------------------------------------
+
+IF NOT bLockerEnabled AND GVL_MASTER.stPuckLocker.eState <> E_PuckLockerState.Disabled THEN
+    GVL_MASTER.stPuckLocker.eState := E_PuckLockerState.Disabled;
+END_IF
+
+
+// ============================================================================
+// PUCK LOCKER STATE MACHINE
+// ============================================================================
+
+CASE GVL_MASTER.stPuckLocker.eState OF
+
+
+    // ========================================================================
+    E_PuckLockerState.Disabled:
+    // ========================================================================
+
+        // Rest position: pin down.
+        GVL_MASTER.stPuckLocker.bPinCommandUp := FALSE;
+
+        GVL_MASTER.stPuckLocker.bRemovalAllowed := TRUE;
+
+        GVL_MASTER.stPuckLocker.nPucksAllowedToPass := 0;
+        GVL_MASTER.stPuckLocker.nPucksToRemove := 0;
+
+        GVL_MASTER.stPuckLocker.bDispositionPending := FALSE;
+
+        GVL_MASTER.stPuckLocker.sMessage := 'Puck locker disabled';
+
+        //tonLockingTimeout(IN := FALSE);
+        //tonUnlockingTimeout(IN := FALSE);
+        tonPuckRemovedConfirmation(IN := FALSE);
+
+        IF bLockerEnabled THEN
+
+            IF GVL_MASTER.stPuckLocker.bPuckDetected THEN
+                GVL_MASTER.stPuckLocker.eState := E_PuckLockerState.LockingPuck;
+            ELSE
+
+                GVL_MASTER.stPuckLocker.eState := E_PuckLockerState.WaitingForPuck;
+
+            END_IF
+        END_IF
+
+
+    // ========================================================================
+    E_PuckLockerState.WaitingForPuck:
+    // ========================================================================
+
+        // Keep the pin down so the next puck can enter the locking position.
+        GVL_MASTER.stPuckLocker.bPinCommandUp := FALSE;
+
+        GVL_MASTER.stPuckLocker.bRemovalAllowed := TRUE;
+
+        GVL_MASTER.stPuckLocker.sMessage := 'Waiting for puck';
+
+        tonLockingTimeout(IN := FALSE);
+        tonUnlockingTimeout(IN := FALSE);
+        tonPuckRemovedConfirmation(IN := FALSE);
+
+        IF NOT bLockerEnabled THEN
+
+            GVL_MASTER.stPuckLocker.eState := E_PuckLockerState.Disabled;
+
+
+        ELSIF GVL_MASTER.stPuckLocker.bPuckDetected THEN
+
+            // Once detected, the puck is expected to remain in place.
+            GVL_MASTER.stPuckLocker.bRemovalAllowed := FALSE;
+            GVL_MASTER.stPuckLocker.eState := E_PuckLockerState.LockingPuck;
+
+        END_IF
+
+
+    // ========================================================================
+    E_PuckLockerState.LockingPuck:
+    // ========================================================================
+
+        GVL_MASTER.stPuckLocker.bPinCommandUp := TRUE;
+        GVL_MASTER.stPuckLocker.bRemovalAllowed := FALSE;
+
+        GVL_MASTER.stPuckLocker.sMessage := 'Locking puck';
+
+        tonUnlockingTimeout(IN := FALSE);
+        tonPuckRemovedConfirmation(IN := FALSE);
+
+
+        IF NOT bLockerEnabled THEN
+
+            tonLockingTimeout(IN := FALSE);
+
+            GVL_MASTER.stPuckLocker.eState := E_PuckLockerState.Disabled;
+
+
+        ELSIF GVL_MASTER.stPuckLocker.bPuckDetected THEN
+
+            tonLockingTimeout(IN := FALSE);
+
+            GVL_MASTER.stPuckLocker.eState := E_PuckLockerState.Locked;
+
+		
+        ELSIF tonLockingTimeout.Q THEN
+
+            // At this stage there is no dedicated pneumatic fault variable in
+            // ST_PuckLocker. Keep the locker blocked and expose the diagnostic.
+            GVL_MASTER.stPuckLocker.bUnexpectedRemovalFault := TRUE;
+            GVL_MASTER.stPuckLocker.sMessage := 'Puck locker failed to reach locked position';
+            GVL_MASTER.stPuckLocker.eState := E_PuckLockerState.UnexpectedPuckRemovalFault;
+		
+        END_IF
+
+
+    // ========================================================================
+    E_PuckLockerState.Locked:
+    // ========================================================================
+
+        GVL_MASTER.stPuckLocker.bPinCommandUp := TRUE;
+		GVL_MASTER.stPuckLocker.bRemovalAllowed := FALSE;
+	
+		tonLockingTimeout(IN := FALSE);
+		tonUnlockingTimeout(IN := FALSE);
+		tonPuckRemovedConfirmation(IN := FALSE);
+	
+		IF NOT bLockerEnabled THEN
+	
+			GVL_MASTER.stPuckLocker.eState := E_PuckLockerState.Disabled;
+	
+		ELSIF GVL_MASTER.stPuckLocker.nPucksAllowedToPass > 0 THEN
+	
+			GVL_MASTER.stPuckLocker.sMessage := 'PASS received - waiting for part removal';
+			GVL_MASTER.stPuckLocker.eState := E_PuckLockerState.WaitingForPartRemoval;
+	
+		ELSE
+	
+			GVL_MASTER.stPuckLocker.sMessage := 'Puck locked - waiting for PASS result';
+			
+		END_IF
+
+
+    // ========================================================================
+    E_PuckLockerState.WaitingForPartRemoval:
+    // ========================================================================
+
+		GVL_MASTER.stPuckLocker.bPinCommandUp 	:= TRUE;
+		GVL_MASTER.stPuckLocker.bRemovalAllowed := FALSE;
+	
+		GVL_MASTER.stPuckLocker.sMessage := 'Remove the processed part from the nest';
+	
+		tonLockingTimeout(IN := FALSE);
+		tonUnlockingTimeout(IN := FALSE);
+		tonPuckRemovedConfirmation(IN := FALSE);
+	
+		IF NOT bLockerEnabled THEN
+	
+			GVL_MASTER.stPuckLocker.eState := E_PuckLockerState.Disabled;
+	
+		ELSIF NOT GVL_MASTER.stPuckLocker.bPuckDetected THEN
+	
+			GVL_MASTER.stPuckLocker.bUnexpectedRemovalFault := TRUE;
+			GVL_MASTER.stPuckLocker.eState := E_PuckLockerState.UnexpectedPuckRemovalFault;
+	
+		ELSIF GVL_MASTER.stPuckLocker.bPartRemovedFromNest THEN
+	
+			GVL_MASTER.stPuckLocker.sMessage := 'Part removed - releasing puck';
+			GVL_MASTER.stPuckLocker.eState := E_PuckLockerState.ReleasingPuck;
+	
+		END_IF
+
+    // ========================================================================
+    E_PuckLockerState.ReleasingPuck:
+    // ========================================================================
+
+        // PASS received: lower the locking pin.
+        GVL_MASTER.stPuckLocker.bPinCommandUp := FALSE;
+        GVL_MASTER.stPuckLocker.bRemovalAllowed := TRUE;
+
+        GVL_MASTER.stPuckLocker.sMessage := 'Puck release authorised';
+
+       tonLockingTimeout(IN := FALSE);
+
+        // Once the pin is down, wait for confirmed removal of the puck.
+        tonPuckRemovedConfirmation(IN := NOT GVL_MASTER.stPuckLocker.bPuckDetected, PT := T#300MS);
+
+
+        IF NOT bLockerEnabled THEN
+
+            tonUnlockingTimeout(IN := FALSE);
+            tonPuckRemovedConfirmation(IN := FALSE);
+
+            GVL_MASTER.stPuckLocker.eState := E_PuckLockerState.Disabled;
+
+
+        ELSIF tonPuckRemovedConfirmation.Q THEN
+
+            // The single authorised puck has left the locking position.
+            GVL_MASTER.stPuckLocker.nPucksAllowedToPass := 0;
+
+            tonUnlockingTimeout(IN := FALSE);
+            tonPuckRemovedConfirmation(IN := FALSE);
+
+            GVL_MASTER.stPuckLocker.eState := E_PuckLockerState.WaitingForPuck;
+
+		
+        ELSIF tonUnlockingTimeout.Q THEN
+
+            GVL_MASTER.stPuckLocker.bUnexpectedRemovalFault := TRUE;
+
+            GVL_MASTER.stPuckLocker.sMessage := 'Puck locker failed to reach released position';
+
+            GVL_MASTER.stPuckLocker.eState := E_PuckLockerState.UnexpectedPuckRemovalFault;
+		
+        END_IF
+
+
+    // ========================================================================
+    E_PuckLockerState.UnexpectedPuckRemovalFault:
+    // ========================================================================
+
+        // Keep the pin raised. The operator must restore the puck to its
+        // detected position before the administrator acknowledgement is valid.
+        GVL_MASTER.stPuckLocker.bPinCommandUp := TRUE;
+        GVL_MASTER.stPuckLocker.bRemovalAllowed := FALSE;
+
+        GVL_MASTER.stPuckLocker.bUnexpectedRemovalFault := TRUE;
+
+        GVL_MASTER.stPuckLocker.sMessage := 'Puck removed while locked. Restore puck and request administrator acknowledgement.';
+
+        tonLockingTimeout(IN := FALSE);
+        tonUnlockingTimeout(IN := FALSE);
+        tonPuckRemovedConfirmation(IN := FALSE);
+
+
+        bAdminAcknowledgeAccepted := rtAdminAcknowledge.Q AND GVL_MASTER.stPuckLocker.bPuckDetected;
+
+
+        IF bAdminAcknowledgeAccepted THEN
+
+            // The HMI must only generate this command after successful
+            // administrator authentication.
+            GVL_MASTER.stPuckLocker.bUnexpectedRemovalFault := FALSE;
+
+            GVL_HMI.stPuckLocker.bCmdAcknowledgeRemovalFault := FALSE;
+            GVL_HMI.stPuckLocker.bShowUnexpectedRemovalPopup := FALSE;
+
+            // Return to Locked. The global machine fault should remain active
+            // until the normal physical Reset procedure is performed.
+            GVL_MASTER.stPuckLocker.eState := E_PuckLockerState.Locked;
+        END_IF
+
+    // ========================================================================
+    ELSE
+    // ========================================================================
+
+        // Unknown or corrupted state: move to a deterministic blocked state.
+        GVL_MASTER.stPuckLocker.bPinCommandUp := TRUE;
+        GVL_MASTER.stPuckLocker.bRemovalAllowed := FALSE;
+
+        GVL_MASTER.stPuckLocker.bUnexpectedRemovalFault := TRUE;
+
+        GVL_MASTER.stPuckLocker.sMessage := 'Invalid puck locker state';
+
+        GVL_MASTER.stPuckLocker.eState := E_PuckLockerState.UnexpectedPuckRemovalFault;
+
+END_CASE
+
+
+// ----------------------------------------------------------------------------
+// Reset momentary HMI commands
+// ----------------------------------------------------------------------------
+
+IF GVL_HMI.stPuckLocker.bCmdAcknowledgeRemovalFault AND NOT GVL_MASTER.stPuckLocker.bUnexpectedRemovalFault THEN
+    GVL_HMI.stPuckLocker.bCmdAcknowledgeRemovalFault := FALSE;
+END_IF
+
+
+// ----------------------------------------------------------------------------
+// Physical output mapping
+//
+// Confirm the valve polarity before commissioning.
+// In the Leak Tester implementation, the physical output was inverted.
+// ----------------------------------------------------------------------------
+
+ GVL_MASTER.stPuckLockerIO.bPuckLockerCylinder := NOT GVL_MASTER.stPuckLocker.bPinCommandUp;
+
+
+// ----------------------------------------------------------------------------
+// HMI status mapping
+// ----------------------------------------------------------------------------
+
+GVL_HMI.stPuckLocker.bPuckDetected := GVL_MASTER.stPuckLocker.bPuckDetected;
+
+GVL_HMI.stPuckLocker.bPuckLocked := GVL_MASTER.stPuckLocker.bPuckLocked;
+
+GVL_HMI.stPuckLocker.bPuckSensorMismatch := GVL_MASTER.stPuckLocker.bPuckSensorMismatch;
+
+GVL_HMI.stPuckLocker.bUnexpectedRemovalFault := GVL_MASTER.stPuckLocker.bUnexpectedRemovalFault;
+
+GVL_HMI.stPuckLocker.bShowUnexpectedRemovalPopup := GVL_MASTER.stPuckLocker.bUnexpectedRemovalFault;
+
+GVL_HMI.stPuckLocker.nPucksAllowedToPass := GVL_MASTER.stPuckLocker.nPucksAllowedToPass;
+
+GVL_HMI.stPuckLocker.sMessage := GVL_MASTER.stPuckLocker.sMessage;]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

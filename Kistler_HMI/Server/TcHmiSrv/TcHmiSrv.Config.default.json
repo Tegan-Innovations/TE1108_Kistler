@@ -1686,6 +1686,45 @@
             },
             "USEMAPPING": true
         },
+        "ADS.PLC1.GVL_MASTER.stNestTable.bNestInMotion": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_MASTER::stNestTable::bNestInMotion",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:general#/definitions/BOOL"
+                    },
+                    {
+                        "comment": "Status: Table is currently indexing (ATIVO)",
+                        "propertyOrder": 14
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_MASTER.stNestTable.bNestReadySensor": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_MASTER::stNestTable::bNestReadySensor",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:general#/definitions/BOOL"
+                    },
+                    {
+                        "attributes": {
+                            "TcDataArea": "Input"
+                        },
+                        "comment": "Sensor: Table air pressure and home state OK",
+                        "propertyOrder": 1
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
         "ADS.PLC1.GVL_MASTER.stProcess.bKistlerCycleDone": {
             "ACCESS": 3,
             "DOMAIN": "ADS",
@@ -1766,6 +1805,23 @@
                     },
                     {
                         "propertyOrder": 6
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_MASTER.stProcess.bReleaseNestRotation": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_MASTER::stProcess::bReleaseNestRotation",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:general#/definitions/BOOL"
+                    },
+                    {
+                        "propertyOrder": 5
                     }
                 ]
             },
@@ -5320,11 +5376,14 @@
                 "ADS.PLC1.GVL_MASTER.stMachineStatus.bReadyToStart": 3,
                 "ADS.PLC1.GVL_MASTER.stMachineStatus.eMachineState": 3,
                 "ADS.PLC1.GVL_MASTER.stNestTable.bNestCompletedSensor": 3,
+                "ADS.PLC1.GVL_MASTER.stNestTable.bNestInMotion": 3,
+                "ADS.PLC1.GVL_MASTER.stNestTable.bNestReadySensor": 3,
                 "ADS.PLC1.GVL_MASTER.stProcess.bKistlerCycleDone": 3,
                 "ADS.PLC1.GVL_MASTER.stProcess.bKistlerCycleRequest": 3,
                 "ADS.PLC1.GVL_MASTER.stProcess.bKistlerHomeDone": 3,
                 "ADS.PLC1.GVL_MASTER.stProcess.bKistlerResultNOK": 3,
                 "ADS.PLC1.GVL_MASTER.stProcess.bKistlerResultOK": 3,
+                "ADS.PLC1.GVL_MASTER.stProcess.bReleaseNestRotation": 3,
                 "ADS.PLC1.GVL_MASTER.stSensors.bPartPresent_Kistler": 3,
                 "ADS.PLC1.GVL_MASTER.stSensors.bPartPresent_NEST": 3,
                 "ADS.PLC1.GVL_MASTER.stSensors.bPartPresent_Reject": 3,

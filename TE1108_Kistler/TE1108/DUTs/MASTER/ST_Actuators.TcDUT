@@ -5,6 +5,7 @@
 STRUCT
     qGuideCylinder 			AT %Q* 				: BOOL;
 
+	
     bGuideCylinderExtendRequest 				: BOOL;
 	
 END_STRUCT

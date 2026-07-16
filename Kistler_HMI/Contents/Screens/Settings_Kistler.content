@@ -30,29 +30,7 @@
     "Name": "Settings",
     "children": [
       {
-        "Name": "Keyence",
-        "children": [
-          {
-            "Name": "Actuator"
-          },
-          {
-            "Name": "Probes",
-            "children": [
-              {
-                "Name": "Calibration Set 1"
-              },
-              {
-                "Name": "Calibration Set 2"
-              },
-              {
-                "Name": "Distances"
-              },
-              {
-                "Name": "Tolerances"
-              }
-            ]
-          }
-        ]
+        "Name": "Kistler"
       },
       {
         "Name": "Enable Nests"
@@ -101,77 +79,17 @@
             "caseValue": {
               "objectType": "StaticValue",
               "valueType": "tchmi:general#/definitions/Any",
-              "value": "Calibration Set 1"
+              "value": "Kistler"
             },
             "actions": [
               {
                 "objectType": "WriteToSymbol",
                 "active": true,
-                "symbolExpression": "%i%Settings_Screen%/i%",
+                "symbolExpression": "%ctrl%IO_Region_18::TargetContent%/ctrl%",
                 "value": {
                   "objectType": "StaticValue",
-                  "valueType": "tchmi:general#/definitions/DINT",
-                  "value": "Contents/Settings/Calibration_Set1.content"
-                },
-                "asyncWait": true
-              }
-            ]
-          },
-          {
-            "caseValue": {
-              "objectType": "StaticValue",
-              "valueType": "tchmi:general#/definitions/Any",
-              "value": "Distances"
-            },
-            "actions": [
-              {
-                "objectType": "WriteToSymbol",
-                "active": true,
-                "symbolExpression": "%i%Settings_Screen%/i%",
-                "value": {
-                  "objectType": "StaticValue",
-                  "valueType": "tchmi:general#/definitions/DINT",
-                  "value": "Contents/Settings/Distances.content"
-                },
-                "asyncWait": true
-              }
-            ]
-          },
-          {
-            "caseValue": {
-              "objectType": "StaticValue",
-              "valueType": "tchmi:general#/definitions/Any",
-              "value": "Tolerances"
-            },
-            "actions": [
-              {
-                "objectType": "WriteToSymbol",
-                "active": true,
-                "symbolExpression": "%i%Settings_Screen%/i%",
-                "value": {
-                  "objectType": "StaticValue",
-                  "valueType": "tchmi:general#/definitions/DINT",
-                  "value": "Contents/Settings/Tolerances.content"
-                },
-                "asyncWait": true
-              }
-            ]
-          },
-          {
-            "caseValue": {
-              "objectType": "StaticValue",
-              "valueType": "tchmi:general#/definitions/Any",
-              "value": "Calibration Set 2"
-            },
-            "actions": [
-              {
-                "objectType": "WriteToSymbol",
-                "active": true,
-                "symbolExpression": "%i%Settings_Screen%/i%",
-                "value": {
-                  "objectType": "StaticValue",
-                  "valueType": "tchmi:general#/definitions/DINT",
-                  "value": "Contents/Settings/Calibration_Set2.content"
+                  "valueType": "tchmi:framework#/definitions/ContentPath",
+                  "value": "Contents/Screens/Settings/Distances.content"
                 },
                 "asyncWait": true
               }
@@ -187,11 +105,11 @@
               {
                 "objectType": "WriteToSymbol",
                 "active": true,
-                "symbolExpression": "%i%Settings_Screen%/i%",
+                "symbolExpression": "%ctrl%IO_Region_18::TargetContent%/ctrl%",
                 "value": {
                   "objectType": "StaticValue",
-                  "valueType": "tchmi:general#/definitions/DINT",
-                  "value": "Contents/Settings/EnableNests.content"
+                  "valueType": "tchmi:framework#/definitions/ContentPath",
+                  "value": "Contents/Screens/Settings/Distances - Copy.content"
                 },
                 "asyncWait": true
               }

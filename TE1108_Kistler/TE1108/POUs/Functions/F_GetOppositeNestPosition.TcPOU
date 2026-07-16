@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="F_GetOppositeNestPosition" Id="{fa26ae98-c2c5-4076-91dd-822948c558a6}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION F_GetOppositeNestPosition : E_NestPosition
+VAR_INPUT
+	eKistlerPosition : E_NestPosition;
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[CASE eKistlerPosition OF
+
+    E_NestPosition.Position_1:
+        F_GetOppositeNestPosition := E_NestPosition.Position_3;
+
+    E_NestPosition.Position_2:
+        F_GetOppositeNestPosition := E_NestPosition.Position_4;
+
+    E_NestPosition.Position_3:
+        F_GetOppositeNestPosition := E_NestPosition.Position_1;
+
+    E_NestPosition.Position_4:
+        F_GetOppositeNestPosition := E_NestPosition.Position_2;
+
+ELSE
+
+    F_GetOppositeNestPosition := E_NestPosition.Unknown;
+
+END_CASE]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

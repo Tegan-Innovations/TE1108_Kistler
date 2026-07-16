@@ -133,6 +133,7 @@
     <Folder Include="Contents\IOs" />
     <Folder Include="Contents\Hardware" />
     <Folder Include="Contents\Screens" />
+    <Folder Include="Contents\Screens\Settings" />
     <Folder Include="Contents\Screens\popups" />
     <Folder Include="Contents\UserControl" />
     <Folder Include="Contents\UserControl\Height Test" />
@@ -247,13 +248,34 @@
     <Content Include="Contents\Screens\0_Simulation.content">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Contents\Screens\Data_History.content">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Contents\Screens\Manual_Mode.content">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Contents\Screens\popups\Content_Popup_Logout.content">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Contents\Screens\Settings\Distances - Copy (2).content">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Contents\Screens\Settings\Distances - Copy.content">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Contents\Screens\Settings\Distances.content">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Contents\Screens\Settings_Kistler.content">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Contents\Screens\Alarms.content">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Contents\Screens\Manual_Mode.content">
+    <Content Include="Contents\Screens\Statistics.content">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Contents\Screens\System_Info.content">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Contents\Screens\UserManagement.content">
@@ -630,7 +652,7 @@
     <Content Include="Images\IO\Wieland_Switch.PNG">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Images\Project\IndexKistler.png">
+    <Content Include="Images\Project\IndexKistler_1.png">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Images\Project\KistlerMAchine.png">
@@ -654,9 +676,6 @@
     <Content Include="Images\Project\kistler_pos_2.PNG">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Images\Project\nest.PNG">
-      <SubType>Content</SubType>
-    </Content>
     <Content Include="Images\Project\nest_pos_2.PNG">
       <SubType>Content</SubType>
     </Content>
@@ -666,7 +685,31 @@
     <Content Include="Images\Project\nest_pos_4.PNG">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Imports\Images\arrow-down-sign-to-navigate.png">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Imports\Images\C6015-0010_2.png">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Imports\Images\IndexKistler_1-0-0.png">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Imports\Images\IndexKistler_1-0.png">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Imports\Images\IndexKistler_1.png">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Imports\Images\kistler_-0.png">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Imports\Images\kistler_.png">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Imports\Images\kistler_Main-0.png">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Imports\Images\kistler_Main.png">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Imports\Images\Kistler_Nest-0-0.png">
@@ -678,10 +721,19 @@
     <Content Include="Imports\Images\Kistler_Nest.png">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Imports\Images\kistler_pos_2.png">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Imports\Images\left_hand - green.png">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Imports\Images\left_hand.png">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Imports\Images\nest.png">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Imports\Images\next.png">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Imports\Images\right_hand - green.png">
