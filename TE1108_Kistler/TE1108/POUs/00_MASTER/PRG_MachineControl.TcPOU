@@ -6,39 +6,40 @@ VAR
     // =========================================================
     // TIMERS & TRIGGERS
     // =========================================================
-	tonSys_Init           : TON := (PT := T#8S);    // Initialization pulse timer
-    tonSys_InitTimeout    : TON := (PT := T#15S);   // Initialization timeout fault timer    : TON := (PT := T#15S);   // Initialization timeout fault timer
-	tonTimeout_testing    : TON := (PT := T#20S);   // Initialization timeout fault timer
-    tonFirstAutoCycle     : TON := (PT := T#500MS); // Auto cycle start settling timer
-	tonStoppingDelay	  : TON                   ; // Time to finalize process 
-    tonSafety             : TON := (PT := T#10S);   // Safety interlock debounce timer
-	tonSimulation		  : ARRAY[1..4] OF TON; //timer for simulations  
-	rtKistlerResultDone   : R_TRIG;
-	rtPartPresentReject   : R_TRIG;
+	tonSys_Init           				: TON := (PT := T#8S);    // Initialization pulse timer
+    tonSys_InitTimeout    				: TON := (PT := T#15S);   // Initialization timeout fault timer    : TON := (PT := T#15S);   // Initialization timeout fault timer
+	tonTimeout_testing    				: TON := (PT := T#20S);   // Initialization timeout fault timer
+    tonFirstAutoCycle     				: TON := (PT := T#500MS); // Auto cycle start settling timer
+	tonStoppingDelay	  				: TON                   ; // Time to finalize process 
+    tonSafety             				: TON := (PT := T#10S);   // Safety interlock debounce timer
+	tonAutoCycleIdleTimeout 			: TON := (PT := T#2M);
+	tonSimulation		  				: ARRAY[1..4] OF TON; //timer for simulations  
+	rtKistlerResultDone   				: R_TRIG;
+	rtPartPresentReject   				: R_TRIG;
     
-    rtFirstAutoCycle      : R_TRIG; // Detects entry into Auto Cycle
-    fbResetTrigger        : F_TRIG; // Detects HMI Reset button release
-	tTwoHandReturnTimeout : TON := (PT := T#2S);
-	tonAfterKistlerDelay  : TON;
+    rtFirstAutoCycle      				: R_TRIG; // Detects entry into Auto Cycle
+    fbResetTrigger        				: F_TRIG; // Detects HMI Reset button release
+	tTwoHandReturnTimeout 				: TON := (PT := T#2S);
+	tonAfterKistlerDelay  				: TON;
 	
     eProcessCycleState : E_ProcessCycle_State := E_ProcessCycle_State.IDLE;
 	
-	tonGuideCylinderDelay 			: TON;
-	tonGuideCylinderRetractDelay 	: TON;
-	tGuideCylinderDelay   			: TIME := T#250MS;
+	tonGuideCylinderDelay 				: TON;
+	tonGuideCylinderRetractDelay 		: TON;
+	tGuideCylinderDelay   				: TIME := T#250MS;
 	
-	bFaultResetRequested 			: BOOL := FALSE;
+	bFaultResetRequested 				: BOOL := FALSE;
 	
     // =========================================================
     // PROCESS CYCLE CONTROL
     // =========================================================
-	bStartProcessCondition 		: BOOL;   // OK to Start checklist condition flag
-	bAutoCyclePermissive		: BOOL;
-    bKistlerReady          		: BOOL;   // Press healthy and ready feedback flag
-    i                      		: INT;    // Loop index counter
-    sMachineMessage        		: STRING; // Diagnostics and status message string
-	stKistlerInTelegram  		: ST_Kistler_TelegramIn;
-	stKistlerOutTelegram 		: ST_Kistler_TelegramOut;
+	bStartProcessCondition 				: BOOL;   // OK to Start checklist condition flag
+	bAutoCyclePermissive				: BOOL;
+    bKistlerReady          				: BOOL;   // Press healthy and ready feedback flag
+    i                      				: INT;    // Loop index counter
+    sMachineMessage        				: STRING; // Diagnostics and status message string
+	stKistlerInTelegram  				: ST_Kistler_TelegramIn;
+	stKistlerOutTelegram 				: ST_Kistler_TelegramOut;
 	
     bProcessCycleAllowed   		: BOOL;
     bAutoProcessAllowed    		: BOOL;
@@ -109,10 +110,10 @@ VAR
 	//==========================================================
 
     // Status memory for each individual LED mode
-    eMode_LED_Start    : E_LEDs_Mode := E_LEDs_Mode.OFF;
-    eMode_LED_Reset    : E_LEDs_Mode := E_LEDs_Mode.OFF;
-	eMode_LED_Pass 	   : E_LEDs_Mode := E_LEDs_Mode.OFF;
-    eMode_LED_fail     : E_LEDs_Mode := E_LEDs_Mode.OFF;
+    eMode_LED_Start    			: E_LEDs_Mode := E_LEDs_Mode.OFF;
+    eMode_LED_Reset    			: E_LEDs_Mode := E_LEDs_Mode.OFF;
+	eMode_LED_Pass 	   			: E_LEDs_Mode := E_LEDs_Mode.OFF;
+    eMode_LED_fail     			: E_LEDs_Mode := E_LEDs_Mode.OFF;
     // Hardware digital outputs mapped to the physical LEDs
     q_bLED_Start      AT%Q*    : BOOL; 
     q_bLED_Reset      AT%Q*    : BOOL;
@@ -126,29 +127,29 @@ VAR
     eOperatorNestPosition 		: E_NestPosition;
 	ePendingPuckDispositionNest : E_NestPosition := E_NestPosition.Unknown;
 
-    iKistlerNestIndex     : INT;
-    iOperatorNestIndex    : INT;
+    iKistlerNestIndex     		: INT;
+    iOperatorNestIndex    		: INT;
 	
-	bKistlerResultStored : BOOL;
+	bKistlerResultStored 		: BOOL;
 	bPartRemovedConfirmedForExchange : BOOL;
 	
     // =========================================================
     // PERSISTENT DATA & LOGGING
     // =========================================================
     //fbWritePersistent      : FB_WritePersistentData;
-	bWriteTrigger          : BOOL; // Test and simulation sequence trigger
-	eCurrentState: INT;
+	bWriteTrigger         		: BOOL; // Test and simulation sequence trigger
+	eCurrentState				: INT;
 	
 	// =========================================================
     // HMI COMMAND
     // =========================================================
-	bHMIManualModeRequest : BOOL := FALSE;
-	rtHMIManualModeRequest : R_TRIG;
-	i_bHMIManualModeRequest: INT;
+	bHMIManualModeRequest 		: BOOL := FALSE;
+	rtHMIManualModeRequest 		: R_TRIG;
+	i_bHMIManualModeRequest		: INT;
 	
 	
-	E_ProcessCycleState: INT;
-	IDLE: INT;
+	E_ProcessCycleState			: INT;
+	IDLE						: INT;
 END_VAR
 
 ]]></Declaration>
@@ -215,6 +216,14 @@ bStartProcessCondition :=
 // =========================================================
 
 	tonTimeout_testing (IN := GVL_MASTER.bProcessBusy);
+	
+	// Any process activity resets the accumulated timeout.
+	tonAutoCycleIdleTimeout(
+		IN :=
+			GVL_MASTER.stMachineStatus.eMachineState =
+				E_MachineState.SYSTEM_AUTO_CYCLE
+			AND NOT GVL_MASTER.bProcessBusy
+	);
 
 // =========================================================
 // GLOBAL FAULT DETECTION
@@ -388,25 +397,20 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 		// Show the result of the processed part currently
 		// waiting at the operator position.
 		IF bPendingOperatorResultFail THEN
-	
 			// NOK part: operator must place the part in Reject.
 			eMode_LED_PASS := E_LEDs_Mode.OFF;
 			eMode_LED_Fail := E_LEDs_Mode.ON;
 	
 		ELSIF bPendingOperatorResultPass THEN
-	
 			// OK part: normal operator removal.
 			eMode_LED_PASS := E_LEDs_Mode.ON;
 			eMode_LED_Fail := E_LEDs_Mode.OFF;
-	
 		ELSE
-	
 			// No processed part is waiting at the operator position.
 			eMode_LED_PASS := E_LEDs_Mode.OFF;
 			eMode_LED_Fail := E_LEDs_Mode.OFF;
 	
 		END_IF;
-	
 	
 		rtFirstAutoCycle(CLK := TRUE);
 		tonFirstAutoCycle(IN := rtFirstAutoCycle.Q);
@@ -428,6 +432,10 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 	
 			GVL_MASTER.stMachineStatus.eMachineState :=
 				E_MachineState.FAULT;
+		ELSIF tonAutoCycleIdleTimeout.Q THEN
+
+			GVL_MASTER.stMachineStatus.eMachineState :=
+				E_MachineState.STOPPING;
 	
 		END_IF;
 			
