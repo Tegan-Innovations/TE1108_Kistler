@@ -166,7 +166,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{09826F5E-A0C6-4F2A-AB8E-A2951346EAC9}" Name="TE1108" PrjFilePath="TE1108\TE1108.plcproj" TmcFilePath="TE1108\TE1108.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{BE2074FE-2116-41A3-5BDC-44675D957A23}" TmcPath="TE1108\TE1108.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{3CD5F3DE-8F3A-0005-91CD-4F5AB5016E24}" TmcPath="TE1108\TE1108.tmc">
 					<Name>TE1108 Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -260,6 +260,11 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_MASTER.i_bButtonStart</Name>
+							<Comment><![CDATA[  Auto Cycle start button]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_IO.stSafety.bSafetyOK</Name>
 							<Comment><![CDATA[ Input to PLC from TwinSAFE (System can start)]]></Comment>
 							<Type>BOOL</Type>
@@ -303,11 +308,6 @@
 							<Name>GVL_KISTLER_IO.aKistlerIn</Name>
 							<Comment><![CDATA[ maXYmos -> PLC]]></Comment>
 							<Type GUID="{2B6B47C9-DB58-8D37-72B9-9344E5A5275A}">ARRAY [0..199] OF BYTE</Type>
-						</Var>
-						<Var>
-							<Name>GVL_MASTER.i_bButtonStart</Name>
-							<Comment><![CDATA[  Auto Cycle start button]]></Comment>
-							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_MASTER.i_bButtonStop</Name>

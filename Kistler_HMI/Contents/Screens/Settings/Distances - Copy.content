@@ -85,7 +85,7 @@
 </div>
 <div id="TcHmiTextblock_1335" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="520" data-tchmi-left-unit="px" data-tchmi-text="Select the check box raleted of the nest you want to Enable/Desable" data-tchmi-top="100" data-tchmi-top-unit="px" data-tchmi-width="460" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-zindex="28" data-tchmi-text-font-size="140" data-tchmi-text-font-size-unit="%" data-tchmi-text-horizontal-alignment="Left" data-tchmi-text-font-style="Italic" data-tchmi-background-image-horizontal-alignment="Center">
 </div>
-<div id="TcHmiToggleSwitch_2" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiToggleSwitch" data-tchmi-height="55" data-tchmi-height-unit="px" data-tchmi-left="665" data-tchmi-left-unit="px" data-tchmi-text="Nest 1" data-tchmi-top="140" data-tchmi-top-unit="px" data-tchmi-width="170" data-tchmi-width-unit="px" data-tchmi-zindex="29" data-tchmi-text-font-size="150" data-tchmi-text-font-size-unit="%">
+<div id="TcHmiToggleSwitch_2" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiToggleSwitch" data-tchmi-height="55" data-tchmi-height-unit="px" data-tchmi-left="665" data-tchmi-left-unit="px" data-tchmi-text="Nest 1" data-tchmi-top="140" data-tchmi-top-unit="px" data-tchmi-width="170" data-tchmi-width-unit="px" data-tchmi-zindex="29" data-tchmi-text-font-size="150" data-tchmi-text-font-size-unit="%" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.aNestEnabled.0%/s%">
 </div>
 
 
@@ -108,11 +108,11 @@
 }
 </script>
 </div>
-<div id="TcHmiToggleSwitch_3" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiToggleSwitch" data-tchmi-height="55" data-tchmi-height-unit="px" data-tchmi-left="665" data-tchmi-left-unit="px" data-tchmi-text="Nest 3" data-tchmi-top="300" data-tchmi-top-unit="px" data-tchmi-width="170" data-tchmi-width-unit="px" data-tchmi-zindex="29" data-tchmi-text-font-size="150" data-tchmi-text-font-size-unit="%">
+<div id="TcHmiToggleSwitch_3" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiToggleSwitch" data-tchmi-height="55" data-tchmi-height-unit="px" data-tchmi-left="665" data-tchmi-left-unit="px" data-tchmi-text="Nest 3" data-tchmi-top="300" data-tchmi-top-unit="px" data-tchmi-width="170" data-tchmi-width-unit="px" data-tchmi-zindex="29" data-tchmi-text-font-size="150" data-tchmi-text-font-size-unit="%" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.aNestEnabled.2%/s%">
 </div>
-<div id="TcHmiToggleSwitch_4" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiToggleSwitch" data-tchmi-height="55" data-tchmi-height-unit="px" data-tchmi-left="550" data-tchmi-left-unit="px" data-tchmi-text="Nest 4" data-tchmi-top="220" data-tchmi-top-unit="px" data-tchmi-width="170" data-tchmi-width-unit="px" data-tchmi-zindex="29" data-tchmi-text-font-size="150" data-tchmi-text-font-size-unit="%">
+<div id="TcHmiToggleSwitch_4" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiToggleSwitch" data-tchmi-height="55" data-tchmi-height-unit="px" data-tchmi-left="550" data-tchmi-left-unit="px" data-tchmi-text="Nest 4" data-tchmi-top="220" data-tchmi-top-unit="px" data-tchmi-width="170" data-tchmi-width-unit="px" data-tchmi-zindex="29" data-tchmi-text-font-size="150" data-tchmi-text-font-size-unit="%" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.aNestEnabled.3%/s%">
 </div>
-<div id="TcHmiToggleSwitch_5" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiToggleSwitch" data-tchmi-height="55" data-tchmi-height-unit="px" data-tchmi-left="780" data-tchmi-left-unit="px" data-tchmi-text="Nest 2" data-tchmi-top="220" data-tchmi-top-unit="px" data-tchmi-width="170" data-tchmi-width-unit="px" data-tchmi-zindex="29" data-tchmi-text-font-size="150" data-tchmi-text-font-size-unit="%" data-tchmi-toggle-state="Normal">
+<div id="TcHmiToggleSwitch_5" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiToggleSwitch" data-tchmi-height="55" data-tchmi-height-unit="px" data-tchmi-left="780" data-tchmi-left-unit="px" data-tchmi-text="Nest 2" data-tchmi-top="220" data-tchmi-top-unit="px" data-tchmi-width="170" data-tchmi-width-unit="px" data-tchmi-zindex="29" data-tchmi-text-font-size="150" data-tchmi-text-font-size-unit="%" data-tchmi-toggle-state="Normal" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.aNestEnabled.1%/s%">
 </div>
 <div id="TcHmiContainer_91" data-tchmi-type="TcHmi.Controls.System.TcHmiContainer" data-tchmi-height="90" data-tchmi-height-unit="px" data-tchmi-left="331" data-tchmi-left-unit="px" data-tchmi-top="176" data-tchmi-top-unit="px" data-tchmi-width="65" data-tchmi-width-unit="px">
 

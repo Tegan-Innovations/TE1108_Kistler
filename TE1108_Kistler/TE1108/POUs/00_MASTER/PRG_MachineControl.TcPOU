@@ -27,6 +27,8 @@ VAR
 	tonGuideCylinderRetractDelay 	: TON;
 	tGuideCylinderDelay   			: TIME := T#250MS;
 	
+	bFaultResetRequested 			: BOOL := FALSE;
+	
     // =========================================================
     // PROCESS CYCLE CONTROL
     // =========================================================
@@ -205,6 +207,9 @@ bStartProcessCondition :=
     OR GVL_MASTER.stActuators.bGuideCylinderExtendRequest
 	OR GVL_MASTER.stNestTable.bSupportExtended;
 	
+	
+
+	
 // =========================================================
 // TIMEOUT
 // =========================================================
@@ -246,6 +251,13 @@ IF NOT GVL_MASTER.i_bButtonStop THEN
     bStopRequested := TRUE;
 END_IF
 
+
+	
+IF GVL_MASTER.stMachineStatus.eMachineState <>
+    E_MachineState.FAULT THEN
+
+    bFaultResetRequested := FALSE;
+END_IF;
 // // =========================================================
 // 2. MAIN STATE MACHINE (CASE)
 // =========================================================
@@ -266,11 +278,14 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 		
 		bHMIManualModeRequest := FALSE;
     	//M_ResetProcessCycle();
-
+		
+		 // Store the first reset request while TwinSAFE recovers.
+		IF GVL_MASTER.i_bButtonReset THEN
+			bFaultResetRequested := TRUE;
+		END_IF;
 
 		IF GVL_MASTER.stMachineStatus.bSafety
 			AND NOT GVL_MASTER.i_bButtonEmergencyStop
-			AND fbResetTrigger.Q
 		THEN
 			bKistlerResetPulse := TRUE;
 		END_IF;
@@ -369,23 +384,53 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
         END_IF	
  
 	E_MachineState.SYSTEM_AUTO_CYCLE:
-	 
-		eMode_LED_PASS := E_LEDs_Mode.ON;
-		eMode_LED_Fail := E_LEDs_Mode.OFF;
-        rtFirstAutoCycle(CLK := TRUE);
-        tonFirstAutoCycle(IN := rtFirstAutoCycle.Q);
-        
-        IF bStopRequested 
+	
+		// Show the result of the processed part currently
+		// waiting at the operator position.
+		IF bPendingOperatorResultFail THEN
+	
+			// NOK part: operator must place the part in Reject.
+			eMode_LED_PASS := E_LEDs_Mode.OFF;
+			eMode_LED_Fail := E_LEDs_Mode.ON;
+	
+		ELSIF bPendingOperatorResultPass THEN
+	
+			// OK part: normal operator removal.
+			eMode_LED_PASS := E_LEDs_Mode.ON;
+			eMode_LED_Fail := E_LEDs_Mode.OFF;
+	
+		ELSE
+	
+			// No processed part is waiting at the operator position.
+			eMode_LED_PASS := E_LEDs_Mode.OFF;
+			eMode_LED_Fail := E_LEDs_Mode.OFF;
+	
+		END_IF;
+	
+	
+		rtFirstAutoCycle(CLK := TRUE);
+		tonFirstAutoCycle(IN := rtFirstAutoCycle.Q);
+	
+		IF bStopRequested
 			AND NOT GVL_MASTER.bProcessBusy THEN
-            GVL_Master.stMachineStatus.eMachineState := E_MachineState.STOPPING;
-			
-        ELSIF GVL_Master.stMachineStatus.bFault OR NOT bStartProcessCondition OR NOT GVL_IO.stSafety.bSafetyOK THEN
-            GVL_Master.stMachineStatus.eMachineState := E_MachineState.FAULT;
-			
+	
+			GVL_MASTER.stMachineStatus.eMachineState :=
+				E_MachineState.STOPPING;
+	
+		ELSIF GVL_MASTER.stMachineStatus.bFault
+			OR NOT bStartProcessCondition
+			OR NOT GVL_IO.stSafety.bSafetyOK THEN
+	
+			GVL_MASTER.stMachineStatus.eMachineState :=
+				E_MachineState.FAULT;
+	
 		ELSIF tonTimeout_testing.Q THEN
-			GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.FAULT;
-        END_IF
-		
+	
+			GVL_MASTER.stMachineStatus.eMachineState :=
+				E_MachineState.FAULT;
+	
+		END_IF;
+			
 		
 		
     E_MachineState.MANUAL_MODE:
@@ -745,6 +790,34 @@ END_IF;
 
 
 M_HMIKistlerResult := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_IsNestEnabled" Id="{c565a59a-4a72-4ce9-ac82-a7eafb09ab56}" FolderPath="Nest_Table\">
+      <Declaration><![CDATA[METHOD M_IsNestEnabled :BOOL
+VAR_INPUT
+	   eNestPos : E_NestPosition;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CASE eNestPos OF
+
+    E_NestPosition.Position_1:
+        M_IsNestEnabled := GVL_HMI.aNestEnabled[1];
+
+    E_NestPosition.Position_2:
+        M_IsNestEnabled := GVL_HMI.aNestEnabled[2];
+
+    E_NestPosition.Position_3:
+        M_IsNestEnabled := GVL_HMI.aNestEnabled[3];
+
+    E_NestPosition.Position_4:
+        M_IsNestEnabled := GVL_HMI.aNestEnabled[4];
+
+ELSE
+
+    M_IsNestEnabled := FALSE;
+
+END_CASE;]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_KistlerCommandMapping" Id="{5cfa21d9-3cc5-49b3-924c-97638c44a598}" FolderPath="Kistler\">
@@ -2525,8 +2598,17 @@ VAR
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[// Default values prevent stale permissives.
+        <ST><![CDATA[
+
+// Default values prevent stale permissives.
 bOperatorExchangeComplete := FALSE;
+
+
+// Reset the operator result indication every PLC cycle.
+// It will be set again below if a valid processed part
+// is currently available at the operator position.
+bPendingOperatorResultPass := FALSE;
+bPendingOperatorResultFail := FALSE;
 
 // -----------------------------------------------------------------------------
 // Validate the nest currently accessible to the operator.
@@ -2542,6 +2624,22 @@ IF (iOperatorNestIndex < 1) OR (iOperatorNestIndex > 4) THEN
     RETURN;
 END_IF
 
+
+// Read the stored result associated with the nest currently
+// available at the operator position.
+//
+// bDispositionSent confirms that the result has already been
+// delivered to the Puck Locker/operator disposition logic.
+IF GVL_MASTER.astNestProcessResult[iOperatorNestIndex].bResultValid
+    AND GVL_MASTER.astNestProcessResult[iOperatorNestIndex].bDispositionSent THEN
+
+    bPendingOperatorResultPass :=
+        GVL_MASTER.astNestProcessResult[iOperatorNestIndex].bPass;
+
+    bPendingOperatorResultFail :=
+        GVL_MASTER.astNestProcessResult[iOperatorNestIndex].bFail;
+
+END_IF;
 
 // -----------------------------------------------------------------------------
 // Result associated with the nest currently accessible to the operator.
@@ -3048,13 +3146,31 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 						  AND (
 							NOT bNestNewPositionReady
 							OR NOT GVL_MASTER.stSensors.bPartPresent_Kistler
-						  ) THEN 
+						)
+						 THEN 
 								
 						GVL_MASTER.stProcess.bKistlerCycleRequest := FALSE;
 						GVL_MASTER.stProcess.bKistlerCycleDone    := FALSE;
 				
 						// Consider Kistler side complete because this position must not be tested again.
-						GVL_MASTER.stProcess.bKistlerHomeDone := TRUE;
+						GVL_MASTER.stProcess.bKistlerHomeDone 	  := TRUE;
+						
+						
+						IF bNestNewPositionReady THEN
+							// New position without a part.
+							// Remove the previous stored result.
+							M_HMIKistlerResult(
+								eNestPosition := eCurrentNestPos,
+								bPartOK       := FALSE,
+								bPartNOK      := FALSE,
+								rForce        := 0.0,
+								rDistance     := 0.0,
+								bResetValues  := TRUE
+							);
+						
+							eLastTestedNestPos := eCurrentNestPos;
+						
+						END_IF;
 				
 						// Release Nest so the table can move to a new physical position.
 						GVL_MASTER.stProcess.bReleaseNestRotation := TRUE;
@@ -3071,7 +3187,8 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 						  AND NOT stKistler_Status.bError
 						  AND NOT bKistlerRecoveryHomeRequest
 						  AND bNestNewPositionReady 
-						  AND GVL_MASTER.stSensors.bPartPresent_Kistler THEN
+						  AND GVL_MASTER.stSensors.bPartPresent_Kistler 
+						  AND M_IsNestEnabled(eCurrentNestPos) THEN
 				
 						GVL_MASTER.stProcess.bKistlerCycleDone := FALSE;
 						GVL_MASTER.stProcess.bKistlerHomeDone  := FALSE;
@@ -3088,6 +3205,41 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 						
 						eProcessCycleState := E_ProcessCycle_State.REQUEST_KISTLER;
 						
+					// Nest disabled from HMI.
+					// Skip the Kistler test and continue the cycle normally.
+					ELSIF GVL_MASTER.stProcess.bNestTestingReady
+						  AND eNestState = E_NestState.TESTING
+						  AND GVL_MASTER.stNestTable.bNestReadySensor
+						  AND GVL_MASTER.stNestTable.bNestLockedSensor
+						  AND NOT GVL_MASTER.stNestTable.bNestInMotion
+						  AND eCurrentNestPos <> E_NestPosition.UNKNOWN
+						  AND bNestNewPositionReady
+						  AND GVL_MASTER.stSensors.bPartPresent_Kistler
+						  AND NOT M_IsNestEnabled(eCurrentNestPos) THEN
+					
+						GVL_MASTER.stProcess.bKistlerCycleRequest := FALSE;
+						GVL_MASTER.stProcess.bKistlerCycleDone    := FALSE;
+						GVL_MASTER.stProcess.bKistlerHomeDone     := TRUE;
+						
+						
+						// Clear the previous result because this nest
+						// was intentionally not tested.
+						M_HMIKistlerResult(
+							eNestPosition := eCurrentNestPos,
+							bPartOK       := FALSE,
+							bPartNOK      := FALSE,
+							rForce        := 0.0,
+							rDistance     := 0.0,
+							bResetValues  := TRUE
+						);
+						
+						// Mark the disabled Nest position as processed so an enabled
+						// Nest can be tested again on the next table rotation.
+						eLastTestedNestPos 						  := eCurrentNestPos;
+						GVL_MASTER.stProcess.bReleaseNestRotation := TRUE;
+						
+						eProcessCycleState := E_ProcessCycle_State.RELEASE_NEST;
+												
 				
 					END_IF
 				
@@ -3981,7 +4133,7 @@ GVL_MASTER.stPuckLocker.bMachinePermissive :=
 // Keeping a separate variable allows additional table-specific
 // interlocks to be added later.
 GVL_MASTER.stPuckLocker.bIndexPermissive := GVL_MASTER.stPuckLocker.bMachinePermissive
-    										AND (GVL_HMI.stPuckLocker.eMode = E_PuckLockerMode.Disabled OR bOperatorExchangeComplete);]]></ST>
+    										AND (GVL_HMI.stPuckLocker.eMode = E_PuckLockerMode.Disabled OR bOperatorExchangeComplete or eCurrentNestPos = E_NestPosition.UNKNOWN);]]></ST>
       </Implementation>
     </Method>
   </POU>
