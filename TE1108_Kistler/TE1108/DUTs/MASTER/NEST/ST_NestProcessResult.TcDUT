@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_NestProcessResult" Id="{403df8ef-2425-404f-9223-dd5ae33d0d7c}">
+    <Declaration><![CDATA[TYPE ST_NestProcessResult :
+STRUCT
+	bResultValid        : BOOL;
+    bPass               : BOOL;
+    bFail               : BOOL;
+    bDispositionSent    : BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

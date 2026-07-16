@@ -10,9 +10,9 @@ STRUCT
  	bNestReadySensor		AT %I*		: BOOL; // Sensor: Table air pressure and home state OK
 	bNestCompletedSensor	AT %I*		: BOOL; // Sensor: Indexing cycle completed
 	bNestLockedSensor		AT %I*		: BOOL; // Sensor: Table locking pin engaged
-	bNestPos_1_Sensor		AT %I*		: BOOL; //binary sensores
-	bNestPos_2_Sensor		AT %I*		: BOOL; //binary sensores
-	bNestPos_3_Sensor		AT %I*		: BOOL; //binary sensores
+	bNestPos_1_Sensor		AT %I*		: BOOL; // binary sensores
+	bNestPos_2_Sensor		AT %I*		: BOOL; // binary sensores
+	bNestPos_3_Sensor		AT %I*		: BOOL; // binary sensores
 	bSupportRetracted       AT %I*		: BOOL;
 	bSupportExtended        AT %I*		: BOOL;
 

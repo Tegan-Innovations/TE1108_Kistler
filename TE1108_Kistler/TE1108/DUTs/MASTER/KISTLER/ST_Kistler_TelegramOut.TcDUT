@@ -110,6 +110,15 @@ STRUCT
     bChangedSelectedMP        : BOOL;
     bChangedGlobal            : BOOL;
     bBackupComplete           : BOOL;
+	
+	// Bytes 20..23 - current X value
+	// X = distance / displacement / travel
+	rCurrentValueX 			  : REAL;
+
+	// Bytes 24..27 - current Y value
+	// Y = force
+	rCurrentValueY 			  : REAL;
+	
 END_STRUCT
 END_TYPE]]></Declaration>
   </DUT>

@@ -25,6 +25,7 @@ VAR_GLOBAL
     // FESTO NEST TABLE INSTANCE
     // =================================================================
     stNestTable             		  : ST_NestTable;
+	astNestTracking 				  : ARRAY[1..4] OF ST_NestTracking;
 	bStations_Home          		  : BOOL :=TRUE; // Interlock: All station tooling retracted
 	
  
@@ -37,19 +38,27 @@ VAR_GLOBAL
     // =================================================================================
     // HARDWARE STATUS
     // =================================================================================
-    bKistlerSystemReady    			  : BOOL :=TRUE; // Kistler system global ready feedback
+    bKistlerSystemReady    			  : BOOL := TRUE; // Kistler system global ready feedback
 	
 	 // =================================================================================
     // PROCESS VARIABLES 
     // =================================================================================
 	eProcessCycleState 				  : E_ProcessCycle_State;
 	stProcess 						  : ST_Process;
-	bProcessBusy					  :BOOL;
+	bProcessBusy					  : BOOL;
 	
 	stSensors   					  : ST_Sensors;
 	stActuators 					  : ST_Actuators;
-
 	
+	test 							  :INT;
+	
+	// =================================================================================
+    // PUCK LOCKER 
+    // =================================================================================
+	stPuckLocker 	: ST_PuckLocker;
+	stPuckLockerIO	: ST_PuckLockerIO;
+
+	astNestProcessResult : ARRAY[1..4] OF ST_NestProcessResult;
 	
 END_VAR]]></Declaration>
   </GVL>

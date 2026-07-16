@@ -9,14 +9,15 @@ TYPE E_NestState :
     // =================================================================
     // 1. NEST TABLE SEQUENCE STATES
     // =================================================================
-    IDLE               := 0,  // Waiting for commands and monitoring interlocks
-    RETRACT_SUPPORT    := 1,  // Lowering/retracting the nest support cylinders
-    ROTATING_TABLE     := 2,  // Commanding pneumatic Port A/B to rotate the table
-	STOP_TABLE 		   := 3,  // stop table
-    EXTEND_SUPPORT     := 4,  // Raising/extending the support cylinders under the new nest
-	WRONG_POSITION	   := 5,  // Nest in the WRONG position
-	TESTING			   := 6,
-    FAULT              := 99  // Emergency stop, safety loss, or timeout
+    IDLE               		:= 0,  // Waiting for commands and monitoring interlocks
+    RETRACT_SUPPORT    		:= 1,  // Lowering/retracting the nest support cylinders
+    ROTATING_TABLE     		:= 2,  // Commanding pneumatic Port A/B to rotate the table
+	STOP_TABLE 		   		:= 3,  // stop table
+    EXTEND_SUPPORT     		:= 4,  // Raising/extending the support cylinders under the new nest
+	WRONG_POSITION	   		:= 5,  // Nest in the WRONG position
+	TESTING			   		:= 6,
+	WAIT_OPERATOR_EXCHANGE 	:= 7,
+    FAULT              		:= 99  // Emergency stop, safety loss, or timeout
 );
 END_TYPE
 ]]></Declaration>

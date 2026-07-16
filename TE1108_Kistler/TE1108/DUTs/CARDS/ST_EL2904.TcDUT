@@ -6,7 +6,7 @@ STRUCT
     sTerminalName       : STRING(80) := 'EL2904 | 4-Channel Safety Digital Output';
     
     // TwinSAFE physical hardware channels (Safe Outputs 1 to 4)
-    bOutput             : ARRAY[1..4] OF BOOL;
+    bOutput             : ARRAY[1..16] OF BOOL;
     
     // Hardware status and diagnostic signals
     bError              : BOOL; // TRUE if a fault is detected (short-circuit, overload, or FSoE error)

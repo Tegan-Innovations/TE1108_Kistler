@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_PuckLockerIO" Id="{48aae017-85d5-4875-a3f2-de429219d00c}">
+    <Declaration><![CDATA[TYPE ST_PuckLockerIO :
+STRUCT
+	bPuckLockerSensor1		AT %I* : BOOL;
+	bPuckLockerSensor2		AT %I* : BOOL;
+	bPuckLockerCylinder		AT %Q* : BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

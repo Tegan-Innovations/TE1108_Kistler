@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="E_OperatorInstruction" Id="{a0e68a0e-7cd0-4c1b-a26b-d24c1357e923}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+TYPE E_OperatorInstruction :
+(
+	None                    := 0,
+    LoadPuck                := 10,
+    WaitPuckLocking         := 20,
+    RemovePassedPart        := 30,
+    RemoveFailedPart        := 40,
+    PlacePartInRejectBin    := 50,
+    RemoveReleasedPuck      := 60,
+    LoadNewPuck             := 70,
+    LoadPart                := 80,
+    ReadyToIndex            := 90,
+    ReadyToIndexEmpty       := 100,
+    TableIndexing           := 110
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

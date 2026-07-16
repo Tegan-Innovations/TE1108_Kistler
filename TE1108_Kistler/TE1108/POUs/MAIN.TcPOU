@@ -7,8 +7,9 @@ END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[
-PRG_SafetyLogic(); // Process emergency states and safety interlocks first
+PRG_SafetyLogic(); 	// Process emergency states and safety interlocks first
 PRG_MachineControl(); // Process standard machine state and auto cycle sequences
+PRG_PuckLocker();	// Puck Locker independent program behaviour 
 PGR_HMI();// Process strings and colors for the top status banner on the HMI
 ]]></ST>
     </Implementation>

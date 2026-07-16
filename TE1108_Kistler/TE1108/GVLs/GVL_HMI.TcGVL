@@ -7,6 +7,7 @@ VAR_GLOBAL
 	StatusHMI : ST_StatusBanner;
 	arrAlarmHistory : ARRAY[1..100] OF ST_AlarmHistory;
 	ePowerCmd : E_PLC_Power := E_PLC_Power.Idle;
+	aKistlerNestResult : ARRAY[1..4] OF ST_HMIKistlerResult;
 	
 // =================================================================
 //                         HMI COMMANDS 
@@ -15,6 +16,13 @@ VAR_GLOBAL
     i_bHMIIndexerManualEnable 			: BOOL := FALSE;
     i_bHMIKistlerManualEnable 			: BOOL := FALSE;
 
+	iNestRotationAngle 					: INT;
+	iNestPositionTesting 				: INT;
+	
+	rKistlerLiveDistance 				: REAL;
+	rKistlerLiveForce    				: REAL;
+
+	stPuckLocker 						: ST_PuckLockerHMI;
 	
 // =================================================================
 //                         HMI COLORS 

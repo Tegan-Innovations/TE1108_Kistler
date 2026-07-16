@@ -33,8 +33,8 @@
     "createPublishLog": false,
     "salt": "1c6a81b435604458b22a131f5587f463",
     "encryptedTcHmiServerPassword": "3z62xurlqTPHvm9yE64Unw==",
-    "tcHmiServerHost": "192.168.0.122",
-    "tcHmiServerPort": "1010",
+    "tcHmiServerHost": "TE1108_Kistler_1",
+    "tcHmiServerPort": "1020",
     "uploadTimeout": "60",
     "connectionTimeout": "5",
     "requestTimeout": "60",
@@ -45,7 +45,7 @@
     "launchBrowserAfterPublish": true,
     "createVirtualDirectoriesOnTargetSystem": false,
     "tcHmiServerUserName": "__SystemAdministrator",
-    "tcHmiDestinationUrl": "http://192.168.0.122:1020/",
+    "tcHmiDestinationUrl": "http://te1108_kistler_1:1020/",
     "publishConfiguration": "remote",
     "tcHmiIgnoreCertificateErrors": true
   }

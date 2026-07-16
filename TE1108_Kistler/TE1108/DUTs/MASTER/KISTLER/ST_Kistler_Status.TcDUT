@@ -3,16 +3,19 @@
   <DUT Name="ST_Kistler_Status" Id="{13fe1f7e-c843-4ff0-b94a-cef6c7ea4e07}">
     <Declaration><![CDATA[TYPE ST_Kistler_Status :
 STRUCT
-    bReady       : BOOL;
-    bBusy        : BOOL;
-    bDone        : BOOL;
-    bError       : BOOL;
-    bInPosition  : BOOL;
+    bReady       	: BOOL;
+    bBusy        	: BOOL;
+    bDone        	: BOOL;
+    bError       	: BOOL;
+    bInPosition  	: BOOL;
 
-    bPartOK      : BOOL;
-    bPartNOK     : BOOL;
+    bPartOK      	: BOOL;
+    bPartNOK     	: BOOL;
+	
+	rLiveDistance 	: REAL;
+	rLiveForce      : REAL;
 
-    eKistlerState : E_KistlerState;
+    eKistlerState 	: E_KistlerState;
 END_STRUCT
 END_TYPE]]></Declaration>
   </DUT>

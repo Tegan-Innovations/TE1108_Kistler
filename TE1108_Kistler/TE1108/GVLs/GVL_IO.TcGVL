@@ -18,8 +18,12 @@ VAR_GLOBAL
 	stTerm7_EL2904      : ST_EL2904; // Term 7 | TwinSAFE 4-Channel Digital Output
 	stTerm8_EL2904      : ST_EL2904; // Term 8 | TwinSAFE 4-Channel Digital Output
 	
+	stTerm11_EL2809     : ST_EL2809; // Term 8 | TwinSAFE 4-Channel Digital Output
 	
 	
+	
+	qInternalLight 		AT %Q* 				: BOOL;
+	qExternalLight 		AT %Q* 				: BOOL;
 	
 	
 	

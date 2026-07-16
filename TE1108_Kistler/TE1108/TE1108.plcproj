@@ -24,6 +24,9 @@
     <Compile Include="DUTs\CARDS\ST_EL2904.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\CARDS\ST_EL2809.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\HMI\E_Alarms.TcDUT">
       <SubType>Code</SubType>
     </Compile>
@@ -48,7 +51,13 @@
     <Compile Include="DUTs\MASTER\E_ProcessCycle_State.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\MASTER\KISTLER\E_HMIKistlerResult.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\MASTER\KISTLER\E_KistlerState.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\MASTER\KISTLER\ST_HMIKistlerResult.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\MASTER\KISTLER\ST_Kistler_CMD.TcDUT">
@@ -63,13 +72,43 @@
     <Compile Include="DUTs\MASTER\KISTLER\ST_Kistler_TelegramOut.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\MASTER\KISTLER\U_BytesToReal.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\MASTER\NEST\E_NestPosition.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\MASTER\NEST\E_NestState.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\MASTER\NEST\E_OperatorExchangeState.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\MASTER\NEST\ST_NestProcessResult.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\MASTER\NEST\ST_NestTable.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\MASTER\NEST\ST_NestTracking.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\MASTER\PUCK_LOCKER\E_OperatorInstruction.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\MASTER\PUCK_LOCKER\E_PuckLockerMode.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\MASTER\PUCK_LOCKER\E_PuckLockerState.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\MASTER\PUCK_LOCKER\ST_PuckLocker.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\MASTER\PUCK_LOCKER\ST_PuckLockerHMI.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\MASTER\PUCK_LOCKER\ST_PuckLockerIO.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\MASTER\ST_Actuators.TcDUT">
@@ -112,7 +151,13 @@
     <Compile Include="POUs\00_MASTER\PRG_MachineControl.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\01_STATIONS\PRG_PuckLocker.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\02_HMI\PGR_HMI.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Functions\F_GetOppositeNestPosition.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\MAIN.TcPOU">
@@ -127,11 +172,13 @@
     <Folder Include="DUTs\MASTER\BUTTON" />
     <Folder Include="DUTs\MASTER\KISTLER" />
     <Folder Include="DUTs\MASTER\NEST" />
+    <Folder Include="DUTs\MASTER\PUCK_LOCKER" />
     <Folder Include="DUTs\SAFETY" />
     <Folder Include="GVLs" />
     <Folder Include="POUs\00_MASTER" />
     <Folder Include="POUs\01_STATIONS" />
     <Folder Include="POUs\02_HMI" />
+    <Folder Include="POUs\Functions" />
     <Folder Include="VISUs" />
     <Folder Include="POUs" />
   </ItemGroup>

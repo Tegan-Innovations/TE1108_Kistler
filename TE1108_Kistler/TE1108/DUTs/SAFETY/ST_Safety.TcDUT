@@ -18,7 +18,8 @@ STRUCT
 	
 	bTwoHandsSafe			AT %I*	: BOOL;
  
-	
+	bTwoHandsLeft 			AT %I*	: BOOL;
+	bTwoHandsRight			AT %I*	: BOOL;
 	
 	
 

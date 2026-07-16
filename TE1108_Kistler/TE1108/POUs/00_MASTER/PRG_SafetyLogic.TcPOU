@@ -11,6 +11,7 @@ END_VAR
       <ST><![CDATA[// =================================================================================
 // SAFETY RESET ACK ERROR
 // =================================================================================
+M_UpdateStandardSafetyRequests();
 
 fbResetTrigger(CLK := GVL_MASTER.i_bButtonReset);
 
@@ -24,7 +25,6 @@ END_IF
 // EMERGENCY STOP LOGIC 
 // =================================================================================
 	//GVL_IO.stSafety.bSafetyReset := GVL_MASTER.i_bButtonReset;
-
 
 CASE GVL_Master.stMachineStatus.eMachineState OF
 
@@ -81,5 +81,17 @@ GVL_Master.stMachineStatus.bManualMode  := (GVL_Master.stMachineStatus.eMachineS
 
 ]]></ST>
     </Implementation>
+    <Method Name="M_UpdateStandardSafetyRequests" Id="{60095fda-4925-4acd-9935-b3d71e4a2736}">
+      <Declaration><![CDATA[METHOD PRIVATE  M_UpdateStandardSafetyRequests
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// The Puck Locker fault remains latched even if the locker mode
+// is changed to Disabled. Administrator acknowledgement is required
+// before the standard PLC permits the safety system to recover.
+GVL_IO.stSafety.bSafetyRun := NOT GVL_MASTER.stPuckLocker.bUnexpectedRemovalFault;]]></ST>
+      </Implementation>
+    </Method>
   </POU>
 </TcPlcObject>
