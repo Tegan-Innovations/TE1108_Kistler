@@ -867,7 +867,7 @@
                 "value": {
                   "objectType": "StaticValue",
                   "valueType": "tchmi:general#/definitions/String",
-                  "value": ""
+                  "value": "NOT TESTED"
                 },
                 "asyncWait": true
               }
@@ -1342,7 +1342,7 @@
                 "value": {
                   "objectType": "StaticValue",
                   "valueType": "tchmi:general#/definitions/String",
-                  "value": ""
+                  "value": "NOT TESTED"
                 },
                 "asyncWait": true
               }
@@ -1638,7 +1638,7 @@
                 "value": {
                   "objectType": "StaticValue",
                   "valueType": "tchmi:general#/definitions/String",
-                  "value": ""
+                  "value": "NOT TESTED"
                 },
                 "asyncWait": true
               }
@@ -1943,7 +1943,7 @@
                 "value": {
                   "objectType": "StaticValue",
                   "valueType": "tchmi:general#/definitions/String",
-                  "value": ""
+                  "value": "NOT TESTED"
                 },
                 "asyncWait": true
               }

@@ -21,6 +21,14 @@ VAR_GLOBAL
 	
 	rKistlerLiveDistance 				: REAL;
 	rKistlerLiveForce    				: REAL;
+	
+	aNestEnabled 						: ARRAY[1..4] OF BOOL :=
+[
+    TRUE,
+    TRUE,
+    TRUE,
+    TRUE
+];
 
 	stPuckLocker 						: ST_PuckLockerHMI;
 	
