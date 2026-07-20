@@ -260,13 +260,13 @@
     <Content Include="Contents\Screens\popups\Content_Popup_Puck.content">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Contents\Screens\Settings\Distances - Copy (2).content">
+    <Content Include="Contents\Screens\Settings\settings_Puck.content">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Contents\Screens\Settings\Distances - Copy.content">
+    <Content Include="Contents\Screens\Settings\settings_kister.content">
       <SubType>Content</SubType>
     </Content>
-    <Content Include="Contents\Screens\Settings\Distances.content">
+    <Content Include="Contents\Screens\Settings\settings_Nest.content">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Contents\Screens\Settings_Kistler.content">

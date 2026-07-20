@@ -24,6 +24,7 @@ STRUCT
 
     // Nest table
     bNestPositionInvalid        : BOOL;
+	bNestWrongPosition          : BOOL;
     bNestMovementTimeout        : BOOL;
 END_STRUCT
 END_TYPE

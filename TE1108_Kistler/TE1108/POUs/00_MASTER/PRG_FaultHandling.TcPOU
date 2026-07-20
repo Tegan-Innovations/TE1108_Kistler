@@ -3,8 +3,9 @@
   <POU Name="PRG_FaultHandling" Id="{7acdadbd-c96e-4055-a3ae-05b95da5b595}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM PRG_FaultHandling
 VAR
-	fbEventsManager : FB_EventsManager;
-    rtEventsPulse   : R_TRIG;
+	fbEventsManager 		: FB_EventsManager;
+    rtEventsPulse   		: R_TRIG;
+	tonFilterDoorClosed 	: TON;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -73,7 +74,8 @@ GVL_MASTER.stStationEvents[0].aEvents[3].bFault := TRUE;
 GVL_MASTER.stStationEvents[0].aEvents[3].bCycleStopRequest := FALSE;
 GVL_MASTER.stStationEvents[0].aEvents[3].bMessage := FALSE;
 GVL_MASTER.stStationEvents[0].aEvents[3].bEventFlag := 	NOT GVL_MASTER.bAirSupply_Ok
-   														AND GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.SYSTEM_POWER_UP;
+   														AND (GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.SYSTEM_POWER_UP 
+														AND GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.SYSTEM_INITIALISING);
 
 GVL_MASTER.stStationEvents[0].aEvents[3].bEventText := 'Air pressure not available';
 GVL_MASTER.stStationEvents[0].aEvents[3].sSolution := 'Check the main compressed-air supply';
@@ -115,10 +117,11 @@ GVL_MASTER.stStationEvents[0].aEvents[11].bEventText := 'Main door opened';
 GVL_MASTER.stStationEvents[0].aEvents[11].sSolution := 'Close the main door to continue';
 
 // Event 12 — Main door not locked during automatic operation
+tonFilterDoorClosed( IN:= NOT GVL_IO.stSafety.bMainDoorLocked, PT := T#1S );
 GVL_MASTER.stStationEvents[0].aEvents[12].bFault := TRUE;
 GVL_MASTER.stStationEvents[0].aEvents[12].bCycleStopRequest := FALSE;
 GVL_MASTER.stStationEvents[0].aEvents[12].bMessage := FALSE;
-GVL_MASTER.stStationEvents[0].aEvents[12].bEventFlag := NOT GVL_IO.stSafety.bMainDoorLocked
+GVL_MASTER.stStationEvents[0].aEvents[12].bEventFlag := tonFilterDoorClosed.Q
     													AND (GVL_MASTER.stMachineStatus.eMachineState = E_MachineState.SYSTEM_AUTO_CYCLE
         												OR GVL_MASTER.stMachineStatus.eMachineState = E_MachineState.SYSTEM_INITIALISING );
 GVL_MASTER.stStationEvents[0].aEvents[12].bEventText := 'Main safety door not locked';
@@ -331,10 +334,10 @@ GVL_MASTER.stStationEvents[1].aEvents[6].sSolution := 'Check Kistler alarms, pos
 GVL_MASTER.stStationEvents[2].aEvents[0].bFault := TRUE;
 GVL_MASTER.stStationEvents[2].aEvents[0].bCycleStopRequest := FALSE;
 GVL_MASTER.stStationEvents[2].aEvents[0].bMessage := FALSE;
-GVL_MASTER.stStationEvents[2].aEvents[0].bEventFlag :=  GVL_MASTER.stDiagnostics.bNestPositionInvalid
+GVL_MASTER.stStationEvents[2].aEvents[0].bEventFlag :=  GVL_MASTER.stDiagnostics.bNestWrongPosition
 														AND GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.SYSTEM_POWER_UP;
-GVL_MASTER.stStationEvents[2].aEvents[0].bEventText := 'Index table position is invalid';
-GVL_MASTER.stStationEvents[2].aEvents[0].sSolution := 'Check the table position sensors and index mechanism';
+GVL_MASTER.stStationEvents[2].aEvents[0].bEventText := 'Index table wrong position';
+GVL_MASTER.stStationEvents[2].aEvents[0].sSolution := 'Place your hands over the safety sensors to restart the process';
 
 
 

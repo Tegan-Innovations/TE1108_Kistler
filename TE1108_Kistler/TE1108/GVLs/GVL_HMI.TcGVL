@@ -22,16 +22,8 @@ VAR_GLOBAL
 	rKistlerLiveDistance 				: REAL;
 	rKistlerLiveForce    				: REAL;
 	
-	aNestEnabled 						: ARRAY[1..4] OF BOOL :=
-	[
-		TRUE,
-		TRUE,
-		TRUE,
-		TRUE
-	];
-
-	stPuckLocker 						: ST_PuckLockerHMI;
 	
+
 // =================================================================
 //                         HMI COLORS 
 // =================================================================
@@ -75,12 +67,24 @@ VAR_GLOBAL
 	nTRANSP								:	DWORD	:=	16#00FFFFFF;	// full transparent WHITE
 	
 /////////////////////////////////////////////////////////////////////////////////////CSV/////////////////////////////////////////////////////////////////////////////////////
-	
+
+END_VAR
 
 	
+VAR_GLOBAL PERSISTENT RETAIN
+
+    stPuckLocker : ST_PuckLockerHMI := (
+        eMode := E_PuckLockerMode.Enabled
+    );
 	
-	
-	
+	aNestEnabled 						: ARRAY[1..4] OF BOOL :=
+	[
+		TRUE,
+		TRUE,
+		TRUE,
+		TRUE
+	];
+
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

@@ -865,6 +865,36 @@ END_IF;
 M_HMIKistlerResult := TRUE;]]></ST>
       </Implementation>
     </Method>
+    <Method Name="M_IsNestEnabled" Id="{faec0923-f0a4-4b40-99ae-0b504fd30bb5}">
+      <Declaration><![CDATA[METHOD M_IsNestEnabled : BOOL
+VAR_INPUT
+    eNestPos : E_NestPosition;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+CASE eNestPos OF
+
+    E_NestPosition.Position_1:
+        M_IsNestEnabled := GVL_HMI.aNestEnabled[1];
+
+    E_NestPosition.Position_2:
+        M_IsNestEnabled := GVL_HMI.aNestEnabled[2];
+
+    E_NestPosition.Position_3:
+        M_IsNestEnabled := GVL_HMI.aNestEnabled[3];
+
+    E_NestPosition.Position_4:
+        M_IsNestEnabled := GVL_HMI.aNestEnabled[4];
+
+ELSE
+
+    M_IsNestEnabled := FALSE;
+
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="M_KistlerCommandMapping" Id="{5cfa21d9-3cc5-49b3-924c-97638c44a598}" FolderPath="Kistler\">
       <Declaration><![CDATA[METHOD PRIVATE M_KistlerCommandMapping : BOOL
 VAR
@@ -1233,10 +1263,10 @@ stKistler_Status.bPartNOK :=
 
 // Technical error only.
 // NOK result must not be included here.
-// stKistler_Status.bError :=
-//     stKistlerOutTelegram.bServoError
-//     OR stKistlerOutTelegram.bTransmissionFault
-//     OR stKistlerOutTelegram.bSequenceError;
+stKistler_Status.bError :=
+    stKistlerOutTelegram.bServoError
+    OR stKistlerOutTelegram.bTransmissionFault
+    OR stKistlerOutTelegram.bSequenceError;
 
 
 // Position status
@@ -4476,8 +4506,9 @@ END_IF;]]></ST>
     </Method>
     <Method Name="M_StatusMapping" Id="{e76387c3-2b6b-4ab8-8e2c-031286cbd112}" FolderPath="Kistler\">
       <Declaration><![CDATA[METHOD PRIVATE M_StatusMapping : BOOL
-VAR_INPUT
+VAR
 
+tonKistlerWarningFilter	: TON;
 
 
 END_VAR
@@ -4532,7 +4563,8 @@ GVL_MASTER.stDiagnostics.bKistlerNotReady := NOT stKistler_Status.bReady;
 // Detailed Kistler telegram diagnostics
 GVL_MASTER.stDiagnostics.bKistlerAlarm := stKistlerOutTelegram.bAlarm;
 
-GVL_MASTER.stDiagnostics.bKistlerWarning := stKistlerOutTelegram.bWarning;
+tonKistlerWarningFilter( IN := stKistlerOutTelegram.bWarning, PT := T#3S);
+GVL_MASTER.stDiagnostics.bKistlerWarning := tonKistlerWarningFilter.Q;
 
 GVL_MASTER.stDiagnostics.bKistlerSequenceError := stKistlerOutTelegram.bSequenceError;
 
@@ -4543,7 +4575,7 @@ GVL_MASTER.stDiagnostics.bKistlerTransmissionFault := stKistlerOutTelegram.bTran
 GVL_MASTER.stDiagnostics.bKistlerDeviceUnavailable := NOT stKistlerOutTelegram.bDeviceAvailable;
 
 // Nest-table diagnostics
-GVL_MASTER.stDiagnostics.bNestPositionInvalid := eCurrentNestPos = E_NestPosition.Unknown;
+GVL_MASTER.stDiagnostics.bNestWrongPosition := eNestState = E_NestState.WRONG_POSITION;
 
 
 // =================================================================================

@@ -1507,6 +1507,46 @@
             },
             "USEMAPPING": true
         },
+        "ADS.PLC1.GVL_HMI.aNestEnabled.0": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::aNestEnabled[0]",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.aNestEnabled.1": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::aNestEnabled[1]",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.aNestEnabled.2": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::aNestEnabled[2]",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.aNestEnabled.3": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::aNestEnabled[3]",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
         "ADS.PLC1.GVL_HMI.arrAlarmHistory": {
             "ACCESS": 3,
             "DOMAIN": "ADS",
@@ -1799,6 +1839,16 @@
             },
             "USEMAPPING": true
         },
+        "ADS.PLC1.GVL_IO.qExternalLight": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_IO::qExternalLight",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
         "ADS.PLC1.GVL_IO.stSafety.bTwoHandsLeft": {
             "ACCESS": 3,
             "DOMAIN": "ADS",
@@ -1847,7 +1897,7 @@
             "SCHEMA": {
                 "allOf": [
                     {
-                        "comment": "1: Leak Test\r\n1: Height Test\r\n3: Vision Inspection\r\n4: Cylinders"
+                        "comment": "1: Kistler\r\n 2: Nest Table\r\n 3: Puck Locker\r\n 4: Reserved"
                     },
                     {
                         "$ref": "tchmi:server#/definitions/ADS-PLC1.ARRAY_0..50_OF-ST_ActiveEvents"
@@ -5678,6 +5728,10 @@
                 "ADS.PLC1.GVL_HMI.aKistlerNestResult.3.eResult": 3,
                 "ADS.PLC1.GVL_HMI.aKistlerNestResult.3.rDistance": 3,
                 "ADS.PLC1.GVL_HMI.aKistlerNestResult.3.rForce": 3,
+                "ADS.PLC1.GVL_HMI.aNestEnabled.0": 3,
+                "ADS.PLC1.GVL_HMI.aNestEnabled.1": 3,
+                "ADS.PLC1.GVL_HMI.aNestEnabled.2": 3,
+                "ADS.PLC1.GVL_HMI.aNestEnabled.3": 3,
                 "ADS.PLC1.GVL_HMI.arrAlarmHistory": 3,
                 "ADS.PLC1.GVL_HMI.bResultTest": 3,
                 "ADS.PLC1.GVL_HMI.ePowerCmd": 3,
@@ -5698,6 +5752,7 @@
                 "ADS.PLC1.GVL_HMI.stPuckLocker.eMode": 3,
                 "ADS.PLC1.GVL_HMI.stPuckLocker.nPucksAllowedToPass": 3,
                 "ADS.PLC1.GVL_HMI.stPuckLocker.sMessage": 3,
+                "ADS.PLC1.GVL_IO.qExternalLight": 3,
                 "ADS.PLC1.GVL_IO.stSafety.bTwoHandsLeft": 3,
                 "ADS.PLC1.GVL_IO.stSafety.bTwoHandsRight": 3,
                 "ADS.PLC1.GVL_MASTER.astActiveEvents": 3,
