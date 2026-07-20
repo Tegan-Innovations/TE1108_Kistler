@@ -28,6 +28,24 @@ VAR_GLOBAL
 	astNestTracking 				  : ARRAY[1..4] OF ST_NestTracking;
 	bStations_Home          		  : BOOL :=TRUE; // Interlock: All station tooling retracted
 	
+	
+	// =================================================================================
+    // EVENT LOG
+    // =================================================================================
+	stStationEvents				: ARRAY[0..4] OF  ST_StationEvents;	// 0: GENERAL
+																	// 1: Kistler
+																	// 2: Nest Table
+																	// 3: Puck Locker
+																	// 4: Reserved
+	astActiveEvents				: ARRAY [0..50] OF ST_ActiveEvents;
+	stEventsAssigment			: ST_EventsAssigmentGeneral;
+	bMachineMessages			: BOOL;
+	sMachineMessage				: STRING(255);
+	
+	sSystemTime					: STRING(255);
+	sSystemDate					: STRING(255);
+	
+	stDiagnostics 				: ST_MachineDiagnostics; // Diagnostics of every alarm PRG_MachineControl may have
  
     // =================================================================================
     // INTERLOCKS & SAFETY

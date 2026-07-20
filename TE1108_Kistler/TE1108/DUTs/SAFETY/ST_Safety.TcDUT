@@ -21,6 +21,11 @@ STRUCT
 	bTwoHandsLeft 			AT %I*	: BOOL;
 	bTwoHandsRight			AT %I*	: BOOL;
 	
+	bDoorFlapLeftCH1		AT %I*	: BOOL;
+	bDoorFlapLeftCH2		AT %I*	: BOOL;
+	bDoorFlapRightCH1		AT %I*	: BOOL;
+	bDoorFlapRightCH2		AT %I*	: BOOL;
+	
 	
 
 END_STRUCT

@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="ST_MachineDiagnostics" Id="{3691e28d-8f35-42eb-a09e-bc37fa80de5c}">
+    <Declaration><![CDATA[TYPE ST_MachineDiagnostics :
+STRUCT
+	// General machine requests
+    bStopRequested              : BOOL;
+
+    // Machine sequence timeouts
+    bInitialisationTimeout      : BOOL;
+    bProcessTimeout             : BOOL;
+
+    // Kistler
+    bKistlerError               : BOOL;
+    bKistlerNotReady            : BOOL;
+    bKistlerAlarm               : BOOL;
+    bKistlerWarning             : BOOL;
+    bKistlerSequenceError       : BOOL;
+    bKistlerServoError          : BOOL;
+    bKistlerTransmissionFault   : BOOL;
+    bKistlerDeviceUnavailable   : BOOL;
+    bKistlerNoValidResult       : BOOL;
+	bKistlerBusy 				: BOOL;
+
+    // Nest table
+    bNestPositionInvalid        : BOOL;
+    bNestMovementTimeout        : BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

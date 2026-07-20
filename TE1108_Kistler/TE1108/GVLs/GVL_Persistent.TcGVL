@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <GVL Name="GVL_Persistent" Id="{c4e2d847-c262-4f9e-8eeb-2ef378462b76}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL PERSISTENT
+	
+	astEventsHistory			: ARRAY[0..200] OF ST_EventsHistory;
+	
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

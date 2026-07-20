@@ -41,6 +41,9 @@ VAR
     bTriggerTestAlarm   : BOOL;               // Force TRUE online to simulate a HMI alarm
     fbTestAlarmTrigger  : R_TRIG;             // Rising edge detector for the test alarm
     bResetTest          : BOOL;               // Reset command for test sequences
+	
+	fbEventsManager		: FB_EventsManager;
+	fbEventsPulse		: R_TRIG;
 
     // =========================================================================
     // BUFFER / TABLE ARRAYS INDEXES
@@ -60,9 +63,9 @@ END_IF
 bBlinkTimer_Q_Old := fbBlinkTimer.Q;
 
 // =================================================================
-// REFRESH LOCAL SYSTEM TIME & FORMAT STRINGS (O que faltava aqui!)
+// REFRESH LOCAL SYSTEM TIME & FORMAT STRINGS
 // =================================================================
-fbLocalTime(bEnable := TRUE); // Executa o bloco para ler a hora do Windows
+fbLocalTime(bEnable := TRUE); 
 
 IF fbLocalTime.bValid THEN
 	
@@ -99,11 +102,16 @@ IF fbLocalTime.bValid THEN
 	sCurrentTimeStr := CONCAT(sCurrentTimeStr, '/');
 	sCurrentTimeStr := CONCAT(sCurrentTimeStr, WORD_TO_STRING(fbLocalTime.systemTime.wYear));
 
+	GVL_MASTER.sSystemTime := sTimeReal;
+	GVL_MASTER.sSystemDate := sCurrentTimeStr;
+
 END_IF
+
 
 // =================================================================
 // ALARM TRIGGER TEST BLOCK (EDGE DETECTION)
 // =================================================================
+(*
 fbTestAlarmTrigger(CLK := bTriggerTestAlarm);
 
 IF fbTestAlarmTrigger.Q THEN
@@ -142,7 +150,7 @@ IF fbTestAlarmTrigger.Q THEN
 		sMessage	:= 'Error feio'
 	);
 END_IF
-
+*)
 // =================================================================
 // NOW CALL THE METHOD TO PROCESS STRINGS AND HMI COLORS
 // =================================================================

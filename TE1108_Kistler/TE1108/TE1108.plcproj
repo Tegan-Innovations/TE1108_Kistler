@@ -18,13 +18,61 @@
     <LibraryReferences>{a46048ed-7c3c-410f-8034-5bc62e0dd02c}</LibraryReferences>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="DUTs\ALARMS_EVENTS\ST_ActiveEvents.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\ALARMS_EVENTS\ST_EVENT.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\ALARMS_EVENTS\ST_EventsAssigment.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\ALARMS_EVENTS\ST_EventsAssigmentGeneral.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\ALARMS_EVENTS\ST_EventsHistory.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\ALARMS_EVENTS\ST_MachineDiagnostics.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\ALARMS_EVENTS\ST_StationEvents.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\CARDS\ST_EL1809_B.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\CARDS\ST_EL1809_A.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\CARDS\ST_EL1918.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\CARDS\ST_EL2904.TcDUT">
+    <Compile Include="DUTs\CARDS\ST_EL1918_A.TcDUT">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="DUTs\CARDS\ST_EL2809.TcDUT">
+    <Compile Include="DUTs\CARDS\ST_EL1918_B.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\CARDS\ST_EL2809_B.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\CARDS\ST_EL2904_A.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\CARDS\ST_EL2809_A.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\CARDS\ST_EL2904_B.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\CARDS\ST_EK1100.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\CARDS\ST_EL3058.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\CARDS\ST_Terminal_Info.TcDUT">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="DUTs\HMI\E_Alarms.TcDUT">
@@ -142,7 +190,14 @@
       <SubType>Code</SubType>
       <LinkAlways>true</LinkAlways>
     </Compile>
+    <Compile Include="GVLs\GVL_Persistent.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
     <Compile Include="PlcTask.TcTTO">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\00_MASTER\PRG_FaultHandling.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\00_MASTER\PRG_SafetyLogic.TcPOU">
@@ -163,6 +218,9 @@
     <Compile Include="POUs\MAIN.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\Utilities\FB_EventsManager.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DUTs" />
@@ -173,12 +231,14 @@
     <Folder Include="DUTs\MASTER\KISTLER" />
     <Folder Include="DUTs\MASTER\NEST" />
     <Folder Include="DUTs\MASTER\PUCK_LOCKER" />
+    <Folder Include="DUTs\ALARMS_EVENTS" />
     <Folder Include="DUTs\SAFETY" />
     <Folder Include="GVLs" />
     <Folder Include="POUs\00_MASTER" />
     <Folder Include="POUs\01_STATIONS" />
     <Folder Include="POUs\02_HMI" />
     <Folder Include="POUs\Functions" />
+    <Folder Include="POUs\Utilities" />
     <Folder Include="VISUs" />
     <Folder Include="POUs" />
   </ItemGroup>
@@ -213,8 +273,8 @@
   <ProjectExtensions>
     <PlcProjectOptions>
       <XmlArchive>
-        <Data>
-          <o xml:space="preserve" t="OptionKey">
+  <Data>
+    <o xml:space="preserve" t="OptionKey">
       <v n="Name">"&lt;ProjectRoot&gt;"</v>
       <d n="SubKeys" t="Hashtable" ckt="String" cvt="OptionKey">
         <v>{192FAD59-8248-4824-A8DE-9177C94C195A}</v>
@@ -284,14 +344,14 @@
       </d>
       <d n="Values" t="Hashtable" />
     </o>
-        </Data>
-        <TypeList>
-          <Type n="Boolean">System.Boolean</Type>
-          <Type n="Hashtable">System.Collections.Hashtable</Type>
-          <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
-          <Type n="String">System.String</Type>
-        </TypeList>
-      </XmlArchive>
+  </Data>
+  <TypeList>
+    <Type n="Boolean">System.Boolean</Type>
+    <Type n="Hashtable">System.Collections.Hashtable</Type>
+    <Type n="OptionKey">{54dd0eac-a6d8-46f2-8c27-2f43c7e49861}</Type>
+    <Type n="String">System.String</Type>
+  </TypeList>
+</XmlArchive>
     </PlcProjectOptions>
   </ProjectExtensions>
 </Project>

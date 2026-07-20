@@ -31,6 +31,14 @@
     "DEFAULTTIMEZONE": "client",
     "DEFINITIONS": {
         "ADS": {
+            "ADS-PLC1.ARRAY_0..50_OF-ST_ActiveEvents": {
+                "items": {
+                    "$ref": "tchmi:server#/definitions/ADS-PLC1.ST_ActiveEvents"
+                },
+                "maxItems": 51,
+                "minItems": 51,
+                "type": "array"
+            },
             "ADS-PLC1.ARRAY_1..100_OF-ST_AlarmHistory": {
                 "items": {
                     "$ref": "tchmi:server#/definitions/ADS-PLC1.ST_AlarmHistory"
@@ -282,6 +290,59 @@
                         "$ref": "tchmi:general#/definitions/String"
                     }
                 ]
+            },
+            "ADS-PLC1.ST_ActiveEvents": {
+                "additionalProperties": false,
+                "properties": {
+                    "abType": {
+                        "allOf": [
+                            {
+                                "$ref": "tchmi:general#/definitions/DINT"
+                            },
+                            {
+                                "comment": "1:Alarm",
+                                "propertyOrder": 4
+                            }
+                        ]
+                    },
+                    "sEventTex": {
+                        "allOf": [
+                            {
+                                "$ref": "tchmi:server#/definitions/ADS-PLC1.STRING-255"
+                            },
+                            {
+                                "propertyOrder": 1
+                            }
+                        ]
+                    },
+                    "sSolution": {
+                        "allOf": [
+                            {
+                                "$ref": "tchmi:server#/definitions/ADS-PLC1.STRING-255"
+                            },
+                            {
+                                "propertyOrder": 3
+                            }
+                        ]
+                    },
+                    "sType": {
+                        "allOf": [
+                            {
+                                "$ref": "tchmi:server#/definitions/ADS-PLC1.STRING-255"
+                            },
+                            {
+                                "propertyOrder": 2
+                            }
+                        ]
+                    }
+                },
+                "required": [
+                    "sEventTex",
+                    "sType",
+                    "sSolution",
+                    "abType"
+                ],
+                "type": "object"
             },
             "ADS-PLC1.ST_AlarmHistory": {
                 "additionalProperties": false,
@@ -1773,6 +1834,23 @@
                             "TcDataArea": "Input"
                         },
                         "propertyOrder": 14
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_MASTER.astActiveEvents": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_MASTER::astActiveEvents",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "comment": "1: Leak Test\r\n1: Height Test\r\n3: Vision Inspection\r\n4: Cylinders"
+                    },
+                    {
+                        "$ref": "tchmi:server#/definitions/ADS-PLC1.ARRAY_0..50_OF-ST_ActiveEvents"
                     }
                 ]
             },
@@ -5622,6 +5700,7 @@
                 "ADS.PLC1.GVL_HMI.stPuckLocker.sMessage": 3,
                 "ADS.PLC1.GVL_IO.stSafety.bTwoHandsLeft": 3,
                 "ADS.PLC1.GVL_IO.stSafety.bTwoHandsRight": 3,
+                "ADS.PLC1.GVL_MASTER.astActiveEvents": 3,
                 "ADS.PLC1.GVL_MASTER.bHmiEmergencyStop": 3,
                 "ADS.PLC1.GVL_MASTER.bHmiReset": 3,
                 "ADS.PLC1.GVL_MASTER.bHmiStart": 3,

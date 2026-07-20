@@ -1,0 +1,404 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="PRG_FaultHandling" Id="{7acdadbd-c96e-4055-a3ae-05b95da5b595}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_FaultHandling
+VAR
+	fbEventsManager : FB_EventsManager;
+    rtEventsPulse   : R_TRIG;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[ACT_Set_Events();
+
+// Generate one event-processing pulse on the rising edge of the 1 Hz clock
+rtEventsPulse(CLK := GVL_MASTER.bBlink_1Hz);
+
+fbEventsManager(
+    bPulse := rtEventsPulse.Q,
+    sSystemTime := GVL_MASTER.sSystemTime,
+    sSystemDate := GVL_MASTER.sSystemDate,
+    bDataWritedInCSV := FALSE,
+    nArraySize := 4,
+    bMachineMessage := GVL_MASTER.sMachineMessage,
+    stStationEvents := GVL_MASTER.stStationEvents,
+    stEventsAssigment := GVL_MASTER.stEventsAssigment,
+    bResetFaults := GVL_MASTER.i_bButtonReset,
+    astActiveEvents => GVL_MASTER.astActiveEvents,
+    astEventsHistory => GVL_Persistent.astEventsHistory
+);
+]]></ST>
+    </Implementation>
+    <Action Name="ACT_AggregateEvents" Id="{9775ef41-7dba-4717-95cb-510a4c88172c}">
+      <Implementation>
+        <ST><![CDATA[
+GVL_MASTER.stStationEvents[0].bFault := GVL_MASTER.stStationEvents[0].bFault;
+
+GVL_MASTER.stStationEvents[0].bCycleStopRequest := GVL_MASTER.stStationEvents[0].bCycleStopRequest;]]></ST>
+      </Implementation>
+    </Action>
+    <Action Name="ACT_Set_Events" Id="{feb9c2e5-a21a-499a-899b-a8d21adfb0d1}">
+      <Implementation>
+        <ST><![CDATA[// ============================================================================
+// GENERAL EVENTS - STATION 0
+// ============================================================================
+
+// Event 0 — Emergency stop
+GVL_MASTER.stStationEvents[0].aEvents[0].bFault := TRUE;
+GVL_MASTER.stStationEvents[0].aEvents[0].bCycleStopRequest := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[0].bMessage := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[0].bEventFlag := GVL_MASTER.i_bButtonEmergencyStop;
+GVL_MASTER.stStationEvents[0].aEvents[0].bEventText := 'Emergency stop activated';
+GVL_MASTER.stStationEvents[0].aEvents[0].sSolution := 'Release the emergency stop and reset the machine';
+
+// Event 1 — TwinSAFE error
+GVL_MASTER.stStationEvents[0].aEvents[1].bFault := TRUE;
+GVL_MASTER.stStationEvents[0].aEvents[1].bCycleStopRequest := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[1].bMessage := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[1].bEventFlag := GVL_IO.stSafety.bSafetyError;
+GVL_MASTER.stStationEvents[0].aEvents[1].bEventText := 'Safety system error';
+GVL_MASTER.stStationEvents[0].aEvents[1].sSolution := 'Check the TwinSAFE system and safety devices';
+
+// Event 2 — Safety circuit not ready
+GVL_MASTER.stStationEvents[0].aEvents[2].bFault := TRUE;
+GVL_MASTER.stStationEvents[0].aEvents[2].bCycleStopRequest := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[2].bMessage := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[2].bEventFlag := 	NOT GVL_IO.stSafety.bSystemSafeOK
+														AND GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.SYSTEM_POWER_UP;
+
+GVL_MASTER.stStationEvents[0].aEvents[2].bEventText := 'Safety circuit not ready';
+GVL_MASTER.stStationEvents[0].aEvents[2].sSolution := 'Check emergency stops, guards and safety devices, then reset the machine';
+	
+// Event 3 — Air supply unavailable
+GVL_MASTER.stStationEvents[0].aEvents[3].bFault := TRUE;
+GVL_MASTER.stStationEvents[0].aEvents[3].bCycleStopRequest := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[3].bMessage := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[3].bEventFlag := 	NOT GVL_MASTER.bAirSupply_Ok
+   														AND GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.SYSTEM_POWER_UP;
+
+GVL_MASTER.stStationEvents[0].aEvents[3].bEventText := 'Air pressure not available';
+GVL_MASTER.stStationEvents[0].aEvents[3].sSolution := 'Check the main compressed-air supply';
+	
+// Event 4 — Initialisation timeout
+GVL_MASTER.stStationEvents[0].aEvents[4].bFault := TRUE;
+GVL_MASTER.stStationEvents[0].aEvents[4].bCycleStopRequest := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[4].bMessage := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[4].bEventFlag := GVL_MASTER.stDiagnostics.bInitialisationTimeout;
+GVL_MASTER.stStationEvents[0].aEvents[4].bEventText := 'Machine initialisation timeout';
+GVL_MASTER.stStationEvents[0].aEvents[4].sSolution := 'Check air supply, index table position and Kistler readiness';
+	
+// Event 5 — Automatic process timeout
+GVL_MASTER.stStationEvents[0].aEvents[5].bFault := TRUE;
+GVL_MASTER.stStationEvents[0].aEvents[5].bCycleStopRequest := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[5].bMessage := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[5].bEventFlag := GVL_MASTER.stDiagnostics.bProcessTimeout;
+GVL_MASTER.stStationEvents[0].aEvents[5].bEventText := 'Automatic process timeout';
+GVL_MASTER.stStationEvents[0].aEvents[5].sSolution := 'Check the Kistler, index table and pneumatic sequence';
+
+
+
+
+
+// Event 10 — Stop requested
+GVL_MASTER.stStationEvents[0].aEvents[10].bFault := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[10].bCycleStopRequest := TRUE;
+GVL_MASTER.stStationEvents[0].aEvents[10].bMessage := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[10].bEventFlag := GVL_MASTER.stDiagnostics.bStopRequested;
+GVL_MASTER.stStationEvents[0].aEvents[10].bEventText := 'Cycle stop requested';
+GVL_MASTER.stStationEvents[0].aEvents[10].sSolution := 'Wait for the current operation to stop safely';
+
+// Event 11 — Main door opened
+GVL_MASTER.stStationEvents[0].aEvents[11].bFault := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[11].bCycleStopRequest := TRUE;
+GVL_MASTER.stStationEvents[0].aEvents[11].bMessage := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[11].bEventFlag := GVL_IO.stSafety.bMainDoorOpenned;
+GVL_MASTER.stStationEvents[0].aEvents[11].bEventText := 'Main door opened';
+GVL_MASTER.stStationEvents[0].aEvents[11].sSolution := 'Close the main door to continue';
+
+// Event 12 — Main door not locked during automatic operation
+GVL_MASTER.stStationEvents[0].aEvents[12].bFault := TRUE;
+GVL_MASTER.stStationEvents[0].aEvents[12].bCycleStopRequest := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[12].bMessage := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[12].bEventFlag := NOT GVL_IO.stSafety.bMainDoorLocked
+    													AND (GVL_MASTER.stMachineStatus.eMachineState = E_MachineState.SYSTEM_AUTO_CYCLE
+        												OR GVL_MASTER.stMachineStatus.eMachineState = E_MachineState.SYSTEM_INITIALISING );
+GVL_MASTER.stStationEvents[0].aEvents[12].bEventText := 'Main safety door not locked';
+GVL_MASTER.stStationEvents[0].aEvents[12].sSolution := 'Close the door and check the safety-door locking system';
+
+// Event 13 — Two-hand control discrepancy
+GVL_MASTER.stStationEvents[0].aEvents[13].bFault := TRUE;
+GVL_MASTER.stStationEvents[0].aEvents[13].bCycleStopRequest := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[13].bMessage := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[13].bEventTimer(IN := GVL_IO.stSafety.bTwoHandsLeft XOR GVL_IO.stSafety.bTwoHandsRight,PT := T#1S);
+GVL_MASTER.stStationEvents[0].aEvents[13].bEventFlag := GVL_MASTER.stStationEvents[0].aEvents[13].bEventTimer.Q;
+GVL_MASTER.stStationEvents[0].aEvents[13].bEventText := 'Two-hand control discrepancy';
+GVL_MASTER.stStationEvents[0].aEvents[13].sSolution := 'Release both buttons and check the two-hand control devices';
+
+
+// Event 20 — Terminal 4 EL1918 not operational
+GVL_MASTER.stStationEvents[0].aEvents[20].bFault := TRUE;
+GVL_MASTER.stStationEvents[0].aEvents[20].bCycleStopRequest := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[20].bMessage := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[20].bEventFlag := GVL_IO.stTerm4_EL1918.nTerminalState <> 8 
+														AND GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.SYSTEM_POWER_UP;
+GVL_MASTER.stStationEvents[0].aEvents[20].bEventText := 'Terminal T04 EL1918 not operational';
+GVL_MASTER.stStationEvents[0].aEvents[20].sSolution := 'Check EtherCAT connection, terminal power and TwinSAFE diagnostics';
+
+
+// Event 21 — Terminal 5 EL1918 not operational
+GVL_MASTER.stStationEvents[0].aEvents[21].bFault := TRUE;
+GVL_MASTER.stStationEvents[0].aEvents[21].bCycleStopRequest := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[21].bMessage := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[21].bEventFlag := GVL_IO.stTerm5_EL1918.nTerminalState <> 8
+														AND GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.SYSTEM_POWER_UP;
+GVL_MASTER.stStationEvents[0].aEvents[21].bEventText := 'Terminal T05 EL1918 not operational';
+GVL_MASTER.stStationEvents[0].aEvents[21].sSolution := 'Check EtherCAT connection, terminal power and TwinSAFE diagnostics';
+
+
+// Event 22 — Terminal 6 EL1918 not operational
+GVL_MASTER.stStationEvents[0].aEvents[22].bFault := TRUE;
+GVL_MASTER.stStationEvents[0].aEvents[22].bCycleStopRequest := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[22].bMessage := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[22].bEventFlag := GVL_IO.stTerm6_EL1918.nTerminalState <> 8
+														AND GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.SYSTEM_POWER_UP;
+GVL_MASTER.stStationEvents[0].aEvents[22].bEventText := 'Terminal T06 EL1918 not operational';
+GVL_MASTER.stStationEvents[0].aEvents[22].sSolution := 'Check EtherCAT connection, terminal power and TwinSAFE diagnostics';
+
+
+// Event 23 — Terminal 7 EL2904 not operational
+GVL_MASTER.stStationEvents[0].aEvents[23].bFault := TRUE;
+GVL_MASTER.stStationEvents[0].aEvents[23].bCycleStopRequest := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[23].bMessage := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[23].bEventFlag := GVL_IO.stTerm7_EL2904.nTerminalState <> 8
+														AND GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.SYSTEM_POWER_UP;
+GVL_MASTER.stStationEvents[0].aEvents[23].bEventText := 'Terminal T07 EL2904 not operational';
+GVL_MASTER.stStationEvents[0].aEvents[23].sSolution := 'Check EtherCAT connection, output power and TwinSAFE diagnostics';
+
+
+// Event 24 — Terminal 8 EL2904 not operational
+GVL_MASTER.stStationEvents[0].aEvents[24].bFault := TRUE;
+GVL_MASTER.stStationEvents[0].aEvents[24].bCycleStopRequest := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[24].bMessage := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[24].bEventFlag := GVL_IO.stTerm8_EL2904.nTerminalState <> 8
+														AND GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.SYSTEM_POWER_UP;
+GVL_MASTER.stStationEvents[0].aEvents[24].bEventText := 'Terminal T08 EL2904 not operational';
+GVL_MASTER.stStationEvents[0].aEvents[24].sSolution := 'Check EtherCAT connection, output power and TwinSAFE diagnostics';
+
+// Event 25 — Terminal 9 EL1809 not operational
+GVL_MASTER.stStationEvents[0].aEvents[25].bFault := TRUE;
+GVL_MASTER.stStationEvents[0].aEvents[25].bCycleStopRequest := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[25].bMessage := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[25].bEventFlag := GVL_IO.stTerm9_EL1809.stTerminalInfo.nTerminal_State <> 8
+														AND GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.SYSTEM_POWER_UP;
+GVL_MASTER.stStationEvents[0].aEvents[25].bEventText := 'Terminal T09 EL1809 not operational';
+GVL_MASTER.stStationEvents[0].aEvents[25].sSolution := 'Check EtherCAT connection, terminal power and input wiring';
+
+// Event 26 — Terminal 10 EL1809 not operational
+GVL_MASTER.stStationEvents[0].aEvents[26].bFault := TRUE;
+GVL_MASTER.stStationEvents[0].aEvents[26].bCycleStopRequest := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[26].bMessage := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[26].bEventFlag := GVL_IO.stTerm10_EL1809.stTerminalInfo.nTerminal_State <> 8
+														AND GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.SYSTEM_POWER_UP;
+GVL_MASTER.stStationEvents[0].aEvents[26].bEventText := 'Terminal T10 EL1809 not operational';
+GVL_MASTER.stStationEvents[0].aEvents[26].sSolution := 'Check EtherCAT connection, terminal power and input wiring';
+
+// Event 27 — Terminal 11 EL2809 not operational
+GVL_MASTER.stStationEvents[0].aEvents[27].bFault := TRUE;
+GVL_MASTER.stStationEvents[0].aEvents[27].bCycleStopRequest := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[27].bMessage := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[27].bEventFlag := GVL_IO.stTerm11_EL2809.nTerminalState <> 8
+														AND GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.SYSTEM_POWER_UP;
+GVL_MASTER.stStationEvents[0].aEvents[27].bEventText := 'Terminal T11 EL2809 not operational';
+GVL_MASTER.stStationEvents[0].aEvents[27].sSolution := 'Check EtherCAT connection, terminal power and output supply';
+
+// Event 28 — Terminal 13 EL2809 not operational
+GVL_MASTER.stStationEvents[0].aEvents[28].bFault := TRUE;
+GVL_MASTER.stStationEvents[0].aEvents[28].bCycleStopRequest := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[28].bMessage := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[28].bEventFlag := GVL_IO.stTerm13_EL2809.nTerminalState <> 8
+														AND GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.SYSTEM_POWER_UP;
+GVL_MASTER.stStationEvents[0].aEvents[28].bEventText := 'Terminal T13 EL2809 not operational';
+GVL_MASTER.stStationEvents[0].aEvents[28].sSolution := 'Check EtherCAT connection, terminal power and output supply';
+
+// Event 28 — Terminal 14 EL3058 not operational
+GVL_MASTER.stStationEvents[0].aEvents[29].bFault := TRUE;
+GVL_MASTER.stStationEvents[0].aEvents[29].bCycleStopRequest := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[29].bMessage := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[29].bEventFlag := GVL_IO.stTerm14_EL3058.stTerminalInfo.nTerminal_State <> 8
+														AND GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.SYSTEM_POWER_UP;
+GVL_MASTER.stStationEvents[0].aEvents[29].bEventText := 'Terminal T14 EL3058 not operational';
+GVL_MASTER.stStationEvents[0].aEvents[29].sSolution := 'Check EtherCAT connection, terminal power and output supply';
+
+
+
+// Event 40 — Left emergency flap door activated
+GVL_MASTER.stStationEvents[0].aEvents[40].bFault := TRUE;
+GVL_MASTER.stStationEvents[0].aEvents[40].bCycleStopRequest := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[40].bMessage := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[40].bEventFlag := GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.SYSTEM_POWER_UP
+    													AND ( NOT GVL_IO.stSafety.bDoorFlapLeftCH1
+          												OR NOT GVL_IO.stSafety.bDoorFlapLeftCH2 );
+GVL_MASTER.stStationEvents[0].aEvents[40].bEventText := 'Left emergency flap door activated';
+GVL_MASTER.stStationEvents[0].aEvents[40].sSolution := 'Close the left emergency flap door and reset the machine';
+
+// Event 41 — Right emergency flap door activated
+GVL_MASTER.stStationEvents[0].aEvents[41].bFault :=  TRUE;
+GVL_MASTER.stStationEvents[0].aEvents[41].bCycleStopRequest := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[41].bMessage := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[41].bEventFlag := GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.SYSTEM_POWER_UP
+    													AND ( NOT GVL_IO.stSafety.bDoorFlapRightCH1
+          												OR NOT GVL_IO.stSafety.bDoorFlapRightCH2 );
+GVL_MASTER.stStationEvents[0].aEvents[41].bEventText := 'Right emergency flap door activated';
+GVL_MASTER.stStationEvents[0].aEvents[41].sSolution := 'Close the right emergency flap door and reset the machine';
+
+
+
+
+// ============================================================================
+// STATION 1 — KISTLER
+// ============================================================================
+
+// Event 0 — Kistler servo error
+GVL_MASTER.stStationEvents[1].aEvents[0].bFault := TRUE;
+GVL_MASTER.stStationEvents[1].aEvents[0].bCycleStopRequest := FALSE;
+GVL_MASTER.stStationEvents[1].aEvents[0].bMessage := FALSE;
+GVL_MASTER.stStationEvents[1].aEvents[0].bEventFlag := GVL_MASTER.stDiagnostics.bKistlerServoError;
+GVL_MASTER.stStationEvents[1].aEvents[0].bEventText := 'Kistler servo error';
+GVL_MASTER.stStationEvents[1].aEvents[0].sSolution := 'Check the Kistler servo status and acknowledge the alarm on the controller';
+
+// Event 1 — Kistler sequence error
+GVL_MASTER.stStationEvents[1].aEvents[1].bFault := TRUE;
+GVL_MASTER.stStationEvents[1].aEvents[1].bCycleStopRequest := FALSE;
+GVL_MASTER.stStationEvents[1].aEvents[1].bMessage := FALSE;
+GVL_MASTER.stStationEvents[1].aEvents[1].bEventFlag := GVL_MASTER.stDiagnostics.bKistlerSequenceError;
+GVL_MASTER.stStationEvents[1].aEvents[1].bEventText := 'Kistler sequence error';
+GVL_MASTER.stStationEvents[1].aEvents[1].sSolution := 'Check the current Kistler sequence and reset the controller';
+
+// Event 2 — Kistler transmission fault
+GVL_MASTER.stStationEvents[1].aEvents[2].bFault := TRUE;
+GVL_MASTER.stStationEvents[1].aEvents[2].bCycleStopRequest := FALSE;
+GVL_MASTER.stStationEvents[1].aEvents[2].bMessage := FALSE;
+GVL_MASTER.stStationEvents[1].aEvents[2].bEventFlag := GVL_MASTER.stDiagnostics.bKistlerTransmissionFault;
+GVL_MASTER.stStationEvents[1].aEvents[2].bEventText := 'Kistler communication transmission fault';
+GVL_MASTER.stStationEvents[1].aEvents[2].sSolution := 'Check EtherCAT communication and the Kistler controller connection';
+
+// Event 3 — Kistler device unavailable
+GVL_MASTER.stStationEvents[1].aEvents[3].bFault := TRUE;
+GVL_MASTER.stStationEvents[1].aEvents[3].bCycleStopRequest := FALSE;
+GVL_MASTER.stStationEvents[1].aEvents[3].bMessage := FALSE;
+GVL_MASTER.stStationEvents[1].aEvents[3].bEventFlag := 	GVL_MASTER.stDiagnostics.bKistlerDeviceUnavailable
+    													AND GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.SYSTEM_POWER_UP;
+
+GVL_MASTER.stStationEvents[1].aEvents[3].bEventText := 'Kistler device unavailable';
+GVL_MASTER.stStationEvents[1].aEvents[3].sSolution := 'Check controller power, network connection and Kistler availability';
+
+// Event 4 — Kistler general alarm
+GVL_MASTER.stStationEvents[1].aEvents[4].bFault := TRUE;
+GVL_MASTER.stStationEvents[1].aEvents[4].bCycleStopRequest := FALSE;
+GVL_MASTER.stStationEvents[1].aEvents[4].bMessage := FALSE;
+GVL_MASTER.stStationEvents[1].aEvents[4].bEventFlag := 	GVL_MASTER.stDiagnostics.bKistlerAlarm
+    													AND NOT GVL_MASTER.stDiagnostics.bKistlerServoError
+    													AND NOT GVL_MASTER.stDiagnostics.bKistlerSequenceError
+    													AND NOT GVL_MASTER.stDiagnostics.bKistlerTransmissionFault;
+
+GVL_MASTER.stStationEvents[1].aEvents[4].bEventText := 'Kistler controller alarm';
+GVL_MASTER.stStationEvents[1].aEvents[4].sSolution := 'Check the active alarm on the Kistler controller';
+
+// Event 5 — Kistler warning
+GVL_MASTER.stStationEvents[1].aEvents[5].bFault := FALSE;
+GVL_MASTER.stStationEvents[1].aEvents[5].bCycleStopRequest := FALSE;
+GVL_MASTER.stStationEvents[1].aEvents[5].bMessage := TRUE;
+GVL_MASTER.stStationEvents[1].aEvents[5].bEventFlag := GVL_MASTER.stDiagnostics.bKistlerWarning;
+GVL_MASTER.stStationEvents[1].aEvents[5].bEventText := 'Kistler controller warning';
+GVL_MASTER.stStationEvents[1].aEvents[5].sSolution := 'Check the warning displayed on the Kistler controller';
+
+// Event 6 — Kistler not ready
+GVL_MASTER.stStationEvents[1].aEvents[6].bFault := TRUE;
+GVL_MASTER.stStationEvents[1].aEvents[6].bCycleStopRequest := FALSE;
+GVL_MASTER.stStationEvents[1].aEvents[6].bMessage := FALSE;
+GVL_MASTER.stStationEvents[1].aEvents[6].bEventFlag := 	GVL_MASTER.stDiagnostics.bKistlerNotReady
+														AND NOT GVL_MASTER.stDiagnostics.bKistlerBusy
+														AND ( GVL_MASTER.stMachineStatus.eMachineState = E_MachineState.SYSTEM_INITIALISING
+															  OR GVL_MASTER.stMachineStatus.eMachineState = E_MachineState.SYSTEM_READY_TO_START );
+		  
+GVL_MASTER.stStationEvents[1].aEvents[6].bEventText := 'Kistler system not ready';
+GVL_MASTER.stStationEvents[1].aEvents[6].sSolution := 'Check Kistler alarms, position and controller readiness';
+
+// ============================================================================
+// STATION 2 — INDEX TABLE
+// ============================================================================
+
+// Event 0 — Index table position invalid
+GVL_MASTER.stStationEvents[2].aEvents[0].bFault := TRUE;
+GVL_MASTER.stStationEvents[2].aEvents[0].bCycleStopRequest := FALSE;
+GVL_MASTER.stStationEvents[2].aEvents[0].bMessage := FALSE;
+GVL_MASTER.stStationEvents[2].aEvents[0].bEventFlag :=  GVL_MASTER.stDiagnostics.bNestPositionInvalid
+														AND GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.SYSTEM_POWER_UP;
+GVL_MASTER.stStationEvents[2].aEvents[0].bEventText := 'Index table position is invalid';
+GVL_MASTER.stStationEvents[2].aEvents[0].sSolution := 'Check the table position sensors and index mechanism';
+
+
+
+// ============================================================================
+// STATION 3 — PUCK LOCKER
+// ============================================================================
+
+// Event 0 — Unexpected puck removal
+GVL_MASTER.stStationEvents[3].aEvents[0].bFault := TRUE;
+GVL_MASTER.stStationEvents[3].aEvents[0].bCycleStopRequest := FALSE;
+GVL_MASTER.stStationEvents[3].aEvents[0].bMessage := FALSE;
+GVL_MASTER.stStationEvents[3].aEvents[0].bEventFlag := GVL_MASTER.stPuckLocker.bUnexpectedRemovalFault;
+GVL_MASTER.stStationEvents[3].aEvents[0].bEventText := 'Puck removed while locker was engaged';
+GVL_MASTER.stStationEvents[3].aEvents[0].sSolution := 'Restore the puck and request administrator acknowledgement';
+
+// Event 1 — Puck sensor mismatch
+GVL_MASTER.stStationEvents[3].aEvents[1].bFault := TRUE;
+GVL_MASTER.stStationEvents[3].aEvents[1].bCycleStopRequest := FALSE;
+GVL_MASTER.stStationEvents[3].aEvents[1].bMessage := FALSE;
+GVL_MASTER.stStationEvents[3].aEvents[1].bEventFlag := GVL_MASTER.stPuckLocker.bPuckSensorMismatch;
+GVL_MASTER.stStationEvents[3].aEvents[1].bEventText := 'Puck locker sensor mismatch';
+GVL_MASTER.stStationEvents[3].aEvents[1].sSolution := 'Check both puck presence sensors and their alignment';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+]]></ST>
+      </Implementation>
+    </Action>
+  </POU>
+</TcPlcObject>

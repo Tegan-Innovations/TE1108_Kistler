@@ -3,7 +3,8 @@
   <POU Name="PRG_SafetyLogic" Id="{c1ae741e-7d84-482a-8ac0-230607928d2d}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM PRG_SafetyLogic
 VAR
-	fbResetTrigger        : F_TRIG; // Detects HMI Reset button release
+	//fbResetTrigger        : F_TRIG; // Detects HMI Reset button release Merge
+	bFaultRecoveryEnable  : BOOL := FALSE;
 	
 END_VAR
 ]]></Declaration>
@@ -11,15 +12,42 @@ END_VAR
       <ST><![CDATA[// =================================================================================
 // SAFETY RESET ACK ERROR
 // =================================================================================
+
+// Outside the FAULT state, the recovery permission is not required.
+IF GVL_MASTER.stMachineStatus.eMachineState <>
+    E_MachineState.FAULT THEN
+
+    bFaultRecoveryEnable := FALSE;
+
+
+// During FAULT, keep the recovery permission active while
+// the operator keeps the Reset button pressed.
+ELSIF GVL_MASTER.i_bButtonReset
+    AND NOT GVL_MASTER.i_bButtonEmergencyStop
+    AND NOT GVL_MASTER.stPuckLocker.bUnexpectedRemovalFault THEN
+
+    bFaultRecoveryEnable := TRUE;
+
+END_IF;
+
+
+// Update the standard PLC requests sent to TwinSAFE.
+
 M_UpdateStandardSafetyRequests();
 
+(* Merge
 fbResetTrigger(CLK := GVL_MASTER.i_bButtonReset);
 
 IF NOT GVL_IO.stSafety.bSystemSafeOK AND fbResetTrigger.Q THEN 
 		GVL_IO.stSafety.bSafetyReset := fbResetTrigger.Q;
 ELSE 
 		GVL_IO.stSafety.bSafetyReset := FALSE;
-END_IF
+END_IF*)
+
+
+// Keep the reset request active while the operator is pressing
+// the Reset button and the safety circuit is not yet ready.
+GVL_IO.stSafety.bSafetyReset := GVL_MASTER.i_bButtonReset AND NOT GVL_IO.stSafety.bSystemSafeOK;
 
 // =================================================================================
 // EMERGENCY STOP LOGIC 
@@ -30,37 +58,37 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 
 
     E_MachineState.SYSTEM_POWER_UP:
-	GVL_IO.stSafety.bMachineStopped := FALSE;
-	GVL_IO.stSafety.bProcessTest := FALSE;
+		GVL_IO.stSafety.bMachineStopped := FALSE;
+		GVL_IO.stSafety.bProcessTest := FALSE;
 		
     E_MachineState.FAULT:
-	GVL_IO.stSafety.bMachineStopped := TRUE;
-	GVL_IO.stSafety.bAirSupplyEnabled := FALSE;
-	GVL_IO.stSafety.bProcessTest := FALSE;
+		GVL_IO.stSafety.bMachineStopped := TRUE;
+		GVL_IO.stSafety.bAirSupplyEnabled := FALSE;
+		GVL_IO.stSafety.bProcessTest := FALSE;
 
 	E_MachineState.STOPPING:
-	GVL_IO.stSafety.bMachineStopped := FALSE;
-	GVL_IO.stSafety.bProcessTest := FALSE;
+		GVL_IO.stSafety.bMachineStopped := FALSE;
+		GVL_IO.stSafety.bProcessTest := FALSE;
 	
 	E_MachineState.STOPPED:
-	GVL_IO.stSafety.bMachineStopped := TRUE;
-	GVL_IO.stSafety.bProcessTest := FALSE;
+		GVL_IO.stSafety.bMachineStopped := TRUE;
+		GVL_IO.stSafety.bProcessTest := FALSE;
 
 	E_MachineState.SYSTEM_INITIALISING:
-	GVL_IO.stSafety.bMachineStopped := FALSE;
-	GVL_IO.stSafety.bAirSupplyEnabled := TRUE;
+		GVL_IO.stSafety.bMachineStopped := FALSE;
+		GVL_IO.stSafety.bAirSupplyEnabled := TRUE;
 
 	E_MachineState.SYSTEM_READY_TO_START:
-	GVL_IO.stSafety.bMachineStopped := FALSE;
-	GVL_IO.stSafety.bProcessTest := FALSE;
+		GVL_IO.stSafety.bMachineStopped := FALSE;
+		GVL_IO.stSafety.bProcessTest := FALSE;
  
 	E_MachineState.SYSTEM_AUTO_CYCLE:
-    GVL_IO.stSafety.bMachineStopped := FALSE;
-	GVL_IO.stSafety.bProcessTest := FALSE;
+		GVL_IO.stSafety.bMachineStopped := FALSE;
+		GVL_IO.stSafety.bProcessTest := FALSE;
 	
 	E_MachineState.MANUAL_MODE:
-    GVL_IO.stSafety.bMachineStopped := FALSE;
-	GVL_IO.stSafety.bProcessTest := FALSE;
+		GVL_IO.stSafety.bMachineStopped := FALSE;
+		GVL_IO.stSafety.bProcessTest := FALSE;
 
 
 
@@ -90,7 +118,16 @@ END_VAR
         <ST><![CDATA[// The Puck Locker fault remains latched even if the locker mode
 // is changed to Disabled. Administrator acknowledgement is required
 // before the standard PLC permits the safety system to recover.
-GVL_IO.stSafety.bSafetyRun := NOT GVL_MASTER.stPuckLocker.bUnexpectedRemovalFault;]]></ST>
+//GVL_IO.stSafety.bSafetyRun := NOT GVL_MASTER.stPuckLocker.bUnexpectedRemovalFault; Merge
+
+
+GVL_IO.stSafety.bSafetyRun :=
+    (
+        GVL_MASTER.stMachineStatus.eMachineState <>
+            E_MachineState.FAULT 
+		OR bFaultRecoveryEnable
+    )
+    AND NOT GVL_MASTER.stPuckLocker.bUnexpectedRemovalFault;]]></ST>
       </Implementation>
     </Method>
   </POU>

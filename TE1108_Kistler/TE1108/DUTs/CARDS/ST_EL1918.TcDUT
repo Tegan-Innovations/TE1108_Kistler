@@ -3,14 +3,17 @@
   <DUT Name="ST_EL1918" Id="{302ffd9b-15fa-4c1e-a32c-56ea245aa4ad}">
     <Declaration><![CDATA[TYPE ST_EL1918 :
 STRUCT
-    sTerminalName       : STRING(80) := 'EL1889 | 8-Channel Digital Input 24V DC';
+    sTerminalName       	: STRING(80) := 'EL1889 | 8-Channel Digital Input 24V DC';
     
     // Physical hardware channels (Inputs 1 to 8)
-    bInput              : ARRAY[1..8] OF BOOL;
+    bInput              	: ARRAY[1..8] OF BOOL;
     
     // Hardware status and diagnostic signals
-    bError              : BOOL; // TRUE if terminal detects a fault or communication error
-    bReady              : BOOL; // TRUE if terminal is operational and communicating properly
+    bError              	: BOOL; // TRUE if terminal detects a fault or communication error
+    bReady              	: BOOL; // TRUE if terminal is operational and communicating properly
+	
+	nTerminalState 	AT %I*	: UINT;
+	
 END_STRUCT
 END_TYPE]]></Declaration>
   </DUT>
