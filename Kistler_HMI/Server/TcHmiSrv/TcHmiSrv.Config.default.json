@@ -1634,6 +1634,93 @@
             },
             "USEMAPPING": true
         },
+        "ADS.PLC1.GVL_HMI.sAplication": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::sAplication",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/STRING%2880%29"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.sHMIServer": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::sHMIServer",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/STRING%2880%29"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.sHMIVersion": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::sHMIVersion",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/STRING%2880%29"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.sProjectID": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::sProjectID",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/STRING%2880%29"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.sSoftwareDate": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::sSoftwareDate",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/STRING%2880%29"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.sSoftwareVersion": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::sSoftwareVersion",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:general#/definitions/STRING%2880%29"
+                    },
+                    {
+                        "comment": "=================================================================\r\n                         SYSTEM INFO \r\n ================================================================="
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.sSystemName": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::sSystemName",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/STRING%2880%29"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.sTC3Version": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::sTC3Version",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/STRING%2880%29"
+            },
+            "USEMAPPING": true
+        },
         "ADS.PLC1.GVL_HMI.stPuckLocker.bCmdAcknowledgeRemovalFault": {
             "ACCESS": 3,
             "DOMAIN": "ADS",
@@ -1681,6 +1768,23 @@
                     },
                     {
                         "propertyOrder": 2
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.stPuckLocker.bEnabled": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::stPuckLocker::bEnabled",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:general#/definitions/BOOL"
+                    },
+                    {
+                        "propertyOrder": 5
                     }
                 ]
             },
@@ -5740,9 +5844,18 @@
                 "ADS.PLC1.GVL_HMI.i_bHMIIndexerManualEnable": 3,
                 "ADS.PLC1.GVL_HMI.i_bHMIKistlerManualEnable": 3,
                 "ADS.PLC1.GVL_HMI.i_bHMIManualModeRequest": 3,
+                "ADS.PLC1.GVL_HMI.sAplication": 3,
+                "ADS.PLC1.GVL_HMI.sHMIServer": 3,
+                "ADS.PLC1.GVL_HMI.sHMIVersion": 3,
+                "ADS.PLC1.GVL_HMI.sProjectID": 3,
+                "ADS.PLC1.GVL_HMI.sSoftwareDate": 3,
+                "ADS.PLC1.GVL_HMI.sSoftwareVersion": 3,
+                "ADS.PLC1.GVL_HMI.sSystemName": 3,
+                "ADS.PLC1.GVL_HMI.sTC3Version": 3,
                 "ADS.PLC1.GVL_HMI.stPuckLocker.bCmdAcknowledgeRemovalFault": 3,
                 "ADS.PLC1.GVL_HMI.stPuckLocker.bCmdEmptyPuckBypass": 3,
                 "ADS.PLC1.GVL_HMI.stPuckLocker.bEnableEmptyPuckBypass": 3,
+                "ADS.PLC1.GVL_HMI.stPuckLocker.bEnabled": 3,
                 "ADS.PLC1.GVL_HMI.stPuckLocker.bPuckDetected": 3,
                 "ADS.PLC1.GVL_HMI.stPuckLocker.bPuckLocked": 3,
                 "ADS.PLC1.GVL_HMI.stPuckLocker.bPuckSensorMismatch": 3,

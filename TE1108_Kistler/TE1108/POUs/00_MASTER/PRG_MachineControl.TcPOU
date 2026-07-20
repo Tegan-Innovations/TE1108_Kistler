@@ -22,13 +22,14 @@ VAR
 	tTwoHandReturnTimeout 				: TON := (PT := T#2S);
 	tonAfterKistlerDelay  				: TON;
 	
-    eProcessCycleState : E_ProcessCycle_State := E_ProcessCycle_State.IDLE;
+    eProcessCycleState 					: E_ProcessCycle_State := E_ProcessCycle_State.IDLE;
 	
 	tonGuideCylinderDelay 				: TON;
 	tonGuideCylinderRetractDelay 		: TON;
 	tGuideCylinderDelay   				: TIME := T#250MS;
 	
 	bFaultResetRequested 				: BOOL := FALSE;
+	
 	
     // =========================================================
     // PROCESS CYCLE CONTROL
@@ -146,21 +147,33 @@ VAR
     // PERSISTENT DATA & LOGGING
     // =========================================================
     //fbWritePersistent      : FB_WritePersistentData;
-	bWriteTrigger          	: BOOL; // Test and simulation sequence trigger
-	eCurrentState			: INT;
+	bWriteTrigger          		: BOOL; // Test and simulation sequence trigger
+	eCurrentState				: INT;
 	
 	// =========================================================
     // HMI COMMAND
     // =========================================================
-	bHMIManualModeRequest : BOOL := FALSE;
-	rtHMIManualModeRequest : R_TRIG;
-	i_bHMIManualModeRequest: INT;
+	bHMIManualModeRequest 		: BOOL := FALSE;
+	rtHMIManualModeRequest 		: R_TRIG;
+	i_bHMIManualModeRequest		: INT;
 	
 	
-	E_ProcessCycleState: INT;
-	IDLE: INT;
+	E_ProcessCycleState			: INT;
+	IDLE						: INT;
 	
-END_VAR
+	// -----------------------------------------------------------------------------
+	// Fault reject recovery
+	// -----------------------------------------------------------------------------
+	rtMachineFault       		: R_TRIG;
+	bFaultRejectActive   		: BOOL;
+	bFaultRejectPending  		: BOOL;
+	eFaultOperatorNest 			: E_NestPosition := E_NestPosition.UNKNOWN;
+	
+
+
+	
+	END_VAR
+
 
 ]]></Declaration>
     <Implementation>
@@ -170,6 +183,21 @@ END_VAR
 // 1. PRE-CONDITION LOGIC
 // =========================================================
 M_PreExecution();
+
+// Detect the transition into machine FAULT.
+rtMachineFault(
+    CLK :=
+        GVL_MASTER.stMachineStatus.eMachineState =
+            E_MachineState.FAULT
+);
+
+// Start the internal-part reject recovery only once,
+// on the rising edge of the FAULT state.
+IF rtMachineFault.Q THEN
+
+    M_StartFaultRejectRecovery();
+
+END_IF
 
 // Generate Kistler commands based on current machine state
 // Map Kistler EtherCAT telegram to PLC status structure
@@ -2258,6 +2286,12 @@ CASE PRG_MachineControl.eMode_LED_Fail OF
         PRG_MachineControl.q_bLED_Fail := FALSE;
 END_CASE;
 
+// =================================================================
+// 5. INTERNAL MACHINE LIGHT
+// =================================================================
+
+GVL_IO.qInternalLight :=
+    GVL_IO.stSafety.bMainDoorOpenned;
 
 
 M_LEDsButtons := TRUE;]]></ST>
@@ -2771,6 +2805,42 @@ IF (
 END_IF
 
 
+// -----------------------------------------------------------------------------
+// A new part was loaded into the operator nest.
+//
+// The previous part result may remain latched in the exchange state machine,
+// but the newly loaded physical part has not yet been tested.
+//
+// Clear only the HMI measurement/result so the new part is displayed as NONE.
+// -----------------------------------------------------------------------------
+IF GVL_MASTER.astNestTracking[
+        iOperatorNestIndex
+   ].bPartLoadedPulse THEN
+
+    // Preserve the disposition of the removed part before clearing
+    // the visual result for the newly loaded part.
+    IF bOperatorResultValid THEN
+
+        bPendingOperatorResultPass :=
+            bOperatorResultPass;
+
+        bPendingOperatorResultFail :=
+            bOperatorResultFail;
+
+    END_IF
+
+    // The newly loaded part has not been tested yet.
+    // Display NONE without losing the pending disposition above.
+    M_HMIKistlerResult(
+        eNestPosition := eOperatorNestPosition,
+        bPartOK       := FALSE,
+        bPartNOK      := FALSE,
+        rForce        := 0.0,
+        rDistance     := 0.0,
+        bResetValues  := TRUE
+    );
+
+END_IF
 
 
 
@@ -2948,6 +3018,8 @@ CASE eOperatorExchangeState OF
               )
               AND NOT GVL_MASTER.stNestTable.bNestInMotion
               AND GVL_MASTER.stNestTable.bNestReadySensor
+			  AND NOT bPendingOperatorResultPass
+			  AND NOT bPendingOperatorResultFail
               AND GVL_MASTER.stNestTable.bNestLockedSensor
               AND NOT bOperatorResultValid
               AND (
@@ -3280,7 +3352,8 @@ CASE eOperatorExchangeState OF
 
         eOperatorExchangeState := E_OperatorExchangeState.Idle;
 
-END_CASE]]></ST>
+END_CASE
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_PreExecution" Id="{d5c5735d-f733-481f-9f83-00134f7ccc98}">
@@ -3342,13 +3415,15 @@ M_PreExecution := TRUE;]]></ST>
     <Method Name="M_ProcessCycle" Id="{e01c53ef-c471-4f56-958b-74875adab0b2}">
       <Declaration><![CDATA[METHOD M_ProcessCycle : BOOL
 VAR
-bControlledStopActive 	: BOOL;
-rTrigTwoHands : R_TRIG; // Edge trigger to detect single press of the two-hand safety signal
+    bControlledStopActive 			: BOOL;
+    rTrigTwoHands : R_TRIG;
 
-bManualIndexerOnly        : BOOL;
-bManualKistlerOnly        : BOOL;
-bManualIndexerAndKistler  : BOOL;
+    bManualIndexerOnly       		: BOOL;
+    bManualKistlerOnly       		: BOOL;
+    bManualIndexerAndKistler 		: BOOL;
+	
 
+    bCurrentNestFaultRejectPending : BOOL;
 
 
 END_VAR]]></Declaration>
@@ -3423,6 +3498,48 @@ eCurrentNestPos :=
 M_UpdateActiveNestPositions();
 
 M_UpdateOperatorNestTracking();
+
+
+// -----------------------------------------------------------------------------
+// Determine safely whether the nest currently at the Kistler still contains
+// a valid FAIL result.
+//
+// The enum is mapped explicitly to indexes 1..4 to prevent an invalid array
+// access when the current position is UNKNOWN.
+// -----------------------------------------------------------------------------
+bCurrentNestFaultRejectPending := FALSE;
+
+CASE eCurrentNestPos OF
+
+    E_NestPosition.Position_1:
+
+        bCurrentNestFaultRejectPending :=
+            GVL_MASTER.astNestProcessResult[1].bResultValid
+            AND GVL_MASTER.astNestProcessResult[1].bFail;
+
+    E_NestPosition.Position_2:
+
+        bCurrentNestFaultRejectPending :=
+            GVL_MASTER.astNestProcessResult[2].bResultValid
+            AND GVL_MASTER.astNestProcessResult[2].bFail;
+
+    E_NestPosition.Position_3:
+
+        bCurrentNestFaultRejectPending :=
+            GVL_MASTER.astNestProcessResult[3].bResultValid
+            AND GVL_MASTER.astNestProcessResult[3].bFail;
+
+    E_NestPosition.Position_4:
+
+        bCurrentNestFaultRejectPending :=
+            GVL_MASTER.astNestProcessResult[4].bResultValid
+            AND GVL_MASTER.astNestProcessResult[4].bFail;
+
+ELSE
+
+    bCurrentNestFaultRejectPending := FALSE;
+
+END_CASE
 
 // ============================================================================
 // AUTOMATIC OPERATOR EXCHANGE
@@ -3520,7 +3637,7 @@ CASE GVL_MASTER.stMachineStatus.eMachineState OF
 
                 END_IF
 
-            // =================================================================
+                       // =================================================================
             E_ProcessCycle_State.WAIT_NEST_TESTING_READY:
             // =================================================================
 
@@ -3554,6 +3671,40 @@ CASE GVL_MASTER.stMachineStatus.eMachineState OF
                         E_ProcessCycle_State.FAULT;
 
                 // -------------------------------------------------------------
+                // Fault-recovery reject.
+                //
+                // During fault recovery, a nest containing a valid FAIL result
+                // must not be tested again by the Kistler.
+                //
+                // Preserve the FAIL result so the normal operator exchange and
+                // reject confirmation flow can dispose of the part.
+                // -------------------------------------------------------------
+                ELSIF bFaultRejectActive
+                      AND bCurrentNestFaultRejectPending
+                      AND GVL_MASTER.stProcess.bNestTestingReady
+                      AND eNestState = E_NestState.TESTING
+                      AND GVL_MASTER.stNestTable.bNestReadySensor
+                      AND GVL_MASTER.stNestTable.bNestLockedSensor
+                      AND NOT GVL_MASTER.stNestTable.bNestInMotion
+                      AND eCurrentNestPos <>
+                            E_NestPosition.UNKNOWN THEN
+
+                    GVL_MASTER.stProcess.bKistlerCycleRequest := FALSE;
+                    GVL_MASTER.stProcess.bKistlerCycleDone    := FALSE;
+                    GVL_MASTER.stProcess.bKistlerHomeDone     := TRUE;
+
+                    // Keep position tracking synchronized.
+                    //eLastTestedNestPos :=
+                       // eCurrentNestPos;
+
+                    // Do not clear the stored FAIL result here.
+                    GVL_MASTER.stProcess.bReleaseNestRotation :=
+                        TRUE;
+
+                    eProcessCycleState :=
+                        E_ProcessCycle_State.RELEASE_NEST;
+
+                // -------------------------------------------------------------
                 // Same position already processed, or no part at Kistler.
                 //
                 // Do not execute another Kistler cycle. Release the table.
@@ -3577,7 +3728,8 @@ CASE GVL_MASTER.stMachineStatus.eMachineState OF
 
                     // Kistler side is considered complete because there is
                     // no valid new part to test.
-                    GVL_MASTER.stProcess.bKistlerHomeDone := TRUE;
+                    GVL_MASTER.stProcess.bKistlerHomeDone :=
+                        TRUE;
 
                     IF bNestNewPositionReady THEN
 
@@ -3597,7 +3749,8 @@ CASE GVL_MASTER.stMachineStatus.eMachineState OF
 
                     END_IF
 
-                    GVL_MASTER.stProcess.bReleaseNestRotation := TRUE;
+                    GVL_MASTER.stProcess.bReleaseNestRotation :=
+                        TRUE;
 
                     eProcessCycleState :=
                         E_ProcessCycle_State.RELEASE_NEST;
@@ -3625,7 +3778,8 @@ CASE GVL_MASTER.stMachineStatus.eMachineState OF
 
                     bKistlerResultStored := FALSE;
 
-                    // Clear the previous HMI measurement values.
+                    // Clear previous HMI measurement values before starting
+                    // a new test.
                     M_HMIKistlerResult(
                         eNestPosition := eCurrentNestPos,
                         bPartOK       := FALSE,
@@ -4207,7 +4361,8 @@ CASE GVL_MASTER.stMachineStatus.eMachineState OF
 
 END_CASE
 
-M_ProcessCycle := TRUE;]]></ST>
+M_ProcessCycle := TRUE;
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_PuckLockerDisposition" Id="{ad617b9e-72f0-4e71-8779-255d6dead4ac}" FolderPath="Pick_Locker\">
@@ -4504,6 +4659,67 @@ IF tonKistlerReset.Q THEN
     M_ResetProcessCycle := TRUE;
 
 END_IF;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_StartFaultRejectRecovery" Id="{1379298e-0cfb-4338-ae73-185b8119dc5c}">
+      <Declaration><![CDATA[METHOD PRIVATE M_StartFaultRejectRecovery
+VAR
+    iNestIndex : INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+// -----------------------------------------------------------------------------
+// Start the fault-recovery reject sequence.
+//
+// The nest that was at the operator position when the fault occurred is
+// excluded. The other three physical nests are marked as rejected and will
+// later be discarded using the normal operator exchange and reject flow.
+// -----------------------------------------------------------------------------
+
+IF eOperatorNestPosition = E_NestPosition.UNKNOWN THEN
+    RETURN;
+END_IF
+
+
+// Save the physical nest that was at the operator position.
+eFaultOperatorNest := eOperatorNestPosition;
+
+
+// Mark the other three nests as rejected.
+FOR iNestIndex := 1 TO 4 DO
+
+    IF iNestIndex <> TO_INT(eFaultOperatorNest) THEN
+
+        GVL_MASTER.astNestProcessResult[
+            iNestIndex
+        ].bResultValid := TRUE;
+
+        GVL_MASTER.astNestProcessResult[
+            iNestIndex
+        ].bPass := FALSE;
+
+        GVL_MASTER.astNestProcessResult[
+            iNestIndex
+        ].bFail := TRUE;
+
+        GVL_MASTER.astNestProcessResult[
+            iNestIndex
+        ].bDispositionSent := FALSE;
+
+
+        // Keep force and distance values for diagnostics.
+        // Only change the displayed result.
+        GVL_HMI.aKistlerNestResult[
+            iNestIndex
+        ].eResult := E_HMIKistlerResult.FAIL;
+
+    END_IF
+
+END_FOR
+
+
+bFaultRejectPending := TRUE;
+bFaultRejectActive := TRUE;]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_StatusMapping" Id="{e76387c3-2b6b-4ab8-8e2c-031286cbd112}" FolderPath="Kistler\">

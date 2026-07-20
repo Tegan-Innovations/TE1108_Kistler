@@ -11,6 +11,15 @@
 			</ArrayInfo>
 		</DataType>
 		<DataType>
+			<Name GUID="{064EA673-04B6-D0C1-CD14-82E56022843A}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..4] OF BOOL</Name>
+			<BitSize>32</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
+			<ArrayInfo>
+				<LBound>1</LBound>
+				<Elements>4</Elements>
+			</ArrayInfo>
+		</DataType>
+		<DataType>
 			<Name GUID="{1B090823-34FE-AA35-7EE2-1CF6FAEBC3BF}" AutoDeleteType="true">E_PuckLockerMode</Name>
 			<BitSize>16</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000006}">INT</BaseType>
@@ -42,8 +51,8 @@
 			</Properties>
 		</DataType>
 		<DataType>
-			<Name GUID="{9AD75839-F9B1-4952-009A-9637050C38A4}" AutoDeleteType="true">ST_PuckLockerHMI</Name>
-			<BitSize>2144</BitSize>
+			<Name GUID="{DCCF9A5C-7EC5-60B0-5C9D-E93A48A3707D}" AutoDeleteType="true">ST_PuckLockerHMI</Name>
+			<BitSize>2160</BitSize>
 			<SubItem>
 				<Name>eMode</Name>
 				<Type GUID="{1B090823-34FE-AA35-7EE2-1CF6FAEBC3BF}">E_PuckLockerMode</Type>
@@ -69,62 +78,62 @@
 				<BitOffs>32</BitOffs>
 			</SubItem>
 			<SubItem>
-				<Name>bPuckDetected</Name>
+				<Name>bEnabled</Name>
 				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
 				<BitSize>8</BitSize>
 				<BitOffs>40</BitOffs>
+				<Default>
+					<Bool>true</Bool>
+				</Default>
 			</SubItem>
 			<SubItem>
-				<Name>bPuckLocked</Name>
+				<Name>bPuckDetected</Name>
 				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
 				<BitSize>8</BitSize>
 				<BitOffs>48</BitOffs>
 			</SubItem>
 			<SubItem>
-				<Name>bPuckSensorMismatch</Name>
+				<Name>bPuckLocked</Name>
 				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
 				<BitSize>8</BitSize>
 				<BitOffs>56</BitOffs>
 			</SubItem>
 			<SubItem>
-				<Name>bUnexpectedRemovalFault</Name>
+				<Name>bPuckSensorMismatch</Name>
 				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
 				<BitSize>8</BitSize>
 				<BitOffs>64</BitOffs>
 			</SubItem>
 			<SubItem>
-				<Name>bShowUnexpectedRemovalPopup</Name>
+				<Name>bUnexpectedRemovalFault</Name>
 				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
 				<BitSize>8</BitSize>
 				<BitOffs>72</BitOffs>
 			</SubItem>
 			<SubItem>
-				<Name>bShowEmptyPuckPopup</Name>
+				<Name>bShowUnexpectedRemovalPopup</Name>
 				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
 				<BitSize>8</BitSize>
 				<BitOffs>80</BitOffs>
 			</SubItem>
 			<SubItem>
+				<Name>bShowEmptyPuckPopup</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>88</BitOffs>
+			</SubItem>
+			<SubItem>
 				<Name>nPucksAllowedToPass</Name>
 				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
 				<BitSize>8</BitSize>
-				<BitOffs>88</BitOffs>
+				<BitOffs>96</BitOffs>
 			</SubItem>
 			<SubItem>
 				<Name>sMessage</Name>
 				<Type GUID="{18071995-0000-0000-0000-0001000000FF}">STRING(255)</Type>
 				<BitSize>2048</BitSize>
-				<BitOffs>96</BitOffs>
+				<BitOffs>104</BitOffs>
 			</SubItem>
-		</DataType>
-		<DataType>
-			<Name GUID="{064EA673-04B6-D0C1-CD14-82E56022843A}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..4] OF BOOL</Name>
-			<BitSize>32</BitSize>
-			<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
-			<ArrayInfo>
-				<LBound>1</LBound>
-				<Elements>4</Elements>
-			</ArrayInfo>
 		</DataType>
 		<DataType>
 			<Name GUID="{2438F91B-E188-4ED7-8594-54354F9ED6A4}" Namespace="Safety" TcBaseType="true">FSOE_6</Name>
@@ -282,19 +291,19 @@
 		</System>
 		<Plc>
 			<Project GUID="{09826F5E-A0C6-4F2A-AB8E-A2951346EAC9}" Name="TE1108" PrjFilePath="TE1108\TE1108.plcproj" TmcFilePath="TE1108\TE1108.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{FBA5063C-8E3A-8FCD-2AA9-EA1E3F464B31}" TmcPath="TE1108\TE1108.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{E1C45581-7666-BEA1-A8FB-9EBBB7A8C994}" TmcPath="TE1108\TE1108.tmc">
 					<Name>TE1108 Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="8" AreaNo="4">
 						<Name>PlcTask Retains</Name>
 						<Var>
-							<Name>GVL_HMI.stPuckLocker</Name>
-							<Type GUID="{9AD75839-F9B1-4952-009A-9637050C38A4}">ST_PuckLockerHMI</Type>
+							<Name>GVL_HMI.aNestEnabled</Name>
+							<Type GUID="{064EA673-04B6-D0C1-CD14-82E56022843A}">ARRAY [1..4] OF BOOL</Type>
 							<InOut>7</InOut>
 						</Var>
 						<Var>
-							<Name>GVL_HMI.aNestEnabled</Name>
-							<Type GUID="{064EA673-04B6-D0C1-CD14-82E56022843A}">ARRAY [1..4] OF BOOL</Type>
+							<Name>GVL_HMI.stPuckLocker</Name>
+							<Type GUID="{DCCF9A5C-7EC5-60B0-5C9D-E93A48A3707D}">ST_PuckLockerHMI</Type>
 							<InOut>7</InOut>
 						</Var>
 					</Vars>
@@ -318,18 +327,13 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_KISTLER_IO.aKistlerOut</Name>
-							<Comment><![CDATA[ PLC -> maXYmos]]></Comment>
-							<Type GUID="{2B6B47C9-DB58-8D37-72B9-9344E5A5275A}">ARRAY [0..199] OF BYTE</Type>
+							<Name>GVL_MASTER.stNestTable.qNestRotatePortA</Name>
+							<Comment><![CDATA[ Valve: Rotate indexing table Port A]]></Comment>
+							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_MASTER.stNestTable.qNestRotatePortB</Name>
 							<Comment><![CDATA[ Valve: Rotate indexing table Port B]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_MASTER.stNestTable.qNestRotatePortA</Name>
-							<Comment><![CDATA[ Valve: Rotate indexing table Port A]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -355,10 +359,6 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_IO.qExternalLight</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_IO.stSafety.bSafetyRun</Name>
 							<Comment><![CDATA[ Output from PLC to TwinSAFE (Command to run)]]></Comment>
 							<Type>BOOL</Type>
@@ -381,6 +381,10 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_IO.qExternalLight</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_IO.stTerm8_EL2904.qEL2904_Ch1</Name>
 							<Comment><![CDATA[ EL2904 channel 1]]></Comment>
 							<Type>BOOL</Type>
@@ -400,14 +404,14 @@
 							<Comment><![CDATA[ EL2904 channel 4 ]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
+						<Var>
+							<Name>GVL_KISTLER_IO.aKistlerOut</Name>
+							<Comment><![CDATA[ PLC -> maXYmos]]></Comment>
+							<Type GUID="{2B6B47C9-DB58-8D37-72B9-9344E5A5275A}">ARRAY [0..199] OF BYTE</Type>
+						</Var>
 					</Vars>
 					<Vars VarGrpType="1">
 						<Name>PlcTask Inputs</Name>
-						<Var>
-							<Name>GVL_KISTLER_IO.bKistlerSafetyEnableOK</Name>
-							<Comment><![CDATA[kistler safety]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
 						<Var>
 							<Name>GVL_MASTER.i_bButtonStart</Name>
 							<Comment><![CDATA[  Auto Cycle start button]]></Comment>
@@ -417,11 +421,6 @@
 							<Name>GVL_MASTER.i_bButtonStop</Name>
 							<Comment><![CDATA[  cycle stop button]]></Comment>
 							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_KISTLER_IO.aKistlerIn</Name>
-							<Comment><![CDATA[ maXYmos -> PLC]]></Comment>
-							<Type GUID="{2B6B47C9-DB58-8D37-72B9-9344E5A5275A}">ARRAY [0..199] OF BYTE</Type>
 						</Var>
 						<Var>
 							<Name>GVL_MASTER.i_bButtonReset</Name>
@@ -557,6 +556,11 @@
 						</Var>
 						<Var>
 							<Name>GVL_IO.stSafety.bDoorFlapRightCH2</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_KISTLER_IO.bKistlerSafetyEnableOK</Name>
+							<Comment><![CDATA[kistler safety]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -808,6 +812,11 @@
 							<Name>GVL_IO.stTerm14_EL3058.stTerminalInfo.nTerminal_State</Name>
 							<Comment><![CDATA[ Terminal State from IO Terminal Info Data]]></Comment>
 							<Type>UINT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_KISTLER_IO.aKistlerIn</Name>
+							<Comment><![CDATA[ maXYmos -> PLC]]></Comment>
+							<Type GUID="{2B6B47C9-DB58-8D37-72B9-9344E5A5275A}">ARRAY [0..199] OF BYTE</Type>
 						</Var>
 					</Vars>
 					<UnrestoredVarLinks ImportTime="2026-07-20T16:44:37">

@@ -33,7 +33,17 @@ END_VAR
 //     - Removing the puck while it is expected to remain locked generates a
 //       latched machine fault.
 // ============================================================================
+IF GVL_HMI.stPuckLocker.bEnabled THEN
 
+    GVL_HMI.stPuckLocker.eMode :=
+        E_PuckLockerMode.Enabled;
+
+ELSE
+
+    GVL_HMI.stPuckLocker.eMode :=
+        E_PuckLockerMode.Disabled;
+
+END_IF
 
 // ----------------------------------------------------------------------------
 // Mode configuration

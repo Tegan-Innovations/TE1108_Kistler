@@ -34,6 +34,9 @@
       },
       {
         "Name": "Enable Nests"
+      },
+      {
+        "Name": "Enable Puck"
       }
     ]
   }
@@ -110,6 +113,26 @@
                   "objectType": "StaticValue",
                   "valueType": "tchmi:framework#/definitions/ContentPath",
                   "value": "Contents/Screens/Settings/settings_Nest.content"
+                },
+                "asyncWait": true
+              }
+            ]
+          },
+          {
+            "caseValue": {
+              "objectType": "StaticValue",
+              "valueType": "tchmi:general#/definitions/Any",
+              "value": "Enable Puck"
+            },
+            "actions": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctrl%IO_Region_18::TargetContent%/ctrl%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/ContentPath",
+                  "value": "Contents/Screens/Settings/settings_Puck.content"
                 },
                 "asyncWait": true
               }

@@ -86,7 +86,8 @@ END_VAR
 VAR_GLOBAL PERSISTENT RETAIN
 
     stPuckLocker : ST_PuckLockerHMI := (
-        eMode := E_PuckLockerMode.Enabled
+        eMode    := E_PuckLockerMode.Enabled,
+        bEnabled := TRUE
     );
 	
 	aNestEnabled 						: ARRAY[1..4] OF BOOL :=
@@ -96,6 +97,15 @@ VAR_GLOBAL PERSISTENT RETAIN
 		TRUE,
 		TRUE
 	];
+	
+// =================================================================
+// KISTLER STATISTICS
+// =================================================================
+
+udiKistlerTotalTested 					: UDINT := 0; // Total number of valid tests completed by the Kistler.
+udiKistlerTotalPass 					: UDINT := 0;// Total number of parts classified as OK by the Kistler.
+udiKistlerTotalFail 					: UDINT := 0;// Total number of parts classified as NOK by the Kistler.
+bResetKistlerStatistics 				: BOOL := FALSE;// HMI command to reset the statistics.
 
 END_VAR]]></Declaration>
   </GVL>

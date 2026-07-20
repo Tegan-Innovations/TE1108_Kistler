@@ -8,6 +8,7 @@ STRUCT
     bEnableEmptyPuckBypass      : BOOL;
     bCmdEmptyPuckBypass         : BOOL;
     bCmdAcknowledgeRemovalFault : BOOL;
+	bEnabled 					: BOOL := TRUE;
 
     bPuckDetected               : BOOL;
     bPuckLocked                 : BOOL;
