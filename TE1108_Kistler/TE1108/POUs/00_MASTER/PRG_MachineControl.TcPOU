@@ -458,7 +458,8 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 					  AND GVL_MASTER.astNestProcessResult[
 							iOperatorNestIndex
 					  ].bPass
-					  AND GVL_MASTER.stSensors.bPartPresent_NEST THEN
+					  AND GVL_MASTER.stSensors.bPartPresent_NEST 
+					  AND NOT bPartRemovedConfirmedForExchange THEN
 		
 					eMode_LED_PASS := E_LEDs_Mode.ON;
 					eMode_LED_Fail := E_LEDs_Mode.OFF;
@@ -2731,24 +2732,37 @@ bOperatorResultFail :=
         iOperatorNestIndex
     ].bFail;
 
-
 // -----------------------------------------------------------------------------
-// Retain the tested-part removal event.
+// Retain operator actions even while the Kistler is processing another nest.
 //
-// The physical removal pulse lasts only one PLC scan.
-// This remains available for the original Puck Locker sequence.
+// Both the nest removal pulse and the reject sensor pulse last only one PLC
+// scan. They must therefore be retained immediately and not only when the
+// exchange state machine reaches the corresponding waiting state.
 // -----------------------------------------------------------------------------
+
+// A processed part was removed from the operator nest.
 IF (
-        eNestState = E_NestState.WAIT_OPERATOR_EXCHANGE
-        OR
-        eOperatorExchangeState =
-            E_OperatorExchangeState.WaitingForPartRemoval
+        bOperatorResultValid
+        OR bPendingOperatorResultPass
+        OR bPendingOperatorResultFail
    )
    AND GVL_MASTER.astNestTracking[
         iOperatorNestIndex
    ].bPartRemovedPulse THEN
 
     bPartRemovedConfirmedForExchange := TRUE;
+
+END_IF
+
+
+// A failed part was placed at the reject sensor.
+IF (
+        bOperatorResultFail
+        OR bPendingOperatorResultFail
+   )
+   AND rtPartPresentReject.Q THEN
+
+    bRejectConfirmedForExchange := TRUE;
 
 END_IF
 
@@ -2776,15 +2790,24 @@ CASE eOperatorExchangeState OF
         //
         // The processed part must be handled before the table may index.
         // --------------------------------------------------------------------
-        IF (
-                eNestState = E_NestState.IDLE
-                OR
-                eNestState = E_NestState.WAIT_OPERATOR_EXCHANGE
-           )
-           AND NOT GVL_MASTER.stNestTable.bNestInMotion
-           AND GVL_MASTER.stNestTable.bNestReadySensor
-           AND GVL_MASTER.stNestTable.bNestLockedSensor
-           AND bOperatorResultValid THEN
+        IF
+			(
+				(
+					eNestState = E_NestState.IDLE
+					OR
+					eNestState = E_NestState.WAIT_OPERATOR_EXCHANGE
+					OR
+					(
+						eNestState = E_NestState.TESTING
+						AND bOperatorResultPass
+					)
+				)
+				AND NOT GVL_MASTER.stNestTable.bNestInMotion
+				AND GVL_MASTER.stNestTable.bNestReadySensor
+				AND GVL_MASTER.stNestTable.bNestLockedSensor
+				AND bOperatorResultValid
+			)
+			THEN
 
             // Latch the result for the entire operator exchange.
             //
@@ -2795,70 +2818,99 @@ CASE eOperatorExchangeState OF
             bPendingOperatorResultFail :=
                 bOperatorResultFail;
 
-            bRejectConfirmedForExchange := FALSE;
+           //bRejectConfirmedForExchange := FALSE;
 
 
-            // -------------------------------------------------------------
-            // The processed part is still present.
-            //
-            // Require a physical removal before continuing.
-            // -------------------------------------------------------------
-            IF GVL_MASTER.stSensors.bPartPresent_NEST THEN
-
-                bPartRemovedConfirmedForExchange := FALSE;
-
-                eOperatorExchangeState :=
-                    E_OperatorExchangeState.WaitingForPartRemoval;
-
-
-            // -------------------------------------------------------------
-            // The processed part is already absent.
-            //
-            // This may occur after fault recovery, machine restart or shift
-            // change.
-            // -------------------------------------------------------------
-            ELSE
-
-                bPartRemovedConfirmedForExchange := TRUE;
-
-
-                // ---------------------------------------------------------
-                // PASS result.
-                // ---------------------------------------------------------
-                IF bOperatorResultPass THEN
-
-                    // With the Puck Locker disabled, there is no puck
-                    // release or replacement sequence.
-                    IF GVL_HMI.stPuckLocker.eMode =
-                        E_PuckLockerMode.Disabled THEN
-
-                        bPartRemovedConfirmedForExchange := FALSE;
-
-                        eOperatorExchangeState :=
-                            E_OperatorExchangeState.ExchangeComplete;
-
-                    ELSE
-
-                        // Original enabled Puck Locker sequence.
-                        eOperatorExchangeState :=
-                            E_OperatorExchangeState.WaitingForPuckRemoval;
-
-                    END_IF
-
-
-                // ---------------------------------------------------------
-                // FAIL result.
-                // ---------------------------------------------------------
-                ELSIF bOperatorResultFail THEN
-
-                    // A failed part must still be confirmed at the reject
-                    // sensor, even when the Puck Locker is disabled.
-                    eOperatorExchangeState :=
-                        E_OperatorExchangeState.WaitingForRejectConfirmation;
-
-                END_IF
-
-            END_IF
+			// -------------------------------------------------------------
+			// The processed part may already have been removed while another
+			// nest was being tested.
+			//
+			// If the operator already loaded a new part, the physical sensor
+			// will be ON again. Therefore, the retained removal event must
+			// take priority over the current sensor state.
+			// -------------------------------------------------------------
+			IF bPartRemovedConfirmedForExchange THEN
+			
+				// ---------------------------------------------------------
+				// PASS result.
+				// ---------------------------------------------------------
+				IF bOperatorResultPass THEN
+			
+					IF GVL_HMI.stPuckLocker.eMode =
+						E_PuckLockerMode.Disabled THEN
+			
+						eOperatorExchangeState :=
+							E_OperatorExchangeState.ExchangeComplete;
+			
+					ELSE
+			
+						eOperatorExchangeState :=
+							E_OperatorExchangeState.WaitingForPuckRemoval;
+			
+					END_IF
+			
+			
+				// ---------------------------------------------------------
+				// FAIL result.
+				// ---------------------------------------------------------
+				ELSIF bOperatorResultFail THEN
+			
+					eOperatorExchangeState :=
+						E_OperatorExchangeState.WaitingForRejectConfirmation;
+			
+				END_IF
+			
+			
+			// -------------------------------------------------------------
+			// No removal event was retained and the processed part is still
+			// physically present.
+			//
+			// Wait for the operator to remove it.
+			// -------------------------------------------------------------
+			ELSIF GVL_MASTER.stSensors.bPartPresent_NEST THEN
+			
+				eOperatorExchangeState :=
+					E_OperatorExchangeState.WaitingForPartRemoval;
+			
+			
+			// -------------------------------------------------------------
+			// The part is already absent, for example after fault recovery
+			// or machine restart.
+			// -------------------------------------------------------------
+			ELSE
+			
+				bPartRemovedConfirmedForExchange := TRUE;
+			
+				// ---------------------------------------------------------
+				// PASS result.
+				// ---------------------------------------------------------
+				IF bOperatorResultPass THEN
+			
+					IF GVL_HMI.stPuckLocker.eMode =
+						E_PuckLockerMode.Disabled THEN
+			
+						eOperatorExchangeState :=
+							E_OperatorExchangeState.ExchangeComplete;
+			
+					ELSE
+			
+						eOperatorExchangeState :=
+							E_OperatorExchangeState.WaitingForPuckRemoval;
+			
+					END_IF
+			
+			
+				// ---------------------------------------------------------
+				// FAIL result.
+				// ---------------------------------------------------------
+				ELSIF bOperatorResultFail THEN
+			
+					eOperatorExchangeState :=
+						E_OperatorExchangeState.WaitingForRejectConfirmation;
+			
+				END_IF
+			
+			END_IF
 
 
         // --------------------------------------------------------------------
@@ -2919,7 +2971,8 @@ CASE eOperatorExchangeState OF
         //
         // Therefore, the part has been removed when the physical sensor
         // becomes FALSE.
-        IF NOT GVL_MASTER.stSensors.bPartPresent_NEST THEN
+        IF bPartRemovedConfirmedForExchange
+   			OR NOT GVL_MASTER.stSensors.bPartPresent_NEST THEN
 
             bPartRemovedConfirmedForExchange := TRUE;
 
@@ -3028,9 +3081,9 @@ CASE eOperatorExchangeState OF
         // 3. The Puck Locker is disabled, or the puck remains present
         //    and locked.
         IF bRejectConfirmedForExchange
-           AND NOT GVL_MASTER.stSensors.bPartPresent_NEST
-           AND
-           (
+			   AND bPartRemovedConfirmedForExchange
+			   AND
+			   (
                 GVL_HMI.stPuckLocker.eMode =
                     E_PuckLockerMode.Disabled
 
