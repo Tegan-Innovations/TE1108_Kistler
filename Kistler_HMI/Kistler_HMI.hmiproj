@@ -688,6 +688,9 @@
     <Content Include="Images\Project\nest_pos_4.PNG">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Images\TeganInfo.png">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Imports\Images\arrow-down-sign-to-navigate.png">
       <SubType>Content</SubType>
     </Content>

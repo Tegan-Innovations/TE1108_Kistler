@@ -22,8 +22,9 @@ VAR_GLOBAL
 	rKistlerLiveDistance 				: REAL;
 	rKistlerLiveForce    				: REAL;
 	
-	
+END_VAR	
 
+VAR_GLOBAL CONSTANT
 // =================================================================
 //                         HMI COLORS 
 // =================================================================
@@ -65,8 +66,19 @@ VAR_GLOBAL
 	nPURPLE								:	DWORD	:=	16#FF800080;
 	nVIOLET								:	DWORD	:=	16#FFEE82EE;
 	nTRANSP								:	DWORD	:=	16#00FFFFFF;	// full transparent WHITE
-	
-/////////////////////////////////////////////////////////////////////////////////////CSV/////////////////////////////////////////////////////////////////////////////////////
+
+// =================================================================
+//                         SYSTEM INFO 
+// =================================================================
+
+	sSoftwareVersion					: STRING := ' 1.0 ';
+	sSoftwareDate						: STRING := '20/07/2026';
+	sTC3Version							: STRING := ' v3.1.4026.22, Runtime v3.1.4026.22 ';
+	sHMIVersion							: STRING := ' 14.13';
+	sSystemName							: STRING := ' Kistler Machine ';
+	sProjectID							: STRING := ' TE 1108' ;
+	sAplication                     	: STRING := ' ';
+	sHMIServer                			: STRING := ' 14.13 ';
 
 END_VAR
 

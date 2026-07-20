@@ -12,18 +12,20 @@ VAR_GLOBAL
 	// TwinSAFE Hardware Terminals (Instances for HMI Diagnostic and Status Mapping)
 	//========================================================================================
 	stTerm_Ek1100		: ST_EK1100;
-	
+	stTerm2_EL6070      : ST_EL6070;	// EtherCAT Terminal, license key FOR TwinCAT 3.1 
+	stTerm3_EL6910		: ST_EL6910;	// TwinSAFE logic
 	stTerm4_EL1918      : ST_EL1918; 	// Term 4 | TwinSAFE 8-Channel Digital Input
 	stTerm5_EL1918      : ST_EL1918; 	// Term 5 | TwinSAFE 8-Channel Digital Input
 	stTerm6_EL1918      : ST_EL1918; 	// Term 6 | TwinSAFE 8-Channel Digital Input
 	
 	stTerm7_EL2904      : ST_EL2904_A; 	// Term 7 | TwinSAFE 4-Channel Digital Output
-	stTerm8_EL2904      : ST_EL2904_A; 	// Term 8 | TwinSAFE 4-Channel Digital Output
+	stTerm8_EL2904      : ST_EL2904_B; 	// Term 8 | TwinSAFE 4-Channel Digital Output
 	
 	stTerm9_EL1809		: ST_EL1809_A;
 	stTerm10_EL1809		: ST_EL1809_B;
 	
 	stTerm11_EL2809     : ST_EL2809_A; 	// Term 11 | TwinSAFE 4-Channel Digital Output
+	stTerm12_EL9410		: ST_EL9410;	// E-Bus Power supply
 	stTerm13_EL2809		: ST_EL2809_B; 	// Term 13 | TwinSAFE 4-Channel Digital Output
 	
 	stTerm14_EL3058		: ST_EL3058; 	// Term 14 | TwinSAFE 4-Channel Digital Output

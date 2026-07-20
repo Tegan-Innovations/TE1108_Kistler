@@ -12,7 +12,7 @@ STRUCT
     bError              	: BOOL; // TRUE if a fault is detected (short-circuit, overload, or FSoE error)
     bReady              	: BOOL; // TRUE if terminal is active and TwinSAFE communication is OK
 	
-	nTerminalState 	AT %I*	: UINT;
+	stTerminalInfo			: 	ST_Terminal_Info;
 	
 END_STRUCT
 END_TYPE]]></Declaration>

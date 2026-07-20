@@ -12,7 +12,7 @@ STRUCT
     bError              	: BOOL; // TRUE if terminal detects a fault or communication error
     bReady              	: BOOL; // TRUE if terminal is operational and communicating properly
 	
-	nTerminalState 	AT %I*	: UINT;
+	stTerminalInfo			: 	ST_Terminal_Info;;
 	
 END_STRUCT
 END_TYPE]]></Declaration>

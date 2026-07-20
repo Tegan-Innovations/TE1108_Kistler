@@ -141,7 +141,7 @@ GVL_MASTER.stStationEvents[0].aEvents[13].sSolution := 'Release both buttons and
 GVL_MASTER.stStationEvents[0].aEvents[20].bFault := TRUE;
 GVL_MASTER.stStationEvents[0].aEvents[20].bCycleStopRequest := FALSE;
 GVL_MASTER.stStationEvents[0].aEvents[20].bMessage := FALSE;
-GVL_MASTER.stStationEvents[0].aEvents[20].bEventFlag := GVL_IO.stTerm4_EL1918.nTerminalState <> 8 
+GVL_MASTER.stStationEvents[0].aEvents[20].bEventFlag := GVL_IO.stTerm4_EL1918.stTerminalInfo.nTerminal_State <> 8 
 														AND GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.SYSTEM_POWER_UP;
 GVL_MASTER.stStationEvents[0].aEvents[20].bEventText := 'Terminal T04 EL1918 not operational';
 GVL_MASTER.stStationEvents[0].aEvents[20].sSolution := 'Check EtherCAT connection, terminal power and TwinSAFE diagnostics';
@@ -151,7 +151,7 @@ GVL_MASTER.stStationEvents[0].aEvents[20].sSolution := 'Check EtherCAT connectio
 GVL_MASTER.stStationEvents[0].aEvents[21].bFault := TRUE;
 GVL_MASTER.stStationEvents[0].aEvents[21].bCycleStopRequest := FALSE;
 GVL_MASTER.stStationEvents[0].aEvents[21].bMessage := FALSE;
-GVL_MASTER.stStationEvents[0].aEvents[21].bEventFlag := GVL_IO.stTerm5_EL1918.nTerminalState <> 8
+GVL_MASTER.stStationEvents[0].aEvents[21].bEventFlag := GVL_IO.stTerm5_EL1918.stTerminalInfo.nTerminal_State <> 8
 														AND GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.SYSTEM_POWER_UP;
 GVL_MASTER.stStationEvents[0].aEvents[21].bEventText := 'Terminal T05 EL1918 not operational';
 GVL_MASTER.stStationEvents[0].aEvents[21].sSolution := 'Check EtherCAT connection, terminal power and TwinSAFE diagnostics';
@@ -161,7 +161,7 @@ GVL_MASTER.stStationEvents[0].aEvents[21].sSolution := 'Check EtherCAT connectio
 GVL_MASTER.stStationEvents[0].aEvents[22].bFault := TRUE;
 GVL_MASTER.stStationEvents[0].aEvents[22].bCycleStopRequest := FALSE;
 GVL_MASTER.stStationEvents[0].aEvents[22].bMessage := FALSE;
-GVL_MASTER.stStationEvents[0].aEvents[22].bEventFlag := GVL_IO.stTerm6_EL1918.nTerminalState <> 8
+GVL_MASTER.stStationEvents[0].aEvents[22].bEventFlag := GVL_IO.stTerm6_EL1918.stTerminalInfo.nTerminal_State <> 8
 														AND GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.SYSTEM_POWER_UP;
 GVL_MASTER.stStationEvents[0].aEvents[22].bEventText := 'Terminal T06 EL1918 not operational';
 GVL_MASTER.stStationEvents[0].aEvents[22].sSolution := 'Check EtherCAT connection, terminal power and TwinSAFE diagnostics';
@@ -171,7 +171,7 @@ GVL_MASTER.stStationEvents[0].aEvents[22].sSolution := 'Check EtherCAT connectio
 GVL_MASTER.stStationEvents[0].aEvents[23].bFault := TRUE;
 GVL_MASTER.stStationEvents[0].aEvents[23].bCycleStopRequest := FALSE;
 GVL_MASTER.stStationEvents[0].aEvents[23].bMessage := FALSE;
-GVL_MASTER.stStationEvents[0].aEvents[23].bEventFlag := GVL_IO.stTerm7_EL2904.nTerminalState <> 8
+GVL_MASTER.stStationEvents[0].aEvents[23].bEventFlag := GVL_IO.stTerm7_EL2904.stTerminalInfo.nTerminal_State <> 8
 														AND GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.SYSTEM_POWER_UP;
 GVL_MASTER.stStationEvents[0].aEvents[23].bEventText := 'Terminal T07 EL2904 not operational';
 GVL_MASTER.stStationEvents[0].aEvents[23].sSolution := 'Check EtherCAT connection, output power and TwinSAFE diagnostics';
@@ -181,7 +181,7 @@ GVL_MASTER.stStationEvents[0].aEvents[23].sSolution := 'Check EtherCAT connectio
 GVL_MASTER.stStationEvents[0].aEvents[24].bFault := TRUE;
 GVL_MASTER.stStationEvents[0].aEvents[24].bCycleStopRequest := FALSE;
 GVL_MASTER.stStationEvents[0].aEvents[24].bMessage := FALSE;
-GVL_MASTER.stStationEvents[0].aEvents[24].bEventFlag := GVL_IO.stTerm8_EL2904.nTerminalState <> 8
+GVL_MASTER.stStationEvents[0].aEvents[24].bEventFlag := GVL_IO.stTerm8_EL2904.stTerminalInfo.nTerminal_State <> 8
 														AND GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.SYSTEM_POWER_UP;
 GVL_MASTER.stStationEvents[0].aEvents[24].bEventText := 'Terminal T08 EL2904 not operational';
 GVL_MASTER.stStationEvents[0].aEvents[24].sSolution := 'Check EtherCAT connection, output power and TwinSAFE diagnostics';
@@ -208,7 +208,7 @@ GVL_MASTER.stStationEvents[0].aEvents[26].sSolution := 'Check EtherCAT connectio
 GVL_MASTER.stStationEvents[0].aEvents[27].bFault := TRUE;
 GVL_MASTER.stStationEvents[0].aEvents[27].bCycleStopRequest := FALSE;
 GVL_MASTER.stStationEvents[0].aEvents[27].bMessage := FALSE;
-GVL_MASTER.stStationEvents[0].aEvents[27].bEventFlag := GVL_IO.stTerm11_EL2809.nTerminalState <> 8
+GVL_MASTER.stStationEvents[0].aEvents[27].bEventFlag := GVL_IO.stTerm11_EL2809.stTerminalInfo.nTerminal_State <> 8
 														AND GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.SYSTEM_POWER_UP;
 GVL_MASTER.stStationEvents[0].aEvents[27].bEventText := 'Terminal T11 EL2809 not operational';
 GVL_MASTER.stStationEvents[0].aEvents[27].sSolution := 'Check EtherCAT connection, terminal power and output supply';
@@ -217,7 +217,7 @@ GVL_MASTER.stStationEvents[0].aEvents[27].sSolution := 'Check EtherCAT connectio
 GVL_MASTER.stStationEvents[0].aEvents[28].bFault := TRUE;
 GVL_MASTER.stStationEvents[0].aEvents[28].bCycleStopRequest := FALSE;
 GVL_MASTER.stStationEvents[0].aEvents[28].bMessage := FALSE;
-GVL_MASTER.stStationEvents[0].aEvents[28].bEventFlag := GVL_IO.stTerm13_EL2809.nTerminalState <> 8
+GVL_MASTER.stStationEvents[0].aEvents[28].bEventFlag := GVL_IO.stTerm13_EL2809.stTerminalInfo.nTerminal_State <> 8
 														AND GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.SYSTEM_POWER_UP;
 GVL_MASTER.stStationEvents[0].aEvents[28].bEventText := 'Terminal T13 EL2809 not operational';
 GVL_MASTER.stStationEvents[0].aEvents[28].sSolution := 'Check EtherCAT connection, terminal power and output supply';

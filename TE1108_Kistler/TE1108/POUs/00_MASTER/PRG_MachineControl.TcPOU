@@ -577,6 +577,8 @@ M_StatusMapping();
 M_LEDsButtons();
 M_NestTableControl();
 
+M_TerminalInfo();
+
 
 ]]></ST>
     </Implementation>
@@ -4669,6 +4671,108 @@ ELSE
 
 
 END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_TerminalInfo" Id="{3b4d5e27-92fa-407f-953a-0393950625d4}">
+      <Declaration><![CDATA[METHOD PRIVATE M_TerminalInfo
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[(*
+    Updates the diagnostic information for all Beckhoff terminals.
+
+    The terminal state value must already be mapped from the EtherCAT
+    terminal diagnostic input to:
+
+        stTerminalInfo.nTerminal_State
+*)
+
+GVL_IO.stTerm_Ek1100.stTerminalInfo.fbTerminalInfo(
+    nTerminalState         := GVL_IO.stTerm_Ek1100.stTerminalInfo.nTerminal_State,
+    sTerminalState         => GVL_IO.stTerm_Ek1100.stTerminalInfo.sTerminalInfo,
+    bTerminalOperational   => GVL_IO.stTerm_Ek1100.stTerminalInfo.bTerminalOperational
+);
+
+GVL_IO.stTerm2_EL6070.stTerminalInfo.fbTerminalInfo(
+    nTerminalState         := GVL_IO.stTerm2_EL6070.stTerminalInfo.nTerminal_State,
+    sTerminalState         => GVL_IO.stTerm2_EL6070.stTerminalInfo.sTerminalInfo,
+    bTerminalOperational   => GVL_IO.stTerm2_EL6070.stTerminalInfo.bTerminalOperational
+);
+
+GVL_IO.stTerm3_EL6910.stTerminalInfo.fbTerminalInfo(
+    nTerminalState         := GVL_IO.stTerm3_EL6910.stTerminalInfo.nTerminal_State,
+    sTerminalState         => GVL_IO.stTerm3_EL6910.stTerminalInfo.sTerminalInfo,
+    bTerminalOperational   => GVL_IO.stTerm3_EL6910.stTerminalInfo.bTerminalOperational
+);
+
+GVL_IO.stTerm4_EL1918.stTerminalInfo.fbTerminalInfo(
+    nTerminalState         := GVL_IO.stTerm4_EL1918.stTerminalInfo.nTerminal_State,
+    sTerminalState         => GVL_IO.stTerm4_EL1918.stTerminalInfo.sTerminalInfo,
+    bTerminalOperational   => GVL_IO.stTerm4_EL1918.stTerminalInfo.bTerminalOperational
+);
+
+GVL_IO.stTerm5_EL1918.stTerminalInfo.fbTerminalInfo(
+    nTerminalState         := GVL_IO.stTerm5_EL1918.stTerminalInfo.nTerminal_State,
+    sTerminalState         => GVL_IO.stTerm5_EL1918.stTerminalInfo.sTerminalInfo,
+    bTerminalOperational   => GVL_IO.stTerm5_EL1918.stTerminalInfo.bTerminalOperational
+);
+
+GVL_IO.stTerm6_EL1918.stTerminalInfo.fbTerminalInfo(
+    nTerminalState         := GVL_IO.stTerm6_EL1918.stTerminalInfo.nTerminal_State,
+    sTerminalState         => GVL_IO.stTerm6_EL1918.stTerminalInfo.sTerminalInfo,
+    bTerminalOperational   => GVL_IO.stTerm6_EL1918.stTerminalInfo.bTerminalOperational
+);
+
+GVL_IO.stTerm7_EL2904.stTerminalInfo.fbTerminalInfo(
+    nTerminalState         := GVL_IO.stTerm7_EL2904.stTerminalInfo.nTerminal_State,
+    sTerminalState         => GVL_IO.stTerm7_EL2904.stTerminalInfo.sTerminalInfo,
+    bTerminalOperational   => GVL_IO.stTerm7_EL2904.stTerminalInfo.bTerminalOperational
+);
+
+GVL_IO.stTerm8_EL2904.stTerminalInfo.fbTerminalInfo(
+    nTerminalState         := GVL_IO.stTerm8_EL2904.stTerminalInfo.nTerminal_State,
+    sTerminalState         => GVL_IO.stTerm8_EL2904.stTerminalInfo.sTerminalInfo,
+    bTerminalOperational   => GVL_IO.stTerm8_EL2904.stTerminalInfo.bTerminalOperational
+);
+
+GVL_IO.stTerm9_EL1809.stTerminalInfo.fbTerminalInfo(
+    nTerminalState         := GVL_IO.stTerm9_EL1809.stTerminalInfo.nTerminal_State,
+    sTerminalState         => GVL_IO.stTerm9_EL1809.stTerminalInfo.sTerminalInfo,
+    bTerminalOperational   => GVL_IO.stTerm9_EL1809.stTerminalInfo.bTerminalOperational
+);
+
+GVL_IO.stTerm10_EL1809.stTerminalInfo.fbTerminalInfo(
+    nTerminalState         := GVL_IO.stTerm10_EL1809.stTerminalInfo.nTerminal_State,
+    sTerminalState         => GVL_IO.stTerm10_EL1809.stTerminalInfo.sTerminalInfo,
+    bTerminalOperational   => GVL_IO.stTerm10_EL1809.stTerminalInfo.bTerminalOperational
+);
+
+GVL_IO.stTerm11_EL2809.stTerminalInfo.fbTerminalInfo(
+    nTerminalState         := GVL_IO.stTerm11_EL2809.stTerminalInfo.nTerminal_State,
+    sTerminalState         => GVL_IO.stTerm11_EL2809.stTerminalInfo.sTerminalInfo,
+    bTerminalOperational   => GVL_IO.stTerm11_EL2809.stTerminalInfo.bTerminalOperational
+);
+
+GVL_IO.stTerm12_EL9410.stTerminalInfo.fbTerminalInfo(
+    nTerminalState         := GVL_IO.stTerm12_EL9410.stTerminalInfo.nTerminal_State,
+    sTerminalState         => GVL_IO.stTerm12_EL9410.stTerminalInfo.sTerminalInfo,
+    bTerminalOperational   => GVL_IO.stTerm12_EL9410.stTerminalInfo.bTerminalOperational
+);
+
+GVL_IO.stTerm13_EL2809.stTerminalInfo.fbTerminalInfo(
+    nTerminalState         := GVL_IO.stTerm13_EL2809.stTerminalInfo.nTerminal_State,
+    sTerminalState         => GVL_IO.stTerm13_EL2809.stTerminalInfo.sTerminalInfo,
+    bTerminalOperational   => GVL_IO.stTerm13_EL2809.stTerminalInfo.bTerminalOperational
+);
+
+GVL_IO.stTerm14_EL3058.stTerminalInfo.fbTerminalInfo(
+    nTerminalState         := GVL_IO.stTerm14_EL3058.stTerminalInfo.nTerminal_State,
+    sTerminalState         => GVL_IO.stTerm14_EL3058.stTerminalInfo.sTerminalInfo,
+    bTerminalOperational   => GVL_IO.stTerm14_EL3058.stTerminalInfo.bTerminalOperational
+);
+
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_UpdateActiveNestPositions" Id="{a175beaf-3ad8-4d7b-8c4f-5074246f2c65}" FolderPath="Nest_Table\">
