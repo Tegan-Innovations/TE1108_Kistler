@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>Kistler_HMI</title>
-  <meta name="tchmi-buildtime" content="2026-07-20T19:04:48">
+  <meta name="tchmi-buildtime" content="2026-07-21T08:37:46">
 
   <!-- target-densitydpi=device-dpi -->
   <meta name="viewport" content="initial-scale=1.0"><script>
@@ -228,8 +228,25 @@
 <script src="/Contents/CSS_JAVA/ManualMode.js" defer=""></script>
 </head>
 <body class="tchmi-body-designer">
-	<div id="HeadMenu" data-tchmi-type="TcHmi.Controls.System.TcHmiContent" data-tchmi-top="0" data-tchmi-left="0" data-tchmi-width="394" data-tchmi-height="100" data-tchmi-left-unit="px" data-tchmi-top-unit="px" data-tchmi-right-unit="%" data-tchmi-bottom-unit="%" data-tchmi-width-unit="px" data-tchmi-height-unit="%" data-tchmi-creator-viewport-height="90" data-tchmi-creator-viewport-width="410" data-tchmi-creator-partial-key="/Contents/Screens/HeadMenu.content">
-<div id="Home_1" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiImage" data-tchmi-height="63" data-tchmi-height-unit="px" data-tchmi-left="5" data-tchmi-left-unit="px" data-tchmi-src="Images/Buttons/HomeButton.png" data-tchmi-top="10" data-tchmi-top-unit="px" data-tchmi-width="60" data-tchmi-width-unit="px" data-tchmi-zindex="1" data-tchmi-is-enabled="%ctrl%Menu_1::IsEnabled%/ctrl%">
+	<div id="Content_Popup_ManualMode_2" data-tchmi-type="TcHmi.Controls.System.TcHmiContent" data-tchmi-top="0" data-tchmi-left="0" data-tchmi-width="480" data-tchmi-height="350" data-tchmi-zindex="2" data-tchmi-creator-partial-key="/Contents/Screens/popups/Content_Popup_Reject_part.content">
+<div id="TcHmiTextblock_1343" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="70" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-text="PUCK WAS REMOVED INCORRECTLY" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width="480" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="200" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-horizontal-alignment="Center" data-tchmi-zindex="2" data-tchmi-text-font-size-unit="%" data-tchmi-text-font-weight="Bold">
+
+
+
+
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-text-color" type="application/json">
+{
+  "color": "rgba(255, 255, 255, 1)"
+}
+</script>
+
+
+</div>
+<div id="TcHmiButton_ManualModeYes_126" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="60" data-tchmi-height-unit="px" data-tchmi-left="70" data-tchmi-left-unit="px" data-tchmi-text="Yes" data-tchmi-top="258" data-tchmi-top-unit="px" data-tchmi-width="150" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="25" data-tchmi-zindex="2" data-tchmi-text-font-weight="Bold" data-tchmi-is-enabled="%s%ADS.PLC1.GVL_HMI.stPuckLocker.bPuckDetected%/s%">
+
 <script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
 [
   {
@@ -238,11 +255,11 @@
       {
         "objectType": "WriteToSymbol",
         "active": true,
-        "symbolExpression": "%ctrl%Main_Region::TargetContent%/ctrl%",
+        "symbolExpression": "%s%ADS.PLC1.GVL_HMI.stPuckLocker.bCmdAcknowledgeRemovalFault%/s%",
         "value": {
           "objectType": "StaticValue",
-          "valueType": "tchmi:framework#/definitions/ContentPath",
-          "value": "Contents/Screens/Main_Kistler.content"
+          "valueType": "tchmi:general#/definitions/BOOL",
+          "value": true
         },
         "asyncWait": true
       }
@@ -251,316 +268,148 @@
 ]
 </script>
 
-<script data-tchmi-target-attribute="data-tchmi-access-config" type="application/json">
-[
-  {
-    "accessright": "operate",
-    "group": "Administrator",
-    "permission": "Allow"
-  },
-  {
-    "accessright": "operate",
-    "group": "Engineer",
-    "permission": "Allow"
-  },
-  {
-    "accessright": "operate",
-    "group": "Operator",
-    "permission": "Deny"
-  },
-  {
-    "accessright": "observe",
-    "group": "Administrator",
-    "permission": "Allow"
-  },
-  {
-    "accessright": "observe",
-    "group": "Engineer",
-    "permission": "Allow"
-  },
-  {
-    "accessright": "observe",
-    "group": "Operator",
-    "permission": "Deny"
-  }
-]
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(237, 235, 235, 1)"
+}
+</script>
+
+
+
+
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-text-color" type="application/json">
+{
+  "color": "rgba(1, 0, 0, 1)"
+}
 </script>
 </div>
-<div id="Menu_1" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiImage" data-tchmi-height="63" data-tchmi-height-unit="px" data-tchmi-left="70" data-tchmi-left-unit="px" data-tchmi-src="Images/Buttons/MenuButton.png" data-tchmi-top="10" data-tchmi-top-unit="px" data-tchmi-width="60" data-tchmi-width-unit="px" data-tchmi-zindex="1" data-tchmi-is-enabled="%i%DisableHeadButtons%/i%">
-<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
-[
-  {
-    "event": "%ctx%owner::Id|EventRegistrationMode=Resolve%/ctx%.onPressed",
-    "actions": [
-      {
-        "objectType": "WriteToSymbol",
-        "active": true,
-        "symbolExpression": "%ctrl%Main_Region::TargetContent%/ctrl%",
-        "value": {
-          "objectType": "StaticValue",
-          "valueType": "tchmi:framework#/definitions/ContentPath",
-          "value": "Contents/Screens/Menu.content"
-        },
-        "asyncWait": true
-      }
-    ]
-  }
-]
+<div id="TcHmiButton_ManualModeNo_126" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="60" data-tchmi-height-unit="px" data-tchmi-text="No" data-tchmi-top="258" data-tchmi-top-unit="px" data-tchmi-width="150" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="25" data-tchmi-zindex="2" data-tchmi-right="70" data-tchmi-text-font-weight="Bold">
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(237, 235, 235, 1)"
+}
 </script>
 
-<script data-tchmi-target-attribute="data-tchmi-access-config" type="application/json">
-[
-  {
-    "accessright": "operate",
-    "group": "Administrator",
-    "permission": "Allow"
-  },
-  {
-    "accessright": "operate",
-    "group": "Engineer",
-    "permission": "Allow"
-  },
-  {
-    "accessright": "operate",
-    "group": "Operator",
-    "permission": "Deny"
-  },
-  {
-    "accessright": "observe",
-    "group": "Administrator",
-    "permission": "Allow"
-  },
-  {
-    "accessright": "observe",
-    "group": "Engineer",
-    "permission": "Allow"
-  },
-  {
-    "accessright": "observe",
-    "group": "Operator",
-    "permission": "Deny"
-  }
-]
+
+
+<script data-tchmi-target-attribute="data-tchmi-border-style" type="application/json">
+{
+  "left": "None",
+  "right": "None",
+  "top": "None",
+  "bottom": "None"
+}
+</script>
+
+
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-border-color" type="application/json">
+{
+  "color": "rgba(0, 0, 0, 1)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-text-color" type="application/json">
+{
+  "color": "rgba(1, 0, 0, 1)"
+}
 </script>
 </div>
-<div id="Alarms_1" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiImage" data-tchmi-height="63" data-tchmi-height-unit="px" data-tchmi-left="135" data-tchmi-left-unit="px" data-tchmi-src="Images/Buttons/AlarmButton.png" data-tchmi-top="10" data-tchmi-top-unit="px" data-tchmi-width="60" data-tchmi-width-unit="px" data-tchmi-zindex="1" data-tchmi-is-enabled="%i%DisableHeadButtons%/i%">
-<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
-[
-  {
-    "event": "%ctx%owner::Id|EventRegistrationMode=Resolve%/ctx%.onPressed",
-    "actions": [
-      {
-        "objectType": "WriteToSymbol",
-        "active": true,
-        "symbolExpression": "%ctrl%Main_Region::TargetContent%/ctrl%",
-        "value": {
-          "objectType": "StaticValue",
-          "valueType": "tchmi:framework#/definitions/ContentPath",
-          "value": "Contents/Screens/Alarms.content"
-        },
-        "asyncWait": true
-      }
-    ]
-  }
-]
+<div id="TcHmiRectangle_popUpBackground_300" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiRectangle" data-tchmi-height="350" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width="480" data-tchmi-width-unit="px" data-tchmi-zindex="0">
+
+
+<script data-tchmi-target-attribute="data-tchmi-border-style" type="application/json">
+{
+  "left": "Solid",
+  "right": "None",
+  "top": "None",
+  "bottom": "None"
+}
 </script>
 
-<script data-tchmi-target-attribute="data-tchmi-access-config" type="application/json">
-[
-  {
-    "accessright": "operate",
-    "group": "Administrator",
-    "permission": "Allow"
-  },
-  {
-    "accessright": "operate",
-    "group": "Engineer",
-    "permission": "Allow"
-  },
-  {
-    "accessright": "operate",
-    "group": "Operator",
-    "permission": "Deny"
-  },
-  {
-    "accessright": "observe",
-    "group": "Administrator",
-    "permission": "Allow"
-  },
-  {
-    "accessright": "observe",
-    "group": "Engineer",
-    "permission": "Allow"
-  },
-  {
-    "accessright": "observe",
-    "group": "Operator",
-    "permission": "Deny"
-  }
-]
-</script>
-</div>
-<div id="IO_1" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiImage" data-tchmi-height="63" data-tchmi-height-unit="px" data-tchmi-left="200" data-tchmi-left-unit="px" data-tchmi-src="Images/Buttons/IOButton.png" data-tchmi-top="10" data-tchmi-top-unit="px" data-tchmi-width="60" data-tchmi-width-unit="px" data-tchmi-zindex="1">
-
-
-
-
-
-
-
-
-<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
-[
-  {
-    "event": "%ctx%owner::Id|EventRegistrationMode=Resolve%/ctx%.onPressed",
-    "actions": [
-      {
-        "objectType": "WriteToSymbol",
-        "active": true,
-        "symbolExpression": "%ctrl%Main_Region::TargetContent%/ctrl%",
-        "value": {
-          "objectType": "StaticValue",
-          "valueType": "tchmi:framework#/definitions/ContentPath",
-          "value": "Contents/IOs/Main_IOs.content"
-        },
-        "asyncWait": true
-      }
-    ]
-  }
-]
+<script data-tchmi-target-attribute="data-tchmi-border-width" type="application/json">
+{
+  "left": 2,
+  "right": 0,
+  "top": 0,
+  "bottom": 0,
+  "leftUnit": "px",
+  "rightUnit": "px",
+  "topUnit": "px",
+  "bottomUnit": "px"
+}
 </script>
 
-<script data-tchmi-target-attribute="data-tchmi-access-config" type="application/json">
-[
-  {
-    "accessright": "operate",
-    "group": "Administrator",
-    "permission": "Allow"
-  },
-  {
-    "accessright": "operate",
-    "group": "Engineer",
-    "permission": "Allow"
-  },
-  {
-    "accessright": "operate",
-    "group": "Operator",
-    "permission": "Deny"
-  },
-  {
-    "accessright": "observe",
-    "group": "Administrator",
-    "permission": "Allow"
-  },
-  {
-    "accessright": "observe",
-    "group": "Engineer",
-    "permission": "Allow"
-  },
-  {
-    "accessright": "observe",
-    "group": "Operator",
-    "permission": "Deny"
-  }
-]
+
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "angle": 0.0,
+  "stopPoints": [
+    {
+      "color": "rgba(108, 19, 0, 1)",
+      "stop": "24.22%"
+    },
+    {
+      "color": "rgba(209, 10, 1, 1)",
+      "stop": "83.02%"
+    },
+    {
+      "color": "rgba(239, 108, 108, 1)",
+      "stop": "100%"
+    }
+  ]
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(0, 0, 0, 0)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-color" type="application/json">
+{
+  "color": "rgba(0, 0, 0, 0)"
+}
 </script>
 </div>
-<div id="Logout_1" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiImage" data-tchmi-height="63" data-tchmi-height-unit="px" data-tchmi-left="265" data-tchmi-left-unit="px" data-tchmi-src="Images/Buttons/LoginButton.png" data-tchmi-top="10" data-tchmi-top-unit="px" data-tchmi-width="60" data-tchmi-width-unit="px" data-tchmi-zindex="1">
-<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
-[
-  {
-    "event": "%ctx%owner::Id|EventRegistrationMode=Resolve%/ctx%.onPressed",
-    "actions": [
-      {
-        "objectType": "WriteToSymbol",
-        "active": true,
-        "symbolExpression": "%ctrl%Main_Popup::TargetFile%/ctrl%",
-        "value": {
-          "objectType": "StaticValue",
-          "valueType": "tchmi:framework#/definitions/TcHmi.Controls.System.TcHmiPopup.TargetFile",
-          "value": {
-            "path": "Contents/Screens/popups/Content_Popup_Logout.content"
-          }
-        },
-        "asyncWait": true
-      },
-      {
-        "objectType": "ControlApiFunction",
-        "active": true,
-        "control": "Main_Popup",
-        "fn": "open",
-        "asyncWait": true
-      }
-    ]
-  }
-]
-</script>
-</div>
-<div id="ShutDown_1" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiImage" data-tchmi-height="63" data-tchmi-height-unit="px" data-tchmi-left="330" data-tchmi-left-unit="px" data-tchmi-src="Images/Buttons/Shutdown_Box_Red.png" data-tchmi-top="10" data-tchmi-top-unit="px" data-tchmi-width="60" data-tchmi-width-unit="px" data-tchmi-zindex="1" data-tchmi-is-enabled="%i%DisableHeadButtons%/i%">
-
-<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
-[
-  {
-    "event": "%ctx%owner::Id|EventRegistrationMode=Resolve%/ctx%.onPressed",
-    "actions": [
-      {
-        "objectType": "WriteToSymbol",
-        "active": true,
-        "symbolExpression": "%ctrl%Main_Popup::TargetFile%/ctrl%",
-        "value": {
-          "objectType": "StaticValue",
-          "valueType": "tchmi:framework#/definitions/TcHmi.Controls.System.TcHmiPopup.TargetFile",
-          "value": {
-            "path": "Contents/Screens/popups/Content_Popup_Shutdown.content"
-          }
-        },
-        "asyncWait": true
-      },
-      {
-        "objectType": "ControlApiFunction",
-        "active": true,
-        "control": "Main_Popup",
-        "fn": "open",
-        "asyncWait": true
-      }
-    ]
-  }
-]
+<div id="TcHmiTextblock_1342" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="100" data-tchmi-height-unit="px" data-tchmi-left="40" data-tchmi-left-unit="px" data-tchmi-text="Please, put the PUCK back and call the SUPERVISOR" data-tchmi-top="108" data-tchmi-top-unit="px" data-tchmi-width="400" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-size="200" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-horizontal-alignment="Center" data-tchmi-zindex="2" data-tchmi-text-font-size-unit="%" data-tchmi-text-font-weight="Bold">
+<script data-tchmi-target-attribute="data-tchmi-text-color" type="application/json">
+{
+  "color": "rgba(0, 0, 0, 1)"
+}
 </script>
 
-<script data-tchmi-target-attribute="data-tchmi-access-config" type="application/json">
-[
-  {
-    "accessright": "operate",
-    "group": "Administrator",
-    "permission": "Allow"
-  },
-  {
-    "accessright": "operate",
-    "group": "Engineer",
-    "permission": "Allow"
-  },
-  {
-    "accessright": "operate",
-    "group": "Operator",
-    "permission": "Deny"
-  },
-  {
-    "accessright": "observe",
-    "group": "Administrator",
-    "permission": "Allow"
-  },
-  {
-    "accessright": "observe",
-    "group": "Engineer",
-    "permission": "Allow"
-  },
-  {
-    "accessright": "observe",
-    "group": "Operator",
-    "permission": "Deny"
-  }
-]
+
+
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(237, 235, 235, 1)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-radius" type="application/json">
+{
+  "topLeft": 20.0,
+  "topRight": 20.0,
+  "bottomLeft": 20.0,
+  "bottomRight": 20.0,
+  "topLeftUnit": "px",
+  "topRightUnit": "px",
+  "bottomLeftUnit": "px",
+  "bottomRightUnit": "px"
+}
 </script>
 </div>
 </div>

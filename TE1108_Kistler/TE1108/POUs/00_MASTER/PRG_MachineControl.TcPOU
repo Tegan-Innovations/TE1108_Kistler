@@ -159,6 +159,8 @@ VAR
 	bHMIManualModeRequest 		: BOOL := FALSE;
 	rtHMIManualModeRequest 		: R_TRIG;
 	i_bHMIManualModeRequest		: INT;
+	fbLocalSystemTime 			: FB_LocalSystemTime;
+	bDataHistoryResetActive 	: BOOL := FALSE;
 	
 	
 	E_ProcessCycleState			: INT;
@@ -175,7 +177,8 @@ VAR
 
 
 	
-	END_VAR
+		iDataHistoryResetIndex: INT;
+END_VAR
 
 
 ]]></Declaration>
@@ -602,155 +605,12 @@ M_GuideCylinderControl(
 
 M_KistlerConfig_Input();
 
-// Keep the Data History write index inside the valid array range.
-IF (GVL_HMI.iDataHistoryWriteIndex < 1)
-   OR (GVL_HMI.iDataHistoryWriteIndex > 100) THEN
-
-    GVL_HMI.iDataHistoryWriteIndex := 1;
-
-END_IF
-// =========================================================
-// KISTLER STATISTICS AND DATA HISTORY
-// =========================================================
-
-// Detect each completed Kistler test only once.
-rtKistlerResultDone(
-    CLK := stKistler_Status.bDone
+fbLocalSystemTime(
+    bEnable := TRUE,
+    dwCycle := 1
 );
 
-IF rtKistlerResultDone.Q THEN
-
-    // -----------------------------------------------------
-    // Update statistics.
-    // -----------------------------------------------------
-    IF stKistler_Status.bPartOK THEN
-
-        GVL_HMI.udiKistlerTotalPass :=
-            GVL_HMI.udiKistlerTotalPass + 1;
-
-    ELSIF stKistler_Status.bPartNOK THEN
-
-        GVL_HMI.udiKistlerTotalFail :=
-            GVL_HMI.udiKistlerTotalFail + 1;
-
-    END_IF
-
-    // -----------------------------------------------------
-    // Safely map the nest enum to the array index.
-    // Never use eCurrentNestPos directly as an array index.
-    // -----------------------------------------------------
-    CASE eCurrentNestPos OF
-
-        E_NestPosition.Position_1:
-            iDataHistoryNestIndex := 1;
-
-        E_NestPosition.Position_2:
-            iDataHistoryNestIndex := 2;
-
-        E_NestPosition.Position_3:
-            iDataHistoryNestIndex := 3;
-
-        E_NestPosition.Position_4:
-            iDataHistoryNestIndex := 4;
-
-    ELSE
-        iDataHistoryNestIndex := 0;
-
-    END_CASE
-
-    // -----------------------------------------------------
-    // Store the completed test only when the nest is valid.
-    // -----------------------------------------------------
-    IF (iDataHistoryNestIndex >= 1)
-       AND (iDataHistoryNestIndex <= 4) THEN
-
-        GVL_HMI.aDataHistoryHMI[
-            GVL_HMI.iDataHistoryWriteIndex
-        ].iNestIndex :=
-            iDataHistoryNestIndex;
-
-        GVL_HMI.aDataHistoryHMI[
-            GVL_HMI.iDataHistoryWriteIndex
-        ].eResult :=
-            GVL_HMI.aKistlerNestResult[
-                iDataHistoryNestIndex
-            ].eResult;
-
-        GVL_HMI.aDataHistoryHMI[
-            GVL_HMI.iDataHistoryWriteIndex
-        ].rForce :=
-            GVL_HMI.aKistlerNestResult[
-                iDataHistoryNestIndex
-            ].rForce;
-
-        GVL_HMI.aDataHistoryHMI[
-            GVL_HMI.iDataHistoryWriteIndex
-        ].rDistance :=
-            GVL_HMI.aKistlerNestResult[
-                iDataHistoryNestIndex
-            ].rDistance;
-
-        // Move to the next history row.
-        GVL_HMI.iDataHistoryWriteIndex :=
-            GVL_HMI.iDataHistoryWriteIndex + 1;
-
-        // Circular history: overwrite the oldest row after row 100.
-        IF GVL_HMI.iDataHistoryWriteIndex > 100 THEN
-
-            GVL_HMI.iDataHistoryWriteIndex := 1;
-
-        END_IF
-
-    END_IF
-
-END_IF
-
-// =========================================================
-// HMI STATISTICS MAPPING
-// =========================================================
-
-// Map the internal counters to the DataGrid row.
-GVL_HMI.aStatisticsHMI[1].udiTotalTested :=
-    GVL_HMI.udiKistlerTotalTested;
-
-GVL_HMI.aStatisticsHMI[1].udiGoodParts :=
-    GVL_HMI.udiKistlerTotalPass;
-
-GVL_HMI.aStatisticsHMI[1].udiBadParts :=
-    GVL_HMI.udiKistlerTotalFail;
-
-// Calculate the process efficiency.
-IF GVL_HMI.aStatisticsHMI[1].udiTotalTested > 0 THEN
-
-    GVL_HMI.aStatisticsHMI[1].rEfficiency :=
-        UDINT_TO_REAL(
-            GVL_HMI.aStatisticsHMI[1].udiGoodParts
-        ) * 100.0 /
-        UDINT_TO_REAL(
-            GVL_HMI.aStatisticsHMI[1].udiTotalTested
-        );
-
-ELSE
-
-    GVL_HMI.aStatisticsHMI[1].rEfficiency := 0.0;
-
-END_IF
-
-// =========================================================
-// HMI STATISTICS RESET
-// =========================================================
-
-IF GVL_HMI.aStatisticsHMI[1].bReset THEN
-
-    GVL_HMI.udiKistlerTotalPass := 0;
-    GVL_HMI.udiKistlerTotalFail := 0;
-    GVL_HMI.udiKistlerTotalTested := 0;
-
-    GVL_HMI.aStatisticsHMI[1].bReset := FALSE;
-
-END_IF
-
-
+M_UpdateStatisticsAndHistory();
 
 // Update machine status from Kistler status
 M_StatusMapping();
@@ -5513,27 +5373,301 @@ END_VAR
         <ST><![CDATA[// Puck Locker is considered permissive when disabled,
 // or when enabled without any latched locker fault.
 GVL_MASTER.stPuckLocker.bMachinePermissive :=
-    ( GVL_HMI.stPuckLocker.eMode = E_PuckLockerMode.Disabled )
-    OR (
+    (GVL_HMI.stPuckLocker.eMode = E_PuckLockerMode.Disabled)
+    OR
+    (
         NOT GVL_MASTER.stPuckLocker.bUnexpectedRemovalFault
         AND NOT GVL_MASTER.stPuckLocker.bPuckSensorMismatch
-        AND GVL_MASTER.stPuckLocker.eState <> E_PuckLockerState.UnexpectedPuckRemovalFault
+        AND GVL_MASTER.stPuckLocker.eState
+            <> E_PuckLockerState.UnexpectedPuckRemovalFault
     );
 
-// Index movement uses the same basic permissive.
-// Keeping a separate variable allows additional table-specific
-// interlocks to be added later.
-IF GVL_HMI.stPuckLocker.eMode = E_PuckLockerMode.Disabled THEN
 
-    // Without the Puck Locker, a part that arrived at the operator
-    // position must be removed before the next table index.
-    GVL_MASTER.stPuckLocker.bIndexPermissive := GVL_MASTER.stPuckLocker.bMachinePermissive AND NOT bPartRemovalRequiredNoLocker;
+// The table can index only after the complete operator-exchange
+// sequence has finished.
+//
+// PASS:
+// Part removed from nest -> exchange complete.
+//
+// FAIL:
+// Part removed from nest -> reject sensor confirmed
+// -> exchange complete.
+GVL_MASTER.stPuckLocker.bIndexPermissive :=
+    GVL_MASTER.stPuckLocker.bMachinePermissive
+    AND bOperatorExchangeComplete;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="M_UpdateStatisticsAndHistory" Id="{00ee633c-8762-44a1-a124-fd33218f5608}">
+      <Declaration><![CDATA[METHOD M_UpdateStatisticsAndHistory
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// =========================================================
+// LOCAL SYSTEM TIME
+// =========================================================
+
+// Update the local system time cyclically.
+fbLocalSystemTime(
+    bEnable := TRUE,
+    dwCycle := 1
+);
+
+
+// =========================================================
+// DATA HISTORY INDEX VALIDATION
+// =========================================================
+
+IF (GVL_HMI.iDataHistoryWriteIndex < 1)
+   OR (GVL_HMI.iDataHistoryWriteIndex > 2000) THEN
+
+    GVL_HMI.iDataHistoryWriteIndex := 1;
+
+END_IF
+
+
+// =========================================================
+// DETECT COMPLETED KISTLER TEST
+// =========================================================
+
+rtKistlerResultDone(
+    CLK := stKistler_Status.bDone
+);
+
+
+// Do not write new history entries while the history is
+// being cleared.
+IF rtKistlerResultDone.Q
+   AND NOT bDataHistoryResetActive THEN
+
+    // =====================================================
+    // STATISTICS
+    // =====================================================
+
+    IF stKistler_Status.bPartOK THEN
+
+        GVL_HMI.udiKistlerTotalTested :=
+            GVL_HMI.udiKistlerTotalTested + 1;
+
+        GVL_HMI.udiKistlerTotalPass :=
+            GVL_HMI.udiKistlerTotalPass + 1;
+
+    ELSIF stKistler_Status.bPartNOK THEN
+
+        GVL_HMI.udiKistlerTotalTested :=
+            GVL_HMI.udiKistlerTotalTested + 1;
+
+        GVL_HMI.udiKistlerTotalFail :=
+            GVL_HMI.udiKistlerTotalFail + 1;
+
+    END_IF
+
+
+    // =====================================================
+    // SAFE NEST POSITION MAPPING
+    // =====================================================
+
+    CASE eCurrentNestPos OF
+
+        E_NestPosition.Position_1:
+            iDataHistoryNestIndex := 1;
+
+        E_NestPosition.Position_2:
+            iDataHistoryNestIndex := 2;
+
+        E_NestPosition.Position_3:
+            iDataHistoryNestIndex := 3;
+
+        E_NestPosition.Position_4:
+            iDataHistoryNestIndex := 4;
+
+    ELSE
+
+        iDataHistoryNestIndex := 0;
+
+    END_CASE
+
+
+    // =====================================================
+    // STORE DATA HISTORY ENTRY
+    // =====================================================
+
+    IF (iDataHistoryNestIndex >= 1)
+       AND (iDataHistoryNestIndex <= 4) THEN
+
+        // Nest.
+        GVL_HMI.aDataHistoryHMI[
+            GVL_HMI.iDataHistoryWriteIndex
+        ].iNestIndex :=
+            iDataHistoryNestIndex;
+
+
+        // Result.
+        IF stKistler_Status.bPartOK THEN
+
+            GVL_HMI.aDataHistoryHMI[
+                GVL_HMI.iDataHistoryWriteIndex
+            ].sResult := 'PASS';
+
+        ELSIF stKistler_Status.bPartNOK THEN
+
+            GVL_HMI.aDataHistoryHMI[
+                GVL_HMI.iDataHistoryWriteIndex
+            ].sResult := 'FAIL';
+
+        ELSE
+
+            GVL_HMI.aDataHistoryHMI[
+                GVL_HMI.iDataHistoryWriteIndex
+            ].sResult := '';
+
+        END_IF
+
+
+        // Force.
+        GVL_HMI.aDataHistoryHMI[
+            GVL_HMI.iDataHistoryWriteIndex
+        ].rForce :=
+            GVL_HMI.aKistlerNestResult[
+                iDataHistoryNestIndex
+            ].rForce;
+
+
+        // Distance.
+        GVL_HMI.aDataHistoryHMI[
+            GVL_HMI.iDataHistoryWriteIndex
+        ].rDistance :=
+            GVL_HMI.aKistlerNestResult[
+                iDataHistoryNestIndex
+            ].rDistance;
+
+
+        // Date and time.
+        GVL_HMI.aDataHistoryHMI[
+            GVL_HMI.iDataHistoryWriteIndex
+        ].dtTimeStamp :=
+            SYSTEMTIME_TO_DT(
+                fbLocalSystemTime.systemTime
+            );
+
+
+        // Move to the next history position.
+        GVL_HMI.iDataHistoryWriteIndex :=
+            GVL_HMI.iDataHistoryWriteIndex + 1;
+
+
+        // Circular history.
+        IF GVL_HMI.iDataHistoryWriteIndex > 2000 THEN
+
+            GVL_HMI.iDataHistoryWriteIndex := 1;
+
+        END_IF
+
+    END_IF
+
+END_IF
+
+
+// =========================================================
+// HMI STATISTICS MAPPING
+// =========================================================
+
+GVL_HMI.aStatisticsHMI[1].udiTotalTested :=
+    GVL_HMI.udiKistlerTotalTested;
+
+GVL_HMI.aStatisticsHMI[1].udiGoodParts :=
+    GVL_HMI.udiKistlerTotalPass;
+
+GVL_HMI.aStatisticsHMI[1].udiBadParts :=
+    GVL_HMI.udiKistlerTotalFail;
+
+
+// Calculate efficiency.
+IF GVL_HMI.aStatisticsHMI[1].udiTotalTested > 0 THEN
+
+    GVL_HMI.aStatisticsHMI[1].rEfficiency :=
+        UDINT_TO_REAL(
+            GVL_HMI.aStatisticsHMI[1].udiGoodParts
+        )
+        * 100.0
+        /
+        UDINT_TO_REAL(
+            GVL_HMI.aStatisticsHMI[1].udiTotalTested
+        );
 
 ELSE
 
-    // With the Puck Locker enabled, use the complete operator-exchange
-    // sequence, including puck disposition and reject confirmation.
-    GVL_MASTER.stPuckLocker.bIndexPermissive := GVL_MASTER.stPuckLocker.bMachinePermissive AND bOperatorExchangeComplete;
+    GVL_HMI.aStatisticsHMI[1].rEfficiency := 0.0;
+
+END_IF
+
+
+// =========================================================
+// START STATISTICS AND HISTORY RESET
+// =========================================================
+
+IF GVL_HMI.aStatisticsHMI[1].bReset
+   AND NOT bDataHistoryResetActive THEN
+
+    // Reset statistics.
+    GVL_HMI.udiKistlerTotalTested := 0;
+    GVL_HMI.udiKistlerTotalPass := 0;
+    GVL_HMI.udiKistlerTotalFail := 0;
+
+    // Start history clearing.
+    iDataHistoryResetIndex := 1;
+    bDataHistoryResetActive := TRUE;
+
+    // Clear the HMI request.
+    GVL_HMI.aStatisticsHMI[1].bReset := FALSE;
+
+END_IF
+
+
+// =========================================================
+// CLEAR ONE HISTORY ENTRY PER PLC CYCLE
+// =========================================================
+
+// Clearing one entry per scan avoids processing all 2000
+// structures in a single PLC cycle.
+IF bDataHistoryResetActive THEN
+
+    GVL_HMI.aDataHistoryHMI[
+        iDataHistoryResetIndex
+    ].iNestIndex := 0;
+
+    GVL_HMI.aDataHistoryHMI[
+        iDataHistoryResetIndex
+    ].sResult := '';
+
+    GVL_HMI.aDataHistoryHMI[
+        iDataHistoryResetIndex
+    ].rDistance := 0.0;
+
+    GVL_HMI.aDataHistoryHMI[
+        iDataHistoryResetIndex
+    ].rForce := 0.0;
+
+    GVL_HMI.aDataHistoryHMI[
+        iDataHistoryResetIndex
+    ].dtTimeStamp :=
+        DT#1970-01-01-00:00:00;
+
+
+    IF iDataHistoryResetIndex < 2000 THEN
+
+        iDataHistoryResetIndex :=
+            iDataHistoryResetIndex + 1;
+
+    ELSE
+
+        // History clearing completed.
+        GVL_HMI.iDataHistoryWriteIndex := 1;
+
+        iDataHistoryResetIndex := 1;
+        bDataHistoryResetActive := FALSE;
+
+    END_IF
 
 END_IF]]></ST>
       </Implementation>

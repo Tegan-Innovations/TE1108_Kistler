@@ -3,11 +3,11 @@
   <DUT Name="ST_DataHistoryHMI" Id="{6478a192-85c4-42dd-85bd-7d4a007ddc4a}">
     <Declaration><![CDATA[TYPE ST_DataHistoryHMI :
 STRUCT
-    iNestIndex : INT;
-    eResult    : E_HMIKistlerResult;
-    rDistance  : REAL;
-    rForce     : REAL;
-    dtTimeStamp : DATE_AND_TIME;
+    iNestIndex 		: INT;
+    sResult 		: STRING(10);
+    rDistance  		: REAL;
+    rForce     		: REAL;
+    dtTimeStamp 	: DATE_AND_TIME;
 END_STRUCT
 END_TYPE]]></Declaration>
   </DUT>

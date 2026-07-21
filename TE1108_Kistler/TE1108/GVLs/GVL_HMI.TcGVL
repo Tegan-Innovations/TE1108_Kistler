@@ -11,7 +11,7 @@ VAR_GLOBAL
 	
 	// Data source used by the Statistics HMI DataGrid.
 	aStatisticsHMI 							: ARRAY[1..1] OF ST_StatisticsHMI;
-	aDataHistoryHMI 						: ARRAY[1..100] OF ST_DataHistoryHMI;
+
 	
 // =================================================================
 //                         HMI COMMANDS 
@@ -111,6 +111,7 @@ udiKistlerTotalPass 					: UDINT := 0;// Total number of parts classified as OK 
 udiKistlerTotalFail 					: UDINT := 0;// Total number of parts classified as NOK by the Kistler.
 bResetKistlerStatistics 				: BOOL := FALSE;// HMI command to reset the statistics.
 iDataHistoryWriteIndex 					: INT := 1;
+aDataHistoryHMI 						: ARRAY[1..1000] OF ST_DataHistoryHMI;
 
 
 END_VAR]]></Declaration>

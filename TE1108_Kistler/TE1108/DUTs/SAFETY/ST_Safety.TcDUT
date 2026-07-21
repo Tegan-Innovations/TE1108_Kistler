@@ -26,6 +26,9 @@ STRUCT
 	bDoorFlapRightCH1		AT %I*	: BOOL;
 	bDoorFlapRightCH2		AT %I*	: BOOL;
 	
+	bEStopCH1				AT %I*	: BOOL;
+	bEStopCH2				AT %I*	: BOOL;
+	
 	
 
 END_STRUCT
