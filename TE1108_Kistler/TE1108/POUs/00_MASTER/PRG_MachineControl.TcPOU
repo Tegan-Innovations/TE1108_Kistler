@@ -30,6 +30,9 @@ VAR
 	
 	bFaultResetRequested 				: BOOL := FALSE;
 	
+	dtCurrentLocalTime 					: DATE_AND_TIME;
+	iDataHistoryNestIndex 				: INT := 0;
+	
 	
     // =========================================================
     // PROCESS CYCLE CONTROL
@@ -598,6 +601,156 @@ M_GuideCylinderControl(
 );
 
 M_KistlerConfig_Input();
+
+// Keep the Data History write index inside the valid array range.
+IF (GVL_HMI.iDataHistoryWriteIndex < 1)
+   OR (GVL_HMI.iDataHistoryWriteIndex > 100) THEN
+
+    GVL_HMI.iDataHistoryWriteIndex := 1;
+
+END_IF
+// =========================================================
+// KISTLER STATISTICS AND DATA HISTORY
+// =========================================================
+
+// Detect each completed Kistler test only once.
+rtKistlerResultDone(
+    CLK := stKistler_Status.bDone
+);
+
+IF rtKistlerResultDone.Q THEN
+
+    // -----------------------------------------------------
+    // Update statistics.
+    // -----------------------------------------------------
+    IF stKistler_Status.bPartOK THEN
+
+        GVL_HMI.udiKistlerTotalPass :=
+            GVL_HMI.udiKistlerTotalPass + 1;
+
+    ELSIF stKistler_Status.bPartNOK THEN
+
+        GVL_HMI.udiKistlerTotalFail :=
+            GVL_HMI.udiKistlerTotalFail + 1;
+
+    END_IF
+
+    // -----------------------------------------------------
+    // Safely map the nest enum to the array index.
+    // Never use eCurrentNestPos directly as an array index.
+    // -----------------------------------------------------
+    CASE eCurrentNestPos OF
+
+        E_NestPosition.Position_1:
+            iDataHistoryNestIndex := 1;
+
+        E_NestPosition.Position_2:
+            iDataHistoryNestIndex := 2;
+
+        E_NestPosition.Position_3:
+            iDataHistoryNestIndex := 3;
+
+        E_NestPosition.Position_4:
+            iDataHistoryNestIndex := 4;
+
+    ELSE
+        iDataHistoryNestIndex := 0;
+
+    END_CASE
+
+    // -----------------------------------------------------
+    // Store the completed test only when the nest is valid.
+    // -----------------------------------------------------
+    IF (iDataHistoryNestIndex >= 1)
+       AND (iDataHistoryNestIndex <= 4) THEN
+
+        GVL_HMI.aDataHistoryHMI[
+            GVL_HMI.iDataHistoryWriteIndex
+        ].iNestIndex :=
+            iDataHistoryNestIndex;
+
+        GVL_HMI.aDataHistoryHMI[
+            GVL_HMI.iDataHistoryWriteIndex
+        ].eResult :=
+            GVL_HMI.aKistlerNestResult[
+                iDataHistoryNestIndex
+            ].eResult;
+
+        GVL_HMI.aDataHistoryHMI[
+            GVL_HMI.iDataHistoryWriteIndex
+        ].rForce :=
+            GVL_HMI.aKistlerNestResult[
+                iDataHistoryNestIndex
+            ].rForce;
+
+        GVL_HMI.aDataHistoryHMI[
+            GVL_HMI.iDataHistoryWriteIndex
+        ].rDistance :=
+            GVL_HMI.aKistlerNestResult[
+                iDataHistoryNestIndex
+            ].rDistance;
+
+        // Move to the next history row.
+        GVL_HMI.iDataHistoryWriteIndex :=
+            GVL_HMI.iDataHistoryWriteIndex + 1;
+
+        // Circular history: overwrite the oldest row after row 100.
+        IF GVL_HMI.iDataHistoryWriteIndex > 100 THEN
+
+            GVL_HMI.iDataHistoryWriteIndex := 1;
+
+        END_IF
+
+    END_IF
+
+END_IF
+
+// =========================================================
+// HMI STATISTICS MAPPING
+// =========================================================
+
+// Map the internal counters to the DataGrid row.
+GVL_HMI.aStatisticsHMI[1].udiTotalTested :=
+    GVL_HMI.udiKistlerTotalTested;
+
+GVL_HMI.aStatisticsHMI[1].udiGoodParts :=
+    GVL_HMI.udiKistlerTotalPass;
+
+GVL_HMI.aStatisticsHMI[1].udiBadParts :=
+    GVL_HMI.udiKistlerTotalFail;
+
+// Calculate the process efficiency.
+IF GVL_HMI.aStatisticsHMI[1].udiTotalTested > 0 THEN
+
+    GVL_HMI.aStatisticsHMI[1].rEfficiency :=
+        UDINT_TO_REAL(
+            GVL_HMI.aStatisticsHMI[1].udiGoodParts
+        ) * 100.0 /
+        UDINT_TO_REAL(
+            GVL_HMI.aStatisticsHMI[1].udiTotalTested
+        );
+
+ELSE
+
+    GVL_HMI.aStatisticsHMI[1].rEfficiency := 0.0;
+
+END_IF
+
+// =========================================================
+// HMI STATISTICS RESET
+// =========================================================
+
+IF GVL_HMI.aStatisticsHMI[1].bReset THEN
+
+    GVL_HMI.udiKistlerTotalPass := 0;
+    GVL_HMI.udiKistlerTotalFail := 0;
+    GVL_HMI.udiKistlerTotalTested := 0;
+
+    GVL_HMI.aStatisticsHMI[1].bReset := FALSE;
+
+END_IF
+
+
 
 // Update machine status from Kistler status
 M_StatusMapping();

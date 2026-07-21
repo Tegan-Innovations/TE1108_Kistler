@@ -9,6 +9,10 @@ VAR_GLOBAL
 	ePowerCmd : E_PLC_Power := E_PLC_Power.Idle;
 	aKistlerNestResult : ARRAY[1..4] OF ST_HMIKistlerResult;
 	
+	// Data source used by the Statistics HMI DataGrid.
+	aStatisticsHMI 							: ARRAY[1..1] OF ST_StatisticsHMI;
+	aDataHistoryHMI 						: ARRAY[1..100] OF ST_DataHistoryHMI;
+	
 // =================================================================
 //                         HMI COMMANDS 
 // =================================================================
@@ -106,6 +110,8 @@ udiKistlerTotalTested 					: UDINT := 0; // Total number of valid tests complete
 udiKistlerTotalPass 					: UDINT := 0;// Total number of parts classified as OK by the Kistler.
 udiKistlerTotalFail 					: UDINT := 0;// Total number of parts classified as NOK by the Kistler.
 bResetKistlerStatistics 				: BOOL := FALSE;// HMI command to reset the statistics.
+iDataHistoryWriteIndex 					: INT := 1;
+
 
 END_VAR]]></Declaration>
   </GVL>

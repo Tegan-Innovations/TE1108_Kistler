@@ -93,6 +93,12 @@
     <Compile Include="DUTs\HMI\ST_AlarmHistory.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\HMI\ST_DataHistoryHMI.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DUTs\HMI\ST_StatisticsHMI.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="DUTs\HMI\ST_StatusBanner.TcDUT">
       <SubType>Code</SubType>
     </Compile>
