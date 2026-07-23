@@ -4,7 +4,7 @@
     <Declaration><![CDATA[TYPE ST_EL1918_B :
 STRUCT
 	//--------------------------------------------------------------------------------------------------------
-	sTerminalName                                           :   STRING(200):= 'EL1918 | 8-Channel Safety Digital Input';
+	sTerminalName                  :   STRING(200):= 'EL1918 | 8-Channel Safety Digital Input';
     //============================================================================================================================	
 	// TERMINAL - EL1918 8-Channel Digital Input Terminal 	(Term 5)
 

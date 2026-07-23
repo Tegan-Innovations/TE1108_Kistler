@@ -12,6 +12,7 @@ STRUCT
 	bMainDoorClosed			AT %I*	: BOOL; // 
 	bMachineStopped			AT %Q*	: BOOL;  //
 	bMainDoorLocked			AT %I*	: BOOL;
+	bMainDoorfeedback				: BOOL;
 	bMainDoorOpenned		AT %I*	: BOOL;
 	bAirSupplyEnabled		AT %Q*	: BOOL;
 	bProcessTest			AT %Q*	: BOOL;
@@ -28,6 +29,10 @@ STRUCT
 	
 	bEStopCH1				AT %I*	: BOOL;
 	bEStopCH2				AT %I*	: BOOL;
+	
+	bSafetyRelayIndraDrive 	AT %I*	: BOOL;
+	bIndraDriveEStop      	AT %I*	: BOOL;
+	bSafetyRelayEStop     	AT %I*	: BOOL;
 	
 	
 

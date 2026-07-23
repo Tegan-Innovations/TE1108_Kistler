@@ -107,6 +107,12 @@ IF fbLocalTime.bValid THEN
 
 END_IF
 
+// =================================================================
+// ENABLE HMI BUTTONS
+// =================================================================
+
+GVL_HMI.bEnableSettings := GVL_Master.stMachineStatus.eMachineState = E_MachineState.STOPPED;
+GVL_HMI.bEnableManual 	:= GVL_Master.stMachineStatus.eMachineState = E_MachineState.SYSTEM_READY_TO_START;
 
 // =================================================================
 // ALARM TRIGGER TEST BLOCK (EDGE DETECTION)

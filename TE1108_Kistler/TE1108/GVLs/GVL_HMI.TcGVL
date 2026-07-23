@@ -22,9 +22,12 @@ VAR_GLOBAL
 
 	iNestRotationAngle 					: INT;
 	iNestPositionTesting 				: INT;
-	
 	rKistlerLiveDistance 				: REAL;
 	rKistlerLiveForce    				: REAL;
+	bShowRejectPopup 					: BOOL;
+	
+	bEnableSettings						: BOOL;
+	bEnableManual						: BOOL;
 	
 END_VAR	
 

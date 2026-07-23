@@ -8,7 +8,7 @@ VAR
     // =========================================================
 	tonSys_Init           				: TON := (PT := T#8S);    // Initialization pulse timer
     tonSys_InitTimeout    				: TON := (PT := T#15S);   // Initialization timeout fault timer    : TON := (PT := T#15S);   // Initialization timeout fault timer
-	tonTimeout_testing    				: TON := (PT := T#20S);   // Initialization timeout fault timer
+	tonTimeout_testing    				: TON := (PT := T#8S);   // Initialization timeout fault timer
     tonFirstAutoCycle     				: TON := (PT := T#500MS); // Auto cycle start settling timer
 	tonStoppingDelay	  				: TON                   ; // Time to finalize process 
     tonSafety             				: TON := (PT := T#10S);   // Safety interlock debounce timer
@@ -19,7 +19,7 @@ VAR
     
     rtFirstAutoCycle      				: R_TRIG; // Detects entry into Auto Cycle
     fbResetTrigger        				: F_TRIG; // Detects HMI Reset button release
-	tTwoHandReturnTimeout 				: TON := (PT := T#2S);
+	tTwoHandReturnTimeout 				: TON := (PT := T#5S);
 	tonAfterKistlerDelay  				: TON;
 	
     eProcessCycleState 					: E_ProcessCycle_State := E_ProcessCycle_State.IDLE;
@@ -1437,7 +1437,9 @@ END_IF;
 
 // Keep abort active while the machine is faulted
 stKistler_CMD.bAbort :=
-    eCurrentState = E_MachineState.FAULT;
+    (eCurrentState = E_MachineState.FAULT)
+    OR
+    (eCurrentState = E_MachineState.STOPPING);
 
 
 // =========================================================
@@ -2302,9 +2304,8 @@ END_CASE;
 // =================================================================
 // 5. INTERNAL MACHINE LIGHT
 // =================================================================
-
-GVL_IO.qInternalLight :=
-    GVL_IO.stSafety.bMainDoorOpenned;
+GVL_IO.stSafety.bMainDoorfeedback := GVL_IO.stTerm4_EL1918.iEL1918_Ch6;
+GVL_IO.qInternalLight := NOT GVL_IO.stSafety.bMainDoorfeedback;
 
 
 M_LEDsButtons := TRUE;]]></ST>
@@ -2576,6 +2577,7 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 			
 					GVL_MASTER.stProcess.bNestTestingReady := FALSE;
 					eNestState := E_NestState.FAULT;
+					
 			
 			
 				ELSE
@@ -2856,12 +2858,18 @@ IF GVL_MASTER.astNestTracking[
 END_IF
 
 
-
-// A failed part was placed at the reject sensor.
+// Reject confirmation is only valid after the failed part
+// has been removed from the operator nest.
+//
+// Required order:
+// 1. Remove the failed part from the nest.
+// 2. Place the failed part at the reject sensor.
+// 3. Complete the operator exchange.
 IF (
         bOperatorResultFail
         OR bPendingOperatorResultFail
    )
+   AND bPartRemovedConfirmedForExchange
    AND rtPartPresentReject.Q THEN
 
     bRejectConfirmedForExchange := TRUE;
@@ -2917,7 +2925,7 @@ CASE eOperatorExchangeState OF
             bPendingOperatorResultFail :=
                 bOperatorResultFail;
 
-           //bRejectConfirmedForExchange := FALSE;
+           bRejectConfirmedForExchange := FALSE;
 
 
 			// -------------------------------------------------------------
@@ -3366,6 +3374,30 @@ CASE eOperatorExchangeState OF
         eOperatorExchangeState := E_OperatorExchangeState.Idle;
 
 END_CASE
+
+// -----------------------------------------------------------------------------
+// Reject popup control.
+//
+// Show the popup as soon as a failed part arrives at the operator position.
+// Keep it visible after the part is removed while reject confirmation is
+// still pending.
+//
+// The popup closes automatically when the reject sensor is confirmed and
+// the operator exchange leaves WaitingForRejectConfirmation.
+// -----------------------------------------------------------------------------
+GVL_HMI.bShowRejectPopup :=
+    (
+        (
+            eOperatorExchangeState =
+                E_OperatorExchangeState.WaitingForPartRemoval
+        )
+        AND bPendingOperatorResultFail
+    )
+    OR
+    (
+        eOperatorExchangeState =
+            E_OperatorExchangeState.WaitingForRejectConfirmation
+    );
 ]]></ST>
       </Implementation>
     </Method>
@@ -5001,6 +5033,80 @@ GVL_IO.stTerm14_EL3058.stTerminalInfo.fbTerminalInfo(
     bTerminalOperational   => GVL_IO.stTerm14_EL3058.stTerminalInfo.bTerminalOperational
 );
 
+// -----------------------------------------------------------------------------
+// T04 - EL1918 channel mirrors for HMI diagnostics
+// -----------------------------------------------------------------------------
+GVL_IO.stTerm4_EL1918.iEL1918_Ch1 := GVL_IO.stSafety.bEStopCH1;
+GVL_IO.stTerm4_EL1918.iEL1918_Ch2 := GVL_IO.stSafety.bEStopCH2;
+GVL_IO.stTerm4_EL1918.iEL1918_Ch3 := GVL_MASTER.i_bButtonReset;
+
+// -----------------------------------------------------------------------------
+// T06 - EL1918 channel mirrors for HMI diagnostics
+// -----------------------------------------------------------------------------
+GVL_IO.stTerm6_EL1918.iEL1918_Ch1 := GVL_IO.stSafety.bDoorFlapLeftCH1;
+GVL_IO.stTerm6_EL1918.iEL1918_Ch2 := GVL_IO.stSafety.bDoorFlapLeftCH2;
+GVL_IO.stTerm6_EL1918.iEL1918_Ch4 := GVL_IO.stSafety.bDoorFlapRightCH1;
+GVL_IO.stTerm6_EL1918.iEL1918_Ch5 := GVL_IO.stSafety.bDoorFlapRightCH2;
+
+// -----------------------------------------------------------------------------
+// T07- EL2904 channel mirrors for HMI diagnostics
+// -----------------------------------------------------------------------------
+GVL_IO.stTerm7_EL2904.qEL2904_Ch1 := GVL_IO.stSafety.bAirSupplyEnabled;
+GVL_IO.stTerm7_EL2904.qEL2904_Ch2 := GVL_IO.stSafety.bSafetyReset;
+GVL_IO.stTerm7_EL2904.qEL2904_Ch3 := GVL_IO.stSafety.bMainDoorLocked;
+GVL_IO.stTerm7_EL2904.qEL2904_Ch4 := FALSE;
+
+// -----------------------------------------------------------------------------
+// T08- EL2904 channel mirrors for HMI diagnostics
+// -----------------------------------------------------------------------------
+GVL_IO.stTerm8_EL2904.qEL2904_Ch1 := GVL_IO.stSafety.bSafetyRelayIndraDrive;
+GVL_IO.stTerm8_EL2904.qEL2904_Ch2 := GVL_IO.stSafety.bIndraDriveEStop;
+GVL_IO.stTerm8_EL2904.qEL2904_Ch3 := GVL_IO.stSafety.bSafetyRelayEStop;
+GVL_IO.stTerm8_EL2904.qEL2904_Ch4 := FALSE;
+// -----------------------------------------------------------------------------
+// T09 - EL1809 channel mirrors for HMI diagnostics
+// -----------------------------------------------------------------------------
+GVL_IO.stTerm9_EL1809.iEL1809_Ch1 := GVL_MASTER.i_bButtonStart;
+GVL_IO.stTerm9_EL1809.iEL1809_Ch2 := GVL_MASTER.i_bButtonStop;
+//GVL_IO.stTerm9_EL1809.iEL1809_Ch3 := ;
+//GVL_IO.stTerm9_EL1809.iEL1809_Ch4 := ;
+GVL_IO.stTerm9_EL1809.iEL1809_Ch5 := GVL_MASTER.stSensors.bPartPresent_Reject;
+GVL_IO.stTerm9_EL1809.iEL1809_Ch6 := GVL_MASTER.stNestTable.bNestPos_1_Sensor;
+GVL_IO.stTerm9_EL1809.iEL1809_Ch7 := GVL_MASTER.stNestTable.bNestPos_2_Sensor;
+GVL_IO.stTerm9_EL1809.iEL1809_Ch8 := GVL_MASTER.stNestTable.bNestPos_3_Sensor;
+GVL_IO.stTerm9_EL1809.iEL1809_Ch9 := GVL_MASTER.stNestTable.bNestCompletedSensor;
+GVL_IO.stTerm9_EL1809.iEL1809_Ch10 := GVL_MASTER.stNestTable.bNestLockedSensor;
+GVL_IO.stTerm9_EL1809.iEL1809_Ch11 := GVL_MASTER.stNestTable.bNestReadySensor;
+GVL_IO.stTerm9_EL1809.iEL1809_Ch12 := GVL_MASTER.stSensors.bPartPresent_NEST;
+GVL_IO.stTerm9_EL1809.iEL1809_Ch13 := GVL_MASTER.stSensors.bPartPresent_Kistler;
+
+// -----------------------------------------------------------------------------
+// T10 - EL1809 channel mirrors for HMI diagnostics
+// -----------------------------------------------------------------------------
+GVL_IO.stTerm10_EL1809.iEL1809_Ch1 := GVL_MASTER.stNestTable.bSupportRetracted;
+GVL_IO.stTerm10_EL1809.iEL1809_Ch2 := GVL_MASTER.stNestTable.bSupportExtended;
+// -----------------------------------------------------------------------------
+// T11 - EL12809 channel mirrors for HMI diagnostics
+// -----------------------------------------------------------------------------
+
+GVL_IO.stTerm11_EL2809.iEL2809_Ch1 := PRG_MachineControl.q_bLED_Start;
+GVL_IO.stTerm11_EL2809.iEL2809_Ch2 := PRG_MachineControl.q_bLED_Reset;
+GVL_IO.stTerm11_EL2809.iEL2809_Ch3 := PRG_MachineControl.q_bLED_Fail;
+GVL_IO.stTerm11_EL2809.iEL2809_Ch4 := PRG_MachineControl.q_bLED_Pass;
+GVL_IO.stTerm11_EL2809.iEL2809_Ch5 := GVL_IO.qInternalLight;
+GVL_IO.stTerm11_EL2809.iEL2809_Ch6 := GVL_MASTER.stNestTable.qNestRotatePortB;
+GVL_IO.stTerm11_EL2809.iEL2809_Ch7 := GVL_MASTER.stNestTable.qNestRotatePortA;
+GVL_IO.stTerm11_EL2809.iEL2809_Ch8 := GVL_MASTER.stNestTable.qSupportExtend;
+GVL_IO.stTerm11_EL2809.iEL2809_Ch9 := GVL_MASTER.stNestTable.qSupportRetract;
+GVL_IO.stTerm11_EL2809.iEL2809_Ch10 := GVL_MASTER.stActuators.qGuideCylinder;
+GVL_IO.stTerm11_EL2809.iEL2809_Ch11 := FALSE;
+GVL_IO.stTerm11_EL2809.iEL2809_Ch12 := FALSE;
+GVL_IO.stTerm11_EL2809.iEL2809_Ch13 := FALSE;
+GVL_IO.stTerm11_EL2809.iEL2809_Ch14 := FALSE;
+GVL_IO.stTerm11_EL2809.iEL2809_Ch15 := FALSE;
+GVL_IO.stTerm11_EL2809.iEL2809_Ch16 := FALSE;
+
+
 ]]></ST>
       </Implementation>
     </Method>
@@ -5042,64 +5148,116 @@ VAR
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[// Default message
+        <ST><![CDATA[// -----------------------------------------------------------------------------
+// Default message.
+// -----------------------------------------------------------------------------
 sMachineMessage := '';
 
-bPuckLockerEnabled := GVL_HMI.stPuckLocker.eMode <> E_PuckLockerMode.Disabled;
+bPuckLockerEnabled :=
+    GVL_HMI.stPuckLocker.eMode <>
+        E_PuckLockerMode.Disabled;
 
+
+// -----------------------------------------------------------------------------
+// Machine messages are currently used during Automatic Cycle.
+// -----------------------------------------------------------------------------
 IF GVL_MASTER.stMachineStatus.eMachineState =
     E_MachineState.SYSTEM_AUTO_CYCLE THEN
 
-    IF bPuckLockerEnabled THEN
 
-        // ================================================================
-        // PUCK LOCKER ENABLED
-        // ================================================================
+    // =========================================================================
+    // Highest priority:
+    // The table is physically moving.
+    // =========================================================================
+    IF GVL_MASTER.stNestTable.bNestInMotion THEN
+
+        sMachineMessage :=
+            'Table indexing - keep hands clear';
+
+
+    ELSE
+
+        // =====================================================================
+        // Operator-exchange sequence.
+        //
+        // Messages follow the exact same state machine that controls table
+        // permission. This prevents instructions from appearing out of order.
+        // =====================================================================
         CASE eOperatorExchangeState OF
 
+
+            // =================================================================
             E_OperatorExchangeState.Idle:
+            // =================================================================
 
-                IF GVL_MASTER.stNestTable.bNestInMotion THEN
+                IF bPuckLockerEnabled THEN
 
-                    sMachineMessage :=
-                        'Table indexing - keep hands clear';
+                    // ---------------------------------------------------------
+                    // Puck Locker enabled:
+                    // first require the puck to be present and locked.
+                    // ---------------------------------------------------------
+                    IF NOT GVL_MASTER.stPuckLocker.bPuckDetected THEN
 
-                ELSIF NOT GVL_MASTER.stPuckLocker.bPuckDetected THEN
+                        sMachineMessage :=
+                            'Insert puck into locker to continue';
 
-                    sMachineMessage :=
-                        'Insert puck into locker to continue';
+                    ELSIF
+                        NOT GVL_MASTER.stPuckLocker.bPuckLocked
+                        OR
+                        GVL_MASTER.stPuckLocker.eState <>
+                            E_PuckLockerState.Locked THEN
 
-                ELSIF NOT GVL_MASTER.stPuckLocker.bPuckLocked
-                      OR GVL_MASTER.stPuckLocker.eState <>
-                         E_PuckLockerState.Locked THEN
+                        sMachineMessage :=
+                            'Waiting for puck locker to lock puck';
 
-                    sMachineMessage :=
-                        'Waiting for puck locker to lock puck';
+                    ELSIF NOT GVL_MASTER.stSensors.bPartPresent_NEST THEN
 
-                ELSIF NOT GVL_MASTER.stSensors.bPartPresent_NEST THEN
+                        sMachineMessage :=
+                            'Load part into operator nest';
 
-                    sMachineMessage :=
-                        'Load part into operator nest';
+                    ELSE
+
+                        sMachineMessage :=
+                            'Machine ready - press two-hand buttons to index';
+
+                    END_IF
+
 
                 ELSE
 
-                    sMachineMessage :=
-                        'Machine ready - waiting for table index';
+                    // ---------------------------------------------------------
+                    // Puck Locker disabled:
+                    // an empty operator nest is allowed to continue.
+                    // ---------------------------------------------------------
+                    IF GVL_MASTER.stSensors.bPartPresent_NEST THEN
+
+                        sMachineMessage :=
+                            'Part loaded - press two-hand buttons to index';
+
+                    ELSE
+
+                        sMachineMessage :=
+                            'Load new part or continue with empty nest';
+
+                    END_IF
 
                 END_IF
 
 
+            // =================================================================
             E_OperatorExchangeState.WaitingForPartRemoval:
+            // =================================================================
 
-                IF bPendingOperatorResultPass THEN
-
-                    sMachineMessage :=
-                        'Remove passed part from operator nest';
-
-                ELSIF bPendingOperatorResultFail THEN
+                // The processed part must always be removed first.
+                IF bPendingOperatorResultFail THEN
 
                     sMachineMessage :=
                         'Remove failed part from operator nest';
+
+                ELSIF bPendingOperatorResultPass THEN
+
+                    sMachineMessage :=
+                        'Remove passed part from operator nest';
 
                 ELSE
 
@@ -5109,134 +5267,149 @@ IF GVL_MASTER.stMachineStatus.eMachineState =
                 END_IF
 
 
+            // =================================================================
+            E_OperatorExchangeState.WaitingForRejectConfirmation:
+            // =================================================================
+
+                // This state is reached only after removal has been confirmed.
+                // Do not show a "confirmed" message here. Once the reject pulse
+                // is accepted, the state machine exits this state automatically.
+                sMachineMessage :=
+                    'Place failed part into reject station';
+
+
+            // =================================================================
             E_OperatorExchangeState.WaitingForPuckRemoval:
+            // =================================================================
 
-                IF GVL_MASTER.stPuckLocker.bPuckDetected THEN
+                IF bPuckLockerEnabled THEN
 
-                    sMachineMessage :=
-                        'Remove released puck from locker';
+                    IF GVL_MASTER.stPuckLocker.bPuckDetected THEN
+
+                        sMachineMessage :=
+                            'Remove released puck from locker';
+
+                    ELSE
+
+                        sMachineMessage :=
+                            'Insert new puck into locker';
+
+                    END_IF
 
                 ELSE
+
+                    // Recovery protection if the locker is disabled while
+                    // this state is still active.
+                    sMachineMessage :=
+                        'Operator exchange completing';
+
+                END_IF
+
+
+            // =================================================================
+            E_OperatorExchangeState.WaitingForNewPuck:
+            // =================================================================
+
+                IF bPuckLockerEnabled THEN
 
                     sMachineMessage :=
                         'Insert new puck into locker';
 
-                END_IF
-
-
-            E_OperatorExchangeState.WaitingForRejectConfirmation:
-
-                IF NOT GVL_MASTER.stSensors.bPartPresent_Reject THEN
-
-                    sMachineMessage :=
-                        'Place failed part into reject bin';
-
                 ELSE
 
                     sMachineMessage :=
-                        'Failed part confirmed in reject bin';
+                        'Operator exchange completing';
 
                 END_IF
 
 
-            E_OperatorExchangeState.WaitingForNewPuck:
-
-                sMachineMessage :=
-                    'Insert new puck into locker';
-
-
+            // =================================================================
             E_OperatorExchangeState.WaitingForPuckLocked:
+            // =================================================================
 
-                sMachineMessage :=
-                    'Waiting for puck locker to lock new puck';
-
-
-            E_OperatorExchangeState.WaitingForPartLoading:
-
-                sMachineMessage :=
-                    'Load new part into operator nest';
-
-
-            E_OperatorExchangeState.ExchangeComplete:
-
-                IF GVL_MASTER.stNestTable.bNestInMotion THEN
+                IF bPuckLockerEnabled THEN
 
                     sMachineMessage :=
-                        'Table indexing - keep hands clear';
+                        'Waiting for puck locker to lock new puck';
 
                 ELSE
 
                     sMachineMessage :=
-                        'Operator exchange complete - ready to index';
+                        'Operator exchange completing';
 
                 END_IF
 
 
-            E_OperatorExchangeState.WaitingForTableIndexComplete:
+            // =================================================================
+            E_OperatorExchangeState.WaitingForPartLoading:
+            // =================================================================
+
+                IF GVL_MASTER.stSensors.bPartPresent_NEST THEN
+
+                    sMachineMessage :=
+                        'New part loaded - ready to index';
+
+                ELSE
+
+                    sMachineMessage :=
+                        'Load new part into operator nest';
+
+                END_IF
+
+
+            // =================================================================
+            E_OperatorExchangeState.ExchangeComplete:
+            // =================================================================
 
                 sMachineMessage :=
-                    'Table indexing - keep hands clear';
+                    'Operator exchange complete - press two-hand buttons to index';
 
 
+            // =================================================================
+            E_OperatorExchangeState.WaitingForTableIndexComplete:
+            // =================================================================
+
+                // Normally table movement is caught by the higher-priority
+                // bNestInMotion condition. This message covers the transition
+                // immediately before or after physical movement.
+                sMachineMessage :=
+                    'Table index in progress';
+
+
+            // =================================================================
             ELSE
+            // =================================================================
 
                 sMachineMessage := '';
 
         END_CASE
 
-		ELSE
-	
-		// ================================================================
-		// PUCK LOCKER DISABLED
-		//
-		// A part already present when the nest arrives at the operator
-		// position must be removed before the next index.
-		//
-		// After removal, the operator may:
-		//     - load a new part; or
-		//     - continue with the nest empty.
-		// ================================================================
-	
-		IF bPartRemovalRequiredNoLocker THEN
-	
-			// Highest-priority instruction.
-			// This is the part that arrived with the nest and must not
-			// be indexed back into the process.
-			sMachineMessage := 'Remove processed part from operator nest';
-	
-		ELSIF GVL_MASTER.stNestTable.bNestInMotion THEN
-	
-			sMachineMessage := 'Table indexing - keep hands clear';
-	
-		ELSIF GVL_MASTER.stSensors.bPartPresent_NEST THEN
-	
-			// Since bPartRemovalRequiredNoLocker is already FALSE,
-			// this is considered a newly loaded part.
-			sMachineMessage := 'New part loaded - ready to index';
-	
-		ELSE
-	
-			// Empty nests are allowed to index.
-			sMachineMessage := 'Load new part or continue with empty nest';
-	
-		END_IF
-	
-	END_IF
+    END_IF
 
 END_IF
 
 
-// Publish current instruction
-GVL_MASTER.sMachineMessage := sMachineMessage;
+// -----------------------------------------------------------------------------
+// Publish current machine instruction.
+// -----------------------------------------------------------------------------
+GVL_MASTER.sMachineMessage :=
+    sMachineMessage;
 
-// Temporary direct connection to DataGrid row zero
-GVL_MASTER.astActiveEvents[0].sEventTex := sMachineMessage;
 
-GVL_MASTER.astActiveEvents[0].sType := 'Message';
+// -----------------------------------------------------------------------------
+// Temporary direct connection to DataGrid row zero.
+// -----------------------------------------------------------------------------
+GVL_MASTER.astActiveEvents[0].sEventTex :=
+    sMachineMessage;
 
-GVL_MASTER.astActiveEvents[0].sSolution := '';
+GVL_MASTER.astActiveEvents[0].sType :=
+    'Message';
 
-GVL_MASTER.astActiveEvents[0].abType := 3;]]></ST>
+GVL_MASTER.astActiveEvents[0].sSolution :=
+    '';
+
+GVL_MASTER.astActiveEvents[0].abType :=
+    3;]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_UpdateOperatorInstruction" Id="{9003e453-721d-4c1e-a060-193bc77fe83e}" FolderPath="Nest_Table\">

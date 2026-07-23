@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<safetyApplication Crc="1120756444" xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.5.0.0" Id="58726efb-ca0e-4ec3-a32f-24c30087c454" name="" mapState="false" mapDiag="false" groupOrderId="0" passificationAllowed="false" temporaryDeactivationAllowed="false" permamentDeactivationAllowed="false" xmlid="0" analogFBOutputReplacementValues="Zero" verifyAnalogFBInputsIfStart="false" userFbId="00000000-0000-0000-0000-000000000000" xmlns="http://schemas.microsoft.com/dsltools/SafetyApplicationLanguage">
+<safetyApplication Crc="1990325054" xmlns:dm0="http://schemas.microsoft.com/VisualStudio/2008/DslTools/Core" dslVersion="1.5.0.0" Id="58726efb-ca0e-4ec3-a32f-24c30087c454" name="" mapState="false" mapDiag="false" groupOrderId="0" passificationAllowed="false" temporaryDeactivationAllowed="false" permamentDeactivationAllowed="false" xmlid="0" analogFBOutputReplacementValues="Zero" verifyAnalogFBInputsIfStart="false" userFbId="00000000-0000-0000-0000-000000000000" xmlns="http://schemas.microsoft.com/dsltools/SafetyApplicationLanguage">
   <networks>
     <safetyApplicationHasNetworks Id="01c47acc-f1d4-4b40-9d8f-1e6f8d38d370">
       <Network Id="fd340fe8-aab7-470e-b31c-0733c122d585" name="Network1" networkName="SafeCondition" intId="1" networkOrderId="0">
@@ -1425,10 +1425,10 @@
           <variableHasTargetUsages Id="3b35e626-2186-47ab-a603-62ba30b1a5b4">
             <variableUsages Id="1aca341f-9c0b-4dc1-9281-d8ee4f65ba47">
               <usages>
-                <variableUsagesHasUsages Id="99f2660f-1130-4dcc-8ae2-262ec46906b6">
-                  <fbPortUsage Id="0a921e26-468f-420c-8451-164bc446b6b9">
+                <variableUsagesHasUsages Id="90b4f4c2-22ee-4020-819f-8499fadeb50e">
+                  <fbPortUsage Id="ea43dfcc-9c93-4ddd-9687-525ccff7cd30">
                     <functionBlockPort>
-                      <fbPortUsageReferencesFunctionBlockPort Id="3d8e70dc-3f21-406a-aceb-c3e2a9c99d17">
+                      <fbPortUsageReferencesFunctionBlockPort Id="c804d1d9-51d4-4548-b50b-f0fce4250c9b">
                         <inPortMoniker name="//Network3/FBMon1/EDM1" />
                       </fbPortUsageReferencesFunctionBlockPort>
                     </functionBlockPort>
@@ -2330,8 +2330,11 @@
           <variableHasTargetUsages Id="adfa2e9e-5de2-460d-922a-00f6cd29e5a3">
             <variableUsages Id="bd99b2f0-9c4f-4fbf-b7e5-ae023557815d">
               <usages>
-                <variableUsagesHasUsages Id="6ad06f16-b2c4-445d-9063-8707212e2748">
-                  <aliasDeviceIoUsage Id="290791be-2388-43b8-9590-c6605e288936" sdsId="35" channelId="2" functionId="1879114241" />
+                <variableUsagesHasUsages Id="670bd362-fe3f-4d7b-ac4f-d35e3211e17c">
+                  <aliasDeviceIoUsage Id="5c0fe83b-3a29-41bf-bb4d-b4c51fa4df0d" sdsId="41" channelId="1" functionId="1131179972" />
+                </variableUsagesHasUsages>
+                <variableUsagesHasUsages Id="39270a2d-e8e6-47f5-b6a3-cbf108dab7f0">
+                  <aliasDeviceIoUsage Id="769846ed-f073-496c-ace7-b401403e5351" sdsId="35" channelId="2" functionId="1879114241" />
                 </variableUsagesHasUsages>
               </usages>
             </variableUsages>
@@ -2362,8 +2365,11 @@
           <variableHasTargetUsages Id="63ad72c9-9e85-4877-894d-092b0af28988">
             <variableUsages Id="36fad52c-8ab4-4034-812c-dd71aed2a0d1">
               <usages>
-                <variableUsagesHasUsages Id="5a32f50e-0f90-4cca-8c22-c15dd9b5e91c">
-                  <aliasDeviceIoUsage Id="20083f4b-f0b3-484d-bcf8-bdd47349c3dd" sdsId="35" channelId="3" functionId="1879114497" />
+                <variableUsagesHasUsages Id="5a109667-f1b1-4827-9eec-2dd1bed7a22c">
+                  <aliasDeviceIoUsage Id="497058e9-9107-42df-b9a8-d894a55943d0" sdsId="42" channelId="1" functionId="1131179972" />
+                </variableUsagesHasUsages>
+                <variableUsagesHasUsages Id="767bbc62-4c1b-49f4-bd70-1c6b0bd6c036">
+                  <aliasDeviceIoUsage Id="0d958325-7924-42ac-8175-67c14b26a412" sdsId="35" channelId="3" functionId="1879114497" />
                 </variableUsagesHasUsages>
               </usages>
             </variableUsages>
@@ -2426,17 +2432,20 @@
           <variableHasTargetUsages Id="329c943c-6190-4cd6-9e0f-5aa4c6b44439">
             <variableUsages Id="2a075a57-fab6-46f7-a4b6-2e64f3cc8338">
               <usages>
-                <variableUsagesHasUsages Id="5bc824ac-4ddb-4592-bef5-861ab821126f">
-                  <aliasDeviceIoUsage Id="2c90c8ce-838d-4993-b046-91ca659d9571" sdsId="35" channelId="1" functionId="1879113985" />
-                </variableUsagesHasUsages>
-                <variableUsagesHasUsages Id="070a7b33-1080-4a04-ad2a-bef550755aac">
-                  <fbPortUsage Id="00a1aa38-9140-4bf6-a6c5-3af8965d9f43">
+                <variableUsagesHasUsages Id="9d00dfc1-d17a-4f5d-b688-96a5608a94c7">
+                  <fbPortUsage Id="7c72851c-9222-4f1b-b568-70e0fdda94d6">
                     <functionBlockPort>
-                      <fbPortUsageReferencesFunctionBlockPort Id="37e6f3cd-984f-499c-9b2b-8be899fffc07">
+                      <fbPortUsageReferencesFunctionBlockPort Id="42765d20-4baa-42b0-b7ee-211ac6a76ff6">
                         <inPortMoniker name="//Network1/FBAnd2/AndIn4" />
                       </fbPortUsageReferencesFunctionBlockPort>
                     </functionBlockPort>
                   </fbPortUsage>
+                </variableUsagesHasUsages>
+                <variableUsagesHasUsages Id="b0848222-1c77-496f-bb6a-f3f3442b7309">
+                  <aliasDeviceIoUsage Id="0e33f1e9-4d54-4ace-99c6-cc20390b9901" sdsId="40" channelId="1" functionId="1131179972" />
+                </variableUsagesHasUsages>
+                <variableUsagesHasUsages Id="d0b92e91-9be2-4320-a870-0f0faf99871c">
+                  <aliasDeviceIoUsage Id="5b14fea2-0bea-47ab-94fb-e07bfbb399cb" sdsId="35" channelId="1" functionId="1879113985" />
                 </variableUsagesHasUsages>
               </usages>
             </variableUsages>

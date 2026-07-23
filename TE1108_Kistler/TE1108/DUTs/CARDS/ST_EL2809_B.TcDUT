@@ -6,7 +6,10 @@ STRUCT
     sTerminalName       	: STRING(80) := 'EL2809 | Channel Digital Output';
     
     // TwinSAFE physical hardware channels (Safe Outputs 1 to 4)
-    bOutput             	: ARRAY[1..4] OF BOOL;
+    iEL2809_Ch1        AT %Q*			: 	BOOL;	// EL1918 channel 1
+	iEL2809_Ch2        AT %Q*			: 	BOOL;	// EL1918 channel 2
+	iEL2809_Ch3        AT %Q*	 		: 	BOOL;	// EL1918 channel 3
+	iEL2809_Ch4   	   AT %Q*	 		: 	BOOL;	// EL1918 channel 4
     
     // Hardware status and diagnostic signals
     bError              	: BOOL; // TRUE if a fault is detected (short-circuit, overload, or FSoE error)
