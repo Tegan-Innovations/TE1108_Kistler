@@ -119,6 +119,12 @@ STRUCT
 	// Y = force
 	rCurrentValueY 			  : REAL;
 	
+	rDistanceMin 			  : REAL;
+	rDistanceMax 			  : REAL;
+	
+	rForceMin 				  : REAL;
+	rForceMax 				  : REAL;
+	
 END_STRUCT
 END_TYPE]]></Declaration>
   </DUT>

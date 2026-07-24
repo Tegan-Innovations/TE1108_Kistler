@@ -27,6 +27,7 @@ VAR_GLOBAL
 	bShowRejectPopup 					: BOOL;
 	
 	bEnableSettings						: BOOL;
+	bSetSettings						: BOOL := FALSE;
 	bEnableManual						: BOOL;
 	
 END_VAR	

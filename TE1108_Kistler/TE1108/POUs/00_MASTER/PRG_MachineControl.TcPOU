@@ -107,9 +107,17 @@ VAR
 	uKistlerCurrentValueX 		: U_BytesToReal;
 	uKistlerCurrentValueY 		: U_BytesToReal;
 	
+	uKistlerEO2_XMax 			: U_BytesToReal;
+	uKistlerEO2_XMin 			: U_BytesToReal;
+	uKistlerEO1_YMax 			: U_BytesToReal;
+	uKistlerEO1_YMin 			: U_BytesToReal;
+
+	
 	// Maximum values recorded during the current Kistler test
 	rKistlerCycleMaxForce    	: REAL := 0.0;
 	rKistlerCycleMaxDistance 	: REAL := 0.0;
+
+	
 
 	
 
@@ -276,7 +284,7 @@ bStartProcessCondition :=
 //OR stKistler_Status.bError
 IF (
     NOT GVL_MASTER.stMachineStatus.bSafety
-    OR GVL_MASTER.i_bButtonEmergencyStop
+    OR GVL_MASTER.i_bButtonEmergencyStop 
 )
 AND GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.FAULT THEN
 
@@ -1249,8 +1257,8 @@ stKistlerOutTelegram.bRefPosReached   := GVL_KISTLER_IO.aKistlerIn[10].7;
 // Byte 11 - Servo / safety status
 stKistlerOutTelegram.bStandStill       := GVL_KISTLER_IO.aKistlerIn[11].0;
 stKistlerOutTelegram.bServoWarning     := GVL_KISTLER_IO.aKistlerIn[11].2;
-//stKistlerOutTelegram.bServoError       := GVL_KISTLER_IO.aKistlerIn[11].3;
-stKistlerOutTelegram.bServoError       := FALSE;
+stKistlerOutTelegram.bServoError       := GVL_KISTLER_IO.aKistlerIn[11].3;
+//stKistlerOutTelegram.bServoError       := FALSE;
 stKistlerOutTelegram.bSMES_STO         := GVL_KISTLER_IO.aKistlerIn[11].4;
 stKistlerOutTelegram.bSMST             := GVL_KISTLER_IO.aKistlerIn[11].5;
 stKistlerOutTelegram.bSMM              := GVL_KISTLER_IO.aKistlerIn[11].6;
@@ -1366,6 +1374,41 @@ GVL_HMI.rKistlerLiveDistance :=
 
 GVL_HMI.rKistlerLiveForce :=
     stKistler_Status.rLiveForce;
+	
+	// =================================================================================
+// EO2 - DISTANCE LIMITS
+// =================================================================================
+
+uKistlerEO2_XMax.aBytes[0] := GVL_KISTLER_IO.aKistlerIn[180];
+uKistlerEO2_XMax.aBytes[1] := GVL_KISTLER_IO.aKistlerIn[181];
+uKistlerEO2_XMax.aBytes[2] := GVL_KISTLER_IO.aKistlerIn[182];
+uKistlerEO2_XMax.aBytes[3] := GVL_KISTLER_IO.aKistlerIn[183];
+
+uKistlerEO2_XMin.aBytes[0] := GVL_KISTLER_IO.aKistlerIn[184];
+uKistlerEO2_XMin.aBytes[1] := GVL_KISTLER_IO.aKistlerIn[185];
+uKistlerEO2_XMin.aBytes[2] := GVL_KISTLER_IO.aKistlerIn[186];
+uKistlerEO2_XMin.aBytes[3] := GVL_KISTLER_IO.aKistlerIn[187];
+
+stKistlerOutTelegram.rDistanceMax := uKistlerEO2_XMax.rValue;
+stKistlerOutTelegram.rDistanceMin := uKistlerEO2_XMin.rValue;
+
+
+// =================================================================================
+// EO1 - FORCE LIMITS
+// =================================================================================
+
+uKistlerEO1_YMax.aBytes[0] := GVL_KISTLER_IO.aKistlerIn[188];
+uKistlerEO1_YMax.aBytes[1] := GVL_KISTLER_IO.aKistlerIn[189];
+uKistlerEO1_YMax.aBytes[2] := GVL_KISTLER_IO.aKistlerIn[190];
+uKistlerEO1_YMax.aBytes[3] := GVL_KISTLER_IO.aKistlerIn[191];
+
+uKistlerEO1_YMin.aBytes[0] := GVL_KISTLER_IO.aKistlerIn[192];
+uKistlerEO1_YMin.aBytes[1] := GVL_KISTLER_IO.aKistlerIn[193];
+uKistlerEO1_YMin.aBytes[2] := GVL_KISTLER_IO.aKistlerIn[194];
+uKistlerEO1_YMin.aBytes[3] := GVL_KISTLER_IO.aKistlerIn[195];
+
+stKistlerOutTelegram.rForceMax := uKistlerEO1_YMax.rValue;
+stKistlerOutTelegram.rForceMin := uKistlerEO1_YMin.rValue;
 // =================================================================================
 // METHOD EXECUTION FEEDBACK
 // =================================================================================
@@ -4087,21 +4130,316 @@ CASE GVL_MASTER.stMachineStatus.eMachineState OF
     // ========================================================================
     // MANUAL MODE
     // ========================================================================
-    E_MachineState.MANUAL_MODE:
+   // ========================================================================
+// MANUAL MODE
+// ========================================================================
+E_MachineState.MANUAL_MODE:
 
-        CASE eProcessCycleState OF
+    CASE eProcessCycleState OF
 
-            // =================================================================
-            E_ProcessCycle_State.IDLE:
-            // =================================================================
+        // =================================================================
+        E_ProcessCycle_State.IDLE:
+        // =================================================================
+
+            GVL_MASTER.stProcess.bKistlerCycleRequest := FALSE;
+            GVL_MASTER.stProcess.bKistlerCycleDone := FALSE;
+            GVL_MASTER.stProcess.bKistlerHomeDone := FALSE;
+            GVL_MASTER.stProcess.bReleaseNestRotation := FALSE;
+
+            GVL_MASTER.stProcess.bKistlerResultOK := FALSE;
+            GVL_MASTER.stProcess.bKistlerResultNOK := FALSE;
+
+            tonAfterKistlerDelay(IN := FALSE);
+
+            // -------------------------------------------------------------
+            // Manual indexer only or indexer + Kistler.
+            // Wait until the table reaches the testing position.
+            // -------------------------------------------------------------
+            IF bManualIndexerOnly
+               OR bManualIndexerAndKistler THEN
+
+                eProcessCycleState :=
+                    E_ProcessCycle_State.WAIT_NEST_TESTING_READY;
+
+            // -------------------------------------------------------------
+            // Manual Kistler only.
+            // Prepare a new test and wait for the two-hand rising edge.
+            // -------------------------------------------------------------
+            ELSIF bManualKistlerOnly
+                  AND NOT GVL_MASTER.stProcess.bNestTestingReady
+                  AND stKistler_Status.eKistlerState =
+                        E_KistlerState.READY
+                  AND NOT stKistler_Status.bError
+                  AND NOT bKistlerRecoveryHomeRequest THEN
+
+                GVL_MASTER.stProcess.bNestTestingReady := FALSE;
+
+                bKistlerResultStored := FALSE;
+                rKistlerCycleMaxForce := 0.0;
+                rKistlerCycleMaxDistance := 0.0;
+
+                IF eCurrentNestPos <> E_NestPosition.UNKNOWN THEN
+
+                    M_HMIKistlerResult(
+                        eNestPosition := eCurrentNestPos,
+                        bPartOK       := FALSE,
+                        bPartNOK      := FALSE,
+                        rForce        := 0.0,
+                        rDistance     := 0.0,
+                        bResetValues  := TRUE
+                    );
+
+                END_IF
+
+                eProcessCycleState :=
+                    E_ProcessCycle_State.REQUEST_KISTLER;
+
+            END_IF
+
+
+        // =================================================================
+        E_ProcessCycle_State.WAIT_NEST_TESTING_READY:
+        // =================================================================
+
+            GVL_MASTER.stProcess.bKistlerCycleRequest := FALSE;
+            GVL_MASTER.stProcess.bReleaseNestRotation := FALSE;
+
+            tonAfterKistlerDelay(IN := FALSE);
+
+            // Manual indexer operation was disabled.
+            IF NOT (
+                bManualIndexerOnly
+                OR bManualIndexerAndKistler
+            ) THEN
+
+                eProcessCycleState :=
+                    E_ProcessCycle_State.IDLE;
+
+            // -------------------------------------------------------------
+            // Manual indexer + Kistler.
+            // Prepare the result storage and start a new Kistler test.
+            // -------------------------------------------------------------
+            ELSIF GVL_MASTER.stProcess.bNestTestingReady
+                  AND eNestState = E_NestState.TESTING
+                  AND bManualIndexerAndKistler
+                  AND stKistler_Status.eKistlerState =
+                        E_KistlerState.READY
+                  AND NOT stKistler_Status.bError
+                  AND NOT bKistlerRecoveryHomeRequest
+                  AND eCurrentNestPos <>
+                        E_NestPosition.UNKNOWN THEN
+
+                GVL_MASTER.stProcess.bKistlerCycleDone := FALSE;
+                GVL_MASTER.stProcess.bKistlerHomeDone := FALSE;
+
+                bKistlerResultStored := FALSE;
+                rKistlerCycleMaxForce := 0.0;
+                rKistlerCycleMaxDistance := 0.0;
+
+                M_HMIKistlerResult(
+                    eNestPosition := eCurrentNestPos,
+                    bPartOK       := FALSE,
+                    bPartNOK      := FALSE,
+                    rForce        := 0.0,
+                    rDistance     := 0.0,
+                    bResetValues  := TRUE
+                );
+
+                eProcessCycleState :=
+                    E_ProcessCycle_State.REQUEST_KISTLER;
+
+            // -------------------------------------------------------------
+            // Manual indexer only.
+            // Do not execute the Kistler; release the table immediately.
+            // -------------------------------------------------------------
+            ELSIF GVL_MASTER.stProcess.bNestTestingReady
+                  AND eNestState = E_NestState.TESTING
+                  AND bManualIndexerOnly THEN
 
                 GVL_MASTER.stProcess.bKistlerCycleRequest := FALSE;
-                GVL_MASTER.stProcess.bKistlerCycleDone    := FALSE;
-                GVL_MASTER.stProcess.bKistlerHomeDone     := FALSE;
-                GVL_MASTER.stProcess.bReleaseNestRotation := FALSE;
+                GVL_MASTER.stProcess.bKistlerHomeDone := TRUE;
+                GVL_MASTER.stProcess.bReleaseNestRotation := TRUE;
 
-                GVL_MASTER.stProcess.bKistlerResultOK  := FALSE;
-                GVL_MASTER.stProcess.bKistlerResultNOK := FALSE;
+                eProcessCycleState :=
+                    E_ProcessCycle_State.RELEASE_NEST;
+
+            END_IF
+
+
+        // =================================================================
+        E_ProcessCycle_State.REQUEST_KISTLER:
+        // =================================================================
+
+            // The Kistler already accepted the request and left READY.
+            IF stKistler_Status.eKistlerState <>
+                E_KistlerState.READY THEN
+
+                eProcessCycleState :=
+                    E_ProcessCycle_State.WAIT_KISTLER_DONE;
+
+            // -------------------------------------------------------------
+            // Manual Kistler only.
+            // Start only on the two-hand rising edge.
+            // -------------------------------------------------------------
+            ELSIF bManualKistlerOnly
+                  AND GVL_IO.stSafety.bSafetyOK
+                  AND rTrigTwoHands.Q
+                  AND GVL_MASTER.stNestTable.bNestReadySensor
+                  AND GVL_MASTER.stNestTable.bNestLockedSensor
+                  AND NOT stKistler_Status.bError
+                  AND NOT bKistlerRecoveryHomeRequest THEN
+
+                GVL_MASTER.stProcess.bKistlerCycleRequest := TRUE;
+
+            // -------------------------------------------------------------
+            // Manual indexer + Kistler.
+            // The table is already positioned and locked.
+            // -------------------------------------------------------------
+            ELSIF bManualIndexerAndKistler
+                  AND GVL_MASTER.stProcess.bNestTestingReady
+                  AND eNestState = E_NestState.TESTING
+                  AND GVL_MASTER.stNestTable.bNestReadySensor
+                  AND GVL_MASTER.stNestTable.bNestLockedSensor
+                  AND NOT GVL_MASTER.stNestTable.bNestInMotion
+                  AND eCurrentNestPos <>
+                        E_NestPosition.UNKNOWN
+                  AND bNestNewPositionReady
+                  AND NOT stKistler_Status.bError
+                  AND NOT bKistlerRecoveryHomeRequest THEN
+
+                GVL_MASTER.stProcess.bKistlerCycleRequest := TRUE;
+
+            ELSIF stKistler_Status.bError THEN
+
+                GVL_MASTER.stProcess.bKistlerCycleRequest := FALSE;
+
+                eProcessCycleState :=
+                    E_ProcessCycle_State.FAULT;
+
+            END_IF
+
+
+        // =================================================================
+        E_ProcessCycle_State.WAIT_KISTLER_DONE:
+        // =================================================================
+
+            GVL_MASTER.stProcess.bKistlerCycleRequest := TRUE;
+
+            IF stKistler_Status.bError THEN
+
+                GVL_MASTER.stProcess.bKistlerCycleRequest := FALSE;
+
+                eProcessCycleState :=
+                    E_ProcessCycle_State.FAULT;
+
+            ELSIF stKistler_Status.eKistlerState =
+                  E_KistlerState.DONE THEN
+
+                GVL_MASTER.stProcess.bKistlerCycleRequest := FALSE;
+                GVL_MASTER.stProcess.bKistlerCycleDone := TRUE;
+
+                // Finalize the maximum force and distance captured during
+                // the manual Kistler sequence.
+                M_StoreKistlerResult();
+
+                IF eCurrentNestPos <> E_NestPosition.UNKNOWN THEN
+
+                    M_HMIKistlerResult(
+                        eNestPosition := eCurrentNestPos,
+                        bPartOK       := stKistler_Status.bPartOK,
+                        bPartNOK      := stKistler_Status.bPartNOK,
+                        rForce        := rKistlerCycleMaxForce,
+                        rDistance     := rKistlerCycleMaxDistance,
+                        bResetValues  := FALSE
+                    );
+
+                END_IF
+
+                // With the indexer enabled, wait for the Kistler to return
+                // home before releasing the table.
+                IF bManualIndexerAndKistler THEN
+
+                    eLastTestedNestPos := eCurrentNestPos;
+
+                    eProcessCycleState :=
+                        E_ProcessCycle_State.WAIT_KISTLER_HOME;
+
+                // Kistler-only operation finishes without moving the table.
+                ELSE
+
+                    eProcessCycleState :=
+                        E_ProcessCycle_State.IDLE;
+
+                END_IF
+
+            END_IF
+
+
+        // =================================================================
+        E_ProcessCycle_State.WAIT_KISTLER_HOME:
+        // =================================================================
+
+            GVL_MASTER.stProcess.bKistlerCycleRequest := FALSE;
+
+            IF stKistler_Status.bError THEN
+
+                eProcessCycleState :=
+                    E_ProcessCycle_State.FAULT;
+
+            ELSIF stKistlerOutTelegram.bHomePosReached
+                  OR stKistlerOutTelegram.bRefPosReached
+                  OR stKistler_Status.bInPosition THEN
+
+                GVL_MASTER.stProcess.bKistlerHomeDone := TRUE;
+
+                IF bManualIndexerAndKistler THEN
+
+                    eProcessCycleState :=
+                        E_ProcessCycle_State.WAIT_AFTER_KISTLER;
+
+                ELSE
+
+                    eProcessCycleState :=
+                        E_ProcessCycle_State.IDLE;
+
+                END_IF
+
+            END_IF
+
+
+        // =================================================================
+        E_ProcessCycle_State.WAIT_AFTER_KISTLER:
+        // =================================================================
+
+            IF stKistlerOutTelegram.bSequenceEnd
+               AND
+               (
+                   stKistlerOutTelegram.bHomePosReached
+                   OR stKistlerOutTelegram.bRefPosReached
+                   OR stKistler_Status.bInPosition
+               ) THEN
+
+                GVL_MASTER.stProcess.bReleaseNestRotation := TRUE;
+
+                eProcessCycleState :=
+                    E_ProcessCycle_State.RELEASE_NEST;
+
+            END_IF
+
+
+        // =================================================================
+        E_ProcessCycle_State.RELEASE_NEST:
+        // =================================================================
+
+            GVL_MASTER.stProcess.bReleaseNestRotation := TRUE;
+
+            IF eNestState <> E_NestState.TESTING
+               OR NOT GVL_MASTER.stProcess.bNestTestingReady THEN
+
+                GVL_MASTER.stProcess.bReleaseNestRotation := FALSE;
+                GVL_MASTER.stProcess.bKistlerCycleRequest := FALSE;
+                GVL_MASTER.stProcess.bKistlerCycleDone := FALSE;
+                GVL_MASTER.stProcess.bKistlerHomeDone := FALSE;
 
                 tonAfterKistlerDelay(IN := FALSE);
 
@@ -4111,298 +4449,39 @@ CASE GVL_MASTER.stMachineStatus.eMachineState OF
                     eProcessCycleState :=
                         E_ProcessCycle_State.WAIT_NEST_TESTING_READY;
 
-                ELSIF bManualKistlerOnly
-                      AND NOT GVL_MASTER.stProcess.bNestTestingReady
-                      AND stKistler_Status.eKistlerState =
-                            E_KistlerState.READY
-                      AND NOT stKistler_Status.bError
-                      AND NOT bKistlerRecoveryHomeRequest THEN
-
-                    GVL_MASTER.stProcess.bNestTestingReady :=
-                        FALSE;
-
-                    eProcessCycleState :=
-                        E_ProcessCycle_State.REQUEST_KISTLER;
-
-                END_IF
-
-            // =================================================================
-            E_ProcessCycle_State.WAIT_NEST_TESTING_READY:
-            // =================================================================
-
-                GVL_MASTER.stProcess.bKistlerCycleRequest := FALSE;
-                GVL_MASTER.stProcess.bReleaseNestRotation := FALSE;
-
-                tonAfterKistlerDelay(IN := FALSE);
-
-                IF NOT (
-                    bManualIndexerOnly
-                    OR bManualIndexerAndKistler
-                ) THEN
+                ELSE
 
                     eProcessCycleState :=
                         E_ProcessCycle_State.IDLE;
 
-                ELSIF GVL_MASTER.stProcess.bNestTestingReady
-                      AND eNestState = E_NestState.TESTING
-                      AND bManualIndexerAndKistler
-                      AND stKistler_Status.eKistlerState =
-                            E_KistlerState.READY
-                      AND NOT stKistler_Status.bError
-                      AND NOT bKistlerRecoveryHomeRequest THEN
-
-                    eProcessCycleState :=
-                        E_ProcessCycle_State.REQUEST_KISTLER;
-
-                ELSIF GVL_MASTER.stProcess.bNestTestingReady
-                      AND eNestState = E_NestState.TESTING
-                      AND bManualIndexerOnly THEN
-
-                    GVL_MASTER.stProcess.bKistlerCycleRequest :=
-                        FALSE;
-
-                    GVL_MASTER.stProcess.bKistlerHomeDone :=
-                        TRUE;
-
-                    GVL_MASTER.stProcess.bReleaseNestRotation :=
-                        TRUE;
-
-                    eProcessCycleState :=
-                        E_ProcessCycle_State.RELEASE_NEST;
-
                 END_IF
 
-            // =================================================================
-            E_ProcessCycle_State.REQUEST_KISTLER:
-            // =================================================================
+            END_IF
 
-                // Kistler already reacted.
-                IF stKistler_Status.eKistlerState <>
-                    E_KistlerState.READY THEN
 
-                    eProcessCycleState :=
-                        E_ProcessCycle_State.WAIT_KISTLER_DONE;
+        // =================================================================
+        E_ProcessCycle_State.FAULT:
+        // =================================================================
 
-                // -------------------------------------------------------------
-                // Manual Kistler only.
-                //
-                // Start only on the two-hand rising edge.
-                // -------------------------------------------------------------
-                ELSIF bManualKistlerOnly
-                      AND GVL_IO.stSafety.bSafetyOK
-                      AND rTrigTwoHands.Q
-                      AND GVL_MASTER.stNestTable.bNestReadySensor
-                      AND GVL_MASTER.stNestTable.bNestLockedSensor
-                      AND NOT stKistler_Status.bError
-                      AND NOT bKistlerRecoveryHomeRequest THEN
+            GVL_MASTER.stProcess.bKistlerCycleRequest := FALSE;
+            GVL_MASTER.stProcess.bReleaseNestRotation := FALSE;
 
-                    GVL_MASTER.stProcess.bKistlerCycleRequest :=
-                        TRUE;
+            tonAfterKistlerDelay(IN := FALSE);
 
-                // -------------------------------------------------------------
-                // Manual indexer and Kistler.
-                // -------------------------------------------------------------
-                ELSIF bManualIndexerAndKistler
-                      AND GVL_MASTER.stProcess.bNestTestingReady
-                      AND eNestState = E_NestState.TESTING
-                      AND GVL_MASTER.stNestTable.bNestReadySensor
-                      AND GVL_MASTER.stNestTable.bNestLockedSensor
-                      AND NOT GVL_MASTER.stNestTable.bNestInMotion
-                      AND eCurrentNestPos <>
-                            E_NestPosition.UNKNOWN
-                      AND bNestNewPositionReady
-                      AND NOT stKistler_Status.bError
-                      AND NOT bKistlerRecoveryHomeRequest THEN
+            M_ResetProcessCycle();
 
-                    GVL_MASTER.stProcess.bKistlerCycleRequest :=
-                        TRUE;
+            GVL_MASTER.stMachineStatus.eMachineState :=
+                E_MachineState.FAULT;
 
-                ELSIF stKistler_Status.bError THEN
 
-                    GVL_MASTER.stProcess.bKistlerCycleRequest :=
-                        FALSE;
+        // =================================================================
+        ELSE
+        // =================================================================
 
-                    eProcessCycleState :=
-                        E_ProcessCycle_State.FAULT;
+            eProcessCycleState :=
+                E_ProcessCycle_State.IDLE;
 
-                END_IF
-
-            // =================================================================
-            E_ProcessCycle_State.WAIT_KISTLER_DONE:
-            // =================================================================
-
-                GVL_MASTER.stProcess.bKistlerCycleRequest := TRUE;
-
-                IF stKistler_Status.bError THEN
-
-                    GVL_MASTER.stProcess.bKistlerCycleRequest :=
-                        FALSE;
-
-                    eProcessCycleState :=
-                        E_ProcessCycle_State.FAULT;
-
-                ELSIF stKistler_Status.eKistlerState =
-                      E_KistlerState.DONE THEN
-
-                    // Capture the final available measurements.
-                    M_HMIKistlerResult(
-                        eNestPosition := eCurrentNestPos,
-                        bPartOK       := FALSE,
-                        bPartNOK      := FALSE,
-                        rForce        := stKistler_Status.rLiveForce,
-                        rDistance     := stKistler_Status.rLiveDistance,
-                        bResetValues  := FALSE
-                    );
-
-                    GVL_MASTER.stProcess.bKistlerCycleRequest :=
-                        FALSE;
-
-                    GVL_MASTER.stProcess.bKistlerCycleDone :=
-                        TRUE;
-
-                    IF bManualIndexerAndKistler THEN
-
-                        eLastTestedNestPos :=
-                            eCurrentNestPos;
-
-                        eProcessCycleState :=
-                            E_ProcessCycle_State.WAIT_KISTLER_HOME;
-
-                    ELSE
-
-                        eProcessCycleState :=
-                            E_ProcessCycle_State.IDLE;
-
-                    END_IF
-
-                END_IF
-
-            // =================================================================
-            E_ProcessCycle_State.WAIT_KISTLER_HOME:
-            // =================================================================
-
-                GVL_MASTER.stProcess.bKistlerCycleRequest := FALSE;
-
-                IF stKistler_Status.bError THEN
-
-                    eProcessCycleState :=
-                        E_ProcessCycle_State.FAULT;
-
-                ELSIF stKistlerOutTelegram.bHomePosReached
-                      OR stKistlerOutTelegram.bRefPosReached
-                      OR stKistler_Status.bInPosition THEN
-
-                    GVL_MASTER.stProcess.bKistlerHomeDone :=
-                        TRUE;
-
-                    IF bManualIndexerAndKistler THEN
-
-                        eProcessCycleState :=
-                            E_ProcessCycle_State.WAIT_AFTER_KISTLER;
-
-                    ELSE
-
-                        eProcessCycleState :=
-                            E_ProcessCycle_State.IDLE;
-
-                    END_IF
-
-                END_IF
-
-            // =================================================================
-            E_ProcessCycle_State.WAIT_AFTER_KISTLER:
-            // =================================================================
-
-                IF stKistlerOutTelegram.bSequenceEnd
-                   AND
-                   (
-                       stKistlerOutTelegram.bHomePosReached
-                       OR
-                       stKistlerOutTelegram.bRefPosReached
-                       OR
-                       stKistler_Status.bInPosition
-                   ) THEN
-
-                    GVL_MASTER.stProcess.bReleaseNestRotation :=
-                        TRUE;
-
-                    eProcessCycleState :=
-                        E_ProcessCycle_State.RELEASE_NEST;
-
-                END_IF
-
-            // =================================================================
-            E_ProcessCycle_State.RELEASE_NEST:
-            // =================================================================
-
-                GVL_MASTER.stProcess.bReleaseNestRotation :=
-                    TRUE;
-
-                IF eNestState <> E_NestState.TESTING
-                   OR NOT GVL_MASTER.stProcess.bNestTestingReady THEN
-
-                    GVL_MASTER.stProcess.bReleaseNestRotation :=
-                        FALSE;
-
-                    GVL_MASTER.stProcess.bKistlerCycleRequest :=
-                        FALSE;
-
-                    GVL_MASTER.stProcess.bKistlerCycleDone :=
-                        FALSE;
-
-                    GVL_MASTER.stProcess.bKistlerHomeDone :=
-                        FALSE;
-
-                    tonAfterKistlerDelay(IN := FALSE);
-
-                    IF bManualIndexerOnly
-                       OR bManualIndexerAndKistler THEN
-
-                        eProcessCycleState :=
-                            E_ProcessCycle_State.WAIT_NEST_TESTING_READY;
-
-                    ELSE
-
-                        eProcessCycleState :=
-                            E_ProcessCycle_State.IDLE;
-
-                    END_IF
-
-                END_IF
-
-            // =================================================================
-            E_ProcessCycle_State.FAULT:
-            // =================================================================
-
-                GVL_MASTER.stProcess.bKistlerCycleRequest :=
-                    FALSE;
-
-                GVL_MASTER.stProcess.bReleaseNestRotation :=
-                    FALSE;
-
-                tonAfterKistlerDelay(IN := FALSE);
-
-                M_ResetProcessCycle();
-
-                GVL_MASTER.stMachineStatus.eMachineState :=
-                    E_MachineState.FAULT;
-
-            // =================================================================
-            ELSE
-            // =================================================================
-
-                eProcessCycleState :=
-                    E_ProcessCycle_State.IDLE;
-
-        END_CASE
-
-    // ========================================================================
-    ELSE
-    // ========================================================================
-
-        // This should normally be handled by bProcessCycleAllowed at the
-        // beginning of the method.
-        M_ResetProcessCycle();
+    END_CASE
 
 END_CASE
 
@@ -5107,7 +5186,11 @@ GVL_IO.stTerm11_EL2809.iEL2809_Ch15 := FALSE;
 GVL_IO.stTerm11_EL2809.iEL2809_Ch16 := FALSE;
 
 
-]]></ST>
+// -----------------------------------------------------------------------------
+// T13 - EL12809 channel mirrors for HMI diagnostics
+// -----------------------------------------------------------------------------
+
+GVL_IO.stTerm13_EL2809.iEL2809_Ch9 := GVL_IO.qExternalLight;]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_UpdateActiveNestPositions" Id="{a175beaf-3ad8-4d7b-8c4f-5074246f2c65}" FolderPath="Nest_Table\">

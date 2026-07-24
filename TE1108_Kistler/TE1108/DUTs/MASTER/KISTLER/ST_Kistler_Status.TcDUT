@@ -16,7 +16,14 @@ STRUCT
 	rLiveForce      : REAL;
 
     eKistlerState 	: E_KistlerState;
-END_STRUCT
+	
+	// Configured evaluation limits
+	rDistanceMin 	: REAL;
+	rDistanceMax 	: REAL;
+	rForceMin    	: REAL;
+	rForceMax    	: REAL;
+	
+	END_STRUCT
 END_TYPE]]></Declaration>
   </DUT>
 </TcPlcObject>

@@ -43,142 +43,235 @@ END_IF]]></ST>
     </Implementation>
     <Action Name="ACT_ActiveEvents_DataHistory" Id="{61da313d-b258-4798-832e-c39696bf6052}">
       <Implementation>
-        <ST><![CDATA[IF bPulse  THEN
+        <ST><![CDATA[// -----------------------------------------------------------------------------
+// Reset has priority over event processing.
+// -----------------------------------------------------------------------------
+IF bResetFaults THEN
 
-FOR k[0] := 0 TO nArraySize DO
-	
-	FOR k[1] := 0 TO 100 DO
-		
-		IF stStationEvents[k[0]].aEvents[k[1]].bFault AND stStationEvents[k[0]].aEvents[k[1]].bEventFlag AND NOT stStationEvents[k[0]].aEvents[k[1]].bActive THEN
-			
-			//ACTIVE EVENTS
-			astActiveEvents[l+1].sEventTex				:= 	stStationEvents[k[0]].aEvents[k[1]].bEventTextHMI;
-			astActiveEvents[l+1].sType					:= 'Fault';						
-			astActiveEvents[l+1].abType					:= 1; 
-			astActiveEvents[l+1].sSolution				:= stStationEvents[k[0]].aEvents[k[1]].sSolution;
-			stStationEvents[k[0]].aEvents[k[1]].bActive := TRUE;
-			
-			//EVENTS HISTORY
-			FOR n := 200 TO 1 BY -1 DO
-							
-				astEventsHistory[n ].sEventTex				:= astEventsHistory[n - 1].sEventTex;
-				astEventsHistory[n ].sType					:= astEventsHistory[n - 1].sType;
-				astEventsHistory[n].abType					:= astEventsHistory[n - 1].abType;
-				astEventsHistory[n ].sDate					:= astEventsHistory[n - 1].sDate;										
-				astEventsHistory[n ].sTime					:= astEventsHistory[n - 1].sTime;
-				
-			END_FOR
+    // Clear active events shown in the main grid.
+    FOR l := 1 TO 50 DO
 
-			astEventsHistory[0].sEventTex				:= stStationEvents[k[0]].aEvents[k[1]].bEventTextHMI;
-			astEventsHistory[0].sType					:= 'Fault';
-			astEventsHistory[0].abType					:= 1;
-			astEventsHistory[0].sDate					:= 	sSystemDate;										
-			astEventsHistory[0].sTime					:= 	sSystemTime;
-			l											:= l + 1;			
-			
-			
-		END_IF
-		
-		IF stStationEvents[k[0]].aEvents[k[1]].bCycleStopRequest AND stStationEvents[k[0]].aEvents[k[1]].bEventFlag AND NOT stStationEvents[k[0]].aEvents[k[1]].bActive THEN
-			
-			//ACTIVE EVENTS
-			astActiveEvents[l+1].sEventTex				:= 	stStationEvents[k[0]].aEvents[k[1]].bEventTextHMI;
-			astActiveEvents[l+1].sType					:= 'Cycle Stop Request';						
-			astActiveEvents[l+1].abType					:= 2; 
-			astActiveEvents[l+1].sSolution				:= stStationEvents[k[0]].aEvents[k[1]].sSolution;
-			stStationEvents[k[0]].aEvents[k[1]].bActive := TRUE;
-			
-			//EVENTS HISTORY
-			n:= 200;
-			FOR n := 200 TO 1 BY -1 DO
-							
-				astEventsHistory[n].sEventTex				:= astEventsHistory[n - 1].sEventTex;
-				astEventsHistory[n].sType					:= astEventsHistory[n - 1].sType;
-				astEventsHistory[n].abType					:= astEventsHistory[n - 1].abType;
-				astEventsHistory[n].sDate					:= astEventsHistory[n - 1].sDate;										
-				astEventsHistory[n].sTime					:= astEventsHistory[n - 1].sTime;
-				
-			END_FOR
+        astActiveEvents[l].sEventTex := '';
+        astActiveEvents[l].sType := '';
+        astActiveEvents[l].abType := 0;
+        astActiveEvents[l].sSolution := '';
 
-			astEventsHistory[0].sEventTex				:= stStationEvents[k[0]].aEvents[k[1]].bEventTextHMI;
-			astEventsHistory[0].sType					:= 'Cycle Stop Request';
-			astEventsHistory[0].abType					:= 2;
-			astEventsHistory[0].sDate					:= 	sSystemDate;										
-			astEventsHistory[0].sTime					:= 	sSystemTime;
-															
-			l											:= l + 1;	
-			
-						
-		END_IF
-		
-		IF stStationEvents[k[0]].aEvents[k[1]].bMessage AND stStationEvents[k[0]].aEvents[k[1]].bEventFlag AND NOT stStationEvents[k[0]].aEvents[k[1]].bActive THEN
-			
-			//ACTIVE EVENTS
-			astActiveEvents[l+1].sEventTex				:= 	stStationEvents[k[0]].aEvents[k[1]].bEventTextHMI;
-			astActiveEvents[l+1].sType					:= 'Message';						
-			astActiveEvents[l+1].abType					:= 3; 
-			astActiveEvents[l+1].sSolution				:= stStationEvents[k[0]].aEvents[k[1]].sSolution;
-			stStationEvents[k[0]].aEvents[k[1]].bActive := TRUE;
-			
-			//EVENTS HISTORY
-			FOR n := 200 TO 1 BY -1 DO
-							
-				astEventsHistory[n].sEventTex				:= astEventsHistory[n - 1].sEventTex;
-				astEventsHistory[n].sType					:= astEventsHistory[n - 1].sType;
-				astEventsHistory[n].abType					:= astEventsHistory[n - 1].abType;
-				astEventsHistory[n].sDate					:= astEventsHistory[n - 1].sDate;										
-				astEventsHistory[n].sTime					:= astEventsHistory[n - 1].sTime;
-				
-			END_FOR
+    END_FOR
 
-			astEventsHistory[0].sEventTex				:= stStationEvents[k[0]].aEvents[k[1]].bEventTextHMI;
-			astEventsHistory[0].sType					:= 'Message';
-			astEventsHistory[0].abType					:= 3;
-			astEventsHistory[0].sDate					:= 	sSystemDate;										
-			astEventsHistory[0].sTime					:= 	sSystemTime;
-															
-			l											:= l + 1;
-			
-										
-		END_IF
-		
-		
-	END_FOR
+    // Re-arm all configured events.
+    FOR k[0] := 0 TO nArraySize DO
 
-END_FOR
+        FOR k[1] := 0 TO 100 DO
 
-ELSIF bResetFaults THEN
-	FOR l := 1 TO 50 DO
-	
-			astActiveEvents[l].sEventTex			:= 	'';
-			astActiveEvents[l].sType				:= '';						
-			astActiveEvents[l].abType				:= 0; 
-			astActiveEvents[l].sSolution			:= '';
-			
-	END_FOR	
-	
-	FOR k[0] := 0 TO nArraySize DO
-	
-		FOR k[1] := 0 TO 100 DO
-	
-			stStationEvents[k[0]].aEvents[k[1]].bActive	:= FALSE;
-		END_FOR
-	END_FOR
-	
-	l												:= 0;
-	k[0]											:= 0;
-	k[1]											:= 0;	
+            stStationEvents[k[0]].aEvents[k[1]].bActive := FALSE;
+
+        END_FOR
+
+    END_FOR
+
+    l := 0;
+    k[0] := 0;
+    k[1] := 0;
+
+
+// -----------------------------------------------------------------------------
+// Process configured events.
+// -----------------------------------------------------------------------------
+ELSIF bPulse THEN
+
+    FOR k[0] := 0 TO nArraySize DO
+
+        FOR k[1] := 0 TO 100 DO
+
+            // Re-arm an event after its condition has cleared.
+            IF NOT stStationEvents[k[0]].aEvents[k[1]].bEventFlag THEN
+
+                stStationEvents[k[0]].aEvents[k[1]].bActive := FALSE;
+
+            END_IF
+
+
+            // -----------------------------------------------------------------
+            // Fault
+            // -----------------------------------------------------------------
+            IF stStationEvents[k[0]].aEvents[k[1]].bFault
+                AND stStationEvents[k[0]].aEvents[k[1]].bEventFlag
+                AND NOT stStationEvents[k[0]].aEvents[k[1]].bActive THEN
+
+                // Active events
+                astActiveEvents[l + 1].sEventTex :=
+                    stStationEvents[k[0]].aEvents[k[1]].bEventTextHMI;
+
+                astActiveEvents[l + 1].sType := 'Fault';
+                astActiveEvents[l + 1].abType := 1;
+
+                astActiveEvents[l + 1].sSolution :=
+                    stStationEvents[k[0]].aEvents[k[1]].sSolution;
+
+                stStationEvents[k[0]].aEvents[k[1]].bActive := TRUE;
+
+
+                // Shift event history
+                FOR n := 200 TO 1 BY -1 DO
+
+                    astEventsHistory[n].sEventTex :=
+                        astEventsHistory[n - 1].sEventTex;
+
+                    astEventsHistory[n].sType :=
+                        astEventsHistory[n - 1].sType;
+
+                    astEventsHistory[n].abType :=
+                        astEventsHistory[n - 1].abType;
+
+                    astEventsHistory[n].sDate :=
+                        astEventsHistory[n - 1].sDate;
+
+                    astEventsHistory[n].sTime :=
+                        astEventsHistory[n - 1].sTime;
+
+                END_FOR
+
+
+                // Insert newest event
+                astEventsHistory[0].sEventTex :=
+                    stStationEvents[k[0]].aEvents[k[1]].bEventTextHMI;
+
+                astEventsHistory[0].sType := 'Fault';
+                astEventsHistory[0].abType := 1;
+                astEventsHistory[0].sDate := sSystemDate;
+                astEventsHistory[0].sTime := sSystemTime;
+
+                l := l + 1;
+
+            END_IF
+
+
+            // -----------------------------------------------------------------
+            // Cycle Stop Request
+            // -----------------------------------------------------------------
+            IF stStationEvents[k[0]].aEvents[k[1]].bCycleStopRequest
+                AND stStationEvents[k[0]].aEvents[k[1]].bEventFlag
+                AND NOT stStationEvents[k[0]].aEvents[k[1]].bActive THEN
+
+                // Active events
+                astActiveEvents[l + 1].sEventTex :=
+                    stStationEvents[k[0]].aEvents[k[1]].bEventTextHMI;
+
+                astActiveEvents[l + 1].sType := 'Cycle Stop Request';
+                astActiveEvents[l + 1].abType := 2;
+
+                astActiveEvents[l + 1].sSolution :=
+                    stStationEvents[k[0]].aEvents[k[1]].sSolution;
+
+                stStationEvents[k[0]].aEvents[k[1]].bActive := TRUE;
+
+
+                // Shift event history
+                FOR n := 200 TO 1 BY -1 DO
+
+                    astEventsHistory[n].sEventTex :=
+                        astEventsHistory[n - 1].sEventTex;
+
+                    astEventsHistory[n].sType :=
+                        astEventsHistory[n - 1].sType;
+
+                    astEventsHistory[n].abType :=
+                        astEventsHistory[n - 1].abType;
+
+                    astEventsHistory[n].sDate :=
+                        astEventsHistory[n - 1].sDate;
+
+                    astEventsHistory[n].sTime :=
+                        astEventsHistory[n - 1].sTime;
+
+                END_FOR
+
+
+                // Insert newest event
+                astEventsHistory[0].sEventTex :=
+                    stStationEvents[k[0]].aEvents[k[1]].bEventTextHMI;
+
+                astEventsHistory[0].sType := 'Cycle Stop Request';
+                astEventsHistory[0].abType := 2;
+                astEventsHistory[0].sDate := sSystemDate;
+                astEventsHistory[0].sTime := sSystemTime;
+
+                l := l + 1;
+
+            END_IF
+
+
+            // -----------------------------------------------------------------
+            // Message
+            // -----------------------------------------------------------------
+            IF stStationEvents[k[0]].aEvents[k[1]].bMessage
+                AND stStationEvents[k[0]].aEvents[k[1]].bEventFlag
+                AND NOT stStationEvents[k[0]].aEvents[k[1]].bActive THEN
+
+                // Active events
+                astActiveEvents[l + 1].sEventTex :=
+                    stStationEvents[k[0]].aEvents[k[1]].bEventTextHMI;
+
+                astActiveEvents[l + 1].sType := 'Message';
+                astActiveEvents[l + 1].abType := 3;
+
+                astActiveEvents[l + 1].sSolution :=
+                    stStationEvents[k[0]].aEvents[k[1]].sSolution;
+
+                stStationEvents[k[0]].aEvents[k[1]].bActive := TRUE;
+
+
+                // Shift event history
+                FOR n := 200 TO 1 BY -1 DO
+
+                    astEventsHistory[n].sEventTex :=
+                        astEventsHistory[n - 1].sEventTex;
+
+                    astEventsHistory[n].sType :=
+                        astEventsHistory[n - 1].sType;
+
+                    astEventsHistory[n].abType :=
+                        astEventsHistory[n - 1].abType;
+
+                    astEventsHistory[n].sDate :=
+                        astEventsHistory[n - 1].sDate;
+
+                    astEventsHistory[n].sTime :=
+                        astEventsHistory[n - 1].sTime;
+
+                END_FOR
+
+
+                // Insert newest event
+                astEventsHistory[0].sEventTex :=
+                    stStationEvents[k[0]].aEvents[k[1]].bEventTextHMI;
+
+                astEventsHistory[0].sType := 'Message';
+                astEventsHistory[0].abType := 3;
+                astEventsHistory[0].sDate := sSystemDate;
+                astEventsHistory[0].sTime := sSystemTime;
+
+                l := l + 1;
+
+            END_IF
+
+        END_FOR
+
+    END_FOR
+
+
 ELSE
-	
-	k[0]											:= 0;
-	k[1]											:= 0;
-	
+
+    k[0] := 0;
+    k[1] := 0;
+
 END_IF
 
-astActiveEvents[0].sEventTex						:= bMachineMessage;
-astActiveEvents[0].sType							:= 'Message';
 
-]]></ST>
+// Machine message always occupies the first active-events row.
+astActiveEvents[0].sEventTex := bMachineMessage;
+astActiveEvents[0].sType := 'Message';
+astActiveEvents[0].abType := 3;]]></ST>
       </Implementation>
     </Action>
     <Action Name="ACT_EventTextAssigment" Id="{0dfbbd34-04a8-4fd4-a700-4471e514f320}">

@@ -511,7 +511,7 @@
 ]
 </script>
 </div>
-<div id="TcHmiDatagrid_5" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiDatagrid" data-tchmi-height="137" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-top="570" data-tchmi-top-unit="px" data-tchmi-width="1366" data-tchmi-width-unit="px" data-tchmi-grid-font-size="20" data-tchmi-grid-font-style="Normal" data-tchmi-grid-font-weight="Bold" data-tchmi-zindex="2" data-tchmi-creator-locked="True" data-tchmi-creator-visibility="Visible" data-tchmi-src-data="%s%ADS.PLC1.GVL_MASTER.astActiveEvents%/s%">
+<div id="TcHmiDatagrid_5" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiDatagrid" data-tchmi-height="137" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-top="570" data-tchmi-top-unit="px" data-tchmi-width="1360" data-tchmi-width-unit="px" data-tchmi-grid-font-size="20" data-tchmi-grid-font-style="Normal" data-tchmi-grid-font-weight="Bold" data-tchmi-zindex="2" data-tchmi-creator-locked="True" data-tchmi-creator-visibility="Visible" data-tchmi-src-data="%s%ADS.PLC1.GVL_MASTER.astActiveEvents%/s%">
 <script data-tchmi-target-attribute="data-tchmi-cell-content-padding" type="application/json">
 {
   "left": 3,
@@ -532,7 +532,7 @@
     "name": "sType",
     "label": "TYPE",
     "control": "TextBox",
-    "width": 200,
+    "width": 150,
     "widthUnit": "px",
     "resize": false,
     "minWidth": 100,
@@ -593,7 +593,7 @@
     "name": "sEventTex",
     "label": "EVENT",
     "control": "TextBox",
-    "width": 500,
+    "width": 550,
     "widthUnit": "px",
     "resize": false,
     "minWidth": 100,
