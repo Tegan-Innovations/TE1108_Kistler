@@ -16,6 +16,8 @@ VAR
 	tonSimulation		  				: ARRAY[1..4] OF TON; //timer for simulations  
 	rtKistlerResultDone   				: R_TRIG;
 	rtPartPresentReject   				: R_TRIG;
+
+	bKistlerResetIssued 				: BOOL := FALSE;
     
     rtFirstAutoCycle      				: R_TRIG; // Detects entry into Auto Cycle
     fbResetTrigger        				: F_TRIG; // Detects HMI Reset button release
@@ -281,17 +283,20 @@ bStartProcessCondition :=
 // Kistler NOK result is a rejected part, not a machine fault.
 // =========================================================
 
-//OR stKistler_Status.bError
+
 IF (
     NOT GVL_MASTER.stMachineStatus.bSafety
-    OR GVL_MASTER.i_bButtonEmergencyStop 
+    OR GVL_MASTER.i_bButtonEmergencyStop
+    OR stKistler_Status.bError
 )
-AND GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.FAULT THEN
+AND GVL_MASTER.stMachineStatus.eMachineState <>
+    E_MachineState.FAULT
+THEN
 
-    GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.FAULT;
+    GVL_MASTER.stMachineStatus.eMachineState :=
+        E_MachineState.FAULT;
 
-END_IF
-
+END_IF;
 //HMI Command Manual Mode
 
 rtHMIManualModeRequest(CLK := GVL_HMI.i_bHMIManualModeRequest);
@@ -309,12 +314,14 @@ IF NOT GVL_MASTER.i_bButtonStop THEN
     bStopRequested := TRUE;
 END_IF
 
-
 IF GVL_MASTER.stMachineStatus.eMachineState <>
-    E_MachineState.FAULT THEN
+    E_MachineState.FAULT
+THEN
 
     bFaultResetRequested := FALSE;
-END_IF
+    bKistlerResetIssued := FALSE;
+
+END_IF;
 
 // // =========================================================
 // 2. MAIN STATE MACHINE (CASE)
@@ -329,42 +336,81 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 		M_ResetProcessCycle();
 		
     E_MachineState.FAULT:
- 		eMode_LED_Start := E_LEDs_Mode.OFF;
-        eMode_LED_Reset := E_LEDs_Mode.FLASHING; // Reset button must flash
-		eMode_LED_Fail := E_LEDs_Mode.ON;
-		eMode_LED_PASS := E_LEDs_Mode.OFF;
-		
-		bHMIManualModeRequest := FALSE;
-    	//M_ResetProcessCycle();
 
-		// Store the first reset request while TwinSAFE recovers.
-		IF GVL_MASTER.i_bButtonReset THEN
-			bFaultResetRequested := TRUE;
-		END_IF
+    eMode_LED_Start := E_LEDs_Mode.OFF;
+    eMode_LED_Reset := E_LEDs_Mode.FLASHING;
+    eMode_LED_Fail  := E_LEDs_Mode.ON;
+    eMode_LED_PASS  := E_LEDs_Mode.OFF;
 
-		IF GVL_MASTER.stMachineStatus.bSafety
-			AND NOT GVL_MASTER.i_bButtonEmergencyStop
-			AND fbResetTrigger.Q
-		THEN
-			bKistlerResetPulse := TRUE;
-		END_IF;
-	
-	
-		IF bKistlerResetPulse THEN
-	
-			IF M_ResetProcessCycle() THEN
-	
-				GVL_MASTER.stMachineStatus.eMachineState :=
-					E_MachineState.STOPPING;
-	
-			END_IF;
-	
-		END_IF;
+    bHMIManualModeRequest := FALSE;
 
-// 
-//         IF  GVL_MASTER.stMachineStatus.bSafety AND NOT GVL_MASTER.i_bButtonEmergencyStop AND fbResetTrigger.Q THEN
-//             GVL_Master.stMachineStatus.eMachineState := E_MachineState.STOPPING;
-//         END_IF
+
+    // =====================================================
+    // STORE RESET BUTTON PRESS
+    // =====================================================
+
+    // Store that the operator pressed Reset.
+    // The actual action is performed when the button
+    // is released through fbResetTrigger.Q.
+    IF GVL_MASTER.i_bButtonReset THEN
+
+        bFaultResetRequested := TRUE;
+
+    END_IF;
+
+
+    // =====================================================
+    // GENERATE KISTLER RESET PULSE
+    // =====================================================
+
+    // Generate only one reset pulse for each operator request.
+    IF bFaultResetRequested
+        AND NOT bKistlerResetIssued
+        AND GVL_MASTER.stMachineStatus.bSafety
+        AND NOT GVL_MASTER.i_bButtonEmergencyStop
+        AND fbResetTrigger.Q
+    THEN
+
+        // Clear the interrupted machine process.
+        M_ResetProcessCycle();
+
+        // Start the Kistler alarm acknowledgement pulse.
+        bKistlerResetPulse := TRUE;
+
+        // Prevent the same request from creating another pulse.
+        bKistlerResetIssued := TRUE;
+
+    END_IF;
+
+
+    // =====================================================
+    // LEAVE FAULT
+    // =====================================================
+
+    // Leave FAULT only after:
+    // - the operator requested Reset;
+    // - the Kistler reset pulse was generated;
+    // - the 500 ms reset pulse has finished;
+    // - the Kistler technical error has disappeared;
+    // - Safety is healthy.
+    IF bFaultResetRequested
+        AND bKistlerResetIssued
+        AND NOT bKistlerResetPulse
+        AND NOT stKistler_Status.bError
+        AND GVL_MASTER.stMachineStatus.bSafety
+        AND NOT GVL_MASTER.i_bButtonEmergencyStop
+    THEN
+
+        bFaultResetRequested := FALSE;
+        bKistlerResetIssued := FALSE;
+
+        // Request Kistler recovery during the next initialization.
+        bKistlerRecoveryHomeRequest := TRUE;
+
+        GVL_MASTER.stMachineStatus.eMachineState :=
+            E_MachineState.STOPPING;
+
+    END_IF;
 		
 	E_MachineState.STOPPING:
 		eMode_LED_PASS := E_LEDs_Mode.OFF;
@@ -1313,7 +1359,7 @@ stKistler_Status.bPartNOK :=
 
 
 // Technical error only.
-// NOK result must not be included here.
+// NOK result must NOT be included here.
 stKistler_Status.bError :=
     stKistlerOutTelegram.bServoError
     OR stKistlerOutTelegram.bTransmissionFault
@@ -1429,9 +1475,7 @@ END_VAR
 
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[
-
-// =========================================================
+        <ST><![CDATA[// =========================================================
 // RESET BUTTON DETECTION
 // =========================================================
 
@@ -1441,10 +1485,12 @@ fbResetTrigger(
 );
 
 
-// Perform the complete process reset only in allowed states
+// Perform the process reset only outside the active states.
+// FAULT recovery is handled in the main machine state.
 IF fbResetTrigger.Q
     AND eCurrentState <> E_MachineState.SYSTEM_AUTO_CYCLE
     AND eCurrentState <> E_MachineState.SYSTEM_READY_TO_START
+    AND eCurrentState <> E_MachineState.FAULT
 THEN
 
     M_ResetProcessCycle();
@@ -1456,13 +1502,11 @@ END_IF;
 // KISTLER RESET / ALARM ACKNOWLEDGEMENT PULSE
 // =========================================================
 
-// bKistlerResetPulse is set by M_ResetProcessCycle()
 tonKistlerReset(
     IN := bKistlerResetPulse,
     PT := T#500MS
 );
 
-// This is the command that is actually sent to the Kistler
 stKistler_CMD.bReset := bKistlerResetPulse;
 
 
@@ -1478,11 +1522,12 @@ END_IF;
 // ABORT
 // =========================================================
 
-// Keep abort active while the machine is faulted
 stKistler_CMD.bAbort :=
-    (eCurrentState = E_MachineState.FAULT)
-    OR
-    (eCurrentState = E_MachineState.STOPPING);
+    (
+        eCurrentState = E_MachineState.FAULT
+        OR eCurrentState = E_MachineState.STOPPING
+    )
+    AND NOT bKistlerResetPulse;
 
 
 // =========================================================
@@ -1493,13 +1538,13 @@ stKistler_CMD.bEnable :=
     GVL_MASTER.stMachineStatus.bSafety
     AND GVL_KISTLER_IO.bKistlerSafetyEnableOK
     AND NOT GVL_MASTER.i_bButtonEmergencyStop
-    AND NOT GVL_MASTER.stMachineStatus.bFault
     AND
     (
         eCurrentState = E_MachineState.SYSTEM_INITIALISING
         OR eCurrentState = E_MachineState.SYSTEM_READY_TO_START
         OR eCurrentState = E_MachineState.SYSTEM_AUTO_CYCLE
         OR eCurrentState = E_MachineState.STOPPING
+        OR eCurrentState = E_MachineState.FAULT
         OR
         (
             eCurrentState = E_MachineState.MANUAL_MODE
@@ -1520,9 +1565,6 @@ stKistler_CMD.bManualMode :=
 // =========================================================
 // MOTION / SEQUENCE COMMAND DEFAULTS
 // =========================================================
-
-// M_KistlerStateMachine(), called later in the PLC cycle,
-// may activate these commands when required.
 
 stKistler_CMD.bStart            := FALSE;
 stKistler_CMD.bRunSequence      := FALSE;
@@ -4674,8 +4716,7 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[
-M_ResetProcessCycle := FALSE;
+        <ST><![CDATA[M_ResetProcessCycle := FALSE;
 
 eProcessCycleState := E_ProcessCycle_State.IDLE;
 
@@ -4734,55 +4775,10 @@ stKistler_CMD.bTareY := FALSE;
 
 
 // =========================================================
-// START RESET PULSE
-// =========================================================
-
-// Start the pulse only on the first execution
-IF NOT bKistlerResetPulse AND NOT tonKistlerReset.Q THEN
-    bKistlerResetPulse := TRUE;
-END_IF;
-
-
-// Reset/Acknowledge command sent to the Kistler
-stKistler_CMD.bReset := bKistlerResetPulse;
-
-
-// Do not send Abort at the same time as Reset
-stKistler_CMD.bAbort := NOT bKistlerResetPulse;
-
-
-// =========================================================
-// RESET PULSE TIMER
-// =========================================================
-
-tonKistlerReset(
-    IN := bKistlerResetPulse,
-    PT := T#500MS
-);
-
-
-// =========================================================
 // RESET ROUTINE COMPLETE
 // =========================================================
 
-IF tonKistlerReset.Q THEN
-
-    // End pulse commands
-    bKistlerResetPulse := FALSE;
-
-    stKistler_CMD.bReset := FALSE;
-    stKistler_CMD.bAbort := FALSE;
-
-    // Reset the timer for the next fault/reset
-    tonKistlerReset(IN := FALSE);
-
-    // Request recovery movement on the next initialization
-    bKistlerRecoveryHomeRequest := TRUE;
-
-    // Inform caller that the reset routine is complete
-    M_ResetProcessCycle := TRUE;
-
-END_IF;]]></ST>
+M_ResetProcessCycle := TRUE;]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_StartFaultRejectRecovery" Id="{1379298e-0cfb-4338-ae73-185b8119dc5c}">

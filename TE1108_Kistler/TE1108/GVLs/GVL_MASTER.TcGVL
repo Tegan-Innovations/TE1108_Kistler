@@ -78,6 +78,7 @@ VAR_GLOBAL
 
 	astNestProcessResult : ARRAY[1..4] OF ST_NestProcessResult;
 	
+	stKistler_Status: INT;
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

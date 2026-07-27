@@ -2,123 +2,445 @@
 /// <reference path="./../../../TE1108_Kistler/Packages/Beckhoff.TwinCAT.HMI.Framework.14.3.431/runtimes/native1.12-tchmi/TcHmi.d.ts" />
 /// <reference path="./../../../Packages/Beckhoff.TwinCAT.HMI.Framework.14.3.431/runtimes/native1.12-tchmi/TcHmi.d.ts" />
 
-// Keep these lines for a best effort IntelliSense in the editor.
-/// <reference path="./../../../TE1108_Kistler/Packages/Beckhoff.TwinCAT.HMI.Framework.14.3.431/runtimes/native1.12-tchmi/TcHmi.d.ts" />
-/// <reference path="./../../../Packages/Beckhoff.TwinCAT.HMI.Framework.14.3.431/runtimes/native1.12-tchmi/TcHmi.d.ts" />
+(function () {
+    'use strict';
 
-window.confirmManualMode = function () {
-    try {
-        const machineStateSymbol =
-            '%s%ADS.PLC1.GVL_MASTER.stMachineStatus.eMachineState%/s%';
+    // ============================================================
+    // CONFIGURATION
+    // ============================================================
 
-        const manualModeRequestSymbol =
-            '%s%ADS.PLC1.GVL_HMI.i_bHMIManualModeRequest%/s%';
+    const MACHINE_STATE_SYMBOL =
+        '%s%ADS.PLC1.GVL_MASTER.stMachineStatus.eMachineState%/s%';
 
-        TcHmi.Symbol.readEx2(machineStateSymbol, function (dataState) {
+    const MANUAL_MODE_REQUEST_SYMBOL =
+        '%s%ADS.PLC1.GVL_HMI.i_bHMIManualModeRequest%/s%';
 
-            if (dataState.error !== TcHmi.Errors.NONE) {
-                closeMainPopup();
+    const MAIN_REGION_ID = 'Main_Region';
+    const MAIN_POPUP_ID = 'Main_Popup';
 
-                setTimeout(function () {
-                    alert("HMI Error: Failed to read Machine State. Code: " + dataState.error);
-                }, 100);
+    const MANUAL_MODE_PAGE =
+        'Contents/Screens/Manual_Mode.content';
 
-                return;
-            }
+    const MAIN_PAGE =
+        'Contents/Screens/Main_Kistler.content';
 
-            const machineStateValue =
-                dataState.value !== undefined ? dataState.value : dataState.result;
+    const READY_TO_START_STATE = 3;
+    const MANUAL_MODE_STATE = 6;
 
-            const isReadyToStart =
-                machineStateValue === 3 ||
-                String(machineStateValue).toUpperCase().includes("SYSTEM_READY_TO_START");
+    const MANUAL_ENTRY_TIMEOUT_MS = 5000;
+    const MANUAL_ENTRY_CHECK_MS = 200;
+    const MANUAL_EXIT_CHECK_MS = 300;
 
-            const isAlreadyManualMode =
-                machineStateValue === 6 ||
-                String(machineStateValue).toUpperCase().includes("MANUAL_MODE");
+    let manualEntryTimer = null;
+    let manualEntryTimeout = null;
+    let manualExitMonitor = null;
+    let exitReadInProgress = false;
 
-            if (isAlreadyManualMode) {
-                closeMainPopup();
 
-                goToManualModePage();
+    // ============================================================
+    // MACHINE STATE HELPERS
+    // ============================================================
 
-                setTimeout(function () {
-                    alert("The system is already in Manual Mode.");
-                }, 100);
+    function getMachineStateValue(data) {
+        if (!data) {
+            return null;
+        }
 
-                return;
-            }
+        const rawValue =
+            data.value !== undefined
+                ? data.value
+                : data.result;
 
-            if (isReadyToStart) {
+        const numericValue = Number(rawValue);
 
-                // Send the Manual Mode request to the PLC.
-                TcHmi.Symbol.writeEx2(manualModeRequestSymbol, true, function (dataWrite) {
-                    if (dataWrite.error !== TcHmi.Errors.NONE) {
-                        setTimeout(function () {
-                            alert("HMI Error: Failed to request Manual Mode. Code: " + dataWrite.error);
-                        }, 100);
-                    }
-                });
+        if (!Number.isNaN(numericValue)) {
+            return numericValue;
+        }
 
-                // Close the popup and change the screen without waiting for the write callback.
-                closeMainPopup();
+        const stateText =
+            String(rawValue).trim().toUpperCase();
 
-                goToManualModePage();
+        if (stateText.includes('SYSTEM_READY_TO_START')) {
+            return READY_TO_START_STATE;
+        }
 
-                setTimeout(function () {
-                    alert("The system has entered Manual Mode.");
-                }, 100);
+        if (stateText.includes('MANUAL_MODE')) {
+            return MANUAL_MODE_STATE;
+        }
 
-                return;
+        return null;
+    }
 
+
+    function isReadyToStart(machineState) {
+        return machineState === READY_TO_START_STATE;
+    }
+
+
+    function isManualMode(machineState) {
+        return machineState === MANUAL_MODE_STATE;
+    }
+
+
+    // ============================================================
+    // POPUP CONTROL
+    // ============================================================
+
+    window.closeMainPopup = function () {
+        try {
+            const popup =
+                TcHmi.Controls.get(MAIN_POPUP_ID);
+
+            if (popup) {
+                popup.close();
             } else {
-                closeMainPopup();
-
-                setTimeout(function () {
-                    alert("Manual Mode blocked: The system is not in Ready To Start, so it cannot enter Manual Mode.");
-                }, 100);
-
-                return;
+                console.log(
+                    MAIN_POPUP_ID + ' control not found.'
+                );
             }
-        });
 
-    } catch (error) {
-        closeMainPopup();
+        } catch (error) {
+            console.log(
+                'Failed to close Main_Popup: ' +
+                error.message
+            );
+        }
+    };
 
-        setTimeout(function () {
-            alert("Fatal Application Exception: " + error.message);
-        }, 100);
+
+    // ============================================================
+    // PAGE NAVIGATION
+    // ============================================================
+
+    function getMainRegion() {
+        return TcHmi.Controls.get(MAIN_REGION_ID);
     }
-};
 
 
-window.closeMainPopup = function () {
-    try {
-        const popup = TcHmi.Controls.get('Main_Popup');
+    window.goToManualModePage = function () {
+        try {
+            const mainRegion = getMainRegion();
 
-        if (popup) {
-            popup.close();
-        } else {
-            console.log("Main_Popup control not found.");
+            if (mainRegion) {
+                mainRegion.setTargetContent(
+                    MANUAL_MODE_PAGE
+                );
+            } else {
+                console.log(
+                    MAIN_REGION_ID + ' control not found.'
+                );
+            }
+
+        } catch (error) {
+            console.log(
+                'Failed to open Manual Mode page: ' +
+                error.message
+            );
+        }
+    };
+
+
+    window.goToMainPage = function () {
+        try {
+            const mainRegion = getMainRegion();
+
+            if (mainRegion) {
+                mainRegion.setTargetContent(
+                    MAIN_PAGE
+                );
+            } else {
+                console.log(
+                    MAIN_REGION_ID + ' control not found.'
+                );
+            }
+
+        } catch (error) {
+            console.log(
+                'Failed to open Main page: ' +
+                error.message
+            );
+        }
+    };
+
+
+    function isManualModePageOpen() {
+        try {
+            const mainRegion = getMainRegion();
+
+            if (
+                !mainRegion ||
+                typeof mainRegion.getTargetContent !==
+                    'function'
+            ) {
+                return false;
+            }
+
+            const currentPage =
+                mainRegion.getTargetContent();
+
+            return currentPage === MANUAL_MODE_PAGE;
+
+        } catch (error) {
+            console.log(
+                'Failed to read current page: ' +
+                error.message
+            );
+
+            return false;
+        }
+    }
+
+
+    // ============================================================
+    // WAIT FOR PLC TO ENTER MANUAL MODE
+    // ============================================================
+
+    function stopManualEntryMonitor() {
+        if (manualEntryTimer !== null) {
+            clearInterval(manualEntryTimer);
+            manualEntryTimer = null;
         }
 
-    } catch (error) {
-        console.log("Failed to close Main_Popup: " + error.message);
+        if (manualEntryTimeout !== null) {
+            clearTimeout(manualEntryTimeout);
+            manualEntryTimeout = null;
+        }
     }
-};
 
 
-window.goToManualModePage = function () {
-    try {
-        const mainRegion = TcHmi.Controls.get('Main_Region');
+    function waitForManualMode() {
+        stopManualEntryMonitor();
 
-        if (mainRegion) {
-            mainRegion.setTargetContent('Contents/Screens/Manual_Mode.content');
-        } else {
-            console.log("Main_Region control not found.");
+        manualEntryTimer = setInterval(
+            function () {
+                TcHmi.Symbol.readEx2(
+                    MACHINE_STATE_SYMBOL,
+                    function (dataState) {
+                        if (
+                            dataState.error !==
+                            TcHmi.Errors.NONE
+                        ) {
+                            console.log(
+                                'Failed to verify Manual Mode. Code: ' +
+                                dataState.error
+                            );
+
+                            return;
+                        }
+
+                        const machineState =
+                            getMachineStateValue(
+                                dataState
+                            );
+
+                        if (isManualMode(machineState)) {
+                            stopManualEntryMonitor();
+
+                            window.closeMainPopup();
+                            window.goToManualModePage();
+                        }
+                    }
+                );
+            },
+            MANUAL_ENTRY_CHECK_MS
+        );
+
+        manualEntryTimeout = setTimeout(
+            function () {
+                stopManualEntryMonitor();
+
+                window.closeMainPopup();
+
+                alert(
+                    'Manual Mode was requested, but the PLC did not enter Manual Mode.'
+                );
+            },
+            MANUAL_ENTRY_TIMEOUT_MS
+        );
+    }
+
+
+    // ============================================================
+    // MANUAL MODE CONFIRMATION
+    // ============================================================
+
+    window.confirmManualMode = function () {
+        try {
+            TcHmi.Symbol.readEx2(
+                MACHINE_STATE_SYMBOL,
+                function (dataState) {
+                    if (
+                        dataState.error !==
+                        TcHmi.Errors.NONE
+                    ) {
+                        window.closeMainPopup();
+
+                        setTimeout(function () {
+                            alert(
+                                'HMI Error: Failed to read Machine State. Code: ' +
+                                dataState.error
+                            );
+                        }, 100);
+
+                        return;
+                    }
+
+                    const machineState =
+                        getMachineStateValue(
+                            dataState
+                        );
+
+                    if (isManualMode(machineState)) {
+                        window.closeMainPopup();
+                        window.goToManualModePage();
+
+                        return;
+                    }
+
+                    if (!isReadyToStart(machineState)) {
+                        window.closeMainPopup();
+
+                        setTimeout(function () {
+                            alert(
+                                'Manual Mode blocked: The system is not in Ready To Start.'
+                            );
+                        }, 100);
+
+                        return;
+                    }
+
+                    TcHmi.Symbol.writeEx2(
+                        MANUAL_MODE_REQUEST_SYMBOL,
+                        true,
+                        function (dataWrite) {
+                            if (
+                                dataWrite.error !==
+                                TcHmi.Errors.NONE
+                            ) {
+                                window.closeMainPopup();
+
+                                setTimeout(function () {
+                                    alert(
+                                        'HMI Error: Failed to request Manual Mode. Code: ' +
+                                        dataWrite.error
+                                    );
+                                }, 100);
+
+                                return;
+                            }
+
+                            /*
+                             * Do not open the page immediately.
+                             * Wait until the PLC confirms MANUAL_MODE.
+                             */
+                            waitForManualMode();
+                        }
+                    );
+                }
+            );
+
+        } catch (error) {
+            window.closeMainPopup();
+
+            setTimeout(function () {
+                alert(
+                    'Fatal Application Exception: ' +
+                    error.message
+                );
+            }, 100);
+        }
+    };
+
+
+    // ============================================================
+    // AUTOMATIC EXIT FROM MANUAL PAGE
+    // ============================================================
+
+    function checkManualModeExit() {
+        /*
+         * Only monitor the PLC while the Manual Mode page
+         * is currently displayed.
+         */
+        if (!isManualModePageOpen()) {
+            return;
         }
 
-    } catch (error) {
-        console.log("Failed to change Main_Region content: " + error.message);
+        if (exitReadInProgress) {
+            return;
+        }
+
+        exitReadInProgress = true;
+
+        TcHmi.Symbol.readEx2(
+            MACHINE_STATE_SYMBOL,
+            function (dataState) {
+                exitReadInProgress = false;
+
+                if (
+                    dataState.error !==
+                    TcHmi.Errors.NONE
+                ) {
+                    console.log(
+                        'Failed to monitor Manual Mode. Code: ' +
+                        dataState.error
+                    );
+
+                    return;
+                }
+
+                const machineState =
+                    getMachineStateValue(
+                        dataState
+                    );
+
+                /*
+                 * Do not navigate on invalid or unavailable data.
+                 */
+                if (machineState === null) {
+                    return;
+                }
+
+                /*
+                 * Return to the main page whenever the machine
+                 * is no longer in MANUAL_MODE.
+                 */
+                if (!isManualMode(machineState)) {
+                    window.goToMainPage();
+                }
+            }
+        );
     }
-};
+
+
+    function startManualModeExitMonitor() {
+        if (manualExitMonitor !== null) {
+            return;
+        }
+
+        manualExitMonitor = setInterval(
+            checkManualModeExit,
+            MANUAL_EXIT_CHECK_MS
+        );
+    }
+
+
+    // ============================================================
+    // INITIALIZATION
+    // ============================================================
+
+    const destroyOnInitialized =
+        TcHmi.EventProvider.register(
+            'onInitialized',
+            function () {
+                if (
+                    typeof destroyOnInitialized ===
+                    'function'
+                ) {
+                    destroyOnInitialized();
+                }
+
+                startManualModeExitMonitor();
+            }
+        );
+
+})();

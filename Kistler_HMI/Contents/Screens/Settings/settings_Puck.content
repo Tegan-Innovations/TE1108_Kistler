@@ -106,4 +106,6 @@
 </div>
 <div id="TcHmiToggleSwitch_2" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiToggleSwitch" data-tchmi-height="80" data-tchmi-height-unit="px" data-tchmi-left="660" data-tchmi-left-unit="px" data-tchmi-text="Puck Locker" data-tchmi-top="150" data-tchmi-top-unit="px" data-tchmi-width="250" data-tchmi-width-unit="px" data-tchmi-zindex="29" data-tchmi-text-font-size="150" data-tchmi-text-font-size-unit="%" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.stPuckLocker.bEnabled%/s%">
 </div>
+<div id="TcHmiImage_33" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiImage" data-tchmi-height="244" data-tchmi-height-unit="px" data-tchmi-left="32" data-tchmi-left-unit="px" data-tchmi-src="Images/Project/Puck.png" data-tchmi-top="52" data-tchmi-top-unit="px" data-tchmi-width="414" data-tchmi-width-unit="px">
+</div>
 </div>
