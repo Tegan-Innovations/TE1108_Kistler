@@ -2548,8 +2548,15 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 				   AND GVL_MASTER.bStations_Home
 				   AND GVL_MASTER.stNestTable.bSupportRetracted
 				   AND bNestSequenceAllowed
-				   AND (GVL_MASTER.stMachineStatus.eMachineState = E_MachineState.MANUAL_MODE
-						OR GVL_MASTER.stPuckLocker.bIndexPermissive)
+				   AND (
+						GVL_MASTER.stMachineStatus.eMachineState =
+							E_MachineState.MANUAL_MODE
+					
+						OR GVL_MASTER.stPuckLocker.bIndexPermissive
+					
+						OR eCurrentNestPos =
+							E_NestPosition.UNKNOWN
+					)
 				   AND stKistler_Status.bInPosition
 				   AND NOT stKistler_Status.bBusy THEN
 				
@@ -5690,8 +5697,10 @@ rtKistlerResultDone(
 
 // Do not write new history entries while the history is
 // being cleared.
-IF rtKistlerResultDone.Q
-   AND NOT bDataHistoryResetActive THEN
+// IF rtKistlerResultDone.Q
+//    AND NOT bDataHistoryResetActive THEN
+
+IF rtKistlerResultDone.Q THEN
 
     // =====================================================
     // STATISTICS
@@ -5855,27 +5864,45 @@ ELSE
 END_IF
 
 
+// // =========================================================
+// // START STATISTICS AND HISTORY RESET
+// // =========================================================
+// 
+// IF GVL_HMI.aStatisticsHMI[1].bReset
+//    AND NOT bDataHistoryResetActive THEN
+// 
+//     // Reset statistics.
+//     GVL_HMI.udiKistlerTotalTested := 0;
+//     GVL_HMI.udiKistlerTotalPass := 0;
+//     GVL_HMI.udiKistlerTotalFail := 0;
+// 
+//     // Start history clearing.
+//     iDataHistoryResetIndex := 1;
+//     bDataHistoryResetActive := TRUE;
+// 
+//     // Clear the HMI request.
+//     GVL_HMI.aStatisticsHMI[1].bReset := FALSE;
+// 
+// END_IF
+
 // =========================================================
-// START STATISTICS AND HISTORY RESET
+// RESET STATISTICS ONLY
 // =========================================================
 
-IF GVL_HMI.aStatisticsHMI[1].bReset
-   AND NOT bDataHistoryResetActive THEN
+IF GVL_HMI.aStatisticsHMI[1].bReset THEN
 
-    // Reset statistics.
+    // Reset only the statistics displayed on the HMI.
     GVL_HMI.udiKistlerTotalTested := 0;
     GVL_HMI.udiKistlerTotalPass := 0;
     GVL_HMI.udiKistlerTotalFail := 0;
 
-    // Start history clearing.
-    iDataHistoryResetIndex := 1;
-    bDataHistoryResetActive := TRUE;
+    // Do not clear aDataHistoryHMI.
+    // Do not reset iDataHistoryWriteIndex.
 
     // Clear the HMI request.
     GVL_HMI.aStatisticsHMI[1].bReset := FALSE;
 
 END_IF
-
 
 // =========================================================
 // CLEAR ONE HISTORY ENTRY PER PLC CYCLE
@@ -5883,46 +5910,46 @@ END_IF
 
 // Clearing one entry per scan avoids processing all 2000
 // structures in a single PLC cycle.
-IF bDataHistoryResetActive THEN
-
-    GVL_HMI.aDataHistoryHMI[
-        iDataHistoryResetIndex
-    ].iNestIndex := 0;
-
-    GVL_HMI.aDataHistoryHMI[
-        iDataHistoryResetIndex
-    ].sResult := '';
-
-    GVL_HMI.aDataHistoryHMI[
-        iDataHistoryResetIndex
-    ].rDistance := 0.0;
-
-    GVL_HMI.aDataHistoryHMI[
-        iDataHistoryResetIndex
-    ].rForce := 0.0;
-
-    GVL_HMI.aDataHistoryHMI[
-        iDataHistoryResetIndex
-    ].dtTimeStamp :=
-        DT#1970-01-01-00:00:00;
-
-
-    IF iDataHistoryResetIndex < 2000 THEN
-
-        iDataHistoryResetIndex :=
-            iDataHistoryResetIndex + 1;
-
-    ELSE
-
-        // History clearing completed.
-        GVL_HMI.iDataHistoryWriteIndex := 1;
-
-        iDataHistoryResetIndex := 1;
-        bDataHistoryResetActive := FALSE;
-
-    END_IF
-
-END_IF]]></ST>
+// IF bDataHistoryResetActive THEN
+// 
+//     GVL_HMI.aDataHistoryHMI[
+//         iDataHistoryResetIndex
+//     ].iNestIndex := 0;
+// 
+//     GVL_HMI.aDataHistoryHMI[
+//         iDataHistoryResetIndex
+//     ].sResult := '';
+// 
+//     GVL_HMI.aDataHistoryHMI[
+//         iDataHistoryResetIndex
+//     ].rDistance := 0.0;
+// 
+//     GVL_HMI.aDataHistoryHMI[
+//         iDataHistoryResetIndex
+//     ].rForce := 0.0;
+// 
+//     GVL_HMI.aDataHistoryHMI[
+//         iDataHistoryResetIndex
+//     ].dtTimeStamp :=
+//         DT#1970-01-01-00:00:00;
+// 
+// 
+//     IF iDataHistoryResetIndex < 2000 THEN
+// 
+//         iDataHistoryResetIndex :=
+//             iDataHistoryResetIndex + 1;
+// 
+//     ELSE
+// 
+//         // History clearing completed.
+//         GVL_HMI.iDataHistoryWriteIndex := 1;
+// 
+//         iDataHistoryResetIndex := 1;
+//         bDataHistoryResetActive := FALSE;
+// 
+//     END_IF
+// 
+// END_IF]]></ST>
       </Implementation>
     </Method>
   </POU>
