@@ -3099,8 +3099,9 @@ CASE eOperatorExchangeState OF
 				// ---------------------------------------------------------
 				ELSIF bOperatorResultFail THEN
 			
-					eOperatorExchangeState :=
-						E_OperatorExchangeState.WaitingForRejectConfirmation;
+					//eOperatorExchangeState := E_OperatorExchangeState.WaitingForRejectConfirmation;
+						
+				    eOperatorExchangeState := E_OperatorExchangeState.ExchangeComplete;
 			
 				END_IF
 			

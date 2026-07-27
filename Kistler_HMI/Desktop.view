@@ -687,13 +687,15 @@
 </div>
 <div id="yes_no_popup" data-tchmi-type="TcHmi.Controls.System.TcHmiRegion" data-tchmi-height="300" data-tchmi-height-unit="px" data-tchmi-left="409" data-tchmi-left-unit="px" data-tchmi-top="172" data-tchmi-top-unit="px" data-tchmi-width="500" data-tchmi-width-unit="px" data-tchmi-target-content="Contents/popup/popup6_ChangeSettings_ver2.content" data-tchmi-visibility="Collapsed" data-tchmi-creator-visibility="Visible">
 </div>
-<div id="Main_Popup" data-tchmi-type="TcHmi.Controls.System.TcHmiPopup" data-tchmi-height="420" data-tchmi-height-unit="px" data-tchmi-width="480" data-tchmi-width-unit="px" data-tchmi-modal="True" data-tchmi-left="444" data-tchmi-top="100" data-tchmi-close-on-background="True" data-tchmi-zindex="5">
+<div id="Main_Popup" data-tchmi-type="TcHmi.Controls.System.TcHmiPopup" data-tchmi-height="420" data-tchmi-height-unit="px" data-tchmi-width="480" data-tchmi-width-unit="px" data-tchmi-modal="True" data-tchmi-left="434" data-tchmi-top="106" data-tchmi-close-on-background="True" data-tchmi-zindex="5">
 
 
 </div>
 
 
-<div id="Region_Popup" data-tchmi-type="TcHmi.Controls.System.TcHmiRegion" data-tchmi-height="350" data-tchmi-height-unit="px" data-tchmi-left="444" data-tchmi-left-unit="px" data-tchmi-top="130" data-tchmi-top-unit="px" data-tchmi-width="480" data-tchmi-width-unit="px" data-tchmi-zindex="6" data-tchmi-creator-visibility="Visible" data-tchmi-background-image-horizontal-alignment="Center">
+<div id="Region_Popup" data-tchmi-type="TcHmi.Controls.System.TcHmiRegion" data-tchmi-height="350" data-tchmi-height-unit="px" data-tchmi-left="434" data-tchmi-left-unit="px" data-tchmi-top="150" data-tchmi-top-unit="px" data-tchmi-width="480" data-tchmi-width-unit="px" data-tchmi-creator-visibility="Visible" data-tchmi-background-image-horizontal-alignment="Center">
+
+
 
 
 <script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
@@ -703,7 +705,7 @@
     "actions": [
       {
         "objectType": "Condition",
-        "active": true,
+        "active": false,
         "parts": [
           {
             "if": [
@@ -726,17 +728,6 @@
               {
                 "objectType": "WriteToSymbol",
                 "active": true,
-                "symbolExpression": "%ctx%owner::TargetContent%/ctx%",
-                "value": {
-                  "objectType": "StaticValue",
-                  "valueType": "tchmi:framework#/definitions/ContentPath",
-                  "value": "Contents/Screens/popups/Content_Popup_Puck.content"
-                },
-                "asyncWait": true
-              },
-              {
-                "objectType": "WriteToSymbol",
-                "active": true,
                 "symbolExpression": "%ctx%owner::Visibility%/ctx%",
                 "value": {
                   "objectType": "StaticValue",
@@ -744,54 +735,32 @@
                   "value": "Visible"
                 },
                 "asyncWait": true
-              }
-            ]
-          },
-          {
-            "else": [
+              },
               {
                 "objectType": "WriteToSymbol",
                 "active": true,
-                "symbolExpression": "%ctx%owner::Visibility%/ctx%",
+                "symbolExpression": "%ctx%owner::TargetContent%/ctx%",
                 "value": {
                   "objectType": "StaticValue",
-                  "valueType": "tchmi:framework#/definitions/Visibility",
-                  "value": "Collapsed"
+                  "valueType": "tchmi:framework#/definitions/ContentPath",
+                  "value": "Contents/Screens/popups/Content_Popup_Puck.content"
                 },
                 "asyncWait": true
               }
             ]
-          }
-        ],
-        "asyncWait": true
-      }
-    ]
-  }
-]
-</script>
-</div>
-<div id="Region_Popup_1" data-tchmi-type="TcHmi.Controls.System.TcHmiRegion" data-tchmi-height="350" data-tchmi-height-unit="px" data-tchmi-left="454" data-tchmi-left-unit="px" data-tchmi-top="140" data-tchmi-top-unit="px" data-tchmi-width="480" data-tchmi-width-unit="px" data-tchmi-zindex="6" data-tchmi-creator-visibility="Visible" data-tchmi-background-image-horizontal-alignment="Center">
-<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
-[
-  {
-    "event": "%s%ADS.PLC1.GVL_HMI.bShowRejectPopup%/s%",
-    "actions": [
-      {
-        "objectType": "Condition",
-        "active": true,
-        "parts": [
+          },
           {
-            "if": [
+            "elseif": [
               {
                 "compare1": {
                   "objectType": "Symbol",
                   "valueType": "tchmi:general#/definitions/BOOL",
-                  "symbolExpression": "%s%ADS.PLC1.GVL_HMI.bShowRejectPopup%/s%"
+                  "symbolExpression": "%s%ADS.PLC1.GVL_HMI.stPuckLocker.bShowUnexpectedRemovalPopup%/s%"
                 },
                 "compare2": {
                   "objectType": "StaticValue",
                   "valueType": "tchmi:general#/definitions/BOOL",
-                  "value": true
+                  "value": false
                 },
                 "compareOperator": "==",
                 "logic": null
@@ -801,32 +770,6 @@
               {
                 "objectType": "WriteToSymbol",
                 "active": true,
-                "symbolExpression": "%ctx%owner::TargetContent%/ctx%",
-                "value": {
-                  "objectType": "StaticValue",
-                  "valueType": "tchmi:framework#/definitions/ContentPath",
-                  "value": "Contents/Screens/popups/Content_Popup_Reject_Part.content"
-                },
-                "asyncWait": true
-              },
-              {
-                "objectType": "WriteToSymbol",
-                "active": true,
-                "symbolExpression": "%ctx%owner::Visibility%/ctx%",
-                "value": {
-                  "objectType": "StaticValue",
-                  "valueType": "tchmi:framework#/definitions/Visibility",
-                  "value": "Visible"
-                },
-                "asyncWait": true
-              }
-            ]
-          },
-          {
-            "else": [
-              {
-                "objectType": "WriteToSymbol",
-                "active": true,
                 "symbolExpression": "%ctx%owner::Visibility%/ctx%",
                 "value": {
                   "objectType": "StaticValue",
@@ -836,9 +779,127 @@
                 "asyncWait": true
               }
             ]
+          },
+          {
+            "else": []
           }
         ],
         "asyncWait": true
+      },
+      {
+        "objectType": "JavaScript",
+        "active": true,
+        "sourceLines": [
+          "TcHmi.Symbol.readEx2(",
+          "    '%s%ADS.PLC1.GVL_HMI.bShowRejectPopup%/s%',",
+          "    function (rejectData) {",
+          "",
+          "        TcHmi.Symbol.readEx2(",
+          "            '%s%ADS.PLC1.GVL_HMI.stPuckLocker.bShowUnexpectedRemovalPopup%/s%',",
+          "            function (puckData) {",
+          "",
+          "                var region = TcHmi.Controls.get('Region_Popup');",
+          "",
+          "                if (!region) {",
+          "                    console.error('Region_Popup não encontrada');",
+          "                    return;",
+          "                }",
+          "",
+          "                console.log(",
+          "                    'Reject:',",
+          "                    rejectData.value,",
+          "                    'Puck:',",
+          "                    puckData.value",
+          "                );",
+          "",
+          "                if (puckData.value === true) {",
+          "",
+          "                    region.setVisibility('Visible');",
+          "",
+          "                    region.setTargetContent(",
+          "                        'Contents/Screens/popups/Content_Popup_Puck.content'",
+          "                    );",
+          "",
+          "                } else if (rejectData.value === true) {",
+          "",
+          "                    region.setVisibility('Visible');",
+          "",
+          "                    region.setTargetContent(",
+          "                        'Contents/Screens/popups/Content_Popup_Reject_Part.content'",
+          "                    );",
+          "",
+          "                } else {",
+          "",
+          "                    region.setVisibility('Collapsed');",
+          "                    region.setTargetContent(null);",
+          "                }",
+          "            }",
+          "        );",
+          "    }",
+          ");"
+        ],
+        "asyncWait": true,
+        "waitMode": "Synchronous"
+      }
+    ]
+  },
+  {
+    "event": "%s%ADS.PLC1.GVL_HMI.bShowRejectPopup%/s%",
+    "actions": [
+      {
+        "objectType": "JavaScript",
+        "active": true,
+        "sourceLines": [
+          "TcHmi.Symbol.readEx2(",
+          "    '%s%ADS.PLC1.GVL_HMI.bShowRejectPopup%/s%',",
+          "    function (rejectData) {",
+          "",
+          "        TcHmi.Symbol.readEx2(",
+          "            '%s%ADS.PLC1.GVL_HMI.stPuckLocker.bShowUnexpectedRemovalPopup%/s%',",
+          "            function (puckData) {",
+          "",
+          "                var region = TcHmi.Controls.get('Region_Popup');",
+          "",
+          "                if (!region) {",
+          "                    console.error('Region_Popup não encontrada');",
+          "                    return;",
+          "                }",
+          "",
+          "                console.log(",
+          "                    'Reject:',",
+          "                    rejectData.value,",
+          "                    'Puck:',",
+          "                    puckData.value",
+          "                );",
+          "",
+          "                if (puckData.value === true) {",
+          "",
+          "                    region.setVisibility('Visible');",
+          "",
+          "                    region.setTargetContent(",
+          "                        'Contents/Screens/popups/Content_Popup_Puck.content'",
+          "                    );",
+          "",
+          "                } else if (rejectData.value === true) {",
+          "",
+          "                    region.setVisibility('Visible');",
+          "",
+          "                    region.setTargetContent(",
+          "                        'Contents/Screens/popups/Content_Popup_Reject_Part.content'",
+          "                    );",
+          "",
+          "                } else {",
+          "",
+          "                    region.setVisibility('Collapsed');",
+          "                    region.setTargetContent(null);",
+          "                }",
+          "            }",
+          "        );",
+          "    }",
+          ");"
+        ],
+        "asyncWait": true,
+        "waitMode": "Synchronous"
       }
     ]
   }
