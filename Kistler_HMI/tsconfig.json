@@ -12,10 +12,10 @@
     ],
     "paths": {
       "Beckhoff.TwinCAT.HMI.Framework/*": [
-        "../TE1108_Kistler/Packages/Beckhoff.TwinCAT.HMI.Framework.14.3.431/runtimes/native1.12-tchmi/*"
+        "../Packages/Beckhoff.TwinCAT.HMI.Framework.14.3.431/runtimes/native1.12-tchmi/*"
       ],
       "Beckhoff.TwinCAT.HMI.Framework": [
-        "../TE1108_Kistler/Packages/Beckhoff.TwinCAT.HMI.Framework.14.3.431/runtimes/native1.12-tchmi/index.esm.d.ts"
+        "../Packages/Beckhoff.TwinCAT.HMI.Framework.14.3.431/runtimes/native1.12-tchmi/index.esm.d.ts"
       ]
     },
     "types": [],
@@ -34,6 +34,6 @@
     "bin/"
   ],
   "include": [
-    "../TE1108_Kistler/Packages/Beckhoff.TwinCAT.HMI.Framework.14.3.431/runtimes/native1.12-tchmi/TcHmi.d.ts"
+    "../Packages/Beckhoff.TwinCAT.HMI.Framework.14.3.431/runtimes/native1.12-tchmi/TcHmi.d.ts"
   ]
 }
