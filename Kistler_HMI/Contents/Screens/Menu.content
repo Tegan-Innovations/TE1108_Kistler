@@ -54,6 +54,16 @@
     "accessright": "observe",
     "group": "Developer",
     "permission": "Allow"
+  },
+  {
+    "accessright": "observe",
+    "group": "Engineer",
+    "permission": "Deny"
+  },
+  {
+    "accessright": "observe",
+    "group": "Operator",
+    "permission": "Deny"
   }
 ]
 </script>
@@ -147,7 +157,7 @@
   {
     "accessright": "operate",
     "group": "Administrator",
-    "permission": "Allow"
+    "permission": "Deny"
   },
   {
     "accessright": "operate",
@@ -157,6 +167,21 @@
   {
     "accessright": "operate",
     "group": "Admin",
+    "permission": "Deny"
+  },
+  {
+    "accessright": "observe",
+    "group": "Engineer",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "observe",
+    "group": "Administrator",
+    "permission": "Deny"
+  },
+  {
+    "accessright": "observe",
+    "group": "Operator",
     "permission": "Deny"
   }
 ]
