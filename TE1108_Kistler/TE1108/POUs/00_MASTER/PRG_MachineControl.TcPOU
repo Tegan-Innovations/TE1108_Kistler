@@ -4897,7 +4897,7 @@ GVL_MASTER.stDiagnostics.bStopRequested := bStopRequested;
 // Machine sequence timeouts
 GVL_MASTER.stDiagnostics.bInitialisationTimeout := tonSys_InitTimeout.Q;
 
-GVL_MASTER.stDiagnostics.bProcessTimeout := tonTimeout_testing.Q;
+//GVL_MASTER.stDiagnostics.bProcessTimeout := tonTimeout_testing.Q;
 
 // Main Kistler status
 GVL_MASTER.stDiagnostics.bKistlerError := stKistler_Status.bError;
