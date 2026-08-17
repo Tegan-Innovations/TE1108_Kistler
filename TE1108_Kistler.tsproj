@@ -2,15 +2,6 @@
 <TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4026.22">
 	<DataTypes>
 		<DataType>
-			<Name GUID="{2B6B47C9-DB58-8D37-72B9-9344E5A5275A}" IecBaseType="true" AutoDeleteType="true">ARRAY [0..199] OF BYTE</Name>
-			<BitSize>1600</BitSize>
-			<BaseType GUID="{18071995-0000-0000-0000-000000000001}">BYTE</BaseType>
-			<ArrayInfo>
-				<LBound>0</LBound>
-				<Elements>200</Elements>
-			</ArrayInfo>
-		</DataType>
-		<DataType>
 			<Name GUID="{1B090823-34FE-AA35-7EE2-1CF6FAEBC3BF}" AutoDeleteType="true">E_PuckLockerMode</Name>
 			<BitSize>16</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000006}">INT</BaseType>
@@ -185,6 +176,15 @@
 			</ArrayInfo>
 		</DataType>
 		<DataType>
+			<Name GUID="{2B6B47C9-DB58-8D37-72B9-9344E5A5275A}" IecBaseType="true" AutoDeleteType="true">ARRAY [0..199] OF BYTE</Name>
+			<BitSize>1600</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000001}">BYTE</BaseType>
+			<ArrayInfo>
+				<LBound>0</LBound>
+				<Elements>200</Elements>
+			</ArrayInfo>
+		</DataType>
+		<DataType>
 			<Name GUID="{2438F91B-E188-4ED7-8594-54354F9ED6A4}" Namespace="Safety" TcBaseType="true">FSOE_6</Name>
 			<BitSize>48</BitSize>
 			<SubItem>
@@ -344,379 +344,6 @@
 				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{24494FD1-AAF3-D409-888D-6160220CE3D6}" TmcPath="TE1108\TE1108.tmc">
 					<Name>TE1108 Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
-					<Vars VarGrpType="8" AreaNo="4">
-						<Name>PlcTask Retains</Name>
-						<Var>
-							<Name>GVL_HMI.bSkipButton</Name>
-							<Type>BOOL</Type>
-							<InOut>7</InOut>
-						</Var>
-						<Var>
-							<Name>GVL_HMI.bResetKistlerStatistics</Name>
-							<Comment><![CDATA[ HMI command to reset the statistics.]]></Comment>
-							<Type>BOOL</Type>
-							<InOut>7</InOut>
-						</Var>
-						<Var>
-							<Name>GVL_HMI.bCSVWriteRequest</Name>
-							<Comment><![CDATA[ Request to save a new Data History record to CSV.]]></Comment>
-							<Type>BOOL</Type>
-							<InOut>7</InOut>
-						</Var>
-						<Var>
-							<Name>GVL_HMI.stPuckLocker</Name>
-							<Type GUID="{DB189694-6976-128C-9CA8-62269606A530}">ST_PuckLockerHMI</Type>
-							<InOut>7</InOut>
-						</Var>
-						<Var>
-							<Name>GVL_HMI.aNestEnabled</Name>
-							<Type GUID="{064EA673-04B6-D0C1-CD14-82E56022843A}">ARRAY [1..4] OF BOOL</Type>
-							<InOut>7</InOut>
-						</Var>
-						<Var>
-							<Name>GVL_HMI.iDataHistoryWriteIndex</Name>
-							<Type>INT</Type>
-							<InOut>7</InOut>
-						</Var>
-						<Var>
-							<Name>GVL_HMI.udiKistlerTotalTested</Name>
-							<Comment><![CDATA[ Total number of valid tests completed by the Kistler.]]></Comment>
-							<Type>UDINT</Type>
-							<InOut>7</InOut>
-						</Var>
-						<Var>
-							<Name>GVL_HMI.udiKistlerTotalPass</Name>
-							<Comment><![CDATA[ Total number of parts classified as OK by the Kistler.]]></Comment>
-							<Type>UDINT</Type>
-							<InOut>7</InOut>
-						</Var>
-						<Var>
-							<Name>GVL_HMI.udiKistlerTotalFail</Name>
-							<Comment><![CDATA[ Total number of parts classified as NOK by the Kistler.]]></Comment>
-							<Type>UDINT</Type>
-							<InOut>7</InOut>
-						</Var>
-						<Var>
-							<Name>GVL_HMI.aDataHistoryHMI</Name>
-							<Type GUID="{69BA76DC-FD31-0169-A401-8089A0A7BA53}">ARRAY [1..2000] OF ST_DataHistoryHMI</Type>
-							<InOut>7</InOut>
-						</Var>
-						<Var>
-							<Name>GVL_HMI.stCSVDataPending</Name>
-							<Comment><![CDATA[ =================================================================
- CSV DATA LOGGING
- =================================================================
- Stable copy of the completed Kistler test.
- The CSV logger will use this record instead of reading
- directly from the circular Data History buffer.]]></Comment>
-							<Type GUID="{C24B66C1-B98E-DCFD-33A2-87AA7ECC3A6F}">ST_DataHistoryHMI</Type>
-							<InOut>7</InOut>
-						</Var>
-						<Var>
-							<Name>GVL_HMI.bCSVBusy</Name>
-							<Comment><![CDATA[ CSV logger status.]]></Comment>
-							<Type>BOOL</Type>
-							<InOut>7</InOut>
-						</Var>
-						<Var>
-							<Name>GVL_HMI.bCSVDone</Name>
-							<Type>BOOL</Type>
-							<InOut>7</InOut>
-						</Var>
-						<Var>
-							<Name>GVL_HMI.bCSVError</Name>
-							<Type>BOOL</Type>
-							<InOut>7</InOut>
-						</Var>
-						<Var>
-							<Name>GVL_HMI.nCSVErrorId</Name>
-							<Type>UDINT</Type>
-							<InOut>7</InOut>
-						</Var>
-					</Vars>
-					<Vars VarGrpType="2" AreaNo="1">
-						<Name>PlcTask Outputs</Name>
-						<Var>
-							<Name>PRG_MachineControl.q_bLED_Start</Name>
-							<Comment><![CDATA[ Hardware digital outputs mapped to the physical LEDs]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>PRG_MachineControl.q_bLED_Reset</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>PRG_MachineControl.q_bLED_Pass</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>PRG_MachineControl.q_bLED_Fail</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.qInternalLight</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stSafety.bSafetyRun</Name>
-							<Comment><![CDATA[ Output from PLC to TwinSAFE (Command to run)]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stSafety.bSafetyReset</Name>
-							<Comment><![CDATA[ Output from PLC to TwinSAFE (Command to reset)]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stSafety.bMachineStopped</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stSafety.bAirSupplyEnabled</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stSafety.bProcessTest</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.qExternalLight</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stTerm7_EL2904.qEL2904_Ch1</Name>
-							<Comment><![CDATA[ EL2904 channel 1]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stTerm7_EL2904.qEL2904_Ch2</Name>
-							<Comment><![CDATA[ EL2904 channel 2]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stTerm7_EL2904.qEL2904_Ch3</Name>
-							<Comment><![CDATA[ EL2904 channel 3 			]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stTerm7_EL2904.qEL2904_Ch4</Name>
-							<Comment><![CDATA[ EL2904 channel 4 ]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stTerm8_EL2904.qEL2904_Ch1</Name>
-							<Comment><![CDATA[ EL2904 channel 1]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stTerm8_EL2904.qEL2904_Ch2</Name>
-							<Comment><![CDATA[ EL2904 channel 2]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stTerm8_EL2904.qEL2904_Ch3</Name>
-							<Comment><![CDATA[ EL2904 channel 3 			]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stTerm8_EL2904.qEL2904_Ch4</Name>
-							<Comment><![CDATA[ EL2904 channel 4 ]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stTerm11_EL2809.iEL2809_Ch1</Name>
-							<Comment><![CDATA[ EL1918 channel 1]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stTerm11_EL2809.iEL2809_Ch2</Name>
-							<Comment><![CDATA[ EL1918 channel 2]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stTerm11_EL2809.iEL2809_Ch3</Name>
-							<Comment><![CDATA[ EL1918 channel 3]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stTerm11_EL2809.iEL2809_Ch4</Name>
-							<Comment><![CDATA[ EL1918 channel 4]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stTerm11_EL2809.iEL2809_Ch5</Name>
-							<Comment><![CDATA[ EL1918 channel 5]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stTerm11_EL2809.iEL2809_Ch6</Name>
-							<Comment><![CDATA[ EL1918 channel 6]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stTerm11_EL2809.iEL2809_Ch7</Name>
-							<Comment><![CDATA[ EL1918 channel 7]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stTerm11_EL2809.iEL2809_Ch8</Name>
-							<Comment><![CDATA[ EL1918 channel 8]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stTerm11_EL2809.iEL2809_Ch9</Name>
-							<Comment><![CDATA[ EL1918 channel 9]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stTerm11_EL2809.iEL2809_Ch10</Name>
-							<Comment><![CDATA[ EL1918 channel 10]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stTerm11_EL2809.iEL2809_Ch11</Name>
-							<Comment><![CDATA[ EL1918 channel 11]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stTerm11_EL2809.iEL2809_Ch12</Name>
-							<Comment><![CDATA[ EL1918 channel 12]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stTerm11_EL2809.iEL2809_Ch13</Name>
-							<Comment><![CDATA[ EL1918 channel 13]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stTerm11_EL2809.iEL2809_Ch14</Name>
-							<Comment><![CDATA[ EL1918 channel 14]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stTerm11_EL2809.iEL2809_Ch15</Name>
-							<Comment><![CDATA[ EL1918 channel 15]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stTerm11_EL2809.iEL2809_Ch16</Name>
-							<Comment><![CDATA[ EL1918 channel 16]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stTerm13_EL2809.iEL2809_Ch1</Name>
-							<Comment><![CDATA[ EL1918 channel 1]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stTerm13_EL2809.iEL2809_Ch2</Name>
-							<Comment><![CDATA[ EL1918 channel 2]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stTerm13_EL2809.iEL2809_Ch3</Name>
-							<Comment><![CDATA[ EL1918 channel 3]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stTerm13_EL2809.iEL2809_Ch4</Name>
-							<Comment><![CDATA[ EL1918 channel 4]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stTerm13_EL2809.iEL2809_Ch5</Name>
-							<Comment><![CDATA[ EL1918 channel 5]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stTerm13_EL2809.iEL2809_Ch6</Name>
-							<Comment><![CDATA[ EL1918 channel 6]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stTerm13_EL2809.iEL2809_Ch7</Name>
-							<Comment><![CDATA[ EL1918 channel 7]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stTerm13_EL2809.iEL2809_Ch8</Name>
-							<Comment><![CDATA[ EL1918 channel 8]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stTerm13_EL2809.iEL2809_Ch9</Name>
-							<Comment><![CDATA[ EL1918 channel 9]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stTerm13_EL2809.iEL2809_Ch10</Name>
-							<Comment><![CDATA[ EL1918 channel 10]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stTerm13_EL2809.iEL2809_Ch11</Name>
-							<Comment><![CDATA[ EL1918 channel 11]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stTerm13_EL2809.iEL2809_Ch12</Name>
-							<Comment><![CDATA[ EL1918 channel 12]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stTerm13_EL2809.iEL2809_Ch13</Name>
-							<Comment><![CDATA[ EL1918 channel 13]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stTerm13_EL2809.iEL2809_Ch14</Name>
-							<Comment><![CDATA[ EL1918 channel 14]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stTerm13_EL2809.iEL2809_Ch15</Name>
-							<Comment><![CDATA[ EL1918 channel 15]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.stTerm13_EL2809.iEL2809_Ch16</Name>
-							<Comment><![CDATA[ EL1918 channel 16]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_KISTLER_IO.aKistlerOut</Name>
-							<Comment><![CDATA[ PLC -> maXYmos]]></Comment>
-							<Type GUID="{2B6B47C9-DB58-8D37-72B9-9344E5A5275A}">ARRAY [0..199] OF BYTE</Type>
-						</Var>
-						<Var>
-							<Name>GVL_MASTER.stNestTable.qSupportExtend</Name>
-							<Comment><![CDATA[ cylinder extend (up for press)]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_MASTER.stNestTable.qNestRotatePortA</Name>
-							<Comment><![CDATA[ Valve: Rotate indexing table Port A]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_MASTER.stNestTable.qNestRotatePortB</Name>
-							<Comment><![CDATA[ Valve: Rotate indexing table Port B]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_MASTER.stNestTable.qSupportRetract</Name>
-							<Comment><![CDATA[ cylinder retract (down for rotate)]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_MASTER.stActuators.qGuideCylinder</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_MASTER.stPuckLockerIO.bPuckLockerCylinder</Name>
-							<Type>BOOL</Type>
-						</Var>
-					</Vars>
 					<Vars VarGrpType="1">
 						<Name>PlcTask Inputs</Name>
 						<Var>
@@ -1264,6 +891,379 @@
 						<Var>
 							<Name>GVL_MASTER.stPuckLockerIO.bPuckLockerSensor2</Name>
 							<Type>BOOL</Type>
+						</Var>
+					</Vars>
+					<Vars VarGrpType="2" AreaNo="1">
+						<Name>PlcTask Outputs</Name>
+						<Var>
+							<Name>PRG_MachineControl.q_bLED_Start</Name>
+							<Comment><![CDATA[ Hardware digital outputs mapped to the physical LEDs]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_MachineControl.q_bLED_Reset</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_MachineControl.q_bLED_Pass</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>PRG_MachineControl.q_bLED_Fail</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.qInternalLight</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stSafety.bSafetyRun</Name>
+							<Comment><![CDATA[ Output from PLC to TwinSAFE (Command to run)]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stSafety.bSafetyReset</Name>
+							<Comment><![CDATA[ Output from PLC to TwinSAFE (Command to reset)]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stSafety.bMachineStopped</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stSafety.bAirSupplyEnabled</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stSafety.bProcessTest</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.qExternalLight</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stTerm7_EL2904.qEL2904_Ch1</Name>
+							<Comment><![CDATA[ EL2904 channel 1]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stTerm7_EL2904.qEL2904_Ch2</Name>
+							<Comment><![CDATA[ EL2904 channel 2]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stTerm7_EL2904.qEL2904_Ch3</Name>
+							<Comment><![CDATA[ EL2904 channel 3 			]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stTerm7_EL2904.qEL2904_Ch4</Name>
+							<Comment><![CDATA[ EL2904 channel 4 ]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stTerm8_EL2904.qEL2904_Ch1</Name>
+							<Comment><![CDATA[ EL2904 channel 1]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stTerm8_EL2904.qEL2904_Ch2</Name>
+							<Comment><![CDATA[ EL2904 channel 2]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stTerm8_EL2904.qEL2904_Ch3</Name>
+							<Comment><![CDATA[ EL2904 channel 3 			]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stTerm8_EL2904.qEL2904_Ch4</Name>
+							<Comment><![CDATA[ EL2904 channel 4 ]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stTerm11_EL2809.iEL2809_Ch1</Name>
+							<Comment><![CDATA[ EL1918 channel 1]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stTerm11_EL2809.iEL2809_Ch2</Name>
+							<Comment><![CDATA[ EL1918 channel 2]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stTerm11_EL2809.iEL2809_Ch3</Name>
+							<Comment><![CDATA[ EL1918 channel 3]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stTerm11_EL2809.iEL2809_Ch4</Name>
+							<Comment><![CDATA[ EL1918 channel 4]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stTerm11_EL2809.iEL2809_Ch5</Name>
+							<Comment><![CDATA[ EL1918 channel 5]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stTerm11_EL2809.iEL2809_Ch6</Name>
+							<Comment><![CDATA[ EL1918 channel 6]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stTerm11_EL2809.iEL2809_Ch7</Name>
+							<Comment><![CDATA[ EL1918 channel 7]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stTerm11_EL2809.iEL2809_Ch8</Name>
+							<Comment><![CDATA[ EL1918 channel 8]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stTerm11_EL2809.iEL2809_Ch9</Name>
+							<Comment><![CDATA[ EL1918 channel 9]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stTerm11_EL2809.iEL2809_Ch10</Name>
+							<Comment><![CDATA[ EL1918 channel 10]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stTerm11_EL2809.iEL2809_Ch11</Name>
+							<Comment><![CDATA[ EL1918 channel 11]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stTerm11_EL2809.iEL2809_Ch12</Name>
+							<Comment><![CDATA[ EL1918 channel 12]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stTerm11_EL2809.iEL2809_Ch13</Name>
+							<Comment><![CDATA[ EL1918 channel 13]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stTerm11_EL2809.iEL2809_Ch14</Name>
+							<Comment><![CDATA[ EL1918 channel 14]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stTerm11_EL2809.iEL2809_Ch15</Name>
+							<Comment><![CDATA[ EL1918 channel 15]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stTerm11_EL2809.iEL2809_Ch16</Name>
+							<Comment><![CDATA[ EL1918 channel 16]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stTerm13_EL2809.iEL2809_Ch1</Name>
+							<Comment><![CDATA[ EL1918 channel 1]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stTerm13_EL2809.iEL2809_Ch2</Name>
+							<Comment><![CDATA[ EL1918 channel 2]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stTerm13_EL2809.iEL2809_Ch3</Name>
+							<Comment><![CDATA[ EL1918 channel 3]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stTerm13_EL2809.iEL2809_Ch4</Name>
+							<Comment><![CDATA[ EL1918 channel 4]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stTerm13_EL2809.iEL2809_Ch5</Name>
+							<Comment><![CDATA[ EL1918 channel 5]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stTerm13_EL2809.iEL2809_Ch6</Name>
+							<Comment><![CDATA[ EL1918 channel 6]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stTerm13_EL2809.iEL2809_Ch7</Name>
+							<Comment><![CDATA[ EL1918 channel 7]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stTerm13_EL2809.iEL2809_Ch8</Name>
+							<Comment><![CDATA[ EL1918 channel 8]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stTerm13_EL2809.iEL2809_Ch9</Name>
+							<Comment><![CDATA[ EL1918 channel 9]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stTerm13_EL2809.iEL2809_Ch10</Name>
+							<Comment><![CDATA[ EL1918 channel 10]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stTerm13_EL2809.iEL2809_Ch11</Name>
+							<Comment><![CDATA[ EL1918 channel 11]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stTerm13_EL2809.iEL2809_Ch12</Name>
+							<Comment><![CDATA[ EL1918 channel 12]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stTerm13_EL2809.iEL2809_Ch13</Name>
+							<Comment><![CDATA[ EL1918 channel 13]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stTerm13_EL2809.iEL2809_Ch14</Name>
+							<Comment><![CDATA[ EL1918 channel 14]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stTerm13_EL2809.iEL2809_Ch15</Name>
+							<Comment><![CDATA[ EL1918 channel 15]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.stTerm13_EL2809.iEL2809_Ch16</Name>
+							<Comment><![CDATA[ EL1918 channel 16]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_KISTLER_IO.aKistlerOut</Name>
+							<Comment><![CDATA[ PLC -> maXYmos]]></Comment>
+							<Type GUID="{2B6B47C9-DB58-8D37-72B9-9344E5A5275A}">ARRAY [0..199] OF BYTE</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.stNestTable.qSupportExtend</Name>
+							<Comment><![CDATA[ cylinder extend (up for press)]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.stNestTable.qNestRotatePortA</Name>
+							<Comment><![CDATA[ Valve: Rotate indexing table Port A]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.stNestTable.qNestRotatePortB</Name>
+							<Comment><![CDATA[ Valve: Rotate indexing table Port B]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.stNestTable.qSupportRetract</Name>
+							<Comment><![CDATA[ cylinder retract (down for rotate)]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.stActuators.qGuideCylinder</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.stPuckLockerIO.bPuckLockerCylinder</Name>
+							<Type>BOOL</Type>
+						</Var>
+					</Vars>
+					<Vars VarGrpType="8" AreaNo="4">
+						<Name>PlcTask Retains</Name>
+						<Var>
+							<Name>GVL_HMI.bSkipButton</Name>
+							<Type>BOOL</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>GVL_HMI.bResetKistlerStatistics</Name>
+							<Comment><![CDATA[ HMI command to reset the statistics.]]></Comment>
+							<Type>BOOL</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>GVL_HMI.bCSVWriteRequest</Name>
+							<Comment><![CDATA[ Request to save a new Data History record to CSV.]]></Comment>
+							<Type>BOOL</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>GVL_HMI.stPuckLocker</Name>
+							<Type GUID="{DB189694-6976-128C-9CA8-62269606A530}">ST_PuckLockerHMI</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>GVL_HMI.aNestEnabled</Name>
+							<Type GUID="{064EA673-04B6-D0C1-CD14-82E56022843A}">ARRAY [1..4] OF BOOL</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>GVL_HMI.iDataHistoryWriteIndex</Name>
+							<Type>INT</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>GVL_HMI.udiKistlerTotalTested</Name>
+							<Comment><![CDATA[ Total number of valid tests completed by the Kistler.]]></Comment>
+							<Type>UDINT</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>GVL_HMI.udiKistlerTotalPass</Name>
+							<Comment><![CDATA[ Total number of parts classified as OK by the Kistler.]]></Comment>
+							<Type>UDINT</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>GVL_HMI.udiKistlerTotalFail</Name>
+							<Comment><![CDATA[ Total number of parts classified as NOK by the Kistler.]]></Comment>
+							<Type>UDINT</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>GVL_HMI.aDataHistoryHMI</Name>
+							<Type GUID="{69BA76DC-FD31-0169-A401-8089A0A7BA53}">ARRAY [1..2000] OF ST_DataHistoryHMI</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>GVL_HMI.stCSVDataPending</Name>
+							<Comment><![CDATA[ =================================================================
+ CSV DATA LOGGING
+ =================================================================
+ Stable copy of the completed Kistler test.
+ The CSV logger will use this record instead of reading
+ directly from the circular Data History buffer.]]></Comment>
+							<Type GUID="{C24B66C1-B98E-DCFD-33A2-87AA7ECC3A6F}">ST_DataHistoryHMI</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>GVL_HMI.bCSVBusy</Name>
+							<Comment><![CDATA[ CSV logger status.]]></Comment>
+							<Type>BOOL</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>GVL_HMI.bCSVDone</Name>
+							<Type>BOOL</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>GVL_HMI.bCSVError</Name>
+							<Type>BOOL</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>GVL_HMI.nCSVErrorId</Name>
+							<Type>UDINT</Type>
+							<InOut>7</InOut>
 						</Var>
 					</Vars>
 					<UnrestoredVarLinks ImportTime="2026-07-20T16:44:37">
@@ -4196,9 +4196,7 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 		</Io>
 	</Project>
 	<Mappings>
-		<MappingInfo Identifier="{00000000-2001-0850-0020-500810000403}" Id="#x02030020"/>
-		<MappingInfo Identifier="{00000000-2001-0850-0020-500821000403}" Id="#x02030030"/>
-		<MappingInfo Identifier="{03040010-0010-0304-1000-040310000403}" Id="#x02030010" Watchdog="04000000040000000400000004000000"/>
+		<MappingInfo Identifier="{00000000-0010-0304-1000-040310000403}" Id="#x02030010"/>
 		<OwnerA Name="TIID^Device 1 (EtherCAT)">
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1100)^Term 4 (EL1918)">
 				<Link VarA="Term 1 (EK1100)^Term 3 (EL6910)^ConnectionInputs^TwinSafeGroup1.Term 4 (EL1918) - Module 1 (FSOE)_3 TxPDO" VarB="Module 1 (FSOE)^FSoE Outputs^FSOE"/>

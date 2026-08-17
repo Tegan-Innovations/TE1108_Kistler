@@ -33,6 +33,14 @@
             "SALT": "Qt2uQk2VLhEZxonVqwzWIpnrIkrcx7BmQctdOJtEPYY0OiQPk9HbWjJXwmn1IxrvFnZaGOTV7f32poLOYdO/Qg==",
             "TWO_FACTOR_AUTHENTICATION_ENABLED": false
         },
+        "Renan": {
+            "ALGORITHM": 1,
+            "ENABLED": true,
+            "LAST_PASSWORD_CHANGE": "2026-08-17T15:53:00.2924321Z",
+            "PASSWORD": "16f045141377794fe2f4bb16a605efd9d09549229947bd4d90a26c8ce4f49e77b474000d4fc12ab4f19e23c0e55e94e45f589a61dc1320cca1585813b641f062",
+            "SALT": "2Xtx26NtFI2ZJxpD0jTkF/XiROwAsEfhCl1s7/EYnEI6MCuFJyVbEEKk74srTZWebCARWZ2vLx/VfYwEINvFrA==",
+            "TWO_FACTOR_AUTHENTICATION_ENABLED": false
+        },
         "Thays": {
             "ALGORITHM": 1,
             "ENABLED": true,
