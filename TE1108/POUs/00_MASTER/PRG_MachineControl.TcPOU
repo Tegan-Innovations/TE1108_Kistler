@@ -295,6 +295,7 @@ bStartProcessCondition :=
 			GVL_MASTER.stMachineStatus.eMachineState =
 				E_MachineState.SYSTEM_AUTO_CYCLE
 			AND NOT GVL_MASTER.bProcessBusy
+			AND bOperatorExchangeComplete
 	);
 
 // =========================================================
@@ -334,6 +335,27 @@ END_IF;
 IF NOT GVL_MASTER.i_bButtonStop THEN
     bStopRequested := TRUE;
 END_IF
+
+// =========================================================
+// AUTO CYCLE MAIN SCREEN SUPERVISION
+// =========================================================
+
+// Automatic cycle is only allowed while the Main screen
+// is active.
+//
+// Leaving the Main screen requests a controlled stop.
+// The existing Auto Cycle logic will wait until the current
+// machine process and operator exchange are complete before
+// entering STOPPING.
+IF GVL_MASTER.stMachineStatus.eMachineState =
+       E_MachineState.SYSTEM_AUTO_CYCLE
+   AND NOT GVL_HMI.bMainScreenActive THEN
+
+    bStopRequested := TRUE;
+
+END_IF;
+
+
 
 IF GVL_MASTER.stMachineStatus.eMachineState <>
     E_MachineState.FAULT
@@ -593,7 +615,7 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 		tonFirstAutoCycle(IN := rtFirstAutoCycle.Q);
 	
 		IF bStopRequested
-			AND NOT GVL_MASTER.bProcessBusy THEN
+			AND NOT GVL_MASTER.bProcessBusy AND bOperatorExchangeComplete THEN
 	
 			GVL_MASTER.stMachineStatus.eMachineState :=
 				E_MachineState.STOPPING;

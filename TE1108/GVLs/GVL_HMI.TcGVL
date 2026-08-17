@@ -32,7 +32,8 @@ VAR_GLOBAL
 	bEnableManual						: BOOL;
 	
 	bHMIAlive							: BOOL;		
-	bOutHMI 							: BOOL; 
+	bOutHMI 							: BOOL;
+	bMainScreenActive 					: BOOL := FALSE; 
 	
 END_VAR	
 

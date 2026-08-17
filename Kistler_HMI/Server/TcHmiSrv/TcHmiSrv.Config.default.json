@@ -1928,6 +1928,16 @@
             },
             "USEMAPPING": true
         },
+        "ADS.PLC1.GVL_HMI.bMainScreenActive": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::bMainScreenActive",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
         "ADS.PLC1.GVL_HMI.bResultTest": {
             "ACCESS": 3,
             "DOMAIN": "ADS",
@@ -8716,6 +8726,7 @@
                 "ADS.PLC1.GVL_HMI.bEnableManual": 3,
                 "ADS.PLC1.GVL_HMI.bEnableSettings": 3,
                 "ADS.PLC1.GVL_HMI.bHMIAlive": 3,
+                "ADS.PLC1.GVL_HMI.bMainScreenActive": 3,
                 "ADS.PLC1.GVL_HMI.bResultTest": 3,
                 "ADS.PLC1.GVL_HMI.bSetSettings": 3,
                 "ADS.PLC1.GVL_HMI.bShowRejectPopup": 3,
