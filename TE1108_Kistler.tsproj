@@ -11,7 +11,7 @@
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{DB3ABD38-31C2-7FC6-21D7-F172BA91984F}" AutoDeleteType="true">E_PuckLockerMode</Name>
+			<Name GUID="{1B090823-34FE-AA35-7EE2-1CF6FAEBC3BF}" AutoDeleteType="true">E_PuckLockerMode</Name>
 			<BitSize>16</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000006}">INT</BaseType>
 			<EnumInfo>
@@ -28,9 +28,6 @@
 			</EnumInfo>
 			<Properties>
 				<Property>
-					<Name>generate_implicit_init_function</Name>
-				</Property>
-				<Property>
 					<Name>qualified_only</Name>
 				</Property>
 				<Property>
@@ -39,14 +36,17 @@
 				<Property>
 					<Name>to_string</Name>
 				</Property>
+				<Property>
+					<Name>generate_implicit_init_function</Name>
+				</Property>
 			</Properties>
 		</DataType>
 		<DataType>
-			<Name GUID="{9BDA5181-349B-8F29-1EAE-A3EB0EC91045}" AutoDeleteType="true">ST_PuckLockerHMI</Name>
+			<Name GUID="{DB189694-6976-128C-9CA8-62269606A530}" AutoDeleteType="true">ST_PuckLockerHMI</Name>
 			<BitSize>2160</BitSize>
 			<SubItem>
 				<Name>eMode</Name>
-				<Type GUID="{DB3ABD38-31C2-7FC6-21D7-F172BA91984F}">E_PuckLockerMode</Type>
+				<Type GUID="{1B090823-34FE-AA35-7EE2-1CF6FAEBC3BF}">E_PuckLockerMode</Type>
 				<BitSize>16</BitSize>
 				<BitOffs>0</BitOffs>
 			</SubItem>
@@ -63,16 +63,22 @@
 				<BitOffs>24</BitOffs>
 			</SubItem>
 			<SubItem>
-				<Name>bCmdAcknowledgeRemovalFault</Name>
+				<Name>bSkipButtonFlag</Name>
 				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
 				<BitSize>8</BitSize>
 				<BitOffs>32</BitOffs>
 			</SubItem>
 			<SubItem>
-				<Name>bEnabled</Name>
+				<Name>bCmdAcknowledgeRemovalFault</Name>
 				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
 				<BitSize>8</BitSize>
 				<BitOffs>40</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>bEnabled</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
+				<BitSize>8</BitSize>
+				<BitOffs>48</BitOffs>
 				<Default>
 					<Bool>true</Bool>
 				</Default>
@@ -81,49 +87,49 @@
 				<Name>bPuckDetected</Name>
 				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
 				<BitSize>8</BitSize>
-				<BitOffs>48</BitOffs>
+				<BitOffs>56</BitOffs>
 			</SubItem>
 			<SubItem>
 				<Name>bPuckLocked</Name>
 				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
 				<BitSize>8</BitSize>
-				<BitOffs>56</BitOffs>
+				<BitOffs>64</BitOffs>
 			</SubItem>
 			<SubItem>
 				<Name>bPuckSensorMismatch</Name>
 				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
 				<BitSize>8</BitSize>
-				<BitOffs>64</BitOffs>
+				<BitOffs>72</BitOffs>
 			</SubItem>
 			<SubItem>
 				<Name>bUnexpectedRemovalFault</Name>
 				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
 				<BitSize>8</BitSize>
-				<BitOffs>72</BitOffs>
+				<BitOffs>80</BitOffs>
 			</SubItem>
 			<SubItem>
 				<Name>bShowUnexpectedRemovalPopup</Name>
 				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
 				<BitSize>8</BitSize>
-				<BitOffs>80</BitOffs>
+				<BitOffs>88</BitOffs>
 			</SubItem>
 			<SubItem>
 				<Name>bShowEmptyPuckPopup</Name>
 				<Type GUID="{18071995-0000-0000-0000-000000000030}">BOOL</Type>
 				<BitSize>8</BitSize>
-				<BitOffs>88</BitOffs>
+				<BitOffs>96</BitOffs>
 			</SubItem>
 			<SubItem>
 				<Name>nPucksAllowedToPass</Name>
 				<Type GUID="{18071995-0000-0000-0000-000000000002}">USINT</Type>
 				<BitSize>8</BitSize>
-				<BitOffs>96</BitOffs>
+				<BitOffs>104</BitOffs>
 			</SubItem>
 			<SubItem>
 				<Name>sMessage</Name>
 				<Type GUID="{18071995-0000-0000-0000-0001000000FF}">STRING(255)</Type>
 				<BitSize>2048</BitSize>
-				<BitOffs>104</BitOffs>
+				<BitOffs>112</BitOffs>
 			</SubItem>
 		</DataType>
 		<DataType>
@@ -170,12 +176,12 @@
 			</SubItem>
 		</DataType>
 		<DataType>
-			<Name GUID="{644F6335-6777-7A14-7461-99B4EB37A1BC}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..1000] OF ST_DataHistoryHMI</Name>
-			<BitSize>224000</BitSize>
+			<Name GUID="{69BA76DC-FD31-0169-A401-8089A0A7BA53}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..2000] OF ST_DataHistoryHMI</Name>
+			<BitSize>448000</BitSize>
 			<BaseType GUID="{C24B66C1-B98E-DCFD-33A2-87AA7ECC3A6F}">ST_DataHistoryHMI</BaseType>
 			<ArrayInfo>
 				<LBound>1</LBound>
-				<Elements>1000</Elements>
+				<Elements>2000</Elements>
 			</ArrayInfo>
 		</DataType>
 		<DataType>
@@ -308,7 +314,7 @@
 		<ImageData Id="1006">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000c40e0000c40e00000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ff808080808080808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c000ffffc0c0c000ffff808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0ff0000c0c0c0ff0000808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff00ff0000ff0000ff0000ff0000ff0000ff00c0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff00ff0000ff0000ff0000ff0000ff0000ff00c0c0c00000ffc0c0c00000ff808080ff00ffff00ffff00ffff00ffff00ff00ff0000ff0000ff0000ff0000ff0000ff00c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff00ff0000ff0000ff0000ff0000ff0000ff00c0c0c0000000c0c0c0000000808080ff00ffff00ffff00ffff00ffff00ff00ff0000ff0000ff0000ff0000ff0000ff00c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff00ff0000ff0000ff0000ff0000ff0000ff00c0c0c0008000c0c0c0008000808080ff00ffff00ffff00ffff00ffff00ff00ff0000ff0000ff0000ff0000ff0000ff00c0c0c0c0c0c0c0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ff</ImageData>
 		<ImageData Id="1007">424dd6020000000000003600000028000000100000000e0000000100180000000000a0020000c40e0000c40e00000000000000000000ff00ffff00ffff00ffff00ffff00ffff00ff808080808080808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffff00ffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff007fff007fff007fff007fff007fff007fffc0c0c0c0c0c0808080ff00ffff00ffff00ffff00ffff00ffff00ffff00ff</ImageData>
 	</ImageDatas>
-	<Project ProjectGUID="{4DAB34FD-03C9-48EF-9470-3ACE45203EED}" TargetNetId="172.18.235.5.1.1" Target64Bit="true" ShowHideConfigurations="#x6">
+	<Project ProjectGUID="{4DAB34FD-03C9-48EF-9470-3ACE45203EED}" TargetNetId="172.18.239.24.1.1" Target64Bit="true" ShowHideConfigurations="#x6">
 		<System>
 			<Settings MaxCpus="4" NonWinCpus="1">
 				<Cpu CpuId="3"/>
@@ -335,7 +341,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{09826F5E-A0C6-4F2A-AB8E-A2951346EAC9}" Name="TE1108" PrjFilePath="TE1108\TE1108.plcproj" TmcFilePath="TE1108\TE1108.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{51334687-7E86-54AD-7FD0-BD7C050891D0}" TmcPath="TE1108\TE1108.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{24494FD1-AAF3-D409-888D-6160220CE3D6}" TmcPath="TE1108\TE1108.tmc">
 					<Name>TE1108 Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="8" AreaNo="4">
@@ -352,8 +358,14 @@
 							<InOut>7</InOut>
 						</Var>
 						<Var>
+							<Name>GVL_HMI.bCSVWriteRequest</Name>
+							<Comment><![CDATA[ Request to save a new Data History record to CSV.]]></Comment>
+							<Type>BOOL</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
 							<Name>GVL_HMI.stPuckLocker</Name>
-							<Type GUID="{9BDA5181-349B-8F29-1EAE-A3EB0EC91045}">ST_PuckLockerHMI</Type>
+							<Type GUID="{DB189694-6976-128C-9CA8-62269606A530}">ST_PuckLockerHMI</Type>
 							<InOut>7</InOut>
 						</Var>
 						<Var>
@@ -386,7 +398,39 @@
 						</Var>
 						<Var>
 							<Name>GVL_HMI.aDataHistoryHMI</Name>
-							<Type GUID="{644F6335-6777-7A14-7461-99B4EB37A1BC}">ARRAY [1..1000] OF ST_DataHistoryHMI</Type>
+							<Type GUID="{69BA76DC-FD31-0169-A401-8089A0A7BA53}">ARRAY [1..2000] OF ST_DataHistoryHMI</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>GVL_HMI.stCSVDataPending</Name>
+							<Comment><![CDATA[ =================================================================
+ CSV DATA LOGGING
+ =================================================================
+ Stable copy of the completed Kistler test.
+ The CSV logger will use this record instead of reading
+ directly from the circular Data History buffer.]]></Comment>
+							<Type GUID="{C24B66C1-B98E-DCFD-33A2-87AA7ECC3A6F}">ST_DataHistoryHMI</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>GVL_HMI.bCSVBusy</Name>
+							<Comment><![CDATA[ CSV logger status.]]></Comment>
+							<Type>BOOL</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>GVL_HMI.bCSVDone</Name>
+							<Type>BOOL</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>GVL_HMI.bCSVError</Name>
+							<Type>BOOL</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>GVL_HMI.nCSVErrorId</Name>
+							<Type>UDINT</Type>
 							<InOut>7</InOut>
 						</Var>
 					</Vars>
@@ -645,6 +689,11 @@
 							<Type GUID="{2B6B47C9-DB58-8D37-72B9-9344E5A5275A}">ARRAY [0..199] OF BYTE</Type>
 						</Var>
 						<Var>
+							<Name>GVL_MASTER.stNestTable.qSupportExtend</Name>
+							<Comment><![CDATA[ cylinder extend (up for press)]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_MASTER.stNestTable.qNestRotatePortA</Name>
 							<Comment><![CDATA[ Valve: Rotate indexing table Port A]]></Comment>
 							<Type>BOOL</Type>
@@ -652,11 +701,6 @@
 						<Var>
 							<Name>GVL_MASTER.stNestTable.qNestRotatePortB</Name>
 							<Comment><![CDATA[ Valve: Rotate indexing table Port B]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_MASTER.stNestTable.qSupportExtend</Name>
-							<Comment><![CDATA[ cylinder extend (up for press)]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -1305,13 +1349,13 @@
 			</Project>
 		</Safety>
 		<Io>
-			<Device Id="1" DevType="111" DevFlags="#x0003" AmsPort="28673" AmsNetId="172.18.235.5.2.1" RemoteName="Device 1 (EtherCAT)" InfoImageId="2">
+			<Device Id="1" DevType="111" DevFlags="#x0003" AmsPort="28673" AmsNetId="172.18.239.24.2.1" RemoteName="Device 1 (EtherCAT)" InfoImageId="2">
 				<Name>Device 1 (EtherCAT)</Name>
 				<AddressInfo>
 					<Pnp>
-						<DeviceDesc>EtherCAT (TwinCAT-Intel PCI Ethernet Adapter (Gigab</DeviceDesc>
-						<DeviceName>\DEVICE\{451F4F2A-C3EB-4924-9A95-C47920A136DF}</DeviceName>
-						<DeviceData>000105a8eef9</DeviceData>
+						<DeviceDesc>Ethercat (TwinCAT-Intel PCI Ethernet Adapter (Gigab</DeviceDesc>
+						<DeviceName>\DEVICE\{ED1210FC-372C-4876-B431-85F0C0FA7E4B}</DeviceName>
+						<DeviceData>000105a8ef07</DeviceData>
 					</Pnp>
 				</AddressInfo>
 				<Image Id="1" AddrType="9" ImageType="3">

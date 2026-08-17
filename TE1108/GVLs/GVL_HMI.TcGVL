@@ -16,6 +16,7 @@ VAR_GLOBAL
 // =================================================================
 //                         HMI COMMANDS 
 // =================================================================
+	
 	i_bHMIManualModeRequest 			: BOOL := FALSE;
     i_bHMIIndexerManualEnable 			: BOOL := FALSE;
     i_bHMIKistlerManualEnable 			: BOOL := FALSE;
@@ -29,6 +30,9 @@ VAR_GLOBAL
 	bEnableSettings						: BOOL;
 	bSetSettings						: BOOL := FALSE;
 	bEnableManual						: BOOL;
+	
+	bHMIAlive							: BOOL;		
+	bOutHMI 							: BOOL; 
 	
 END_VAR	
 
@@ -79,8 +83,8 @@ VAR_GLOBAL CONSTANT
 //                         SYSTEM INFO 
 // =================================================================
 
-	sSoftwareVersion					: STRING := ' 1.0 ';
-	sSoftwareDate						: STRING := '20/07/2026';
+	sSoftwareVersion					: STRING := ' v1.0.0-rc.2 ';
+	sSoftwareDate						: STRING := '14/08/2026';
 	sTC3Version							: STRING := ' v3.1.4026.22, Runtime v3.1.4026.22 ';
 	sHMIVersion							: STRING := ' 14.13';
 	sSystemName							: STRING := ' Kistler Machine ';
@@ -116,8 +120,28 @@ udiKistlerTotalPass 					: UDINT := 0;// Total number of parts classified as OK 
 udiKistlerTotalFail 					: UDINT := 0;// Total number of parts classified as NOK by the Kistler.
 bResetKistlerStatistics 				: BOOL := FALSE;// HMI command to reset the statistics.
 iDataHistoryWriteIndex 					: INT := 1;
-aDataHistoryHMI 						: ARRAY[1..1000] OF ST_DataHistoryHMI;
+aDataHistoryHMI 						: ARRAY[1..2000] OF ST_DataHistoryHMI;
 
+
+// =================================================================
+// CSV DATA LOGGING
+// =================================================================
+
+// Stable copy of the completed Kistler test.
+// The CSV logger will use this record instead of reading
+// directly from the circular Data History buffer.
+stCSVDataPending 						: ST_DataHistoryHMI;
+
+
+// Request to save a new Data History record to CSV.
+bCSVWriteRequest 						: BOOL := FALSE;
+
+
+// CSV logger status.
+bCSVBusy 				: BOOL := FALSE;
+bCSVDone 				: BOOL := FALSE;
+bCSVError 				: BOOL := FALSE;
+nCSVErrorId 			: UDINT := 0;
 
 END_VAR]]></Declaration>
   </GVL>

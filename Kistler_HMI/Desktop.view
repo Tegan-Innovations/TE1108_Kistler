@@ -532,7 +532,7 @@
     "name": "sType",
     "label": "TYPE",
     "control": "TextBox",
-    "width": 150,
+    "width": 160,
     "widthUnit": "px",
     "resize": false,
     "minWidth": 100,

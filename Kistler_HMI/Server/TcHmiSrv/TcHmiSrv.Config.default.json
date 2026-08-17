@@ -1913,6 +1913,16 @@
             },
             "USEMAPPING": true
         },
+        "ADS.PLC1.GVL_HMI.bHMIAlive": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::bHMIAlive",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
         "ADS.PLC1.GVL_HMI.bResultTest": {
             "ACCESS": 3,
             "DOMAIN": "ADS",
@@ -8697,6 +8707,7 @@
                 "ADS.PLC1.GVL_HMI.arrAlarmHistory": 3,
                 "ADS.PLC1.GVL_HMI.bEnableManual": 3,
                 "ADS.PLC1.GVL_HMI.bEnableSettings": 3,
+                "ADS.PLC1.GVL_HMI.bHMIAlive": 3,
                 "ADS.PLC1.GVL_HMI.bResultTest": 3,
                 "ADS.PLC1.GVL_HMI.bSetSettings": 3,
                 "ADS.PLC1.GVL_HMI.bShowRejectPopup": 3,
@@ -8932,7 +8943,7 @@
     "USERGROUPUSERS": {
         "TcHmiUserManagement": {
             "Admin": {
-                "USERGROUPUSERS_AUTO_LOGOFF": "P30D",
+                "USERGROUPUSERS_AUTO_LOGOFF": "PT15M",
                 "USERGROUPUSERS_FORCE_PASSWORD_CHANGE": false,
                 "USERGROUPUSERS_GROUPS": [
                     "__SystemUsers",
@@ -8943,7 +8954,7 @@
                 "USERGROUPUSERS_TIMEZONE": "project"
             },
             "Engineer": {
-                "USERGROUPUSERS_AUTO_LOGOFF": "P30D",
+                "USERGROUPUSERS_AUTO_LOGOFF": "PT15M",
                 "USERGROUPUSERS_FORCE_PASSWORD_CHANGE": false,
                 "USERGROUPUSERS_GROUPS": [
                     "__SystemUsers",
@@ -8969,8 +8980,9 @@
                 "USERGROUPUSERS_FORCE_PASSWORD_CHANGE": false,
                 "USERGROUPUSERS_GROUPS": [
                     "__SystemUsers",
+                    "Administrator",
                     "Engineer",
-                    "Administrator"
+                    "Operator"
                 ],
                 "USERGROUPUSERS_LOCALE": "client",
                 "USERGROUPUSERS_TIMEFORMATLOCALE": "project",
@@ -9008,13 +9020,6 @@
                 "USERGROUPUSERS_LOCALE": "project",
                 "USERGROUPUSERS_TIMEFORMATLOCALE": "project",
                 "USERGROUPUSERS_TIMEZONE": "project"
-            },
-            "teste": {
-                "USERGROUPUSERS_AUTO_LOGOFF": "PT15M",
-                "USERGROUPUSERS_GROUPS": [
-                    "Engineer"
-                ],
-                "USERGROUPUSERS_LOCALE": "en"
             }
         }
     },

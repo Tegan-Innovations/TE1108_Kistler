@@ -25,7 +25,12 @@ STRUCT
     // Nest table
     bNestPositionInvalid        : BOOL;
 	bNestWrongPosition          : BOOL;
+	bNestWrongPositionAlarm     : BOOL;
     bNestMovementTimeout        : BOOL;
+	
+	// HMI
+	bHmiLogoutStopped         : BOOL;
+	bHmiLogoutAutoCycle       : BOOL;
 END_STRUCT
 END_TYPE
 ]]></Declaration>
