@@ -80,7 +80,7 @@ GVL_MASTER.stStationEvents[0].aEvents[3].bEventFlag := 	NOT GVL_MASTER.bAirSuppl
 														AND GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.STOPPING
 														AND GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.STOPPED);
 
-GVL_MASTER.stStationEvents[0].aEvents[3].bEventText := 'Air pressure not available';
+GVL_MASTER.stStationEvents[0].aEvents[3].bEventText := 'Air Pressure to Low';
 GVL_MASTER.stStationEvents[0].aEvents[3].sSolution := 'Check the main compressed-air supply';
 	
 // Event 4 — Initialisation timeout
@@ -99,7 +99,30 @@ GVL_MASTER.stStationEvents[0].aEvents[5].bEventFlag := GVL_MASTER.stDiagnostics.
 GVL_MASTER.stStationEvents[0].aEvents[5].bEventText := 'Automatic process timeout';
 GVL_MASTER.stStationEvents[0].aEvents[5].sSolution := 'Check the Kistler, index table and pneumatic sequence';
 
+// Event 6 — AutoCicle process timeout
+GVL_MASTER.stStationEvents[0].aEvents[6].bFault := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[6].bCycleStopRequest := TRUE;
+GVL_MASTER.stStationEvents[0].aEvents[6].bMessage := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[6].bEventFlag := GVL_MASTER.stDiagnostics.bAutoCycleIdleTimeout;
+GVL_MASTER.stStationEvents[0].aEvents[6].bEventText := 'Machine stopped';
+GVL_MASTER.stStationEvents[0].aEvents[6].sSolution := 'Machine Cycle Stop 2 min Not Use - Timeout';
 
+
+// Event 7 — HMI logout during automatic cycle
+GVL_MASTER.stStationEvents[0].aEvents[7].bFault := TRUE;
+GVL_MASTER.stStationEvents[0].aEvents[7].bCycleStopRequest := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[7].bMessage := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[7].bEventFlag :=GVL_MASTER.stDiagnostics.bHmiLogoutAutoCycle; 	
+GVL_MASTER.stStationEvents[0].aEvents[7].bEventText :='Out HMI while machine was in Auto cycle';
+GVL_MASTER.stStationEvents[0].aEvents[7].sSolution :='Reset the System';
+
+// Event 8— HMI logout
+GVL_MASTER.stStationEvents[0].aEvents[8].bFault := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[8].bCycleStopRequest := TRUE;
+GVL_MASTER.stStationEvents[0].aEvents[8].bMessage := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[8].bEventFlag := GVL_MASTER.stDiagnostics.bHmiLogoutStopped;
+GVL_MASTER.stStationEvents[0].aEvents[8].bEventText :='Out HMI or User not logged in';
+GVL_MASTER.stStationEvents[0].aEvents[8].sSolution := '';
 
 
 
@@ -338,9 +361,9 @@ GVL_MASTER.stStationEvents[2].aEvents[0].bFault := TRUE;
 GVL_MASTER.stStationEvents[2].aEvents[0].bCycleStopRequest := FALSE;
 GVL_MASTER.stStationEvents[2].aEvents[0].bMessage := FALSE;
 GVL_MASTER.stStationEvents[2].aEvents[0].bEventFlag :=  GVL_MASTER.stDiagnostics.bNestWrongPosition
-														AND GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.SYSTEM_POWER_UP;
+														AND GVL_MASTER.stMachineStatus.eMachineState = E_MachineState.FAULT;
 GVL_MASTER.stStationEvents[2].aEvents[0].bEventText := 'Index table wrong position';
-GVL_MASTER.stStationEvents[2].aEvents[0].sSolution := 'Place your hands over the safety sensors to restart the process';
+GVL_MASTER.stStationEvents[2].aEvents[0].sSolution := 'Restart the process and Place your hands over the safety sensors to restart the process';
 
 
 

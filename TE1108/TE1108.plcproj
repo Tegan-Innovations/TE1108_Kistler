@@ -233,6 +233,9 @@
     <Compile Include="POUs\MAIN.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\Utilities\D_1_PRG_CycleDataCSV.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Utilities\FB_EventsManager.TcPOU">
       <SubType>Code</SubType>
     </Compile>

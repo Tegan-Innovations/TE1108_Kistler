@@ -11,6 +11,8 @@ PRG_SafetyLogic(); 	// Process emergency states and safety interlocks first
 
 PRG_MachineControl(); // Process standard machine state and auto cycle sequences
 
+D_1_PRG_CycleDataCSV();
+
 PRG_PuckLocker();	// Puck Locker independent program behaviour
  
 PRG_FaultHandling(); // Define machine alarms, warnings and messages

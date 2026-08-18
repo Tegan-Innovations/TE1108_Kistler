@@ -32,6 +32,13 @@
     <HmiInitial>14.3.683.1</HmiInitial>
     <HmiRecent>14.3.804.1</HmiRecent>
     <HmiServerNodeAdvancedView>False</HmiServerNodeAdvancedView>
+    <HmiTmcFiles>[
+  {
+    "FileName": "TE1108\\TE1108.tmc",
+    "RootNamespace": "TE1108",
+    "PlcName": null
+  }
+]</HmiTmcFiles>
   </PropertyGroup>
   <PropertyGroup>
     <TwinCATHmi_Tasks>$(TcHmiDirectory)\MSBuild\Beckhoff.TwinCAT.HMI.tasks</TwinCATHmi_Tasks>
@@ -173,6 +180,9 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Contents\CSS_JAVA\ManualMode.js">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Contents\CSS_JAVA\PDF Maker\Heartbeat.js">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Contents\CSS_JAVA\PDF Maker\jspdf.min.js">

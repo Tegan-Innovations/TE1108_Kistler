@@ -50,6 +50,10 @@ VAR
     // =========================================================================
     i                   : DINT;               // Generic loop index iterator
     n                   : DINT;               // Specific table data index pointer
+	
+
+	tonHMIAliveOn 		: TON; 
+	tonHMIAliveOff		: TON;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[// =================================================================
@@ -160,9 +164,19 @@ END_IF
 // =================================================================
 // NOW CALL THE METHOD TO PROCESS STRINGS AND HMI COLORS
 // =================================================================
+ACT_UserLogout();
 M_StatusHMI();
 M_PLC_Power();]]></ST>
     </Implementation>
+    <Action Name="ACT_UserLogout" Id="{c14da0f3-8317-4be2-9d60-83c1b12be1bf}">
+      <Implementation>
+        <ST><![CDATA[tonHMIAliveOn(IN := GVL_HMI.bHMIAlive, PT:= T#2S);
+ 
+tonHMIAliveOff(IN := NOT GVL_HMI.bHMIAlive, PT:= T#2S);
+ 
+GVL_HMI.bOutHMI := tonHMIAliveOn.Q OR tonHMIAliveOff.Q;]]></ST>
+      </Implementation>
+    </Action>
     <Method Name="M_AddLogToHistory" Id="{4a7a2891-da8e-4224-86d0-f95767bff40e}">
       <Declaration><![CDATA[METHOD M_AddLogToHistory
 VAR_INPUT

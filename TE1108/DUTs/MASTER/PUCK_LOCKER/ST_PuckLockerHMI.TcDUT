@@ -7,6 +7,7 @@ STRUCT
 
     bEnableEmptyPuckBypass      : BOOL;
     bCmdEmptyPuckBypass         : BOOL;
+	bSkipButtonFlag				: BOOL;
     bCmdAcknowledgeRemovalFault : BOOL;
 	bEnabled 					: BOOL := TRUE;
 

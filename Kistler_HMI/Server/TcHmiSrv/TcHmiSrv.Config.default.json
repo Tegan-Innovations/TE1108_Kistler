@@ -929,6 +929,11 @@
             "domain": "TcHmiUserManagement",
             "userName": "__SystemAdministrator"
         },
+        "accf0500f986e370d173764f3b0f00fa35e60183320e5929c440a8ad3449a2a34972ec91a4ce00f958e6d9d07f59c8924330594815f17f34d2658cb8bdc450de": {
+            "created": "2026-08-17T15:56:58.6794128Z",
+            "domain": "TcHmiUserManagement",
+            "userName": "Renan"
+        },
         "cab73796f4531eceb26ee3bbacc15861b6ce2e9d34ac76df865817d50aec9c6633d01e9e2eb61d170009b07d2ba071c07b7f3a7860a497a07868229cc3d45fbe": {
             "created": "2026-07-27T07:41:11.1043365Z",
             "domain": "TcHmiUserManagement",
@@ -1908,6 +1913,26 @@
             "DOMAIN": "ADS",
             "DYNAMIC": true,
             "MAPPING": "PLC1::GVL_HMI::bEnableSettings",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.bHMIAlive": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::bHMIAlive",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.bMainScreenActive": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::bMainScreenActive",
             "SCHEMA": {
                 "$ref": "tchmi:general#/definitions/BOOL"
             },
@@ -8411,11 +8436,13 @@
                 "Shutdown": 3,
                 "SubscribeEvents": 3,
                 "TcHmiSrv.Config": 3,
-                "TcHmiUserManagement.AddUser": 0,
+                "TcHmiUserManagement.AddUser": 3,
+                "TcHmiUserManagement.ChangePassword": 3,
+                "TcHmiUserManagement.Config": 0,
                 "TcHmiUserManagement.DisableUser": 0,
                 "TcHmiUserManagement.EnableUser": 0,
                 "TcHmiUserManagement.RemoveUser": 0,
-                "TcHmiUserManagement.RenameUser": 0,
+                "TcHmiUserManagement.RenameUser": 3,
                 "Unsubscribe": 3,
                 "UnsubscribeEvents": 3,
                 "UpdateEventsSubscription": 3,
@@ -8509,6 +8536,7 @@
                 "SubscribeEvents": 3,
                 "TcHmiSrv.Config": 3,
                 "TcHmiUserManagement.AddUser": 0,
+                "TcHmiUserManagement.Config": 0,
                 "TcHmiUserManagement.DisableUser": 0,
                 "TcHmiUserManagement.EnableUser": 0,
                 "TcHmiUserManagement.RemoveUser": 0,
@@ -8697,6 +8725,8 @@
                 "ADS.PLC1.GVL_HMI.arrAlarmHistory": 3,
                 "ADS.PLC1.GVL_HMI.bEnableManual": 3,
                 "ADS.PLC1.GVL_HMI.bEnableSettings": 3,
+                "ADS.PLC1.GVL_HMI.bHMIAlive": 3,
+                "ADS.PLC1.GVL_HMI.bMainScreenActive": 3,
                 "ADS.PLC1.GVL_HMI.bResultTest": 3,
                 "ADS.PLC1.GVL_HMI.bSetSettings": 3,
                 "ADS.PLC1.GVL_HMI.bShowRejectPopup": 3,
@@ -8932,7 +8962,7 @@
     "USERGROUPUSERS": {
         "TcHmiUserManagement": {
             "Admin": {
-                "USERGROUPUSERS_AUTO_LOGOFF": "P30D",
+                "USERGROUPUSERS_AUTO_LOGOFF": "PT15M",
                 "USERGROUPUSERS_FORCE_PASSWORD_CHANGE": false,
                 "USERGROUPUSERS_GROUPS": [
                     "__SystemUsers",
@@ -8943,7 +8973,7 @@
                 "USERGROUPUSERS_TIMEZONE": "project"
             },
             "Engineer": {
-                "USERGROUPUSERS_AUTO_LOGOFF": "P30D",
+                "USERGROUPUSERS_AUTO_LOGOFF": "PT15M",
                 "USERGROUPUSERS_FORCE_PASSWORD_CHANGE": false,
                 "USERGROUPUSERS_GROUPS": [
                     "__SystemUsers",
@@ -8964,12 +8994,17 @@
                 "USERGROUPUSERS_TIMEFORMATLOCALE": "project",
                 "USERGROUPUSERS_TIMEZONE": "project"
             },
+            "Renan": {
+                "USERGROUPUSERS_AUTO_LOGOFF": "PT15M",
+                "USERGROUPUSERS_GROUPS": [
+                    "Administrator"
+                ],
+                "USERGROUPUSERS_LOCALE": "en"
+            },
             "Thays": {
                 "USERGROUPUSERS_AUTO_LOGOFF": "P30D",
                 "USERGROUPUSERS_FORCE_PASSWORD_CHANGE": false,
                 "USERGROUPUSERS_GROUPS": [
-                    "__SystemUsers",
-                    "Engineer",
                     "Administrator"
                 ],
                 "USERGROUPUSERS_LOCALE": "client",
@@ -9008,13 +9043,6 @@
                 "USERGROUPUSERS_LOCALE": "project",
                 "USERGROUPUSERS_TIMEFORMATLOCALE": "project",
                 "USERGROUPUSERS_TIMEZONE": "project"
-            },
-            "teste": {
-                "USERGROUPUSERS_AUTO_LOGOFF": "PT15M",
-                "USERGROUPUSERS_GROUPS": [
-                    "Engineer"
-                ],
-                "USERGROUPUSERS_LOCALE": "en"
             }
         }
     },

@@ -1,0 +1,611 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="D_1_PRG_CycleDataCSV" Id="{1311eead-4d4d-4783-80ab-5afc27af2040}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM D_1_PRG_CycleDataCSV
+VAR
+
+    // =========================================================
+    // CSV FILE
+    // =========================================================
+	fDateTime       : STRING(30);
+    sFileName       : T_MaxString :=  'C:\Users\Administrator\Desktop\csv\CycleData_#date#.csv';
+    sCSVLine        : T_MaxString := '#1#;#2#;#3#;#4#;#5#;#6#$L';
+
+
+    // =========================================================
+    // FILE ACCESS
+    // =========================================================
+
+    bBusy           : BOOL;
+    bError          : BOOL;
+    nErrId          : UDINT;
+
+    hFile           : UINT := 0;
+    step            : DWORD := 0;
+
+    fbFileOpen      : FB_FileOpen;
+    fbFileClose     : FB_FileClose;
+    fbFilePuts      : FB_FilePuts;
+
+
+    // =========================================================
+    // DATA TO WRITE
+    // =========================================================
+
+    stDataToWrite   : ST_DataHistoryHMI;
+
+
+    // =========================================================
+    // CSV FIELDS
+    // =========================================================
+
+    f1_Nest             : STRING;
+    f2_GeneralResult    : STRING;
+    f3_Distance         : STRING;
+    f4_Force            : STRING;
+    f5_Date             : STRING;
+    f6_Time             : STRING;
+
+
+    // =========================================================
+    // WRITE CONTROL
+    // =========================================================
+
+    done                : BOOL;
+
+    bWritingFirstRow    : BOOL;
+    bWrite              : BOOL;
+
+
+    // =========================================================
+    // DATE CONTROL
+    // =========================================================
+
+    fbLocalSystemTime   : FB_LocalSystemTime;
+
+    sSystemDate         : STRING;
+    lastDateCSV         : STRING;
+
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// =========================================================
+// LOCAL SYSTEM TIME
+// =========================================================
+
+fbLocalSystemTime(
+    bEnable := TRUE,
+    dwCycle := 1
+);
+
+
+// =========================================================
+// BUILD CURRENT DATE
+// Format: YYYY-MM-DD
+// =========================================================
+
+sSystemDate :=
+    WORD_TO_STRING(
+        fbLocalSystemTime.systemTime.wYear
+    );
+
+sSystemDate :=
+    CONCAT(
+        sSystemDate,
+        '-'
+    );
+
+IF fbLocalSystemTime.systemTime.wMonth < 10 THEN
+
+    sSystemDate :=
+        CONCAT(
+            sSystemDate,
+            '0'
+        );
+
+END_IF
+
+sSystemDate :=
+    CONCAT(
+        sSystemDate,
+        WORD_TO_STRING(
+            fbLocalSystemTime.systemTime.wMonth
+        )
+    );
+
+sSystemDate :=
+    CONCAT(
+        sSystemDate,
+        '-'
+    );
+
+IF fbLocalSystemTime.systemTime.wDay < 10 THEN
+
+    sSystemDate :=
+        CONCAT(
+            sSystemDate,
+            '0'
+        );
+
+END_IF
+
+sSystemDate :=
+    CONCAT(
+        sSystemDate,
+        WORD_TO_STRING(
+            fbLocalSystemTime.systemTime.wDay
+        )
+    );
+
+
+// =========================================================
+// CSV STATUS
+// =========================================================
+
+IF step = 0 THEN
+
+    GVL_HMI.bCSVBusy := FALSE;
+
+ELSE
+
+    GVL_HMI.bCSVBusy := TRUE;
+
+END_IF
+
+
+// Done is a one-cycle pulse.
+GVL_HMI.bCSVDone := FALSE;
+
+
+// =========================================================
+// NEW DAILY CSV FILE
+// =========================================================
+
+IF (lastDateCSV <> sSystemDate)
+   AND (step = 0)
+   AND NOT bWritingFirstRow THEN
+
+    lastDateCSV := sSystemDate;
+
+    sFileName :=
+        'C:\Users\Administrator\Desktop\csv\CycleData_#date#.csv';
+
+    FindAndReplace(
+        pSrcString := ADR(sFileName),
+        pDeleteString := ADR('#date#'),
+        pInsertString := ADR(lastDateCSV),
+        pDstString := ADR(sFileName),
+        nDstSize := SIZEOF(sFileName)
+    );
+
+
+    // -----------------------------------------------------
+    // CSV HEADER
+    // -----------------------------------------------------
+
+    f1_Nest :=
+        'NEST';
+
+    f2_GeneralResult :=
+        'GENERAL RESULTS';
+
+    f3_Distance :=
+        'DISTANCE';
+
+    f4_Force :=
+        'FORCE';
+
+    f5_Date :=
+        'DATE';
+
+    f6_Time :=
+        'TIME';
+
+
+    bWrite := TRUE;
+    bWritingFirstRow := TRUE;
+
+END_IF
+
+
+// =========================================================
+// LINK NEW KISTLER RESULT TO CSV
+// =========================================================
+
+IF GVL_HMI.bCSVWriteRequest
+   AND NOT bWritingFirstRow
+   AND (step = 0)
+   AND NOT bWrite THEN
+
+    // Keep a stable local copy of the completed test.
+    stDataToWrite :=
+        GVL_HMI.stCSVDataPending;
+
+    // The CSV logger has accepted the request.
+    GVL_HMI.bCSVWriteRequest := FALSE;
+
+    // Convert the Kistler data into the standard
+    // CSV field variables.
+    ACT_LinkingVariables();
+
+END_IF
+
+
+// =========================================================
+// CSV STATE MACHINE
+// =========================================================
+
+CASE step OF
+
+
+    // =====================================================
+    // WAIT FOR WRITE REQUEST
+    // =====================================================
+
+    0:
+
+        IF bWrite THEN
+
+            bWrite := FALSE;
+
+            bBusy := TRUE;
+            bError := FALSE;
+            nErrId := 0;
+            hFile := 0;
+
+            GVL_HMI.bCSVError := FALSE;
+            GVL_HMI.nCSVErrorId := 0;
+
+            step := 1;
+
+        END_IF
+
+
+    // =====================================================
+    // OPEN FILE
+    // =====================================================
+
+    1:
+
+        fbFileOpen(
+            bExecute := FALSE
+        );
+
+        fbFileOpen(
+            sNetId := '',
+            sPathName := sFileName,
+            nMode := FOPEN_MODEAPPEND OR FOPEN_MODETEXT,
+            ePath := PATH_GENERIC,
+            bExecute := TRUE
+        );
+
+        step := 2;
+
+
+    // =====================================================
+    // WAIT UNTIL OPEN COMPLETE
+    // =====================================================
+
+    2:
+
+        fbFileOpen(
+            bExecute := FALSE,
+            bError => bError,
+            nErrID => nErrId,
+            hFile => hFile
+        );
+
+        IF NOT fbFileOpen.bBusy THEN
+
+            IF NOT fbFileOpen.bError THEN
+
+                step := 3;
+
+            ELSE
+
+                bError := TRUE;
+                nErrId := fbFileOpen.nErrID;
+
+                GVL_HMI.bCSVError := TRUE;
+                GVL_HMI.nCSVErrorId := nErrId;
+
+                step := 100;
+
+            END_IF
+
+        END_IF
+
+
+    // =====================================================
+    // CONVERT RECORD TO CSV FORMAT
+    // =====================================================
+
+    3:
+
+        // Always restore the CSV template before replacing
+        // the field placeholders.
+        sCSVLine :=
+            '#1#;#2#;#3#;#4#;#5#;#6#$L';
+
+
+        FindAndReplace(
+            pSrcString := ADR(sCSVLine),
+            pDeleteString := ADR('#1#'),
+            pInsertString := ADR(f1_Nest),
+            pDstString := ADR(sCSVLine),
+            nDstSize := SIZEOF(sCSVLine)
+        );
+
+        FindAndReplace(
+            pSrcString := ADR(sCSVLine),
+            pDeleteString := ADR('#2#'),
+            pInsertString := ADR(f2_GeneralResult),
+            pDstString := ADR(sCSVLine),
+            nDstSize := SIZEOF(sCSVLine)
+        );
+
+        FindAndReplace(
+            pSrcString := ADR(sCSVLine),
+            pDeleteString := ADR('#3#'),
+            pInsertString := ADR(f3_Distance),
+            pDstString := ADR(sCSVLine),
+            nDstSize := SIZEOF(sCSVLine)
+        );
+
+        FindAndReplace(
+            pSrcString := ADR(sCSVLine),
+            pDeleteString := ADR('#4#'),
+            pInsertString := ADR(f4_Force),
+            pDstString := ADR(sCSVLine),
+            nDstSize := SIZEOF(sCSVLine)
+        );
+
+        FindAndReplace(
+            pSrcString := ADR(sCSVLine),
+            pDeleteString := ADR('#5#'),
+            pInsertString := ADR(f5_Date),
+            pDstString := ADR(sCSVLine),
+            nDstSize := SIZEOF(sCSVLine)
+        );
+
+        FindAndReplace(
+            pSrcString := ADR(sCSVLine),
+            pDeleteString := ADR('#6#'),
+            pInsertString := ADR(f6_Time),
+            pDstString := ADR(sCSVLine),
+            nDstSize := SIZEOF(sCSVLine)
+        );
+
+
+        done := TRUE;
+
+
+        IF done THEN
+
+            step := 4;
+            done := FALSE;
+
+        ELSE
+
+            step := 3;
+
+        END_IF
+
+
+    // =====================================================
+    // WRITE SINGLE TEXT LINE
+    // =====================================================
+
+    4:
+
+        fbFilePuts(
+            bExecute := FALSE
+        );
+
+        fbFilePuts(
+            sNetId := '',
+            hFile := hFile,
+            sLine := sCSVLine,
+            bExecute := TRUE
+        );
+
+        step := 5;
+
+
+    // =====================================================
+    // WAIT UNTIL WRITE COMPLETE
+    // =====================================================
+
+    5:
+
+        fbFilePuts(
+            bExecute := FALSE,
+            bError => bError,
+            nErrID => nErrId
+        );
+
+        IF NOT fbFilePuts.bBusy THEN
+
+            IF NOT fbFilePuts.bError THEN
+
+                step := 10;
+
+            ELSE
+
+                bError := TRUE;
+                nErrId := fbFilePuts.nErrID;
+
+                GVL_HMI.bCSVError := TRUE;
+                GVL_HMI.nCSVErrorId := nErrId;
+
+                step := 100;
+
+            END_IF
+
+        END_IF
+
+
+    // =====================================================
+    // CLOSE FILE
+    // =====================================================
+
+    10:
+
+        fbFileClose(
+            bExecute := FALSE
+        );
+
+        fbFileClose(
+            sNetId := '',
+            hFile := hFile,
+            bExecute := TRUE
+        );
+
+        // Restore template for the next CSV record.
+        sCSVLine :=
+            '#1#;#2#;#3#;#4#;#5#;#6#$L';
+
+        step := 11;
+
+
+    // =====================================================
+    // WAIT UNTIL CLOSE COMPLETE
+    // =====================================================
+
+    11:
+
+        fbFileClose(
+            bExecute := FALSE,
+            bError => bError,
+            nErrID => nErrId
+        );
+
+        IF NOT fbFileClose.bBusy THEN
+
+            IF fbFileClose.bError THEN
+
+                bError := TRUE;
+                nErrId := fbFileClose.nErrID;
+
+                GVL_HMI.bCSVError := TRUE;
+                GVL_HMI.nCSVErrorId := nErrId;
+
+            END_IF
+
+
+            // Header write is complete.
+            IF bWritingFirstRow THEN
+
+                bWritingFirstRow := FALSE;
+
+            END_IF
+
+
+            hFile := 0;
+            step := 100;
+
+        END_IF
+
+
+    // =====================================================
+    // ERROR OR READY / CLEANUP
+    // =====================================================
+
+    100:
+
+        IF hFile <> 0 THEN
+
+            // Close the file before returning to Ready.
+            step := 10;
+
+        ELSE
+
+            bBusy := FALSE;
+
+            GVL_HMI.bCSVBusy := FALSE;
+
+
+            IF NOT GVL_HMI.bCSVError THEN
+
+                GVL_HMI.bCSVDone := TRUE;
+
+            END_IF
+
+
+            step := 0;
+
+        END_IF
+
+
+END_CASE]]></ST>
+    </Implementation>
+    <Action Name="ACT_LinkingVariables" Id="{aefe0441-c878-4b2c-8890-8d9046b6e377}">
+      <Implementation>
+        <ST><![CDATA[// =========================================================
+// KISTLER DATA HISTORY -> CSV VARIABLES
+// =========================================================
+
+// Nest.
+f1_Nest :=
+    INT_TO_STRING(
+        stDataToWrite.iNestIndex
+    );
+
+
+// General result.
+f2_GeneralResult :=
+    stDataToWrite.sResult;
+
+
+// Distance.
+f3_Distance :=
+    REAL_TO_STRING(
+        stDataToWrite.rDistance
+    );
+
+
+// Force.
+f4_Force :=
+    REAL_TO_STRING(
+        stDataToWrite.rForce
+    );
+
+
+// =========================================================
+// DATE AND TIME
+// =========================================================
+
+// DT_TO_STRING format:
+// DT#YYYY-MM-DD-hh:mm:ss
+fDateTime :=
+    DT_TO_STRING(
+        stDataToWrite.dtTimeStamp
+    );
+
+
+// Date: YYYY-MM-DD
+f5_Date :=
+    MID(
+        fDateTime,
+        10,
+        4
+    );
+
+
+// Time: hh:mm:ss
+f6_Time :=
+    MID(
+        fDateTime,
+        8,
+        15
+    );
+
+
+// =========================================================
+// REQUEST CSV WRITE
+// =========================================================
+
+bWrite := TRUE;]]></ST>
+      </Implementation>
+    </Action>
+  </POU>
+</TcPlcObject>

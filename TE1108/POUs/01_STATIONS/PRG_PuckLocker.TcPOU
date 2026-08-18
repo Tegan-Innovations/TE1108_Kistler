@@ -34,14 +34,19 @@ END_VAR
 //       latched machine fault.
 // ============================================================================
 IF GVL_HMI.stPuckLocker.bEnabled THEN
-
-    GVL_HMI.stPuckLocker.eMode :=
-        E_PuckLockerMode.Enabled;
-
+	
+	IF GVL_HMI.stPuckLocker.bEnableEmptyPuckBypass THEN
+		
+		GVL_HMI.stPuckLocker.eMode := E_PuckLockerMode.EnabledWithEmptyPuckBypass;
+		
+	ELSE
+		
+		GVL_HMI.stPuckLocker.eMode := E_PuckLockerMode.Enabled;
+		
+	END_IF
 ELSE
 
-    GVL_HMI.stPuckLocker.eMode :=
-        E_PuckLockerMode.Disabled;
+    GVL_HMI.stPuckLocker.eMode := E_PuckLockerMode.Disabled;
 
 END_IF
 
@@ -184,7 +189,9 @@ END_IF
 IF rtEmptyPuckBypass.Q THEN
 
     GVL_HMI.stPuckLocker.bCmdEmptyPuckBypass := FALSE;
-
+	GVL_HMI.stPuckLocker.bSkipButtonFlag 	 := TRUE;
+	
+	
     IF bEmptyPuckBypassEnabled AND GVL_MASTER.stPuckLocker.eState = E_PuckLockerState.Locked AND NOT GVL_MASTER.stPuckLocker.bUnexpectedRemovalFault THEN
         GVL_MASTER.stPuckLocker.nPucksAllowedToPass := 1;
     END_IF
@@ -355,10 +362,12 @@ CASE GVL_MASTER.stPuckLocker.eState OF
 			GVL_MASTER.stPuckLocker.bUnexpectedRemovalFault := TRUE;
 			GVL_MASTER.stPuckLocker.eState := E_PuckLockerState.UnexpectedPuckRemovalFault;
 	
-		ELSIF GVL_MASTER.stPuckLocker.bPartRemovedFromNest THEN
-	
+		ELSIF GVL_MASTER.stPuckLocker.bPartRemovedFromNest OR GVL_HMI.stPuckLocker.bSkipButtonFlag THEN
+			
+			GVL_HMI.stPuckLocker.bSkipButtonFlag := FALSE;
+			
 			GVL_MASTER.stPuckLocker.sMessage := 'Part removed - releasing puck';
-			GVL_MASTER.stPuckLocker.eState := E_PuckLockerState.ReleasingPuck;
+			GVL_MASTER.stPuckLocker.eState := E_PuckLockerState.ReleasingPuck;		
 	
 		END_IF
 

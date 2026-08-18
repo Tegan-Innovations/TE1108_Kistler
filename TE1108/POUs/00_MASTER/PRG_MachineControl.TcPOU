@@ -183,6 +183,7 @@ VAR
 	bFaultRejectActive   		: BOOL;
 	bFaultRejectPending  		: BOOL;
 	eFaultOperatorNest 			: E_NestPosition := E_NestPosition.UNKNOWN;
+	bNestWrongPositionFault 	: BOOL := FALSE;
 	
 
 
@@ -199,6 +200,24 @@ END_VAR
 // 1. PRE-CONDITION LOGIC
 // =========================================================
 M_PreExecution();
+
+
+
+IF GVL_HMI.bOutHMI 
+	AND GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.FAULT 
+	AND GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.STOPPED
+	AND GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.SYSTEM_AUTO_CYCLE  THEN 
+	
+		GVL_MASTER.stDiagnostics.bHmiLogoutStopped := TRUE;
+		GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.STOPPED;
+		
+		
+ELSIF GVL_HMI.bOutHMI AND GVL_MASTER.stMachineStatus.eMachineState = E_MachineState.SYSTEM_AUTO_CYCLE THEN
+	
+	GVL_MASTER.stDiagnostics.bHmiLogoutAutoCycle := TRUE;
+	GVL_MASTER.stMachineStatus.eMachineState := E_MachineState.FAULT;
+	
+END_IF
 
 // Detect the transition into machine FAULT.
 rtMachineFault(
@@ -276,6 +295,7 @@ bStartProcessCondition :=
 			GVL_MASTER.stMachineStatus.eMachineState =
 				E_MachineState.SYSTEM_AUTO_CYCLE
 			AND NOT GVL_MASTER.bProcessBusy
+			AND bOperatorExchangeComplete
 	);
 
 // =========================================================
@@ -316,6 +336,27 @@ IF NOT GVL_MASTER.i_bButtonStop THEN
     bStopRequested := TRUE;
 END_IF
 
+// =========================================================
+// AUTO CYCLE MAIN SCREEN SUPERVISION
+// =========================================================
+
+// Automatic cycle is only allowed while the Main screen
+// is active.
+//
+// Leaving the Main screen requests a controlled stop.
+// The existing Auto Cycle logic will wait until the current
+// machine process and operator exchange are complete before
+// entering STOPPING.
+IF GVL_MASTER.stMachineStatus.eMachineState =
+       E_MachineState.SYSTEM_AUTO_CYCLE
+   AND NOT GVL_HMI.bMainScreenActive THEN
+
+    bStopRequested := TRUE;
+
+END_IF;
+
+
+
 IF GVL_MASTER.stMachineStatus.eMachineState <>
     E_MachineState.FAULT
 THEN
@@ -354,7 +395,7 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
     // Store that the operator pressed Reset.
     // The actual action is performed when the button
     // is released through fbResetTrigger.Q.
-    IF GVL_MASTER.i_bButtonReset THEN
+    IF GVL_MASTER.i_bButtonReset AND NOT GVL_HMI.bOutHMI THEN
 
         bFaultResetRequested := TRUE;
 
@@ -405,7 +446,7 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 
         bFaultResetRequested := FALSE;
         bKistlerResetIssued := FALSE;
-
+		GVL_MASTER.stDiagnostics.bHmiLogoutAutoCycle := FALSE;
         // Request Kistler recovery during the next initialization.
         bKistlerRecoveryHomeRequest := TRUE;
 
@@ -432,7 +473,11 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 		eMode_LED_Fail := E_LEDs_Mode.OFF;
 		M_ResetProcessCycle();
 
-		IF fbResetTrigger.Q AND bStartProcessCondition THEN
+		IF fbResetTrigger.Q AND bStartProcessCondition AND NOT GVL_HMI.bOutHMI THEN
+			
+			
+			GVL_MASTER.stDiagnostics.bHmiLogoutStopped := FALSE;
+			GVL_MASTER.stDiagnostics.bAutoCycleIdleTimeout := FALSE; 
             GVL_Master.stMachineStatus.eMachineState := E_MachineState.SYSTEM_INITIALISING;
 			
         END_IF
@@ -571,7 +616,7 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 		tonFirstAutoCycle(IN := rtFirstAutoCycle.Q);
 	
 		IF bStopRequested
-			AND NOT GVL_MASTER.bProcessBusy THEN
+			AND NOT GVL_MASTER.bProcessBusy AND bOperatorExchangeComplete THEN
 	
 			GVL_MASTER.stMachineStatus.eMachineState :=
 				E_MachineState.STOPPING;
@@ -589,9 +634,12 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 				E_MachineState.FAULT;
 		ELSIF tonAutoCycleIdleTimeout.Q THEN
 
-			GVL_MASTER.stMachineStatus.eMachineState :=
-				E_MachineState.STOPPING;
-	
+			// Store the reason for the controlled stop.
+			GVL_MASTER.stDiagnostics.bAutoCycleIdleTimeout := TRUE;
+		
+			// Request a normal controlled stop.
+			bStopRequested := TRUE;
+		
 		END_IF
 		
 		
@@ -2536,6 +2584,8 @@ tSupportExtendDelay(IN  := (eNestState = E_NestState.TESTING) AND tSupportRetrac
 // the sequence goes to FAULT.
 tTwoHandReturnTimeout(IN := (eNestState = E_NestState.WRONG_POSITION),PT := T#5S);
 
+
+
 // =================================================================
 // 4. NEST TABLE STATE MACHINE CONTROL (WITH INTERNAL INTERLOCKS)
 // =================================================================
@@ -2552,6 +2602,8 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 				GVL_MASTER.stNestTable.qNestRotatePortB := FALSE;
 				GVL_MASTER.stNestTable.bNestInMotion    := FALSE;
 				GVL_MASTER.stProcess.bNestTestingReady  := FALSE;
+				bNestWrongPositionFault := FALSE;
+				
 			//
 				IF GVL_IO.stSafety.bSafetyOK
 				   AND rTrigTwoHands.Q
@@ -2612,7 +2664,7 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 			
 					IF tRotatingTableDelay.Q
 					   AND GVL_MASTER.stNestTable.bNestCompletedSensor THEN
-			
+					
 						eNestState := E_NestState.STOP_TABLE;
 			
 					END_IF
@@ -2753,6 +2805,7 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 				GVL_MASTER.stNestTable.qNestRotatePortA := FALSE;
 				GVL_MASTER.stNestTable.qNestRotatePortB := TRUE;
 				GVL_MASTER.stNestTable.bNestInMotion    := TRUE;
+				
 			
 				GVL_MASTER.stProcess.bNestTestingReady  := FALSE;
 			
@@ -2761,7 +2814,8 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 					GVL_MASTER.stNestTable.qNestRotatePortA := FALSE;
 					GVL_MASTER.stNestTable.qNestRotatePortB := FALSE;
 					GVL_MASTER.stNestTable.bNestInMotion    := FALSE;
-			
+					bNestWrongPositionFault := TRUE;
+					
 					eNestState := E_NestState.FAULT;
 			
 				ELSIF rTrigTwoHands.Q
@@ -2771,6 +2825,7 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 			
 					GVL_MASTER.stNestTable.qNestRotatePortA := TRUE;
 					GVL_MASTER.stNestTable.qNestRotatePortB := FALSE;
+					
 			
 					eNestState := E_NestState.ROTATING_TABLE;
 			
@@ -4752,6 +4807,9 @@ GVL_MASTER.stProcess.bKistlerResultOK := FALSE;
 GVL_MASTER.stProcess.bKistlerResultNOK := FALSE;
 
 
+
+
+
 // =========================================================
 // RESET PROCESS TIMERS
 // =========================================================
@@ -4931,9 +4989,18 @@ GVL_MASTER.stDiagnostics.bKistlerTransmissionFault := stKistlerOutTelegram.bTran
 
 GVL_MASTER.stDiagnostics.bKistlerDeviceUnavailable := NOT stKistlerOutTelegram.bDeviceAvailable;
 
+// =================================================================================
 // Nest-table diagnostics
-GVL_MASTER.stDiagnostics.bNestWrongPosition := eNestState = E_NestState.WRONG_POSITION;
+// =================================================================================
 
+// Recoverable wrong-position condition.
+// Active while the nest state machine is in WRONG_POSITION.
+GVL_MASTER.stDiagnostics.bNestWrongPositionAlarm := eNestState = E_NestState.WRONG_POSITION;
+
+
+// Wrong-position fault.
+// Active when the recovery timeout has expired.
+GVL_MASTER.stDiagnostics.bNestWrongPosition :=  bNestWrongPositionFault;
 
 // =================================================================================
 // METHOD EXECUTION FEEDBACK (Return True)
@@ -5266,15 +5333,26 @@ bPuckLockerEnabled :=
 // -----------------------------------------------------------------------------
 // Machine messages are currently used during Automatic Cycle.
 // -----------------------------------------------------------------------------
+
 IF GVL_MASTER.stMachineStatus.eMachineState =
     E_MachineState.SYSTEM_AUTO_CYCLE THEN
 
 
     // =========================================================================
     // Highest priority:
+    // Index table stopped in a recoverable wrong position.
+    // =========================================================================
+    IF GVL_MASTER.stDiagnostics.bNestWrongPositionAlarm THEN
+
+        sMachineMessage :=
+            'WRONG POSITION-Place your hands over the safety sensors to fix the table position';
+
+
+    // =========================================================================
+    // Second priority:
     // The table is physically moving.
     // =========================================================================
-    IF GVL_MASTER.stNestTable.bNestInMotion THEN
+    ELSIF GVL_MASTER.stNestTable.bNestInMotion THEN
 
         sMachineMessage :=
             'Table indexing - keep hands clear';
@@ -5288,6 +5366,7 @@ IF GVL_MASTER.stMachineStatus.eMachineState =
         // Messages follow the exact same state machine that controls table
         // permission. This prevents instructions from appearing out of order.
         // =====================================================================
+      
         CASE eOperatorExchangeState OF
 
 
@@ -5830,6 +5909,20 @@ IF rtKistlerResultDone.Q THEN
                 fbLocalSystemTime.systemTime
             );
 
+
+		// =====================================================
+		// PREPARE CSV DATA
+		// =====================================================
+		
+		// Copy the complete Data History record before moving
+		// the circular buffer index.
+		GVL_HMI.stCSVDataPending :=
+			GVL_HMI.aDataHistoryHMI[
+				GVL_HMI.iDataHistoryWriteIndex
+			];
+		
+		// Request CSV storage for this completed Kistler test.
+		GVL_HMI.bCSVWriteRequest := TRUE;
 
         // Move to the next history position.
         GVL_HMI.iDataHistoryWriteIndex :=
