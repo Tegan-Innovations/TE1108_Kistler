@@ -80,7 +80,7 @@ GVL_MASTER.stStationEvents[0].aEvents[3].bEventFlag := 	NOT GVL_MASTER.bAirSuppl
 														AND GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.STOPPING
 														AND GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.STOPPED);
 
-GVL_MASTER.stStationEvents[0].aEvents[3].bEventText := 'Air pressure not available';
+GVL_MASTER.stStationEvents[0].aEvents[3].bEventText := 'Air Pressure to Low';
 GVL_MASTER.stStationEvents[0].aEvents[3].sSolution := 'Check the main compressed-air supply';
 	
 // Event 4 — Initialisation timeout
@@ -98,6 +98,15 @@ GVL_MASTER.stStationEvents[0].aEvents[5].bMessage := FALSE;
 GVL_MASTER.stStationEvents[0].aEvents[5].bEventFlag := GVL_MASTER.stDiagnostics.bProcessTimeout;
 GVL_MASTER.stStationEvents[0].aEvents[5].bEventText := 'Automatic process timeout';
 GVL_MASTER.stStationEvents[0].aEvents[5].sSolution := 'Check the Kistler, index table and pneumatic sequence';
+
+// Event 6 — AutoCicle process timeout
+GVL_MASTER.stStationEvents[0].aEvents[6].bFault := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[6].bCycleStopRequest := TRUE;
+GVL_MASTER.stStationEvents[0].aEvents[6].bMessage := FALSE;
+GVL_MASTER.stStationEvents[0].aEvents[6].bEventFlag := GVL_MASTER.stDiagnostics.bAutoCycleIdleTimeout;
+GVL_MASTER.stStationEvents[0].aEvents[6].bEventText := 'Machine stopped';
+GVL_MASTER.stStationEvents[0].aEvents[6].sSolution := 'Machine Cycle Stop 2 min Not Use - Timeout';
+
 
 // Event 7 — HMI logout during automatic cycle
 GVL_MASTER.stStationEvents[0].aEvents[7].bFault := TRUE;

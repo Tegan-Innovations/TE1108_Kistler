@@ -476,7 +476,8 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 		IF fbResetTrigger.Q AND bStartProcessCondition AND NOT GVL_HMI.bOutHMI THEN
 			
 			
-			GVL_MASTER.stDiagnostics.bHmiLogoutStopped := FALSE; 
+			GVL_MASTER.stDiagnostics.bHmiLogoutStopped := FALSE;
+			GVL_MASTER.stDiagnostics.bAutoCycleIdleTimeout := FALSE; 
             GVL_Master.stMachineStatus.eMachineState := E_MachineState.SYSTEM_INITIALISING;
 			
         END_IF
@@ -633,9 +634,12 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 				E_MachineState.FAULT;
 		ELSIF tonAutoCycleIdleTimeout.Q THEN
 
-			GVL_MASTER.stMachineStatus.eMachineState :=
-				E_MachineState.STOPPING;
-	
+			// Store the reason for the controlled stop.
+			GVL_MASTER.stDiagnostics.bAutoCycleIdleTimeout := TRUE;
+		
+			// Request a normal controlled stop.
+			bStopRequested := TRUE;
+		
 		END_IF
 		
 		

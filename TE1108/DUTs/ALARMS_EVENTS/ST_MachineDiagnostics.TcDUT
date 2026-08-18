@@ -9,6 +9,7 @@ STRUCT
     // Machine sequence timeouts
     bInitialisationTimeout      : BOOL;
     bProcessTimeout             : BOOL;
+	bAutoCycleIdleTimeout		: BOOL;
 
     // Kistler
     bKistlerError               : BOOL;
