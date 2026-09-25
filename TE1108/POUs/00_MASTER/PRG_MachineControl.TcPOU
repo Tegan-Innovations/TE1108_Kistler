@@ -21,7 +21,8 @@ VAR
     
     rtFirstAutoCycle      				: R_TRIG; // Detects entry into Auto Cycle
     fbResetTrigger        				: F_TRIG; // Detects HMI Reset button release
-	tTwoHandReturnTimeout 				: TON := (PT := T#5S);
+	tTwoHandReturnTimeout 				: TON;
+	tTwoHandReturnTimeouttime   	    : TIME := T#10S;
 	tonAfterKistlerDelay  				: TON;
 	
     eProcessCycleState 					: E_ProcessCycle_State := E_ProcessCycle_State.IDLE;
@@ -411,7 +412,7 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
         AND NOT bKistlerResetIssued
         AND GVL_MASTER.stMachineStatus.bSafety
         AND NOT GVL_MASTER.i_bButtonEmergencyStop
-        AND fbResetTrigger.Q
+        //AND fbResetTrigger.Q
     THEN
 
         // Clear the interrupted machine process.
@@ -618,8 +619,7 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 		IF bStopRequested
 			AND NOT GVL_MASTER.bProcessBusy AND bOperatorExchangeComplete THEN
 	
-			GVL_MASTER.stMachineStatus.eMachineState :=
-				E_MachineState.STOPPING;
+			GVL_MASTER.stMachineStatus.eMachineState :=E_MachineState.STOPPING;
 	
 		ELSIF GVL_MASTER.stMachineStatus.bFault
 			OR NOT bStartProcessCondition
@@ -2582,7 +2582,7 @@ tSupportExtendDelay(IN  := (eNestState = E_NestState.TESTING) AND tSupportRetrac
 // Two-hand return timeout.
 // If the operator does not press the two-hand control again within 1 second,
 // the sequence goes to FAULT.
-tTwoHandReturnTimeout(IN := (eNestState = E_NestState.WRONG_POSITION),PT := T#5S);
+tTwoHandReturnTimeout(IN := (eNestState = E_NestState.WRONG_POSITION),PT := tTwoHandReturnTimeouttime);
 
 
 
@@ -5345,7 +5345,7 @@ IF GVL_MASTER.stMachineStatus.eMachineState =
     IF GVL_MASTER.stDiagnostics.bNestWrongPositionAlarm THEN
 
         sMachineMessage :=
-            'WRONG POSITION-Place your hands over the safety sensors to fix the table position';
+            'Index wrong position - place both hands on the safety controls to recover';
 
 
     // =========================================================================
@@ -5355,7 +5355,7 @@ IF GVL_MASTER.stMachineStatus.eMachineState =
     ELSIF GVL_MASTER.stNestTable.bNestInMotion THEN
 
         sMachineMessage :=
-            'Table indexing - keep hands clear';
+            'Index table moving - keep hands clear';
 
 
     ELSE
@@ -5366,7 +5366,7 @@ IF GVL_MASTER.stMachineStatus.eMachineState =
         // Messages follow the exact same state machine that controls table
         // permission. This prevents instructions from appearing out of order.
         // =====================================================================
-      
+
         CASE eOperatorExchangeState OF
 
 
@@ -5392,7 +5392,7 @@ IF GVL_MASTER.stMachineStatus.eMachineState =
                             E_PuckLockerState.Locked THEN
 
                         sMachineMessage :=
-                            'Waiting for puck locker to lock puck';
+                            'Waiting for puck locker to lock';
 
                     ELSIF NOT GVL_MASTER.stSensors.bPartPresent_NEST THEN
 
@@ -5402,7 +5402,7 @@ IF GVL_MASTER.stMachineStatus.eMachineState =
                     ELSE
 
                         sMachineMessage :=
-                            'Machine ready - press two-hand buttons to index';
+                            'Ready to index - press both safety controls';
 
                     END_IF
 
@@ -5416,12 +5416,12 @@ IF GVL_MASTER.stMachineStatus.eMachineState =
                     IF GVL_MASTER.stSensors.bPartPresent_NEST THEN
 
                         sMachineMessage :=
-                            'Part loaded - press two-hand buttons to index';
+                            'Part loaded - press both safety controls to index';
 
                     ELSE
 
                         sMachineMessage :=
-                            'Load new part or continue with empty nest';
+                            'Load new part or press both safety controls to continue';
 
                     END_IF
 
@@ -5459,7 +5459,7 @@ IF GVL_MASTER.stMachineStatus.eMachineState =
                 // Do not show a "confirmed" message here. Once the reject pulse
                 // is accepted, the state machine exits this state automatically.
                 sMachineMessage :=
-                    'Place failed part into reject station';
+                    'Place failed part in reject station';
 
 
             // =================================================================
@@ -5485,7 +5485,7 @@ IF GVL_MASTER.stMachineStatus.eMachineState =
                     // Recovery protection if the locker is disabled while
                     // this state is still active.
                     sMachineMessage :=
-                        'Operator exchange completing';
+                        'Completing operator exchange';
 
                 END_IF
 
@@ -5502,7 +5502,7 @@ IF GVL_MASTER.stMachineStatus.eMachineState =
                 ELSE
 
                     sMachineMessage :=
-                        'Operator exchange completing';
+                        'Completing operator exchange';
 
                 END_IF
 
@@ -5514,12 +5514,12 @@ IF GVL_MASTER.stMachineStatus.eMachineState =
                 IF bPuckLockerEnabled THEN
 
                     sMachineMessage :=
-                        'Waiting for puck locker to lock new puck';
+                        'Waiting for puck locker to lock';
 
                 ELSE
 
                     sMachineMessage :=
-                        'Operator exchange completing';
+                        'Completing operator exchange';
 
                 END_IF
 
@@ -5531,7 +5531,7 @@ IF GVL_MASTER.stMachineStatus.eMachineState =
                 IF GVL_MASTER.stSensors.bPartPresent_NEST THEN
 
                     sMachineMessage :=
-                        'New part loaded - ready to index';
+                        'Part loaded - ready to index';
 
                 ELSE
 
@@ -5546,7 +5546,7 @@ IF GVL_MASTER.stMachineStatus.eMachineState =
             // =================================================================
 
                 sMachineMessage :=
-                    'Operator exchange complete - press two-hand buttons to index';
+                    'Operator exchange complete - press both safety controls to index';
 
 
             // =================================================================
@@ -5557,7 +5557,7 @@ IF GVL_MASTER.stMachineStatus.eMachineState =
                 // bNestInMotion condition. This message covers the transition
                 // immediately before or after physical movement.
                 sMachineMessage :=
-                    'Table index in progress';
+                    'Index table moving - keep hands clear';
 
 
             // =================================================================
