@@ -574,13 +574,20 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
 				// Turn it off only after the reject sensor confirms that the
 				// failed part was placed in the reject location.
 				// -------------------------------------------------------------
-				IF GVL_MASTER.astNestProcessResult[
-						iOperatorNestIndex
-				   ].bResultValid
-				   AND GVL_MASTER.astNestProcessResult[
-						iOperatorNestIndex
-				   ].bFail
-				   AND NOT bRejectConfirmedForExchange THEN
+				IF (
+						GVL_MASTER.astNestProcessResult[
+							iOperatorNestIndex
+						].bResultValid
+						AND GVL_MASTER.astNestProcessResult[
+							iOperatorNestIndex
+						].bFail
+				   )
+				   OR (
+						eOperatorExchangeState =
+							E_OperatorExchangeState.WaitingForRejectConfirmation
+						AND NOT bRejectConfirmedForExchange
+				   )
+				THEN
 		
 					eMode_LED_PASS := E_LEDs_Mode.OFF;
 					eMode_LED_Fail := E_LEDs_Mode.ON;
@@ -3169,13 +3176,18 @@ CASE eOperatorExchangeState OF
 				// ---------------------------------------------------------
 				// FAIL result.
 				// ---------------------------------------------------------
-				ELSIF bOperatorResultFail THEN
+			ELSIF bOperatorResultFail THEN
 			
-					//eOperatorExchangeState := E_OperatorExchangeState.WaitingForRejectConfirmation;
-						
-				    eOperatorExchangeState := E_OperatorExchangeState.ExchangeComplete;
+				// A valid FAIL result must always be physically confirmed
+				// at the reject station before the exchange is completed.
+				//
+				// The part may already have been removed from the operator nest
+				// before this state is evaluated, so the current part-present
+				// sensor must not bypass reject confirmation.
+				eOperatorExchangeState :=
+					E_OperatorExchangeState.WaitingForRejectConfirmation;
 			
-				END_IF
+			END_IF
 			
 			END_IF
 
@@ -4882,33 +4894,48 @@ END_IF
 eFaultOperatorNest := eOperatorNestPosition;
 
 
-// Mark the other three nests as rejected.
+// Preserve the actual Kistler result during fault recovery.
+//
+// A machine fault is not a Kistler FAIL result.
+// The retained nest memory determines the real part state:
+//
+// bResultValid = TRUE  -> keep the existing PASS / FAIL result.
+// bResultValid = FALSE -> part remains NOT TESTED.
+//
+// This also covers a Kistler cycle interrupted by a machine fault:
+// because no valid Kistler result was completed, no artificial
+// FAIL result is generated here.
 FOR iNestIndex := 1 TO 4 DO
 
-    IF iNestIndex <> TO_INT(eFaultOperatorNest) THEN
-
-        GVL_MASTER.astNestProcessResult[
-            iNestIndex
-        ].bResultValid := TRUE;
-
-        GVL_MASTER.astNestProcessResult[
-            iNestIndex
-        ].bPass := FALSE;
-
-        GVL_MASTER.astNestProcessResult[
-            iNestIndex
-        ].bFail := TRUE;
+    IF GVL_MASTER.astNestTracking[iNestIndex].bPartLoaded THEN
 
         GVL_MASTER.astNestProcessResult[
             iNestIndex
         ].bDispositionSent := FALSE;
 
+        // If the part currently at the Kistler station does not have
+        // a valid completed result, the test cannot be guaranteed.
+        // Treat this part as FAIL for reject handling.
+        IF (iNestIndex = TO_INT(eKistlerNestPosition))
+           AND NOT GVL_MASTER.astNestProcessResult[iNestIndex].bResultValid THEN
 
-        // Keep force and distance values for diagnostics.
-        // Only change the displayed result.
-        GVL_HMI.aKistlerNestResult[
-            iNestIndex
-        ].eResult := E_HMIKistlerResult.FAIL;
+            GVL_MASTER.astNestProcessResult[
+                iNestIndex
+            ].bResultValid := TRUE;
+
+            GVL_MASTER.astNestProcessResult[
+                iNestIndex
+            ].bPass := FALSE;
+
+            GVL_MASTER.astNestProcessResult[
+                iNestIndex
+            ].bFail := TRUE;
+
+            GVL_HMI.aKistlerNestResult[
+                iNestIndex
+            ].eResult := E_HMIKistlerResult.FAIL;
+
+        END_IF
 
     END_IF
 
@@ -5697,13 +5724,36 @@ IF GVL_HMI.stPuckLocker.eMode = E_PuckLockerMode.Disabled
 END_IF
 
 // Detect new part loading.
-GVL_MASTER.astNestTracking[iOperatorNestIndex].bPartLoadedPulse := NOT GVL_MASTER.astNestTracking[iOperatorNestIndex].bPreviousSensor AND bPartPresent;
+GVL_MASTER.astNestTracking[iOperatorNestIndex].bPartLoadedPulse :=
+    NOT GVL_MASTER.astNestTracking[iOperatorNestIndex].bPreviousSensor
+    AND bPartPresent;
 
-// Store the current occupancy status.
-GVL_MASTER.astNestTracking[iOperatorNestIndex].bPartLoaded := bPartPresent;
+// Retain the logical occupancy of this physical nest.
+//
+// The physical sensor is only available at the operator position.
+// Therefore, bPartLoaded must represent the remembered part state
+// associated with the nest, not a continuous copy of the sensor.
+IF GVL_MASTER.astNestTracking[iOperatorNestIndex].bPartLoadedPulse THEN
+
+    // A new physical part has been loaded into this nest.
+    GVL_MASTER.astNestTracking[iOperatorNestIndex].bPartLoaded := TRUE;
+
+    // A new part must never inherit the process result
+    // stored for the previous part in the same physical nest.
+    GVL_MASTER.astNestProcessResult[iOperatorNestIndex].bResultValid := FALSE;
+    GVL_MASTER.astNestProcessResult[iOperatorNestIndex].bPass := FALSE;
+    GVL_MASTER.astNestProcessResult[iOperatorNestIndex].bFail := FALSE;
+    GVL_MASTER.astNestProcessResult[iOperatorNestIndex].bDispositionSent := FALSE;
+
+ELSIF GVL_MASTER.astNestTracking[iOperatorNestIndex].bPartRemovedPulse THEN
+
+    GVL_MASTER.astNestTracking[iOperatorNestIndex].bPartLoaded := FALSE;
+
+END_IF
 
 // Save the current sensor state for the next scan.
-GVL_MASTER.astNestTracking[iOperatorNestIndex].bPreviousSensor := bPartPresent;
+GVL_MASTER.astNestTracking[iOperatorNestIndex].bPreviousSensor :=
+    bPartPresent;
 ]]></ST>
       </Implementation>
     </Method>
