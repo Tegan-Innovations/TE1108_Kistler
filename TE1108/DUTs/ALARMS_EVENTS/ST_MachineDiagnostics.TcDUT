@@ -32,6 +32,15 @@ STRUCT
 	// HMI
 	bHmiLogoutStopped         : BOOL;
 	bHmiLogoutAutoCycle       : BOOL;
+	// Index Support
+	bSupportSensors             : BOOL;
+	bSupportRetractTimeout      : BOOL;
+	bSupportExtendTimeout       : BOOL;
+	
+	// Main Door
+	bMainDoorSensorMismatch     : BOOL;
+	bMainDoorLockTimeout        : BOOL;
+	
 END_STRUCT
 END_TYPE
 ]]></Declaration>

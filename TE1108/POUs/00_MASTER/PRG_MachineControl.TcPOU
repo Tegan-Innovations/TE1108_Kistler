@@ -16,6 +16,10 @@ VAR
 	tonSimulation		  				: ARRAY[1..4] OF TON; //timer for simulations  
 	rtKistlerResultDone   				: R_TRIG;
 	rtPartPresentReject   				: R_TRIG;
+	tonSupportRetractTimeout 			: TON;
+	tonSupportExtendTimeout  			: TON;
+	tSupportRetractTimeout 				: TIME := T#2S;
+	tSupportExtendTimeout  				: TIME := T#2S;
 
 	bKistlerResetIssued 				: BOOL := FALSE;
     
@@ -313,6 +317,9 @@ IF (
     OR stKistler_Status.bError
 	OR NOT GVL_MASTER.bUp24VPowerSupplyOk
     OR NOT GVL_MASTER.bUs24VPowerSupplyOk
+    OR GVL_MASTER.stDiagnostics.bSupportSensors
+    OR GVL_MASTER.stDiagnostics.bSupportRetractTimeout
+    OR GVL_MASTER.stDiagnostics.bSupportExtendTimeout
 )
 AND GVL_MASTER.stMachineStatus.eMachineState <>
     E_MachineState.FAULT
@@ -2583,6 +2590,38 @@ tTwoHandHoldTimer(IN := GVL_IO.stSafety.bTwoHandsSafe, PT := tTwoHandTargetTime)
 // Enchained timers execution pattern to generate an automated timeline for the TESTING state
 tRotatingTableDelay(IN  := (eNestState = E_NestState.ROTATING_TABLE), PT := T#500MS);
 tPortB_ResetDelay(IN    := (eNestState = E_NestState.STOP_TABLE), PT := T#1S);
+
+// =================================================================
+// INDEX SUPPORT DIAGNOSTICS
+// =================================================================
+
+// Both support position sensors must never be active simultaneously.
+GVL_MASTER.stDiagnostics.bSupportSensors :=
+    GVL_MASTER.stNestTable.bSupportExtended
+    AND GVL_MASTER.stNestTable.bSupportRetracted;
+
+// Support retract timeout.
+tonSupportRetractTimeout(
+    IN := GVL_MASTER.stNestTable.bSupportRetractRequest
+          AND NOT GVL_MASTER.stNestTable.bSupportRetracted,
+    PT := tSupportRetractTimeout
+);
+
+GVL_MASTER.stDiagnostics.bSupportRetractTimeout :=
+    tonSupportRetractTimeout.Q;
+
+// Support extend timeout.
+tonSupportExtendTimeout(
+    IN := GVL_MASTER.stNestTable.bSupportExtendRequest
+          AND NOT GVL_MASTER.stNestTable.bSupportExtended,
+    PT := tSupportExtendTimeout
+);
+
+GVL_MASTER.stDiagnostics.bSupportExtendTimeout :=
+    tonSupportExtendTimeout.Q;
+
+
+// TESTING TIMELINE:
 
 // TESTING TIMELINE: 
 // 1. Initial 100ms settling delay starts when entering TESTING state
@@ -5282,8 +5321,8 @@ GVL_MASTER.stSensors.bPartPresent_Kistler 			:= GVL_IO.stTerm9_EL1809.iEL1809_Ch
 // -----------------------------------------------------------------------------
 // T10 - EL1809 channel mirrors for HMI diagnostics
 // -----------------------------------------------------------------------------
-GVL_IO.stTerm10_EL1809.iEL1809_Ch1 := GVL_MASTER.stNestTable.bSupportRetracted;
-GVL_IO.stTerm10_EL1809.iEL1809_Ch2 := GVL_MASTER.stNestTable.bSupportExtended;
+GVL_MASTER.stNestTable.bSupportRetracted := GVL_IO.stTerm10_EL1809.iEL1809_Ch1;
+GVL_MASTER.stNestTable.bSupportExtended := GVL_IO.stTerm10_EL1809.iEL1809_Ch2;
 // -----------------------------------------------------------------------------
 // T11 - EL12809 channel mirrors for HMI diagnostics
 // -----------------------------------------------------------------------------

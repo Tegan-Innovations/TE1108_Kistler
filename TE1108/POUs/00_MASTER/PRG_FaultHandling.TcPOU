@@ -6,6 +6,7 @@ VAR
 	fbEventsManager 		: FB_EventsManager;
     rtEventsPulse   		: R_TRIG;
 	tonFilterDoorClosed 	: TON;
+	tMainDoorLockTimeout 	: TIME := T#2S;
 	tonUpSupplyLost 		: TON;
 	tonUsSupplyLost 		: TON;
 END_VAR
@@ -52,6 +53,13 @@ tonUsSupplyLost(
     IN := NOT GVL_MASTER.bUs24VPowerSupplyOk,
     PT := T#1S
 );
+tonFilterDoorClosed(
+    IN := NOT GVL_IO.stSafety.bMainDoorLocked,
+    PT := tMainDoorLockTimeout
+);
+GVL_MASTER.stDiagnostics.bMainDoorLockTimeout :=
+    tonFilterDoorClosed.Q;
+
 // ============================================================================
 // GENERAL EVENTS - STATION 0
 // ============================================================================
@@ -164,19 +172,14 @@ GVL_MASTER.stStationEvents[0].aEvents[11].bEventFlag := GVL_IO.stSafety.bMainDoo
 GVL_MASTER.stStationEvents[0].aEvents[11].bEventText := 'Main door opened';
 GVL_MASTER.stStationEvents[0].aEvents[11].sSolution := 'Close the main door to continue';
 
-
-// Event 12 — Main door not locked during automatic operation
-tonFilterDoorClosed(IN := NOT GVL_IO.stSafety.bMainDoorLocked, PT := T#1S);
-
-GVL_MASTER.stStationEvents[0].aEvents[12].bFault := TRUE;
-GVL_MASTER.stStationEvents[0].aEvents[12].bCycleStopRequest := FALSE;
-GVL_MASTER.stStationEvents[0].aEvents[12].bMessage := FALSE;
-GVL_MASTER.stStationEvents[0].aEvents[12].bEventFlag := tonFilterDoorClosed.Q
-    AND (GVL_MASTER.stMachineStatus.eMachineState = E_MachineState.SYSTEM_AUTO_CYCLE
-    OR GVL_MASTER.stMachineStatus.eMachineState = E_MachineState.SYSTEM_READY_TO_START);
-
-GVL_MASTER.stStationEvents[0].aEvents[12].bEventText := 'Main safety door not locked';
-GVL_MASTER.stStationEvents[0].aEvents[12].sSolution := 'Close the door and check the safety door locking system';
+// 
+// // Event 12 — Main Door Lock Timeout
+// GVL_MASTER.stStationEvents[0].aEvents[12].bFault := TRUE;
+// GVL_MASTER.stStationEvents[0].aEvents[12].bCycleStopRequest := FALSE;
+// GVL_MASTER.stStationEvents[0].aEvents[12].bMessage := FALSE;
+// GVL_MASTER.stStationEvents[0].aEvents[12].bEventFlag :=GVL_MASTER.stDiagnostics.bMainDoorLockTimeout;
+// GVL_MASTER.stStationEvents[0].aEvents[12].bEventText :='Main safety door lock timeout';
+// GVL_MASTER.stStationEvents[0].aEvents[12].sSolution :='Close the door and check the safety door locking system';
 
 
 // Event 13 — Two-hand control discrepancy
@@ -457,14 +460,35 @@ GVL_MASTER.stStationEvents[1].aEvents[6].sSolution := 'Check Kistler alarms, pos
 GVL_MASTER.stStationEvents[2].aEvents[0].bFault := TRUE;
 GVL_MASTER.stStationEvents[2].aEvents[0].bCycleStopRequest := FALSE;
 GVL_MASTER.stStationEvents[2].aEvents[0].bMessage := FALSE;
-GVL_MASTER.stStationEvents[2].aEvents[0].bEventFlag :=
-    GVL_MASTER.stDiagnostics.bNestWrongPosition
-    AND GVL_MASTER.stMachineStatus.eMachineState = E_MachineState.FAULT;
-
+GVL_MASTER.stStationEvents[2].aEvents[0].bEventFlag :=GVL_MASTER.stDiagnostics.bNestWrongPosition AND GVL_MASTER.stMachineStatus.eMachineState = E_MachineState.FAULT;
 GVL_MASTER.stStationEvents[2].aEvents[0].bEventText := 'Index recovery timeout';
 GVL_MASTER.stStationEvents[2].aEvents[0].sSolution := 'Reset the machine and use the two-hand controls to recover';
 
+// Event 1 — Index Support Sensor Mismatch
+GVL_MASTER.stStationEvents[2].aEvents[1].bFault := TRUE;
+GVL_MASTER.stStationEvents[2].aEvents[1].bCycleStopRequest := FALSE;
+GVL_MASTER.stStationEvents[2].aEvents[1].bMessage := FALSE;
+GVL_MASTER.stStationEvents[2].aEvents[1].bEventFlag :=GVL_MASTER.stDiagnostics.bSupportSensors;
+GVL_MASTER.stStationEvents[2].aEvents[1].bEventText :='Index support sensor mismatch';
+GVL_MASTER.stStationEvents[2].aEvents[1].sSolution :='Check index support position sensors';
 
+
+// Event 2 — Index Support Retract Timeout
+GVL_MASTER.stStationEvents[2].aEvents[2].bFault := TRUE;
+GVL_MASTER.stStationEvents[2].aEvents[2].bCycleStopRequest := FALSE;
+GVL_MASTER.stStationEvents[2].aEvents[2].bMessage := FALSE;
+GVL_MASTER.stStationEvents[2].aEvents[2].bEventFlag :=GVL_MASTER.stDiagnostics.bSupportRetractTimeout;
+GVL_MASTER.stStationEvents[2].aEvents[2].bEventText :='Index support retract timeout';
+GVL_MASTER.stStationEvents[2].aEvents[2].sSolution :='Check index support retraction';
+
+
+// Event 3 — Index Support Extend Timeout
+GVL_MASTER.stStationEvents[2].aEvents[3].bFault := TRUE;
+GVL_MASTER.stStationEvents[2].aEvents[3].bCycleStopRequest := FALSE;
+GVL_MASTER.stStationEvents[2].aEvents[3].bMessage := FALSE;
+GVL_MASTER.stStationEvents[2].aEvents[3].bEventFlag :=GVL_MASTER.stDiagnostics.bSupportExtendTimeout;
+GVL_MASTER.stStationEvents[2].aEvents[3].bEventText :='Index support extend timeout';
+GVL_MASTER.stStationEvents[2].aEvents[3].sSolution :='Check index support extension';
 // ============================================================================
 // STATION 3 — PUCK LOCKER
 // ============================================================================
