@@ -264,6 +264,9 @@
     <Content Include="Contents\Screens\Manual_Mode.content">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Contents\Screens\popups\Content_Popup_BinFull.content">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Contents\Screens\popups\Content_Popup_DisabledNest.content">
       <SubType>Content</SubType>
     </Content>

@@ -5171,6 +5171,16 @@
             },
             "USEMAPPING": true
         },
+        "ADS.PLC1.PRG_MachineControl.bRejectBinFull": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::PRG_MachineControl::bRejectBinFull",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
         "ADS.PLC1.PRG_MachineControl.eCurrentNestPos": {
             "ACCESS": 3,
             "DOMAIN": "ADS",
@@ -8918,6 +8928,7 @@
                 "ADS.PLC1.PRG_MachineControl.bFinishKistler": 3,
                 "ADS.PLC1.PRG_MachineControl.bKistlerReady": 3,
                 "ADS.PLC1.PRG_MachineControl.bNestNewPositionReady": 3,
+                "ADS.PLC1.PRG_MachineControl.bRejectBinFull": 3,
                 "ADS.PLC1.PRG_MachineControl.eCurrentNestPos": 3,
                 "ADS.PLC1.PRG_MachineControl.stKistlerInTelegram.bDriveToHomePos": 3,
                 "ADS.PLC1.PRG_MachineControl.stKistlerOutTelegram.rDistanceMax": 3,

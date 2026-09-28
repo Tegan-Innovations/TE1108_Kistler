@@ -13,14 +13,16 @@ VAR
 	tonStoppingDelay	  				: TON                   ; // Time to finalize process 
     tonSafety             				: TON := (PT := T#10S);   // Safety interlock debounce timer
 	tonAutoCycleIdleTimeout 			: TON := (PT := T#2M);
+
 	tonSimulation		  				: ARRAY[1..4] OF TON; //timer for simulations  
 	rtKistlerResultDone   				: R_TRIG;
 	rtPartPresentReject   				: R_TRIG;
+	
 	tonSupportRetractTimeout 			: TON;
 	tonSupportExtendTimeout  			: TON;
 	tSupportRetractTimeout 				: TIME := T#2S;
 	tSupportExtendTimeout  				: TIME := T#2S;
-
+	bRejectBinFullTimer					: TIME := T#2S;
 
 	bKistlerResetIssued 				: BOOL := FALSE;
     
@@ -68,6 +70,7 @@ VAR
 	bRejectConfirmedForExchange : BOOL;
 	bPendingOperatorResultPass  : BOOL;
 	bPendingOperatorResultFail  : BOOL;
+	bRejectBinFull 				: BOOL;
 	
 	// =================================================================
     // NEST TABLE INTERNAL CONTROL VARIABLES
@@ -92,6 +95,7 @@ VAR
 	tRotatingTableDelay  		: TON;  // Simulated time for index table to complete rotation
 	tPortB_ResetDelay    		: TON;  // Pulse time for Port B air relief / mechanism reset
 	tSupportExtendDelay  		: TON;  // Time for elevator cylinder to extend back up
+	tonRejectBinFull 			: TON;
 	
 	eLastTestedNestPos 			: E_NestPosition := E_NestPosition.UNKNOWN;
 	bNestNewPositionReady 		: BOOL;
@@ -304,6 +308,17 @@ bStartProcessCondition :=
 			AND NOT GVL_MASTER.bProcessBusy
 			AND bOperatorExchangeComplete
 	);
+// Reject bin full supervision.
+// Normal reject sensor activation is allowed.
+// A continuous activation longer than 2 seconds
+// indicates that the reject bin is full or obstructed.
+tonRejectBinFull(
+    IN := GVL_MASTER.stSensors.bPartPresent_Reject,
+    PT := bRejectBinFullTimer
+);
+
+bRejectBinFull := tonRejectBinFull.Q;
+
 
 // =========================================================
 // GLOBAL FAULT DETECTION
@@ -344,7 +359,9 @@ ELSE
 END_IF;
 
 
-IF NOT GVL_MASTER.i_bButtonStop OR GVL_HMI.bPowerDownRequest THEN
+IF NOT GVL_MASTER.i_bButtonStop 
+	OR GVL_HMI.bPowerDownRequest 
+	OR bRejectBinFull  THEN
     bStopRequested := TRUE;
 END_IF
 
