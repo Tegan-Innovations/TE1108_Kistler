@@ -344,7 +344,7 @@ ELSE
 END_IF;
 
 
-IF NOT GVL_MASTER.i_bButtonStop THEN
+IF NOT GVL_MASTER.i_bButtonStop OR GVL_HMI.bPowerDownRequest THEN
     bStopRequested := TRUE;
 END_IF
 

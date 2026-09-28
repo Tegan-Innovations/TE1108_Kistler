@@ -9,6 +9,8 @@ VAR_GLOBAL
 	ePowerCmd : E_PLC_Power := E_PLC_Power.Idle;
 	aKistlerNestResult : ARRAY[1..4] OF ST_HMIKistlerResult;
 	
+	bPowerDownRequest : BOOL;
+	
 	// Data source used by the Statistics HMI DataGrid.
 	aStatisticsHMI 							: ARRAY[1..1] OF ST_StatisticsHMI;
 
