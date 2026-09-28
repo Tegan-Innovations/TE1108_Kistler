@@ -311,6 +311,8 @@ IF (
     NOT GVL_MASTER.stMachineStatus.bSafety
     OR GVL_MASTER.i_bButtonEmergencyStop
     OR stKistler_Status.bError
+	OR NOT GVL_MASTER.bUp24VPowerSupplyOk
+    OR NOT GVL_MASTER.bUs24VPowerSupplyOk
 )
 AND GVL_MASTER.stMachineStatus.eMachineState <>
     E_MachineState.FAULT
@@ -443,6 +445,8 @@ CASE GVL_Master.stMachineStatus.eMachineState OF
         AND NOT stKistler_Status.bError
         AND GVL_MASTER.stMachineStatus.bSafety
         AND NOT GVL_MASTER.i_bButtonEmergencyStop
+		AND GVL_MASTER.bUp24VPowerSupplyOk
+    	AND GVL_MASTER.bUs24VPowerSupplyOk
     THEN
 
         bFaultResetRequested := FALSE;
@@ -5261,19 +5265,19 @@ GVL_IO.stTerm8_EL2904.qEL2904_Ch4 := FALSE;
 // -----------------------------------------------------------------------------
 // T09 - EL1809 channel mirrors for HMI diagnostics
 // -----------------------------------------------------------------------------
-GVL_IO.stTerm9_EL1809.iEL1809_Ch1 := GVL_MASTER.i_bButtonStart;
-GVL_IO.stTerm9_EL1809.iEL1809_Ch2 := GVL_MASTER.i_bButtonStop;
-//GVL_IO.stTerm9_EL1809.iEL1809_Ch3 := ;
-//GVL_IO.stTerm9_EL1809.iEL1809_Ch4 := ;
-GVL_IO.stTerm9_EL1809.iEL1809_Ch5 := GVL_MASTER.stSensors.bPartPresent_Reject;
-GVL_IO.stTerm9_EL1809.iEL1809_Ch6 := GVL_MASTER.stNestTable.bNestPos_1_Sensor;
-GVL_IO.stTerm9_EL1809.iEL1809_Ch7 := GVL_MASTER.stNestTable.bNestPos_2_Sensor;
-GVL_IO.stTerm9_EL1809.iEL1809_Ch8 := GVL_MASTER.stNestTable.bNestPos_3_Sensor;
-GVL_IO.stTerm9_EL1809.iEL1809_Ch9 := GVL_MASTER.stNestTable.bNestCompletedSensor;
-GVL_IO.stTerm9_EL1809.iEL1809_Ch10 := GVL_MASTER.stNestTable.bNestLockedSensor;
-GVL_IO.stTerm9_EL1809.iEL1809_Ch11 := GVL_MASTER.stNestTable.bNestReadySensor;
-GVL_IO.stTerm9_EL1809.iEL1809_Ch12 := GVL_MASTER.stSensors.bPartPresent_NEST;
-GVL_IO.stTerm9_EL1809.iEL1809_Ch13 := GVL_MASTER.stSensors.bPartPresent_Kistler;
+GVL_MASTER.i_bButtonStart 							:= GVL_IO.stTerm9_EL1809.iEL1809_Ch1;
+GVL_MASTER.i_bButtonStop 							:= GVL_IO.stTerm9_EL1809.iEL1809_Ch2;
+GVL_MASTER.bUp24VPowerSupplyOk 						:= GVL_IO.stTerm9_EL1809.iEL1809_Ch3;
+GVL_MASTER.bUs24VPowerSupplyOk 						:= GVL_IO.stTerm9_EL1809.iEL1809_Ch4;
+GVL_MASTER.stSensors.bPartPresent_Reject 			:= GVL_IO.stTerm9_EL1809.iEL1809_Ch5;
+GVL_MASTER.stNestTable.bNestPos_1_Sensor 			:= GVL_IO.stTerm9_EL1809.iEL1809_Ch6;
+GVL_MASTER.stNestTable.bNestPos_2_Sensor 			:= GVL_IO.stTerm9_EL1809.iEL1809_Ch7;
+GVL_MASTER.stNestTable.bNestPos_3_Sensor 			:= GVL_IO.stTerm9_EL1809.iEL1809_Ch8;
+GVL_MASTER.stNestTable.bNestCompletedSensor 		:= GVL_IO.stTerm9_EL1809.iEL1809_Ch9;
+GVL_MASTER.stNestTable.bNestLockedSensor 			:= GVL_IO.stTerm9_EL1809.iEL1809_Ch10;
+GVL_MASTER.stNestTable.bNestReadySensor 			:= GVL_IO.stTerm9_EL1809.iEL1809_Ch11;
+GVL_MASTER.stSensors.bPartPresent_NEST 				:= GVL_IO.stTerm9_EL1809.iEL1809_Ch12;
+GVL_MASTER.stSensors.bPartPresent_Kistler 			:= GVL_IO.stTerm9_EL1809.iEL1809_Ch13;
 
 // -----------------------------------------------------------------------------
 // T10 - EL1809 channel mirrors for HMI diagnostics

@@ -6,6 +6,8 @@ VAR
 	fbEventsManager 		: FB_EventsManager;
     rtEventsPulse   		: R_TRIG;
 	tonFilterDoorClosed 	: TON;
+	tonUpSupplyLost 		: TON;
+	tonUsSupplyLost 		: TON;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -39,7 +41,18 @@ GVL_MASTER.stStationEvents[0].bCycleStopRequest := GVL_MASTER.stStationEvents[0]
     </Action>
     <Action Name="ACT_Set_Events" Id="{feb9c2e5-a21a-499a-899b-a8d21adfb0d1}">
       <Implementation>
-        <ST><![CDATA[// ============================================================================
+        <ST><![CDATA[
+// 24 V Up power supply supervision
+tonUpSupplyLost(
+    IN := NOT GVL_MASTER.bUp24VPowerSupplyOk,
+    PT := T#1S
+);
+// 24 V Us power supply supervision
+tonUsSupplyLost(
+    IN := NOT GVL_MASTER.bUs24VPowerSupplyOk,
+    PT := T#1S
+);
+// ============================================================================
 // GENERAL EVENTS - STATION 0
 // ============================================================================
 
@@ -47,7 +60,7 @@ GVL_MASTER.stStationEvents[0].bCycleStopRequest := GVL_MASTER.stStationEvents[0]
 GVL_MASTER.stStationEvents[0].aEvents[0].bFault := TRUE;
 GVL_MASTER.stStationEvents[0].aEvents[0].bCycleStopRequest := FALSE;
 GVL_MASTER.stStationEvents[0].aEvents[0].bMessage := FALSE;
-GVL_MASTER.stStationEvents[0].aEvents[0].bEventFlag := NOT (GVL_IO.stSafety.bEStopCH1 OR GVL_IO.stSafety.bEStopCH1);
+GVL_MASTER.stStationEvents[0].aEvents[0].bEventFlag := NOT (GVL_IO.stSafety.bEStopCH1 OR GVL_IO.stSafety.bEStopCH2);
 GVL_MASTER.stStationEvents[0].aEvents[0].bEventText := 'Emergency stop activated';
 GVL_MASTER.stStationEvents[0].aEvents[0].sSolution := 'Release the emergency stop and reset the machine';
 
@@ -132,6 +145,8 @@ GVL_MASTER.stStationEvents[0].aEvents[8].bEventText := 'HMI logout or no user lo
 GVL_MASTER.stStationEvents[0].aEvents[8].sSolution := 'Log in to continue operation';
 
 
+
+
 // Event 10 — Stop requested
 GVL_MASTER.stStationEvents[0].aEvents[10].bFault := FALSE;
 GVL_MASTER.stStationEvents[0].aEvents[10].bCycleStopRequest := TRUE;
@@ -180,6 +195,33 @@ GVL_MASTER.stStationEvents[0].aEvents[13].bEventFlag :=
 GVL_MASTER.stStationEvents[0].aEvents[13].bEventText := 'Two-hand control discrepancy';
 GVL_MASTER.stStationEvents[0].aEvents[13].sSolution := 'Release both buttons and check the two-hand control devices';
 
+
+// =========================================================
+// Event 14 — Emergency Stop Channel 2 Fault
+// =========================================================
+GVL_MASTER.stStationEvents[0].aEvents[14].bFault := TRUE;
+GVL_MASTER.stStationEvents[0].aEvents[14].bEventFlag := GVL_IO.stSafety.bEStopCH1 AND NOT GVL_IO.stSafety.bEStopCH2;
+GVL_MASTER.stStationEvents[0].aEvents[14].bEventText :='E-stop Channel 2 fault';
+GVL_MASTER.stStationEvents[0].aEvents[14].sSolution :='Check E-stop Channel 2';
+
+// =========================================================
+// Event 15 — Emergency Stop Channel 1 Fault
+// =========================================================
+GVL_MASTER.stStationEvents[0].aEvents[15].bFault := TRUE;
+GVL_MASTER.stStationEvents[0].aEvents[15].bEventFlag := NOT GVL_IO.stSafety.bEStopCH1 AND GVL_IO.stSafety.bEStopCH2;
+GVL_MASTER.stStationEvents[0].aEvents[15].bEventText := 'E-stop Channel 1 fault';
+GVL_MASTER.stStationEvents[0].aEvents[15].sSolution :='Check E-stop Channel 1';
+
+// Event 16 — 24 V Up Supply Fault
+GVL_MASTER.stStationEvents[0].aEvents[16].bFault := TRUE;
+GVL_MASTER.stStationEvents[0].aEvents[16].bEventFlag :=tonUpSupplyLost.Q;
+GVL_MASTER.stStationEvents[0].aEvents[16].bEventText :='24 V Up supply fault';
+GVL_MASTER.stStationEvents[0].aEvents[16].sSolution :='Check 24 V Up power supply';
+// Event 17 — 24 V Us Supply Fault
+GVL_MASTER.stStationEvents[0].aEvents[17].bFault := TRUE;
+GVL_MASTER.stStationEvents[0].aEvents[17].bEventFlag :=tonUsSupplyLost.Q;
+GVL_MASTER.stStationEvents[0].aEvents[17].bEventText :='24 V Us supply fault';
+GVL_MASTER.stStationEvents[0].aEvents[17].sSolution :='Check 24 V Us power supply';
 
 // Event 20 — Terminal 4 EL1918 not operational
 GVL_MASTER.stStationEvents[0].aEvents[20].bFault := TRUE;
