@@ -2455,7 +2455,7 @@ END_CASE;
 // 5. INTERNAL MACHINE LIGHT
 // =================================================================
 GVL_IO.stSafety.bMainDoorfeedback := GVL_IO.stTerm4_EL1918.iEL1918_Ch6;
-GVL_IO.qInternalLight := NOT GVL_IO.stSafety.bMainDoorfeedback;
+GVL_IO.qInternalLight := GVL_IO.stSafety.bMainDoorOpenned;
 
 
 M_LEDsButtons := TRUE;]]></ST>
