@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>Kistler_HMI</title>
-  <meta name="tchmi-buildtime" content="2026-09-25T12:33:39">
+  <meta name="tchmi-buildtime" content="2026-09-28T11:53:32">
 
   <!-- target-densitydpi=device-dpi -->
   <meta name="viewport" content="initial-scale=1.0"><script>
@@ -34,15 +34,15 @@
   },
   "Beckhoff.TwinCAT.HMI.Server.Engineering": {
     "version": "22.0.7791",
-    "authors": "",
-    "title": "",
-    "description": ""
+    "authors": "Beckhoff",
+    "title": "TcHmiSrv",
+    "description": "TwinCAT HMI is a development environment for web-based HMIs (Human Machine Interfaces). This package provides the TwinCAT HMI Server for the engineering."
   },
   "Microsoft.TypeScript.MSBuild": {
     "version": "5.9.2",
-    "authors": "",
-    "title": "",
-    "description": ""
+    "authors": "Microsoft",
+    "title": "Microsoft.TypeScript.MSBuild",
+    "description": "The TypeScript MSBuild task, and matching compiler version."
   }
 };
 </script>
@@ -921,6 +921,74 @@
 <div id="Main_Popup" data-tchmi-type="TcHmi.Controls.System.TcHmiPopup" data-tchmi-height="420" data-tchmi-height-unit="px" data-tchmi-width="480" data-tchmi-width-unit="px" data-tchmi-modal="True" data-tchmi-left="434" data-tchmi-top="106" data-tchmi-close-on-background="True" data-tchmi-zindex="5">
 
 
+
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "%s%ADS.PLC1.PRG_MachineControl.bDisabledNestPartPresent%/s%",
+    "actions": [
+      {
+        "objectType": "Condition",
+        "active": true,
+        "parts": [
+          {
+            "if": [
+              {
+                "compare1": {
+                  "objectType": "Symbol",
+                  "valueType": "tchmi:general#/definitions/BOOL",
+                  "symbolExpression": "%s%ADS.PLC1.PRG_MachineControl.bDisabledNestPartPresent%/s%"
+                },
+                "compare2": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:general#/definitions/BOOL",
+                  "value": true
+                },
+                "compareOperator": "==",
+                "logic": null
+              }
+            ],
+            "then": [
+              {
+                "objectType": "ControlApiFunction",
+                "active": true,
+                "control": "Main_Popup",
+                "fn": "open",
+                "asyncWait": true
+              },
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctx%owner::TargetFile%/ctx%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/TcHmi.Controls.System.TcHmiPopup.TargetFile",
+                  "value": {
+                    "path": "Contents/Screens/popups/Content_Popup_DisabledNest.content"
+                  }
+                },
+                "asyncWait": true
+              }
+            ]
+          },
+          {
+            "else": [
+              {
+                "objectType": "ControlApiFunction",
+                "active": true,
+                "control": "Main_Popup",
+                "fn": "close",
+                "asyncWait": true
+              }
+            ]
+          }
+        ],
+        "asyncWait": true
+      }
+    ]
+  }
+]
+</script>
 </div>
 
 

@@ -21,6 +21,7 @@ VAR
 	tSupportRetractTimeout 				: TIME := T#2S;
 	tSupportExtendTimeout  				: TIME := T#2S;
 
+
 	bKistlerResetIssued 				: BOOL := FALSE;
     
     rtFirstAutoCycle      				: R_TRIG; // Detects entry into Auto Cycle
@@ -75,6 +76,7 @@ VAR
 	bSequenceToggle      			: BOOL := FALSE;                   // Toggle flag for manual bench testing
 	eCurrentNestPos 	 			: E_NestPosition := E_NestPosition.UNKNOWN;
 	eCompletedOperatorExchangeNest 	: E_NestPosition;
+	bDisabledNestPartPresent 		: BOOL;
 	
 	// Part-removal control used when the Puck Locker is disabled
 	eLastOperatorNestPositionNoLocker : E_NestPosition := E_NestPosition.Unknown;
@@ -5721,6 +5723,12 @@ END_IF
 // to the operator.
 bPartPresent := GVL_MASTER.stSensors.bPartPresent_NEST;
 
+// Detect a part placed into a disabled nest at the operator position.
+// The condition follows the physical sensor directly so it clears
+// automatically when the operator removes the part.
+bDisabledNestPartPresent :=
+    NOT M_IsNestEnabled(eOperatorNestPosition)
+    AND bPartPresent;
 // ============================================================================
 // PART REMOVAL CONTROL WITHOUT PUCK LOCKER
 // ============================================================================
@@ -5844,7 +5852,8 @@ GVL_MASTER.stPuckLocker.bMachinePermissive :=
 // -> exchange complete.
 GVL_MASTER.stPuckLocker.bIndexPermissive :=
     GVL_MASTER.stPuckLocker.bMachinePermissive
-    AND bOperatorExchangeComplete;]]></ST>
+    AND bOperatorExchangeComplete
+	AND NOT bDisabledNestPartPresent;]]></ST>
       </Implementation>
     </Method>
     <Method Name="M_UpdateStatisticsAndHistory" Id="{00ee633c-8762-44a1-a124-fd33218f5608}">

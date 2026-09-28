@@ -690,6 +690,8 @@
 <div id="Main_Popup" data-tchmi-type="TcHmi.Controls.System.TcHmiPopup" data-tchmi-height="420" data-tchmi-height-unit="px" data-tchmi-width="480" data-tchmi-width-unit="px" data-tchmi-modal="True" data-tchmi-left="434" data-tchmi-top="106" data-tchmi-close-on-background="True" data-tchmi-zindex="5">
 
 
+
+
 </div>
 
 
@@ -900,6 +902,75 @@
         ],
         "asyncWait": true,
         "waitMode": "Synchronous"
+      }
+    ]
+  },
+  {
+    "event": "%s%ADS.PLC1.PRG_MachineControl.bDisabledNestPartPresent%/s%",
+    "actions": [
+      {
+        "objectType": "Condition",
+        "active": true,
+        "parts": [
+          {
+            "if": [
+              {
+                "compare1": {
+                  "objectType": "Symbol",
+                  "valueType": "tchmi:general#/definitions/BOOL",
+                  "symbolExpression": "%s%ADS.PLC1.PRG_MachineControl.bDisabledNestPartPresent%/s%"
+                },
+                "compare2": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:general#/definitions/BOOL",
+                  "value": true
+                },
+                "compareOperator": "==",
+                "logic": null
+              }
+            ],
+            "then": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctx%owner::TargetContent%/ctx%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/ContentPath",
+                  "value": "Contents/Screens/popups/Content_Popup_DisabledNest.content"
+                },
+                "asyncWait": true
+              },
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctx%owner::Visibility%/ctx%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/Visibility",
+                  "value": "Visible"
+                },
+                "asyncWait": true
+              }
+            ]
+          },
+          {
+            "else": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctx%owner::Visibility%/ctx%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/Visibility",
+                  "value": "Collapsed"
+                },
+                "asyncWait": true
+              }
+            ]
+          }
+        ],
+        "asyncWait": true
       }
     ]
   }
