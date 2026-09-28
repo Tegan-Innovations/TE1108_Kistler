@@ -124,6 +124,8 @@ VAR
 	uKistlerEO2_XMin 			: U_BytesToReal;
 	uKistlerEO1_YMax 			: U_BytesToReal;
 	uKistlerEO1_YMin 			: U_BytesToReal;
+	uKistlerCurveYMax 			: U_BytesToReal;
+	uKistlerCurvePeakToPeakY 	: U_BytesToReal; // Pos. 92 - pvCurvePeak-Peak-Y
 
 	
 	// Maximum values recorded during the current Kistler test
@@ -1490,7 +1492,21 @@ uKistlerCurrentValueY.aBytes[3] := GVL_KISTLER_IO.aKistlerIn[27];
 stKistlerOutTelegram.rCurrentValueY :=
     uKistlerCurrentValueY.rValue;
 	
-	
+
+// Curve maximum Y value calculated by maXYmos.
+// Fieldbus position 76: pvCurveYMax-Y.
+uKistlerCurveYMax.aBytes[0] := GVL_KISTLER_IO.aKistlerIn[76];
+uKistlerCurveYMax.aBytes[1] := GVL_KISTLER_IO.aKistlerIn[77];
+uKistlerCurveYMax.aBytes[2] := GVL_KISTLER_IO.aKistlerIn[78];
+uKistlerCurveYMax.aBytes[3] := GVL_KISTLER_IO.aKistlerIn[79];
+
+
+// Peak-to-Peak Y value calculated by maXYmos.
+// Fieldbus Pos. 92 - pvCurvePeak-Peak-Y.
+uKistlerCurvePeakToPeakY.aBytes[0] := GVL_KISTLER_IO.aKistlerIn[92];
+uKistlerCurvePeakToPeakY.aBytes[1] := GVL_KISTLER_IO.aKistlerIn[93];
+uKistlerCurvePeakToPeakY.aBytes[2] := GVL_KISTLER_IO.aKistlerIn[94];
+uKistlerCurvePeakToPeakY.aBytes[3] := GVL_KISTLER_IO.aKistlerIn[95];
 	// =================================================================================
 // MAP LIVE VALUES TO INTERNAL KISTLER STATUS
 // =================================================================================
@@ -3877,7 +3893,7 @@ IF GVL_MASTER.stProcess.bKistlerCycleRequest
         eNestPosition := eCurrentNestPos,
         bPartOK       := FALSE,
         bPartNOK      := FALSE,
-        rForce        := stKistler_Status.rLiveForce,
+        rForce        := uKistlerCurveYMax.rValue,
         rDistance     := stKistler_Status.rLiveDistance,
         bResetValues  := FALSE
     );
@@ -4220,7 +4236,7 @@ CASE GVL_MASTER.stMachineStatus.eMachineState OF
                         eNestPosition := eCurrentNestPos,
                         bPartOK       := stKistler_Status.bPartOK,
                         bPartNOK      := stKistler_Status.bPartNOK,
-                        rForce        := stKistler_Status.rLiveForce,
+                        rForce        := uKistlerCurveYMax.rValue,
                         rDistance     := stKistler_Status.rLiveDistance,
                         bResetValues  := FALSE
                     ) THEN
@@ -4537,7 +4553,7 @@ E_MachineState.MANUAL_MODE:
                         eNestPosition := eCurrentNestPos,
                         bPartOK       := stKistler_Status.bPartOK,
                         bPartNOK      := stKistler_Status.bPartNOK,
-                        rForce        := rKistlerCycleMaxForce,
+                        rForce        := uKistlerCurveYMax.rValue,
                         rDistance     := rKistlerCycleMaxDistance,
                         bResetValues  := FALSE
                     );
