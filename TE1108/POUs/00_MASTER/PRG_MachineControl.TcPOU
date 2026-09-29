@@ -2635,10 +2635,10 @@ GVL_MASTER.stDiagnostics.bSupportSensors :=
     GVL_MASTER.stNestTable.bSupportExtended
     AND GVL_MASTER.stNestTable.bSupportRetracted;
 
-// Support retract timeout.
 tonSupportRetractTimeout(
     IN := GVL_MASTER.stNestTable.bSupportRetractRequest
-          AND NOT GVL_MASTER.stNestTable.bSupportRetracted,
+          AND NOT GVL_MASTER.stNestTable.bSupportRetracted
+          AND GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.FAULT,
     PT := tSupportRetractTimeout
 );
 
@@ -2648,7 +2648,8 @@ GVL_MASTER.stDiagnostics.bSupportRetractTimeout :=
 // Support extend timeout.
 tonSupportExtendTimeout(
     IN := GVL_MASTER.stNestTable.bSupportExtendRequest
-          AND NOT GVL_MASTER.stNestTable.bSupportExtended,
+          AND NOT GVL_MASTER.stNestTable.bSupportExtended
+		  AND GVL_MASTER.stMachineStatus.eMachineState <> E_MachineState.FAULT,
     PT := tSupportExtendTimeout
 );
 

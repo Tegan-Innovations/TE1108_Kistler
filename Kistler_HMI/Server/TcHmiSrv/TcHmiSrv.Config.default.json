@@ -74,6 +74,15 @@
                 "startOffset": 1,
                 "type": "array"
             },
+            "ADS-PLC1.ARRAY_1..4_OF-ST_HMIKistlerResult": {
+                "items": {
+                    "$ref": "tchmi:server#/definitions/ADS-PLC1.ST_HMIKistlerResult"
+                },
+                "maxItems": 4,
+                "minItems": 4,
+                "startOffset": 1,
+                "type": "array"
+            },
             "ADS-PLC1.E_Alarms": {
                 "attributes": {
                     "generate_implicit_init_function": "",
@@ -588,6 +597,47 @@
                     "sTime",
                     "nEventsAmount",
                     "abType"
+                ],
+                "type": "object"
+            },
+            "ADS-PLC1.ST_HMIKistlerResult": {
+                "additionalProperties": false,
+                "properties": {
+                    "eResult": {
+                        "allOf": [
+                            {
+                                "$ref": "tchmi:server#/definitions/ADS-PLC1.E_HMIKistlerResult"
+                            },
+                            {
+                                "propertyOrder": 1
+                            }
+                        ]
+                    },
+                    "rDistance": {
+                        "allOf": [
+                            {
+                                "$ref": "tchmi:general#/definitions/REAL"
+                            },
+                            {
+                                "propertyOrder": 3
+                            }
+                        ]
+                    },
+                    "rForce": {
+                        "allOf": [
+                            {
+                                "$ref": "tchmi:general#/definitions/REAL"
+                            },
+                            {
+                                "propertyOrder": 2
+                            }
+                        ]
+                    }
+                },
+                "required": [
+                    "eResult",
+                    "rForce",
+                    "rDistance"
                 ],
                 "type": "object"
             },
@@ -1548,6 +1598,33 @@
             "MAPPING": "PLC1::GVL_HMI::aDataHistoryHMI",
             "SCHEMA": {
                 "$ref": "tchmi:server#/definitions/ADS-PLC1.ARRAY_1..100_OF-ST_DataHistoryHMI"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.aKistlerManualResult": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::aKistlerManualResult",
+            "SCHEMA": {
+                "$ref": "tchmi:server#/definitions/ADS-PLC1.ARRAY_1..4_OF-ST_HMIKistlerResult"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.aKistlerManualResult.0.eResult": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::aKistlerManualResult[0]::eResult",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:server#/definitions/ADS-PLC1.E_HMIKistlerResult"
+                    },
+                    {
+                        "propertyOrder": 1
+                    }
+                ]
             },
             "USEMAPPING": true
         },
@@ -8729,6 +8806,8 @@
                 "ADS.PLC1.GVL_HMI.StatusHMI.sBannerTextColor": 3,
                 "ADS.PLC1.GVL_HMI.StatusHMI.sMachineStatusText": 3,
                 "ADS.PLC1.GVL_HMI.aDataHistoryHMI": 3,
+                "ADS.PLC1.GVL_HMI.aKistlerManualResult": 3,
+                "ADS.PLC1.GVL_HMI.aKistlerManualResult.0.eResult": 3,
                 "ADS.PLC1.GVL_HMI.aKistlerNestResult.0": 3,
                 "ADS.PLC1.GVL_HMI.aKistlerNestResult.0.eResult": 3,
                 "ADS.PLC1.GVL_HMI.aKistlerNestResult.0.rDistance": 3,
