@@ -8,6 +8,7 @@ VAR_GLOBAL
 	arrAlarmHistory : ARRAY[1..100] OF ST_AlarmHistory;
 	ePowerCmd : E_PLC_Power := E_PLC_Power.Idle;
 	aKistlerNestResult : ARRAY[1..4] OF ST_HMIKistlerResult;
+	aKistlerManualResult : ARRAY[1..4] OF ST_HMIKistlerResult;
 	
 	bPowerDownRequest : BOOL;
 	
@@ -28,6 +29,7 @@ VAR_GLOBAL
 	rKistlerLiveDistance 				: REAL;
 	rKistlerLiveForce    				: REAL;
 	bShowRejectPopup 					: BOOL;
+	bCloseBinPopup 						: BOOL;
 	
 	bEnableSettings						: BOOL;
 	bSetSettings						: BOOL := FALSE;
