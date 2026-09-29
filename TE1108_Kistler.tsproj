@@ -142,6 +142,15 @@
 			</ArrayInfo>
 		</DataType>
 		<DataType>
+			<Name GUID="{7EBDD008-A9A8-B259-6DF4-ACAC21313C21}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..4] OF UDINT</Name>
+			<BitSize>128</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
+			<ArrayInfo>
+				<LBound>1</LBound>
+				<Elements>4</Elements>
+			</ArrayInfo>
+		</DataType>
+		<DataType>
 			<Name GUID="{C24B66C1-B98E-DCFD-33A2-87AA7ECC3A6F}" AutoDeleteType="true">ST_DataHistoryHMI</Name>
 			<BitSize>224</BitSize>
 			<SubItem>
@@ -341,7 +350,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{09826F5E-A0C6-4F2A-AB8E-A2951346EAC9}" Name="TE1108" PrjFilePath="TE1108\TE1108.plcproj" TmcFilePath="TE1108\TE1108.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{7561AAA6-09DB-4135-8B8C-18993ADCBC25}" TmcPath="TE1108\TE1108.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{75C23C8A-71C0-025E-D7C5-C64A46F4B7A7}" TmcPath="TE1108\TE1108.tmc">
 					<Name>TE1108 Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="8" AreaNo="4">
@@ -388,6 +397,17 @@
 							<Name>GVL_HMI.udiKistlerTotalFail</Name>
 							<Comment><![CDATA[ Total number of parts classified as NOK by the Kistler.]]></Comment>
 							<Type>UDINT</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>GVL_HMI.aKistlerNestGoodParts</Name>
+							<Comment><![CDATA[ Kistler statistics per nest]]></Comment>
+							<Type GUID="{7EBDD008-A9A8-B259-6DF4-ACAC21313C21}">ARRAY [1..4] OF UDINT</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>GVL_HMI.aKistlerNestBadParts</Name>
+							<Type GUID="{7EBDD008-A9A8-B259-6DF4-ACAC21313C21}">ARRAY [1..4] OF UDINT</Type>
 							<InOut>7</InOut>
 						</Var>
 						<Var>
@@ -473,6 +493,14 @@
 						</Var>
 						<Var>
 							<Name>GVL_IO.stSafety.bProcessTest</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.qInternalLight</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.qExternalLight</Name>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -676,14 +704,6 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_IO.qInternalLight</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.qExternalLight</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_KISTLER_IO.aKistlerOut</Name>
 							<Comment><![CDATA[ PLC -> maXYmos]]></Comment>
 							<Type GUID="{2B6B47C9-DB58-8D37-72B9-9344E5A5275A}">ARRAY [0..199] OF BYTE</Type>
@@ -793,6 +813,16 @@
 						</Var>
 						<Var>
 							<Name>GVL_IO.stSafety.bSafetyRelayEStop</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_KISTLER_IO.bKistlerSafetyEnableOK</Name>
+							<Comment><![CDATA[kistler safety]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.i_bButtonStart</Name>
+							<Comment><![CDATA[  Auto Cycle start button]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -1171,16 +1201,6 @@
 							<Type GUID="{2B6B47C9-DB58-8D37-72B9-9344E5A5275A}">ARRAY [0..199] OF BYTE</Type>
 						</Var>
 						<Var>
-							<Name>GVL_KISTLER_IO.bKistlerSafetyEnableOK</Name>
-							<Comment><![CDATA[kistler safety]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_MASTER.i_bButtonStart</Name>
-							<Comment><![CDATA[  Auto Cycle start button]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_MASTER.i_bButtonStop</Name>
 							<Comment><![CDATA[  cycle stop button]]></Comment>
 							<Type>BOOL</Type>
@@ -1193,6 +1213,14 @@
 						<Var>
 							<Name>GVL_MASTER.i_bButtonEmergencyStop</Name>
 							<Comment><![CDATA[  software E-stop button]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.bUp24VPowerSupplyOk</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.bUs24VPowerSupplyOk</Name>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -1258,19 +1286,11 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_MASTER.bUp24VPowerSupplyOk</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_MASTER.stPuckLockerIO.bPuckLockerSensor1</Name>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_MASTER.stPuckLockerIO.bPuckLockerSensor2</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_MASTER.bUs24VPowerSupplyOk</Name>
 							<Type>BOOL</Type>
 						</Var>
 					</Vars>

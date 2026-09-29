@@ -123,6 +123,10 @@ VAR_GLOBAL PERSISTENT RETAIN
 udiKistlerTotalTested 					: UDINT := 0; // Total number of valid tests completed by the Kistler.
 udiKistlerTotalPass 					: UDINT := 0;// Total number of parts classified as OK by the Kistler.
 udiKistlerTotalFail 					: UDINT := 0;// Total number of parts classified as NOK by the Kistler.
+// Kistler statistics per nest
+aKistlerNestGoodParts 					: ARRAY[1..4] OF UDINT;
+aKistlerNestBadParts  					: ARRAY[1..4] OF UDINT;
+
 bResetKistlerStatistics 				: BOOL := FALSE;// HMI command to reset the statistics.
 iDataHistoryWriteIndex 					: INT := 1;
 aDataHistoryHMI 						: ARRAY[1..2000] OF ST_DataHistoryHMI;

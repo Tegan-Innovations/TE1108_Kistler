@@ -1815,6 +1815,86 @@
             },
             "USEMAPPING": true
         },
+        "ADS.PLC1.GVL_HMI.aKistlerNestBadParts.0": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::aKistlerNestBadParts[0]",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/UDINT"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.aKistlerNestBadParts.1": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::aKistlerNestBadParts[1]",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/UDINT"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.aKistlerNestBadParts.2": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::aKistlerNestBadParts[2]",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/UDINT"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.aKistlerNestBadParts.3": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::aKistlerNestBadParts[3]",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/UDINT"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.aKistlerNestGoodParts.0": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::aKistlerNestGoodParts[0]",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/UDINT"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.aKistlerNestGoodParts.1": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::aKistlerNestGoodParts[1]",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/UDINT"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.aKistlerNestGoodParts.2": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::aKistlerNestGoodParts[2]",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/UDINT"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.aKistlerNestGoodParts.3": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::aKistlerNestGoodParts[3]",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/UDINT"
+            },
+            "USEMAPPING": true
+        },
         "ADS.PLC1.GVL_HMI.aKistlerNestResult.0": {
             "ACCESS": 3,
             "DOMAIN": "ADS",
@@ -9006,6 +9086,14 @@
                 "ADS.PLC1.GVL_HMI.aKistlerManualResult.3.eResult": 3,
                 "ADS.PLC1.GVL_HMI.aKistlerManualResult.3.rDistance": 3,
                 "ADS.PLC1.GVL_HMI.aKistlerManualResult.3.rForce": 3,
+                "ADS.PLC1.GVL_HMI.aKistlerNestBadParts.0": 3,
+                "ADS.PLC1.GVL_HMI.aKistlerNestBadParts.1": 3,
+                "ADS.PLC1.GVL_HMI.aKistlerNestBadParts.2": 3,
+                "ADS.PLC1.GVL_HMI.aKistlerNestBadParts.3": 3,
+                "ADS.PLC1.GVL_HMI.aKistlerNestGoodParts.0": 3,
+                "ADS.PLC1.GVL_HMI.aKistlerNestGoodParts.1": 3,
+                "ADS.PLC1.GVL_HMI.aKistlerNestGoodParts.2": 3,
+                "ADS.PLC1.GVL_HMI.aKistlerNestGoodParts.3": 3,
                 "ADS.PLC1.GVL_HMI.aKistlerNestResult.0": 3,
                 "ADS.PLC1.GVL_HMI.aKistlerNestResult.0.eResult": 3,
                 "ADS.PLC1.GVL_HMI.aKistlerNestResult.0.rDistance": 3,

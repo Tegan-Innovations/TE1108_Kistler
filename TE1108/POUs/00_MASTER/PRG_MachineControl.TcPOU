@@ -3886,6 +3886,72 @@ bNestNewPositionReady :=
         eCurrentNestPos <> eLastTestedNestPos
     );
 
+
+
+
+
+
+
+// -----------------------------------------------------------------------------
+// Capture maximum Kistler distance during Auto Cycle.
+//
+// The Kistler position returns to zero after the test, therefore only a
+// distance greater than the value already stored is accepted.
+// -----------------------------------------------------------------------------
+IF GVL_MASTER.stProcess.bKistlerCycleRequest
+   AND NOT stKistlerOutTelegram.bSequenceEnd
+   AND GVL_MASTER.stMachineStatus.eMachineState =
+       E_MachineState.SYSTEM_AUTO_CYCLE THEN
+
+    CASE eCurrentNestPos OF
+
+        E_NestPosition.Position_1:
+
+            IF stKistler_Status.rLiveDistance >
+               GVL_HMI.aKistlerNestResult[1].rDistance THEN
+
+                GVL_HMI.aKistlerNestResult[1].rDistance :=
+                    stKistler_Status.rLiveDistance;
+
+            END_IF
+
+
+        E_NestPosition.Position_2:
+
+            IF stKistler_Status.rLiveDistance >
+               GVL_HMI.aKistlerNestResult[2].rDistance THEN
+
+                GVL_HMI.aKistlerNestResult[2].rDistance :=
+                    stKistler_Status.rLiveDistance;
+
+            END_IF
+
+
+        E_NestPosition.Position_3:
+
+            IF stKistler_Status.rLiveDistance >
+               GVL_HMI.aKistlerNestResult[3].rDistance THEN
+
+                GVL_HMI.aKistlerNestResult[3].rDistance :=
+                    stKistler_Status.rLiveDistance;
+
+            END_IF
+
+
+        E_NestPosition.Position_4:
+
+            IF stKistler_Status.rLiveDistance >
+               GVL_HMI.aKistlerNestResult[4].rDistance THEN
+
+                GVL_HMI.aKistlerNestResult[4].rDistance :=
+                    stKistler_Status.rLiveDistance;
+
+            END_IF
+
+    END_CASE
+
+END_IF
+
 // -----------------------------------------------------------------------------
 // Capture live Kistler values while an automatic or manual sequence is active.
 //
@@ -6051,28 +6117,6 @@ IF rtKistlerResultDone.Q
    AND GVL_MASTER.stMachineStatus.eMachineState =
        E_MachineState.SYSTEM_AUTO_CYCLE THEN
 
-    // =====================================================
-    // STATISTICS
-    // =====================================================
-
-    IF stKistler_Status.bPartOK THEN
-
-        GVL_HMI.udiKistlerTotalTested :=
-            GVL_HMI.udiKistlerTotalTested + 1;
-
-        GVL_HMI.udiKistlerTotalPass :=
-            GVL_HMI.udiKistlerTotalPass + 1;
-
-    ELSIF stKistler_Status.bPartNOK THEN
-
-        GVL_HMI.udiKistlerTotalTested :=
-            GVL_HMI.udiKistlerTotalTested + 1;
-
-        GVL_HMI.udiKistlerTotalFail :=
-            GVL_HMI.udiKistlerTotalFail + 1;
-
-    END_IF
-
 
     // =====================================================
     // SAFE NEST POSITION MAPPING
@@ -6100,11 +6144,54 @@ IF rtKistlerResultDone.Q
 
 
     // =====================================================
-    // STORE DATA HISTORY ENTRY
+    // STATISTICS
     // =====================================================
 
+    // Update statistics only when the nest position is valid.
     IF (iDataHistoryNestIndex >= 1)
        AND (iDataHistoryNestIndex <= 4) THEN
+
+        IF stKistler_Status.bPartOK THEN
+
+            // Total machine statistics.
+            GVL_HMI.udiKistlerTotalTested :=
+                GVL_HMI.udiKistlerTotalTested + 1;
+
+            GVL_HMI.udiKistlerTotalPass :=
+                GVL_HMI.udiKistlerTotalPass + 1;
+
+            // Good parts for this nest.
+            GVL_HMI.aKistlerNestGoodParts[
+                iDataHistoryNestIndex
+            ] :=
+                GVL_HMI.aKistlerNestGoodParts[
+                    iDataHistoryNestIndex
+                ] + 1;
+
+
+        ELSIF stKistler_Status.bPartNOK THEN
+
+            // Total machine statistics.
+            GVL_HMI.udiKistlerTotalTested :=
+                GVL_HMI.udiKistlerTotalTested + 1;
+
+            GVL_HMI.udiKistlerTotalFail :=
+                GVL_HMI.udiKistlerTotalFail + 1;
+
+            // Bad parts for this nest.
+            GVL_HMI.aKistlerNestBadParts[
+                iDataHistoryNestIndex
+            ] :=
+                GVL_HMI.aKistlerNestBadParts[
+                    iDataHistoryNestIndex
+                ] + 1;
+
+        END_IF
+
+
+        // =====================================================
+        // STORE DATA HISTORY ENTRY
+        // =====================================================
 
         // Nest.
         GVL_HMI.aDataHistoryHMI[
@@ -6146,6 +6233,7 @@ IF rtKistlerResultDone.Q
 
 
         // Distance.
+        // Use the final value already stored for this nest.
         GVL_HMI.aDataHistoryHMI[
             GVL_HMI.iDataHistoryWriteIndex
         ].rDistance :=
@@ -6229,38 +6317,27 @@ ELSE
 END_IF
 
 
-// // =========================================================
-// // START STATISTICS AND HISTORY RESET
-// // =========================================================
-//
-// IF GVL_HMI.aStatisticsHMI[1].bReset
-//    AND NOT bDataHistoryResetActive THEN
-//
-//     // Reset statistics.
-//     GVL_HMI.udiKistlerTotalTested := 0;
-//     GVL_HMI.udiKistlerTotalPass := 0;
-//     GVL_HMI.udiKistlerTotalFail := 0;
-//
-//     // Start history clearing.
-//     iDataHistoryResetIndex := 1;
-//     bDataHistoryResetActive := TRUE;
-//
-//     // Clear the HMI request.
-//     GVL_HMI.aStatisticsHMI[1].bReset := FALSE;
-//
-// END_IF
-
-
 // =========================================================
 // RESET STATISTICS ONLY
 // =========================================================
 
 IF GVL_HMI.aStatisticsHMI[1].bReset THEN
 
-    // Reset only the statistics displayed on the HMI.
+    // Reset total machine statistics.
     GVL_HMI.udiKistlerTotalTested := 0;
     GVL_HMI.udiKistlerTotalPass := 0;
     GVL_HMI.udiKistlerTotalFail := 0;
+
+    // Reset per-nest statistics.
+    GVL_HMI.aKistlerNestGoodParts[1] := 0;
+    GVL_HMI.aKistlerNestGoodParts[2] := 0;
+    GVL_HMI.aKistlerNestGoodParts[3] := 0;
+    GVL_HMI.aKistlerNestGoodParts[4] := 0;
+
+    GVL_HMI.aKistlerNestBadParts[1] := 0;
+    GVL_HMI.aKistlerNestBadParts[2] := 0;
+    GVL_HMI.aKistlerNestBadParts[3] := 0;
+    GVL_HMI.aKistlerNestBadParts[4] := 0;
 
     // Do not clear aDataHistoryHMI.
     // Do not reset iDataHistoryWriteIndex.
