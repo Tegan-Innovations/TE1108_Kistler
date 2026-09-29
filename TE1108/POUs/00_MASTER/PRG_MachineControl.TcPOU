@@ -3910,8 +3910,13 @@ IF GVL_MASTER.stProcess.bKistlerCycleRequest
             GVL_HMI.aKistlerManualResult[1].rForce :=
                 uKistlerCurveYMax.rValue;
 
-            GVL_HMI.aKistlerManualResult[1].rDistance :=
-                stKistler_Status.rLiveDistance;
+            IF stKistler_Status.rLiveDistance >
+               GVL_HMI.aKistlerManualResult[1].rDistance THEN
+
+                GVL_HMI.aKistlerManualResult[1].rDistance :=
+                    stKistler_Status.rLiveDistance;
+
+            END_IF
 
 
         E_NestPosition.Position_2:
@@ -3919,8 +3924,13 @@ IF GVL_MASTER.stProcess.bKistlerCycleRequest
             GVL_HMI.aKistlerManualResult[2].rForce :=
                 uKistlerCurveYMax.rValue;
 
-            GVL_HMI.aKistlerManualResult[2].rDistance :=
-                stKistler_Status.rLiveDistance;
+            IF stKistler_Status.rLiveDistance >
+               GVL_HMI.aKistlerManualResult[2].rDistance THEN
+
+                GVL_HMI.aKistlerManualResult[2].rDistance :=
+                    stKistler_Status.rLiveDistance;
+
+            END_IF
 
 
         E_NestPosition.Position_3:
@@ -3928,8 +3938,13 @@ IF GVL_MASTER.stProcess.bKistlerCycleRequest
             GVL_HMI.aKistlerManualResult[3].rForce :=
                 uKistlerCurveYMax.rValue;
 
-            GVL_HMI.aKistlerManualResult[3].rDistance :=
-                stKistler_Status.rLiveDistance;
+            IF stKistler_Status.rLiveDistance >
+               GVL_HMI.aKistlerManualResult[3].rDistance THEN
+
+                GVL_HMI.aKistlerManualResult[3].rDistance :=
+                    stKistler_Status.rLiveDistance;
+
+            END_IF
 
 
         E_NestPosition.Position_4:
@@ -3937,8 +3952,13 @@ IF GVL_MASTER.stProcess.bKistlerCycleRequest
             GVL_HMI.aKistlerManualResult[4].rForce :=
                 uKistlerCurveYMax.rValue;
 
-            GVL_HMI.aKistlerManualResult[4].rDistance :=
-                stKistler_Status.rLiveDistance;
+            IF stKistler_Status.rLiveDistance >
+               GVL_HMI.aKistlerManualResult[4].rDistance THEN
+
+                GVL_HMI.aKistlerManualResult[4].rDistance :=
+                    stKistler_Status.rLiveDistance;
+
+            END_IF
 
     END_CASE
 
@@ -4573,123 +4593,113 @@ CASE GVL_MASTER.stMachineStatus.eMachineState OF
                 END_IF
 
             // =================================================================
-            E_ProcessCycle_State.WAIT_KISTLER_DONE:
-            // =================================================================
-
-                GVL_MASTER.stProcess.bKistlerCycleRequest := TRUE;
-
-                IF stKistler_Status.bError THEN
-
-                    GVL_MASTER.stProcess.bKistlerCycleRequest := FALSE;
-
-                    eProcessCycleState :=
-                        E_ProcessCycle_State.FAULT;
-
-                ELSIF stKistler_Status.eKistlerState =
-                      E_KistlerState.DONE THEN
-
-                    GVL_MASTER.stProcess.bKistlerCycleRequest := FALSE;
-                    GVL_MASTER.stProcess.bKistlerCycleDone := TRUE;
-
-                    // Finalize the maximum force and distance captured during
-                    // the manual Kistler sequence.
-                    M_StoreKistlerResult();
-
-                    CASE eCurrentNestPos OF
-
-                        E_NestPosition.Position_1:
-
-                            GVL_HMI.aKistlerManualResult[1].rForce :=
-                                uKistlerCurveYMax.rValue;
-
-                            GVL_HMI.aKistlerManualResult[1].rDistance :=
-                                rKistlerCycleMaxDistance;
-
-                            IF stKistler_Status.bPartOK THEN
-                                GVL_HMI.aKistlerManualResult[1].eResult :=
-                                    E_HMIKistlerResult.PASS;
-                            ELSIF stKistler_Status.bPartNOK THEN
-                                GVL_HMI.aKistlerManualResult[1].eResult :=
-                                    E_HMIKistlerResult.FAIL;
-                            ELSE
-                                GVL_HMI.aKistlerManualResult[1].eResult :=
-                                    E_HMIKistlerResult.NONE;
-                            END_IF
-
-                        E_NestPosition.Position_2:
-
-                            GVL_HMI.aKistlerManualResult[2].rForce :=
-                                uKistlerCurveYMax.rValue;
-
-                            GVL_HMI.aKistlerManualResult[2].rDistance :=
-                                rKistlerCycleMaxDistance;
-
-                            IF stKistler_Status.bPartOK THEN
-                                GVL_HMI.aKistlerManualResult[2].eResult :=
-                                    E_HMIKistlerResult.PASS;
-                            ELSIF stKistler_Status.bPartNOK THEN
-                                GVL_HMI.aKistlerManualResult[2].eResult :=
-                                    E_HMIKistlerResult.FAIL;
-                            ELSE
-                                GVL_HMI.aKistlerManualResult[2].eResult :=
-                                    E_HMIKistlerResult.NONE;
-                            END_IF
-
-                        E_NestPosition.Position_3:
-
-                            GVL_HMI.aKistlerManualResult[3].rForce :=
-                                uKistlerCurveYMax.rValue;
-
-                            GVL_HMI.aKistlerManualResult[3].rDistance :=
-                                rKistlerCycleMaxDistance;
-
-                            IF stKistler_Status.bPartOK THEN
-                                GVL_HMI.aKistlerManualResult[3].eResult :=
-                                    E_HMIKistlerResult.PASS;
-                            ELSIF stKistler_Status.bPartNOK THEN
-                                GVL_HMI.aKistlerManualResult[3].eResult :=
-                                    E_HMIKistlerResult.FAIL;
-                            ELSE
-                                GVL_HMI.aKistlerManualResult[3].eResult :=
-                                    E_HMIKistlerResult.NONE;
-                            END_IF
-
-                        E_NestPosition.Position_4:
-
-                            GVL_HMI.aKistlerManualResult[4].rForce :=
-                                uKistlerCurveYMax.rValue;
-
-                            GVL_HMI.aKistlerManualResult[4].rDistance :=
-                                rKistlerCycleMaxDistance;
-
-                            IF stKistler_Status.bPartOK THEN
-                                GVL_HMI.aKistlerManualResult[4].eResult :=
-                                    E_HMIKistlerResult.PASS;
-                            ELSIF stKistler_Status.bPartNOK THEN
-                                GVL_HMI.aKistlerManualResult[4].eResult :=
-                                    E_HMIKistlerResult.FAIL;
-                            ELSE
-                                GVL_HMI.aKistlerManualResult[4].eResult :=
-                                    E_HMIKistlerResult.NONE;
-                            END_IF
-
-                    END_CASE
-
-                    IF bManualIndexerAndKistler THEN
-
-                        eLastTestedNestPos := eCurrentNestPos;
-
-                        eProcessCycleState :=
-                            E_ProcessCycle_State.WAIT_KISTLER_HOME;
-
-                    ELSE
-
-                        eProcessCycleState :=
-                            E_ProcessCycle_State.IDLE;
-
-                    END_IF
-
-                END_IF
+			E_ProcessCycle_State.WAIT_KISTLER_DONE:
+			// =================================================================
+			
+				GVL_MASTER.stProcess.bKistlerCycleRequest := TRUE;
+			
+				IF stKistler_Status.bError THEN
+			
+					GVL_MASTER.stProcess.bKistlerCycleRequest := FALSE;
+			
+					eProcessCycleState :=
+						E_ProcessCycle_State.FAULT;
+			
+				ELSIF stKistler_Status.eKistlerState =
+					  E_KistlerState.DONE THEN
+			
+					GVL_MASTER.stProcess.bKistlerCycleRequest := FALSE;
+					GVL_MASTER.stProcess.bKistlerCycleDone := TRUE;
+			
+					// Finalize the Kistler result.
+					M_StoreKistlerResult();
+			
+					CASE eCurrentNestPos OF
+			
+						E_NestPosition.Position_1:
+			
+							GVL_HMI.aKistlerManualResult[1].rForce :=
+								uKistlerCurveYMax.rValue;
+			
+							IF stKistler_Status.bPartOK THEN
+								GVL_HMI.aKistlerManualResult[1].eResult :=
+									E_HMIKistlerResult.PASS;
+							ELSIF stKistler_Status.bPartNOK THEN
+								GVL_HMI.aKistlerManualResult[1].eResult :=
+									E_HMIKistlerResult.FAIL;
+							ELSE
+								GVL_HMI.aKistlerManualResult[1].eResult :=
+									E_HMIKistlerResult.NONE;
+							END_IF
+			
+			
+						E_NestPosition.Position_2:
+			
+							GVL_HMI.aKistlerManualResult[2].rForce :=
+								uKistlerCurveYMax.rValue;
+			
+							IF stKistler_Status.bPartOK THEN
+								GVL_HMI.aKistlerManualResult[2].eResult :=
+									E_HMIKistlerResult.PASS;
+							ELSIF stKistler_Status.bPartNOK THEN
+								GVL_HMI.aKistlerManualResult[2].eResult :=
+									E_HMIKistlerResult.FAIL;
+							ELSE
+								GVL_HMI.aKistlerManualResult[2].eResult :=
+									E_HMIKistlerResult.NONE;
+							END_IF
+			
+			
+						E_NestPosition.Position_3:
+			
+							GVL_HMI.aKistlerManualResult[3].rForce :=
+								uKistlerCurveYMax.rValue;
+			
+							IF stKistler_Status.bPartOK THEN
+								GVL_HMI.aKistlerManualResult[3].eResult :=
+									E_HMIKistlerResult.PASS;
+							ELSIF stKistler_Status.bPartNOK THEN
+								GVL_HMI.aKistlerManualResult[3].eResult :=
+									E_HMIKistlerResult.FAIL;
+							ELSE
+								GVL_HMI.aKistlerManualResult[3].eResult :=
+									E_HMIKistlerResult.NONE;
+							END_IF
+			
+			
+						E_NestPosition.Position_4:
+			
+							GVL_HMI.aKistlerManualResult[4].rForce :=
+								uKistlerCurveYMax.rValue;
+			
+							IF stKistler_Status.bPartOK THEN
+								GVL_HMI.aKistlerManualResult[4].eResult :=
+									E_HMIKistlerResult.PASS;
+							ELSIF stKistler_Status.bPartNOK THEN
+								GVL_HMI.aKistlerManualResult[4].eResult :=
+									E_HMIKistlerResult.FAIL;
+							ELSE
+								GVL_HMI.aKistlerManualResult[4].eResult :=
+									E_HMIKistlerResult.NONE;
+							END_IF
+			
+					END_CASE
+			
+					IF bManualIndexerAndKistler THEN
+			
+						eLastTestedNestPos := eCurrentNestPos;
+			
+						eProcessCycleState :=
+							E_ProcessCycle_State.WAIT_KISTLER_HOME;
+			
+					ELSE
+			
+						eProcessCycleState :=
+							E_ProcessCycle_State.IDLE;
+			
+					END_IF
+			
+				END_IF
 
             // =================================================================
             E_ProcessCycle_State.WAIT_KISTLER_HOME:
