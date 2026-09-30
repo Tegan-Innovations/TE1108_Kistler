@@ -319,9 +319,19 @@ tonRejectBinFull(
     PT := bRejectBinFullTimer
 );
 
-bRejectBinFull := tonRejectBinFull.Q;
+IF tonRejectBinFull.Q THEN
+    bRejectBinFull := TRUE;
+END_IF;;
 
+// Reject Bin Full popup can only be acknowledged
+// after the reject bin has been physically cleared.
+IF GVL_HMI.bCloseBinPopup
+   AND NOT GVL_MASTER.stSensors.bPartPresent_Reject THEN
 
+    bRejectBinFull := FALSE;
+    GVL_HMI.bCloseBinPopup := FALSE;
+
+END_IF;
 // =========================================================
 // GLOBAL FAULT DETECTION
 // =========================================================

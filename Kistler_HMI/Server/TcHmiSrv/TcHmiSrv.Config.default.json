@@ -83,6 +83,43 @@
                 "startOffset": 1,
                 "type": "array"
             },
+            "ADS-PLC1.E_ActivePopup": {
+                "attributes": {
+                    "generate_implicit_init_function": "",
+                    "qualified_only": "",
+                    "strict": ""
+                },
+                "enum": [
+                    0,
+                    1,
+                    2,
+                    3,
+                    4
+                ],
+                "options": [
+                    {
+                        "label": "NONE",
+                        "value": 0
+                    },
+                    {
+                        "label": "PUCK_REMOVAL",
+                        "value": 1
+                    },
+                    {
+                        "label": "REJECT_PART",
+                        "value": 2
+                    },
+                    {
+                        "label": "DISABLED_NEST",
+                        "value": 3
+                    },
+                    {
+                        "label": "REJECT_BIN_FULL",
+                        "value": 4
+                    }
+                ],
+                "type": "integer"
+            },
             "ADS-PLC1.E_Alarms": {
                 "attributes": {
                     "generate_implicit_init_function": "",
@@ -2242,6 +2279,16 @@
             },
             "USEMAPPING": true
         },
+        "ADS.PLC1.GVL_HMI.bActivePopupTrigger": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::bActivePopupTrigger",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
         "ADS.PLC1.GVL_HMI.bCloseBinPopup": {
             "ACCESS": 3,
             "DOMAIN": "ADS",
@@ -2329,6 +2376,23 @@
             "MAPPING": "PLC1::GVL_HMI::bSkipButton",
             "SCHEMA": {
                 "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.eActivePopup": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::eActivePopup",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "comment": "Active popup displayed in the Main Screen"
+                    },
+                    {
+                        "$ref": "tchmi:server#/definitions/ADS-PLC1.E_ActivePopup"
+                    }
+                ]
             },
             "USEMAPPING": true
         },
@@ -9118,6 +9182,7 @@
                 "ADS.PLC1.GVL_HMI.aStatisticsHMI.0.bReset": 3,
                 "ADS.PLC1.GVL_HMI.aStatisticsHMI.0.udiTotalTested": 3,
                 "ADS.PLC1.GVL_HMI.arrAlarmHistory": 3,
+                "ADS.PLC1.GVL_HMI.bActivePopupTrigger": 3,
                 "ADS.PLC1.GVL_HMI.bCloseBinPopup": 3,
                 "ADS.PLC1.GVL_HMI.bEnableManual": 3,
                 "ADS.PLC1.GVL_HMI.bEnableSettings": 3,
@@ -9127,6 +9192,7 @@
                 "ADS.PLC1.GVL_HMI.bSetSettings": 3,
                 "ADS.PLC1.GVL_HMI.bShowRejectPopup": 3,
                 "ADS.PLC1.GVL_HMI.bSkipButton": 3,
+                "ADS.PLC1.GVL_HMI.eActivePopup": 3,
                 "ADS.PLC1.GVL_HMI.ePowerCmd": 3,
                 "ADS.PLC1.GVL_HMI.iNestPositionTesting": 3,
                 "ADS.PLC1.GVL_HMI.iNestRotationAngle": 3,

@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <DUT Name="E_ActivePopup" Id="{694504d3-b6cf-430f-8d6d-bf46a3dc3589}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_ActivePopup :
+(
+    NONE            := 0,
+    PUCK_REMOVAL    := 1,
+    REJECT_PART     := 2,
+    DISABLED_NEST   := 3,
+    REJECT_BIN_FULL := 4
+);
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>

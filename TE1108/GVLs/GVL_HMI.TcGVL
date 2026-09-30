@@ -94,7 +94,7 @@ VAR_GLOBAL CONSTANT
 	sHMIVersion							: STRING := ' 14.13';
 	sSystemName							: STRING := ' Kistler Machine ';
 	sProjectID							: STRING := ' TE 1108' ;
-	sAplication                     	: STRING := ' ';
+	sAplication                     	: STRING := ' v1.0.0-rc.3';
 	sHMIServer                			: STRING := ' 14.13 ';
 
 END_VAR
