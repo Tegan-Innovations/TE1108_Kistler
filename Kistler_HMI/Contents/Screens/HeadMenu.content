@@ -36,7 +36,7 @@
   {
     "accessright": "operate",
     "group": "Operator",
-    "permission": "Deny"
+    "permission": "Allow"
   },
   {
     "accessright": "observe",
@@ -51,7 +51,7 @@
   {
     "accessright": "observe",
     "group": "Operator",
-    "permission": "Deny"
+    "permission": "Allow"
   }
 ]
 </script>
@@ -150,7 +150,7 @@
   {
     "accessright": "operate",
     "group": "Operator",
-    "permission": "Deny"
+    "permission": "Allow"
   },
   {
     "accessright": "observe",
@@ -165,7 +165,7 @@
   {
     "accessright": "observe",
     "group": "Operator",
-    "permission": "Deny"
+    "permission": "Allow"
   }
 ]
 </script>

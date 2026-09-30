@@ -9437,7 +9437,7 @@
     "USERGROUPUSERS": {
         "TcHmiUserManagement": {
             "Admin": {
-                "USERGROUPUSERS_AUTO_LOGOFF": "PT15M",
+                "USERGROUPUSERS_AUTO_LOGOFF": "PT10M",
                 "USERGROUPUSERS_FORCE_PASSWORD_CHANGE": false,
                 "USERGROUPUSERS_GROUPS": [
                     "__SystemUsers",
@@ -9448,7 +9448,7 @@
                 "USERGROUPUSERS_TIMEZONE": "project"
             },
             "Engineer": {
-                "USERGROUPUSERS_AUTO_LOGOFF": "PT15M",
+                "USERGROUPUSERS_AUTO_LOGOFF": "PT10M",
                 "USERGROUPUSERS_FORCE_PASSWORD_CHANGE": false,
                 "USERGROUPUSERS_GROUPS": [
                     "__SystemUsers",
@@ -9470,11 +9470,14 @@
                 "USERGROUPUSERS_TIMEZONE": "project"
             },
             "Renan": {
-                "USERGROUPUSERS_AUTO_LOGOFF": "PT15M",
+                "USERGROUPUSERS_AUTO_LOGOFF": "PT10M",
+                "USERGROUPUSERS_FORCE_PASSWORD_CHANGE": false,
                 "USERGROUPUSERS_GROUPS": [
-                    "Administrator"
+                    "Engineer"
                 ],
-                "USERGROUPUSERS_LOCALE": "en"
+                "USERGROUPUSERS_LOCALE": "en",
+                "USERGROUPUSERS_TIMEFORMATLOCALE": "client",
+                "USERGROUPUSERS_TIMEZONE": "client"
             },
             "Thays": {
                 "USERGROUPUSERS_AUTO_LOGOFF": "P30D",
