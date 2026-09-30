@@ -5525,6 +5525,16 @@
             },
             "USEMAPPING": true
         },
+        "ADS.PLC1.GVL_Persistent.uiAutoCycleIdleTimeoutMin": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_Persistent::uiAutoCycleIdleTimeoutMin",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/UINT"
+            },
+            "USEMAPPING": true
+        },
         "ADS.PLC1.PGR_HMI.iCountdownValue": {
             "ACCESS": 3,
             "DOMAIN": "ADS",
@@ -9365,6 +9375,7 @@
                 "ADS.PLC1.GVL_MASTER.stSensors.bPartPresent_NEST": 3,
                 "ADS.PLC1.GVL_MASTER.stSensors.bPartPresent_Reject": 3,
                 "ADS.PLC1.GVL_Persistent.astEventsHistory": 3,
+                "ADS.PLC1.GVL_Persistent.uiAutoCycleIdleTimeoutMin": 3,
                 "ADS.PLC1.PGR_HMI.iCountdownValue": 3,
                 "ADS.PLC1.PRG_MachineControl.bDisabledNestPartPresent": 3,
                 "ADS.PLC1.PRG_MachineControl.bFinishKistler": 3,
