@@ -37,6 +37,9 @@
       },
       {
         "Name": "Enable Puck Locker"
+      },
+      {
+        "Name": "Parameters"
       }
     ]
   }
@@ -133,6 +136,26 @@
                   "objectType": "StaticValue",
                   "valueType": "tchmi:framework#/definitions/ContentPath",
                   "value": "Contents/Screens/Settings/settings_Puck.content"
+                },
+                "asyncWait": true
+              }
+            ]
+          },
+          {
+            "caseValue": {
+              "objectType": "StaticValue",
+              "valueType": "tchmi:general#/definitions/Any",
+              "value": "Parameters"
+            },
+            "actions": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctrl%IO_Region_18::TargetContent%/ctrl%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/ContentPath",
+                  "value": "Contents/Screens/Settings/settings_setttings.content"
                 },
                 "asyncWait": true
               }

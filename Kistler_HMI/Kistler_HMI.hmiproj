@@ -291,6 +291,9 @@
     <Content Include="Contents\Screens\Settings\settings_Puck.content">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Contents\Screens\Settings\settings_setttings.content">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Contents\Screens\Settings_Kistler.content">
       <SubType>Content</SubType>
     </Content>
