@@ -105,8 +105,78 @@
 <div id="TcHmiTextblock_1335" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left="520" data-tchmi-left-unit="px" data-tchmi-text="Select the check box to Enable/Desable" data-tchmi-top="100" data-tchmi-top-unit="px" data-tchmi-width="460" data-tchmi-width-unit="px" data-tchmi-word-wrap="True" data-tchmi-zindex="29" data-tchmi-text-font-size="140" data-tchmi-text-font-size-unit="%" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-font-style="Italic" data-tchmi-background-image-horizontal-alignment="Center">
 </div>
 <div id="TcHmiToggleSwitch_10" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiToggleSwitch" data-tchmi-height="80" data-tchmi-height-unit="px" data-tchmi-left="595" data-tchmi-left-unit="px" data-tchmi-text="Skip Locker Button" data-tchmi-top="260" data-tchmi-top-unit="px" data-tchmi-width="300" data-tchmi-width-unit="px" data-tchmi-zindex="31" data-tchmi-text-font-size="150" data-tchmi-text-font-size-unit="%" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.stPuckLocker.bEnableEmptyPuckBypass%/s%" data-tchmi-is-enabled="%s%ADS.PLC1.GVL_HMI.stPuckLocker.bEnabled%/s%">
+
+<script data-tchmi-target-attribute="data-tchmi-access-config" type="application/json">
+[
+  {
+    "accessright": "operate",
+    "group": "Administrator",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "operate",
+    "group": "Engineer",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "operate",
+    "group": "Operator",
+    "permission": "Deny"
+  },
+  {
+    "accessright": "observe",
+    "group": "Administrator",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "observe",
+    "group": "Engineer",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "observe",
+    "group": "Operator",
+    "permission": "Deny"
+  }
+]
+</script>
 </div>
 <div id="TcHmiToggleSwitch_2" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiToggleSwitch" data-tchmi-height="80" data-tchmi-height-unit="px" data-tchmi-left="595" data-tchmi-left-unit="px" data-tchmi-text="Puck Locker" data-tchmi-top="150" data-tchmi-top-unit="px" data-tchmi-width="300" data-tchmi-width-unit="px" data-tchmi-zindex="30" data-tchmi-text-font-size="150" data-tchmi-text-font-size-unit="%" data-tchmi-state-symbol="%s%ADS.PLC1.GVL_HMI.stPuckLocker.bEnabled%/s%">
+
+<script data-tchmi-target-attribute="data-tchmi-access-config" type="application/json">
+[
+  {
+    "accessright": "operate",
+    "group": "Administrator",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "operate",
+    "group": "Engineer",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "operate",
+    "group": "Operator",
+    "permission": "Deny"
+  },
+  {
+    "accessright": "observe",
+    "group": "Administrator",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "observe",
+    "group": "Engineer",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "observe",
+    "group": "Operator",
+    "permission": "Deny"
+  }
+]
+</script>
 </div>
 <div id="TcHmiImage_33" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiImage" data-tchmi-height="244" data-tchmi-height-unit="px" data-tchmi-left="32" data-tchmi-left-unit="px" data-tchmi-src="Images/Project/Puck.png" data-tchmi-top="52" data-tchmi-top-unit="px" data-tchmi-width="414" data-tchmi-width-unit="px" data-tchmi-zindex="1">
 </div>

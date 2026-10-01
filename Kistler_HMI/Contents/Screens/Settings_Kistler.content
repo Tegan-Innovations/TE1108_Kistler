@@ -36,10 +36,10 @@
         "Name": "Enable Nests"
       },
       {
-        "Name": "Enable Puck Locker"
+        "Name": "Parameters"
       },
       {
-        "Name": "Parameters"
+        "Name": "Enable Puck Locker"
       }
     ]
   }
