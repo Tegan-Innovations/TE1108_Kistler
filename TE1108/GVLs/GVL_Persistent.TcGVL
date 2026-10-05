@@ -5,6 +5,7 @@
 VAR_GLOBAL PERSISTENT
 	
 	astEventsHistory			: ARRAY[0..200] OF ST_EventsHistory;
+	uiAutoCycleIdleTimeoutMin 	: UINT := 10;
 	
 END_VAR]]></Declaration>
   </GVL>

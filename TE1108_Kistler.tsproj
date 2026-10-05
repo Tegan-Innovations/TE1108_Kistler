@@ -11,15 +11,6 @@
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{064EA673-04B6-D0C1-CD14-82E56022843A}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..4] OF BOOL</Name>
-			<BitSize>32</BitSize>
-			<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
-			<ArrayInfo>
-				<LBound>1</LBound>
-				<Elements>4</Elements>
-			</ArrayInfo>
-		</DataType>
-		<DataType>
 			<Name GUID="{1B090823-34FE-AA35-7EE2-1CF6FAEBC3BF}" AutoDeleteType="true">E_PuckLockerMode</Name>
 			<BitSize>16</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000006}">INT</BaseType>
@@ -142,6 +133,15 @@
 			</SubItem>
 		</DataType>
 		<DataType>
+			<Name GUID="{064EA673-04B6-D0C1-CD14-82E56022843A}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..4] OF BOOL</Name>
+			<BitSize>32</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000030}">BOOL</BaseType>
+			<ArrayInfo>
+				<LBound>1</LBound>
+				<Elements>4</Elements>
+			</ArrayInfo>
+		</DataType>
+		<DataType>
 			<Name GUID="{C24B66C1-B98E-DCFD-33A2-87AA7ECC3A6F}" AutoDeleteType="true">ST_DataHistoryHMI</Name>
 			<BitSize>224</BitSize>
 			<SubItem>
@@ -182,6 +182,15 @@
 			<ArrayInfo>
 				<LBound>1</LBound>
 				<Elements>2000</Elements>
+			</ArrayInfo>
+		</DataType>
+		<DataType>
+			<Name GUID="{7EBDD008-A9A8-B259-6DF4-ACAC21313C21}" IecBaseType="true" AutoDeleteType="true">ARRAY [1..4] OF UDINT</Name>
+			<BitSize>128</BitSize>
+			<BaseType GUID="{18071995-0000-0000-0000-000000000008}">UDINT</BaseType>
+			<ArrayInfo>
+				<LBound>1</LBound>
+				<Elements>4</Elements>
 			</ArrayInfo>
 		</DataType>
 		<DataType>
@@ -341,7 +350,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{09826F5E-A0C6-4F2A-AB8E-A2951346EAC9}" Name="TE1108" PrjFilePath="TE1108\TE1108.plcproj" TmcFilePath="TE1108\TE1108.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{9EE66E11-50A7-2B0F-9469-825CE615E269}" TmcPath="TE1108\TE1108.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{746C527C-B893-B29B-2461-60D1B996D52C}" TmcPath="TE1108\TE1108.tmc">
 					<Name>TE1108 Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="8" AreaNo="4">
@@ -355,6 +364,11 @@
 							<Name>GVL_HMI.bResetKistlerStatistics</Name>
 							<Comment><![CDATA[ HMI command to reset the statistics.]]></Comment>
 							<Type>BOOL</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>GVL_HMI.stPuckLocker</Name>
+							<Type GUID="{DB189694-6976-128C-9CA8-62269606A530}">ST_PuckLockerHMI</Type>
 							<InOut>7</InOut>
 						</Var>
 						<Var>
@@ -386,6 +400,22 @@
 							<InOut>7</InOut>
 						</Var>
 						<Var>
+							<Name>GVL_HMI.aDataHistoryHMI</Name>
+							<Type GUID="{69BA76DC-FD31-0169-A401-8089A0A7BA53}">ARRAY [1..2000] OF ST_DataHistoryHMI</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
+							<Name>GVL_HMI.stCSVDataPending</Name>
+							<Comment><![CDATA[ =================================================================
+ CSV DATA LOGGING
+ =================================================================
+ Stable copy of the completed Kistler test.
+ The CSV logger will use this record instead of reading
+ directly from the circular Data History buffer.]]></Comment>
+							<Type GUID="{C24B66C1-B98E-DCFD-33A2-87AA7ECC3A6F}">ST_DataHistoryHMI</Type>
+							<InOut>7</InOut>
+						</Var>
+						<Var>
 							<Name>GVL_HMI.bCSVWriteRequest</Name>
 							<Comment><![CDATA[ Request to save a new Data History record to CSV.]]></Comment>
 							<Type>BOOL</Type>
@@ -413,24 +443,14 @@
 							<InOut>7</InOut>
 						</Var>
 						<Var>
-							<Name>GVL_HMI.stPuckLocker</Name>
-							<Type GUID="{DB189694-6976-128C-9CA8-62269606A530}">ST_PuckLockerHMI</Type>
+							<Name>GVL_HMI.aKistlerNestGoodParts</Name>
+							<Comment><![CDATA[ Kistler statistics per nest]]></Comment>
+							<Type GUID="{7EBDD008-A9A8-B259-6DF4-ACAC21313C21}">ARRAY [1..4] OF UDINT</Type>
 							<InOut>7</InOut>
 						</Var>
 						<Var>
-							<Name>GVL_HMI.stCSVDataPending</Name>
-							<Comment><![CDATA[ =================================================================
- CSV DATA LOGGING
- =================================================================
- Stable copy of the completed Kistler test.
- The CSV logger will use this record instead of reading
- directly from the circular Data History buffer.]]></Comment>
-							<Type GUID="{C24B66C1-B98E-DCFD-33A2-87AA7ECC3A6F}">ST_DataHistoryHMI</Type>
-							<InOut>7</InOut>
-						</Var>
-						<Var>
-							<Name>GVL_HMI.aDataHistoryHMI</Name>
-							<Type GUID="{69BA76DC-FD31-0169-A401-8089A0A7BA53}">ARRAY [1..2000] OF ST_DataHistoryHMI</Type>
+							<Name>GVL_HMI.aKistlerNestBadParts</Name>
+							<Type GUID="{7EBDD008-A9A8-B259-6DF4-ACAC21313C21}">ARRAY [1..4] OF UDINT</Type>
 							<InOut>7</InOut>
 						</Var>
 					</Vars>
@@ -454,10 +474,6 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_IO.qInternalLight</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_IO.stSafety.bSafetyRun</Name>
 							<Comment><![CDATA[ Output from PLC to TwinSAFE (Command to run)]]></Comment>
 							<Type>BOOL</Type>
@@ -477,10 +493,6 @@
 						</Var>
 						<Var>
 							<Name>GVL_IO.stSafety.bProcessTest</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.qExternalLight</Name>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -684,6 +696,14 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
+							<Name>GVL_IO.qInternalLight</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.qExternalLight</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_KISTLER_IO.aKistlerOut</Name>
 							<Comment><![CDATA[ PLC -> maXYmos]]></Comment>
 							<Type GUID="{2B6B47C9-DB58-8D37-72B9-9344E5A5275A}">ARRAY [0..199] OF BYTE</Type>
@@ -793,21 +813,6 @@
 						</Var>
 						<Var>
 							<Name>GVL_IO.stSafety.bSafetyRelayEStop</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_KISTLER_IO.bKistlerSafetyEnableOK</Name>
-							<Comment><![CDATA[kistler safety]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_MASTER.i_bButtonStart</Name>
-							<Comment><![CDATA[  Auto Cycle start button]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_MASTER.i_bButtonStop</Name>
-							<Comment><![CDATA[  cycle stop button]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -1186,6 +1191,21 @@
 							<Type GUID="{2B6B47C9-DB58-8D37-72B9-9344E5A5275A}">ARRAY [0..199] OF BYTE</Type>
 						</Var>
 						<Var>
+							<Name>GVL_KISTLER_IO.bKistlerSafetyEnableOK</Name>
+							<Comment><![CDATA[kistler safety]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.i_bButtonStart</Name>
+							<Comment><![CDATA[  Auto Cycle start button]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.i_bButtonStop</Name>
+							<Comment><![CDATA[  cycle stop button]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_MASTER.i_bButtonReset</Name>
 							<Comment><![CDATA[  fault reset button]]></Comment>
 							<Type>BOOL</Type>
@@ -1263,6 +1283,14 @@
 						</Var>
 						<Var>
 							<Name>GVL_MASTER.stPuckLockerIO.bPuckLockerSensor2</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.bUp24VPowerSupplyOk</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_MASTER.bUs24VPowerSupplyOk</Name>
 							<Type>BOOL</Type>
 						</Var>
 					</Vars>
@@ -4628,9 +4656,9 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="PlcTask Inputs^GVL_IO.stTerm_Ek1100.stTerminalInfo.nTerminal_State" VarB="InfoData^State"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1100)^Term 10 (EL1809)">
+				<Link VarA="PlcTask Inputs^GVL_IO.stTerm10_EL1809.iEL1809_Ch1" VarB="Channel 1^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_IO.stTerm10_EL1809.iEL1809_Ch2" VarB="Channel 2^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_IO.stTerm10_EL1809.stTerminalInfo.nTerminal_State" VarB="InfoData^State"/>
-				<Link VarA="PlcTask Inputs^GVL_MASTER.stNestTable.bSupportExtended" VarB="Channel 2^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_MASTER.stNestTable.bSupportRetracted" VarB="Channel 1^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_MASTER.stPuckLockerIO.bPuckLockerSensor1" VarB="Channel 15^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_MASTER.stPuckLockerIO.bPuckLockerSensor2" VarB="Channel 16^Input"/>
 			</OwnerB>
@@ -4684,15 +4712,15 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="PlcTask Outputs^GVL_IO.stSafety.bSafetyRun" VarB="StandardOutputs^TwinSafeGroup1.SafetyRun_2"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1100)^Term 4 (EL1918)">
-				<Link VarA="PlcTask Inputs^GVL_IO.stSafety.bEStopCH1" VarB="Module 1 (FSOE)^FSoE Inputs^FSOE^FSIN Module 1.Input"/>
-				<Link VarA="PlcTask Inputs^GVL_IO.stSafety.bEStopCH2" VarB="Module 1 (FSOE)^FSoE Inputs^FSOE^FSIN Module 2.Input"/>
+				<Link VarA="PlcTask Inputs^GVL_IO.stTerm4_EL1918.iEL1918_Ch1" VarB="Module 1 (FSOE)^FSoE Inputs^FSOE^FSIN Module 1.Input"/>
+				<Link VarA="PlcTask Inputs^GVL_IO.stTerm4_EL1918.iEL1918_Ch2" VarB="Module 1 (FSOE)^FSoE Inputs^FSOE^FSIN Module 2.Input"/>
+				<Link VarA="PlcTask Inputs^GVL_IO.stTerm4_EL1918.iEL1918_Ch3" VarB="Module 1 (FSOE)^FSoE Inputs^FSOE^FSIN Module 3.Input"/>
 				<Link VarA="PlcTask Inputs^GVL_IO.stTerm4_EL1918.iEL1918_Ch4" VarB="Module 1 (FSOE)^FSoE Inputs^FSOE^FSIN Module 4.Input"/>
 				<Link VarA="PlcTask Inputs^GVL_IO.stTerm4_EL1918.iEL1918_Ch5" VarB="Module 1 (FSOE)^FSoE Inputs^FSOE^FSIN Module 5.Input"/>
 				<Link VarA="PlcTask Inputs^GVL_IO.stTerm4_EL1918.iEL1918_Ch6" VarB="Module 1 (FSOE)^FSoE Inputs^FSOE^FSIN Module 6.Input"/>
 				<Link VarA="PlcTask Inputs^GVL_IO.stTerm4_EL1918.iEL1918_Ch7" VarB="Module 1 (FSOE)^FSoE Inputs^FSOE^FSIN Module 7.Input"/>
 				<Link VarA="PlcTask Inputs^GVL_IO.stTerm4_EL1918.iEL1918_Ch8" VarB="Module 1 (FSOE)^FSoE Inputs^FSOE^FSIN Module 8.Input"/>
 				<Link VarA="PlcTask Inputs^GVL_IO.stTerm4_EL1918.stTerminalInfo.nTerminal_State" VarB="InfoData^State"/>
-				<Link VarA="PlcTask Inputs^GVL_MASTER.i_bButtonReset" VarB="Module 1 (FSOE)^FSoE Inputs^FSOE^FSIN Module 3.Input"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1100)^Term 5 (EL1918)">
 				<Link VarA="PlcTask Inputs^GVL_IO.stTerm5_EL1918.iEL1918_Ch1" VarB="Module 1 (FSOE)^FSoE Inputs^FSOE^FSIN Module 1.Input"/>
@@ -4706,11 +4734,11 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="PlcTask Inputs^GVL_IO.stTerm5_EL1918.stTerminalInfo.nTerminal_State" VarB="InfoData^State"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1100)^Term 6 (EL1918)">
-				<Link VarA="PlcTask Inputs^GVL_IO.stSafety.bDoorFlapLeftCH1" VarB="Module 1 (FSOE)^FSoE Inputs^FSOE^FSIN Module 1.Input"/>
-				<Link VarA="PlcTask Inputs^GVL_IO.stSafety.bDoorFlapLeftCH2" VarB="Module 1 (FSOE)^FSoE Inputs^FSOE^FSIN Module 2.Input"/>
-				<Link VarA="PlcTask Inputs^GVL_IO.stSafety.bDoorFlapRightCH1" VarB="Module 1 (FSOE)^FSoE Inputs^FSOE^FSIN Module 4.Input"/>
-				<Link VarA="PlcTask Inputs^GVL_IO.stSafety.bDoorFlapRightCH2" VarB="Module 1 (FSOE)^FSoE Inputs^FSOE^FSIN Module 5.Input"/>
+				<Link VarA="PlcTask Inputs^GVL_IO.stTerm6_EL1918.iEL1918_Ch1" VarB="Module 1 (FSOE)^FSoE Inputs^FSOE^FSIN Module 1.Input"/>
+				<Link VarA="PlcTask Inputs^GVL_IO.stTerm6_EL1918.iEL1918_Ch2" VarB="Module 1 (FSOE)^FSoE Inputs^FSOE^FSIN Module 2.Input"/>
 				<Link VarA="PlcTask Inputs^GVL_IO.stTerm6_EL1918.iEL1918_Ch3" VarB="Module 1 (FSOE)^FSoE Inputs^FSOE^FSIN Module 3.Input"/>
+				<Link VarA="PlcTask Inputs^GVL_IO.stTerm6_EL1918.iEL1918_Ch4" VarB="Module 1 (FSOE)^FSoE Inputs^FSOE^FSIN Module 4.Input"/>
+				<Link VarA="PlcTask Inputs^GVL_IO.stTerm6_EL1918.iEL1918_Ch5" VarB="Module 1 (FSOE)^FSoE Inputs^FSOE^FSIN Module 5.Input"/>
 				<Link VarA="PlcTask Inputs^GVL_IO.stTerm6_EL1918.iEL1918_Ch6" VarB="Module 1 (FSOE)^FSoE Inputs^FSOE^FSIN Module 6.Input"/>
 				<Link VarA="PlcTask Inputs^GVL_IO.stTerm6_EL1918.iEL1918_Ch7" VarB="Module 1 (FSOE)^FSoE Inputs^FSOE^FSIN Module 7.Input"/>
 				<Link VarA="PlcTask Inputs^GVL_IO.stTerm6_EL1918.iEL1918_Ch8" VarB="Module 1 (FSOE)^FSoE Inputs^FSOE^FSIN Module 8.Input"/>
@@ -4723,18 +4751,23 @@ Bit1: Value bigger/equal Limit2]]></Comment>
 				<Link VarA="PlcTask Inputs^GVL_IO.stTerm8_EL2904.stTerminalInfo.nTerminal_State" VarB="InfoData^State"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 1 (EK1100)^Term 9 (EL1809)">
+				<Link VarA="PlcTask Inputs^GVL_IO.stTerm9_EL1809.iEL1809_Ch1" VarB="Channel 1^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_IO.stTerm9_EL1809.iEL1809_Ch10" VarB="Channel 10^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_IO.stTerm9_EL1809.iEL1809_Ch11" VarB="Channel 11^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_IO.stTerm9_EL1809.iEL1809_Ch12" VarB="Channel 12^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_IO.stTerm9_EL1809.iEL1809_Ch13" VarB="Channel 13^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_IO.stTerm9_EL1809.iEL1809_Ch14" VarB="Channel 14^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_IO.stTerm9_EL1809.iEL1809_Ch15" VarB="Channel 15^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_IO.stTerm9_EL1809.iEL1809_Ch16" VarB="Channel 16^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_IO.stTerm9_EL1809.iEL1809_Ch2" VarB="Channel 2^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_IO.stTerm9_EL1809.iEL1809_Ch3" VarB="Channel 3^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_IO.stTerm9_EL1809.iEL1809_Ch4" VarB="Channel 4^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_IO.stTerm9_EL1809.iEL1809_Ch5" VarB="Channel 5^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_IO.stTerm9_EL1809.iEL1809_Ch6" VarB="Channel 6^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_IO.stTerm9_EL1809.iEL1809_Ch7" VarB="Channel 7^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_IO.stTerm9_EL1809.iEL1809_Ch8" VarB="Channel 8^Input"/>
+				<Link VarA="PlcTask Inputs^GVL_IO.stTerm9_EL1809.iEL1809_Ch9" VarB="Channel 9^Input"/>
 				<Link VarA="PlcTask Inputs^GVL_IO.stTerm9_EL1809.stTerminalInfo.nTerminal_State" VarB="InfoData^State"/>
-				<Link VarA="PlcTask Inputs^GVL_MASTER.i_bButtonStart" VarB="Channel 1^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_MASTER.i_bButtonStop" VarB="Channel 2^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_MASTER.stNestTable.bNestCompletedSensor" VarB="Channel 9^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_MASTER.stNestTable.bNestLockedSensor" VarB="Channel 10^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_MASTER.stNestTable.bNestPos_1_Sensor" VarB="Channel 6^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_MASTER.stNestTable.bNestPos_2_Sensor" VarB="Channel 7^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_MASTER.stNestTable.bNestPos_3_Sensor" VarB="Channel 8^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_MASTER.stNestTable.bNestReadySensor" VarB="Channel 11^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_MASTER.stSensors.bPartPresent_Kistler" VarB="Channel 13^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_MASTER.stSensors.bPartPresent_NEST" VarB="Channel 12^Input"/>
-				<Link VarA="PlcTask Inputs^GVL_MASTER.stSensors.bPartPresent_Reject" VarB="Channel 5^Input"/>
 			</OwnerB>
 		</OwnerA>
 	</Mappings>

@@ -223,6 +223,14 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[// =========================================================================
+// 0. CONTROLLED MACHINE STOP REQUEST
+// =========================================================================
+// Shutdown and Reboot are only allowed after the machine has completed
+// its normal stopping sequence and reached STOPPED.
+GVL_HMI.bPowerDownRequest :=
+    (GVL_HMI.ePowerCmd = E_PLC_Power.Reboot)
+    OR (GVL_HMI.ePowerCmd = E_PLC_Power.Shutdown);
+// =========================================================================
 // 1. TIMER CONFIGURATION (Dynamic PT based on Command)
 // =========================================================================
 // Define the preset time (PT) dynamically depending on the selected action

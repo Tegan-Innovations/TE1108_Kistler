@@ -261,7 +261,16 @@
     <Content Include="Contents\Screens\Data_History.content">
       <SubType>Content</SubType>
     </Content>
+    <Content Include="Contents\Screens\Main_Kistler.content">
+      <SubType>Content</SubType>
+    </Content>
     <Content Include="Contents\Screens\Manual_Mode.content">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Contents\Screens\popups\Content_Popup_BinFull.content">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Contents\Screens\popups\Content_Popup_DisabledNest.content">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Contents\Screens\popups\Content_Popup_Logout.content">
@@ -280,6 +289,9 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Contents\Screens\Settings\settings_Puck.content">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Contents\Screens\Settings\settings_setttings.content">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Contents\Screens\Settings_Kistler.content">
@@ -316,9 +328,6 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Contents\Screens\popups\Content_Popup_Shutdown.content">
-      <SubType>Content</SubType>
-    </Content>
-    <Content Include="Contents\Screens\Main_Kistler.content">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Contents\Screens\HeadMenu.content">
@@ -447,6 +456,9 @@
       <SubType>Content</SubType>
     </Content>
     <Content Include="Images\Client\JabilMasterLogo.png">
+      <SubType>Content</SubType>
+    </Content>
+    <Content Include="Images\Client\minimedLogo.png">
       <SubType>Content</SubType>
     </Content>
     <Content Include="Images\Icons\box.svg">

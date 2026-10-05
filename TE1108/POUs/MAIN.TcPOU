@@ -18,7 +18,8 @@ PRG_PuckLocker();	// Puck Locker independent program behaviour
 PRG_FaultHandling(); // Define machine alarms, warnings and messages
 
 PGR_HMI();// Process strings and colors for the top status banner on the HMI
-]]></ST>
+
+PRG_PersistentData();]]></ST>
     </Implementation>
   </POU>
 </TcPlcObject>
