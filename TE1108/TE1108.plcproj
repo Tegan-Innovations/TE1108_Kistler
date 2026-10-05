@@ -242,6 +242,9 @@
     <Compile Include="POUs\Utilities\FB_TerminalInfo.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\Utilities\PRG_PersistentData.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="DUTs" />

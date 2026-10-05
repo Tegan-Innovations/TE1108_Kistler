@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1">
+  <POU Name="PRG_PersistentData" Id="{e5710e9c-2f2d-4a10-a480-aa84da30db99}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_PersistentData
+VAR
+    fbWritePersistentData : FB_WritePersistentData;
+    rtMachineStopped      : R_TRIG;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[rtMachineStopped(
+    CLK := GVL_MASTER.stMachineStatus.eMachineState = E_MachineState.STOPPED
+);
+
+fbWritePersistentData(
+    NETID := '',
+    PORT := 851,
+    START := rtMachineStopped.Q,
+    MODE := SPDM_VAR_BOOST,
+    TMOUT := T#5S
+);]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>
