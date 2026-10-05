@@ -89,7 +89,7 @@ VAR_GLOBAL CONSTANT
 // =================================================================
 
 	sSoftwareVersion					: STRING := ' v1.0.0-rc.2 ';
-	sSoftwareDate						: STRING := '14/08/2026';
+	sSoftwareDate						: STRING := '05/10/2026';
 	sTC3Version							: STRING := ' v3.1.4026.22, Runtime v3.1.4026.22 ';
 	sHMIVersion							: STRING := ' 14.13';
 	sSystemName							: STRING := ' Kistler Machine ';

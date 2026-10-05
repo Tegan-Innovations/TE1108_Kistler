@@ -352,6 +352,8 @@ IF (
     OR GVL_MASTER.stDiagnostics.bSupportSensors
     OR GVL_MASTER.stDiagnostics.bSupportRetractTimeout
     OR GVL_MASTER.stDiagnostics.bSupportExtendTimeout
+	    // Emergency Stop channel discrepancy
+    OR (GVL_IO.stSafety.bEStopCH1 XOR GVL_IO.stSafety.bEStopCH2)
 )
 AND GVL_MASTER.stMachineStatus.eMachineState <>
     E_MachineState.FAULT
@@ -5497,9 +5499,9 @@ GVL_IO.stTerm14_EL3058.stTerminalInfo.fbTerminalInfo(
 // -----------------------------------------------------------------------------
 // T04 - EL1918 channel mirrors for HMI diagnostics
 // -----------------------------------------------------------------------------
-GVL_IO.stTerm4_EL1918.iEL1918_Ch1 := GVL_IO.stSafety.bEStopCH1;
-GVL_IO.stTerm4_EL1918.iEL1918_Ch2 := GVL_IO.stSafety.bEStopCH2;
-GVL_IO.stTerm4_EL1918.iEL1918_Ch3 := GVL_MASTER.i_bButtonReset;
+GVL_IO.stSafety.bEStopCH1 := GVL_IO.stTerm4_EL1918.iEL1918_Ch1;
+GVL_IO.stSafety.bEStopCH2 := GVL_IO.stTerm4_EL1918.iEL1918_Ch2;
+GVL_MASTER.i_bButtonReset := GVL_IO.stTerm4_EL1918.iEL1918_Ch3;
 
 // -----------------------------------------------------------------------------
 // T05 - EL1918 channel mirrors for HMI diagnostics
@@ -5511,11 +5513,11 @@ GVL_IO.stSafety.bTwoHandsRight := GVL_IO.stTerm5_EL1918.iEL1918_Ch4;
 // -----------------------------------------------------------------------------
 // T06 - EL1918 channel mirrors for HMI diagnostics
 // -----------------------------------------------------------------------------
-GVL_IO.stTerm6_EL1918.iEL1918_Ch1 := GVL_IO.stSafety.bDoorFlapLeftCH1;
-GVL_IO.stTerm6_EL1918.iEL1918_Ch2 := GVL_IO.stSafety.bDoorFlapLeftCH2;
-GVL_IO.stTerm6_EL1918.iEL1918_Ch4 := GVL_IO.stSafety.bDoorFlapRightCH1;
-GVL_IO.stTerm6_EL1918.iEL1918_Ch5 := GVL_IO.stSafety.bDoorFlapRightCH2;
 
+GVL_IO.stSafety.bDoorFlapLeftCH1  := GVL_IO.stTerm6_EL1918.iEL1918_Ch1;
+GVL_IO.stSafety.bDoorFlapLeftCH2  := GVL_IO.stTerm6_EL1918.iEL1918_Ch2;
+GVL_IO.stSafety.bDoorFlapRightCH1 := GVL_IO.stTerm6_EL1918.iEL1918_Ch4;
+GVL_IO.stSafety.bDoorFlapRightCH2 := GVL_IO.stTerm6_EL1918.iEL1918_Ch5;
 // -----------------------------------------------------------------------------
 // T07- EL2904 channel mirrors for HMI diagnostics
 // -----------------------------------------------------------------------------
