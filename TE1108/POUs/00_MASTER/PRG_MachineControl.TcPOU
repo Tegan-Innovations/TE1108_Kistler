@@ -80,6 +80,7 @@ VAR
 	eCurrentNestPos 	 			: E_NestPosition := E_NestPosition.UNKNOWN;
 	eCompletedOperatorExchangeNest 	: E_NestPosition;
 	bDisabledNestPartPresent 		: BOOL;
+	bCurrentNestPartLoaded 			: BOOL;
 	
 	// Part-removal control used when the Puck Locker is disabled
 	eLastOperatorNestPositionNoLocker : E_NestPosition := E_NestPosition.Unknown;
@@ -3807,12 +3808,42 @@ rtPartPresentReject(
 //
 // These methods are required in both Auto and Manual Mode.
 // ============================================================================
-eCurrentNestPos :=
-    M_GetCurrentPosition();
+eCurrentNestPos := M_GetCurrentPosition();
 
 M_UpdateActiveNestPositions();
 
 M_UpdateOperatorNestTracking();
+
+// =====================================================
+// CURRENT KISTLER NEST - PART MEMORY
+// =====================================================
+// Read the stored part presence for the physical nest
+// currently positioned at the Kistler station.
+
+bCurrentNestPartLoaded := FALSE;
+
+CASE eCurrentNestPos OF
+
+    E_NestPosition.Position_1:
+        bCurrentNestPartLoaded :=
+            GVL_MASTER.astNestTracking[1].bPartLoaded;
+
+    E_NestPosition.Position_2:
+        bCurrentNestPartLoaded :=
+            GVL_MASTER.astNestTracking[2].bPartLoaded;
+
+    E_NestPosition.Position_3:
+        bCurrentNestPartLoaded :=
+            GVL_MASTER.astNestTracking[3].bPartLoaded;
+
+    E_NestPosition.Position_4:
+        bCurrentNestPartLoaded :=
+            GVL_MASTER.astNestTracking[4].bPartLoaded;
+
+ELSE
+    bCurrentNestPartLoaded := FALSE;
+
+END_CASE
 
 // -----------------------------------------------------------------------------
 // Determine safely whether the nest currently at the Kistler still contains
@@ -4144,8 +4175,8 @@ CASE GVL_MASTER.stMachineStatus.eMachineState OF
                       AND
                       (
                           NOT bNestNewPositionReady
-                          OR
-                          NOT GVL_MASTER.stSensors.bPartPresent_Kistler
+                          OR NOT GVL_MASTER.stSensors.bPartPresent_Kistler
+						  OR NOT bCurrentNestPartLoaded
                       ) THEN
 
                     GVL_MASTER.stProcess.bKistlerCycleRequest := FALSE;
@@ -4192,6 +4223,7 @@ CASE GVL_MASTER.stMachineStatus.eMachineState OF
                       AND NOT bKistlerRecoveryHomeRequest
                       AND bNestNewPositionReady
                       AND GVL_MASTER.stSensors.bPartPresent_Kistler
+					  AND bCurrentNestPartLoaded
                       AND M_IsNestEnabled(eCurrentNestPos) THEN
 
                     GVL_MASTER.stProcess.bKistlerCycleDone := FALSE;
